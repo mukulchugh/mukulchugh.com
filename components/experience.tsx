@@ -1,3 +1,4 @@
+// @ts-ignore
 "use client";
 
 import React from "react";
@@ -18,7 +19,7 @@ export default function Experience() {
   return (
     <section id="experience" ref={ref} className="scroll-mt-28 mb-28 sm:mb-40">
       <SectionHeading>My experience</SectionHeading>
-      {/* <VerticalTimeline lineColor="">
+      <VerticalTimeline lineColor="">
         {experiencesData.map((item, index) => (
           <React.Fragment key={index}>
             <VerticalTimelineElement
@@ -39,13 +40,18 @@ export default function Experience() {
               date={item.date}
               icon={item.icon}
               iconStyle={{
-                background:
-                  theme === "light" ? "white" : "rgba(255, 255, 255, 0.15)",
+                background: theme === "light" ? "white" : "white",
                 fontSize: "1.5rem",
+                width: "4rem",
+                height: "4rem",
+                borderRadius: "50%",
+                padding: "0.8rem",
               }}
             >
               <h3 className="font-semibold capitalize">{item.title}</h3>
-              <p className="font-normal !mt-0">{item.location}</p>
+              <p className="!font-normal !text-sm text-gray-500 !mt-1">
+                {item.company} | {item.location}
+              </p>
               <p className="!mt-1 !font-normal text-gray-700 dark:text-white/75">
                 {item.description &&
                   item.description.map((desc, index) => (
@@ -58,7 +64,7 @@ export default function Experience() {
             </VerticalTimelineElement>
           </React.Fragment>
         ))}
-      </VerticalTimeline> */}
+      </VerticalTimeline>
     </section>
   );
 }

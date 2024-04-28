@@ -47,8 +47,8 @@ export const experiencesData = [
     date: "2021-Present",
     location: "Bengaluru, India",
     icon: React.createElement(Img, {
-      src: "https://via.placeholder.com/150",
-      alt: "Placeholder",
+      src: "https://ik.imagekit.io/kooxhdceru/portfolio/zenduty.webp",
+      alt: "Zenduty",
     }),
   },
   {
@@ -63,8 +63,8 @@ export const experiencesData = [
     date: "January 2022 - June 2022",
     location: "Gururgram, India",
     icon: React.createElement(Img, {
-      src: "https://via.placeholder.com/150",
-      alt: "Placeholder",
+      src: "https://ik.imagekit.io/kooxhdceru/portfolio/heroapp.webp",
+      alt: "HeroApp",
     }),
   },
   {
@@ -80,8 +80,8 @@ export const experiencesData = [
     date: "April 2022 - June 2022",
     location: "Manila, Philippines",
     icon: React.createElement(Img, {
-      src: "https://via.placeholder.com/150",
-      alt: "Placeholder",
+      src: "https://ik.imagekit.io/kooxhdceru/portfolio/instahomes.webp",
+      alt: "Instahomes PH",
     }),
   },
   {
@@ -97,8 +97,8 @@ export const experiencesData = [
     date: "September 2020 - Febuary 2021",
     location: "Gurugram, India (Remote)",
     icon: React.createElement(Img, {
-      src: "https://via.placeholder.com/150",
-      alt: "Placeholder",
+      src: "https://ik.imagekit.io/kooxhdceru/portfolio/guby-rogers.webp",
+      alt: "Guby Rogers",
     }),
   },
   {
@@ -114,8 +114,8 @@ export const experiencesData = [
     date: "October 2020 - June 2022",
     location: "India",
     icon: React.createElement(Img, {
-      src: "https://via.placeholder.com/150",
-      alt: "Placeholder",
+      src: "https://ik.imagekit.io/kooxhdceru/portfolio/digital-moshai.webp",
+      alt: "Digital Moshai",
     }),
     company: "Digital Moshai",
   },
@@ -133,8 +133,8 @@ export const experiencesData = [
     date: "September 2019 - July 2020",
     location: "Gurugram, India",
     icon: React.createElement(Img, {
-      src: "https://via.placeholder.com/150",
-      alt: "Placeholder",
+      src: "https://ik.imagekit.io/kooxhdceru/portfolio/microsoft.webp",
+      alt: "Microsoft",
     }),
   },
 ] as const;
@@ -222,13 +222,9 @@ export const skillsData = [
   "Node.js",
   "Git",
   "Tailwind",
-  "Prisma",
   "MongoDB",
-  "Redux",
   "GraphQL",
-  "Apollo",
   "Express",
-  "PostgreSQL",
   "Python",
   "Django",
   "Framer Motion",

@@ -55,13 +55,37 @@ ProjectProps) {
 
           <div className="flex flex-col sm:flex-row gap-2 mt-4 sm:mt-auto sm:ml-auto sm:gap-4">
             {github && (
-              <a href={github} className="btn mt-4" target="_blank">
+              <a
+                href={github}
+                className="
+                hover:bg-black/[0.1] 
+                hover:bg-opacity-10
+                dark:hover:bg-white/10
+                dark:hover:bg-opacity-10
+                px-2 py-1 rounded-full
+                flex items-center
+                justify-between 
+              mt-4"
+                target="_blank"
+              >
                 <BsGithub className="inline-block mr-2" />
                 Github
               </a>
             )}
             {demo && (
-              <a href={demo} className="btn mt-4" target="_blank">
+              <a
+                href={demo}
+                className="
+                hover:bg-black/[0.1] 
+                hover:bg-opacity-10
+                dark:hover:bg-white/10
+                dark:hover:bg-opacity-10
+                px-2 py-1 rounded-full
+                flex items-center
+                justify-between 
+              mt-4"
+                target="_blank"
+              >
                 <BsGlobe className="inline-block mr-2" />
                 Demo
               </a>

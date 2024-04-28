@@ -18,7 +18,7 @@ export default function About() {
       id="about"
     >
       <SectionHeading>About me</SectionHeading>
-      <p className="mb-3">
+      <div className="mb-3">
         <p>Hey there, I'm Mukul Chugh, a software engineer based in India.</p>
         <p className="mt-2">
           I'm all about creating digital experiences that put humans first.
@@ -38,7 +38,7 @@ export default function About() {
           Would you like to work together or just chat? Feel free to reach out
           to me.
         </p>
-      </p>
+      </div>
     </motion.section>
   );
 }
