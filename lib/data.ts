@@ -43,6 +43,8 @@ export const experiencesData = [
     icon: React.createElement(Img, {
       src: "https://ik.imagekit.io/kooxhdceru/portfolio/zenduty.webp",
       alt: "Zenduty",
+      height: 50,
+      width: 50,
     }),
   },
   {
@@ -59,6 +61,8 @@ export const experiencesData = [
     icon: React.createElement(Img, {
       src: "https://ik.imagekit.io/kooxhdceru/portfolio/heroapp.webp",
       alt: "HeroApp",
+      height: 50,
+      width: 50,
     }),
   },
   {
@@ -76,6 +80,8 @@ export const experiencesData = [
     icon: React.createElement(Img, {
       src: "https://ik.imagekit.io/kooxhdceru/portfolio/instahomes.webp",
       alt: "Instahomes PH",
+      height: 50,
+      width: 50,
     }),
   },
   {
@@ -93,6 +99,8 @@ export const experiencesData = [
     icon: React.createElement(Img, {
       src: "https://ik.imagekit.io/kooxhdceru/portfolio/guby-rogers.webp",
       alt: "Guby Rogers",
+      height: 50,
+      width: 50,
     }),
   },
   {
@@ -110,6 +118,8 @@ export const experiencesData = [
     icon: React.createElement(Img, {
       src: "https://ik.imagekit.io/kooxhdceru/portfolio/digital-moshai.webp",
       alt: "Digital Moshai",
+      height: 50,
+      width: 50,
     }),
     company: "Digital Moshai",
   },
@@ -129,6 +139,8 @@ export const experiencesData = [
     icon: React.createElement(Img, {
       src: "https://ik.imagekit.io/kooxhdceru/portfolio/microsoft.webp",
       alt: "Microsoft",
+      height: 50,
+      width: 50,
     }),
   },
 ] as const;
