@@ -3,7 +3,6 @@ const nextConfig = {
   compress: true,
   poweredByHeader: false,
   optimizeFonts: true,
-
   headers: async () => {
     return [
       {

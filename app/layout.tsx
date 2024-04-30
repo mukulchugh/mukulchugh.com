@@ -2,8 +2,7 @@ import "./globals.css";
 
 import ActiveSectionContextProvider from "@/context/active-section-context";
 import Footer from "@/components/footer";
-import { SpeedInsights } from "@vercel/speed-insights/next";
-import { Analytics } from "@vercel/analytics/react";
+
 import ThemeContextProvider from "@/context/theme-context";
 import { Toaster } from "react-hot-toast";
 import React from "react";
@@ -78,8 +77,6 @@ export default function RootLayout({
           </ActiveSectionContextProvider>
         </ThemeContextProvider>
         <GoogleAnalytics gaId="G-VTWNXFFM1L" />
-        <SpeedInsights />
-        <Analytics />
       </body>
     </html>
   );

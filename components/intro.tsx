@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useCallback } from "react";
+import React, { Suspense, useCallback } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { BsArrowRight, BsGithub, BsTwitterX } from "react-icons/bs";
@@ -153,7 +153,11 @@ const Component = React.memo(() => {
   );
 });
 const Intro = () => {
-  return <Component />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Component />
+    </Suspense>
+  );
 };
 
 export default Intro;
