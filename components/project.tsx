@@ -42,7 +42,7 @@ ProjectProps) {
       }}
       className="group mb-3 sm:mb-8 last:mb-0"
     >
-      <section className="bg-gray-100 max-w-[44rem] border border-black/5 rounded-lg overflow-hidden sm:pr-8 md:p-4 relative sm:h-[15rem] hover:bg-gray-200 transition sm:group-even:pl-8 md:group-even:pl-4 dark:text-white dark:bg-white/10 dark:hover:bg-white/20">
+      <section className="bg-gray-100 pb-6 max-w-[44rem] border border-black/5 rounded-lg overflow-hidden sm:pr-8 md:p-4 relative sm:h-[15rem] hover:bg-gray-200 transition sm:group-even:pl-8 md:group-even:pl-4 dark:text-white dark:bg-white/10 dark:hover:bg-white/20">
         <div className="pt-4 pb-0 px-2 sm:pl-10 sm:pr-2 sm:pt-10 md:p-0 sm:max-w-[100%] flex flex-col h-full">
           <h3 className={clsx("text-2xl font-semibold", syne.className)}>
             {title}
@@ -63,7 +63,7 @@ ProjectProps) {
             </ul>
           )}
 
-          <div className="flex flex-col sm:flex-row gap-2 mt-4 sm:mt-auto sm:ml-auto sm:gap-4">
+          <div className="flex gap-2 items-center mt-auto">
             {github && (
               <a
                 href={github}
