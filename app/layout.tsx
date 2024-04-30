@@ -1,4 +1,3 @@
-import Header from "@/components/header";
 import "./globals.css";
 
 import ActiveSectionContextProvider from "@/context/active-section-context";
@@ -10,6 +9,7 @@ import { Toaster } from "react-hot-toast";
 import React from "react";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { inter } from "@/lib/fonts";
+import Header from "@/components/header";
 
 export const metadata = {
   title: "Mukul Chugh - Creating Digital Experiences for Humans",

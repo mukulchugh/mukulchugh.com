@@ -11,7 +11,7 @@ export default function ThemeSwitch() {
   return (
     <button
       className={clsx(
-        "mr-3  w-[2.5rem] h-[2.5rem] border-opacity-40  flex items-center justify-center hover:scale-[1.3] active:scale-[1.5] transition-all "
+        "mr-3 w-[2.5rem] h-[2.5rem] border-opacity-40  flex items-center justify-center hover:scale-[1.3] active:scale-[1.5] transition-all "
       )}
       onClick={toggleTheme}
     >

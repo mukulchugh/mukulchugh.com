@@ -62,7 +62,7 @@ export default function Intro() {
 
       <motion.h1
         className={clsx(
-          "mb-10 mt-4 px-4 text-2xl font-medium !leading-[1.5] sm:text-4xl",
+          "mb-10 mt-4 px-4  font-medium !leading-[1.5] text-xl md:text-4xl",
           syne.className
         )}
         initial={{ opacity: 0, y: 100 }}

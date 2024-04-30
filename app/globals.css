@@ -13,3 +13,73 @@ html.dark {
 .borderBlack {
   @apply border border-black/10;
 }
+
+.mobile-menu {
+  position: fixed;
+  top: -2px;
+  left: 0;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+
+  button {
+    align-self: flex-end;
+    margin: 35px 45px 0 0;
+    outline: none;
+    border: none;
+    background-color: transparent;
+    text-transform: uppercase;
+    font-family: inherit;
+    font-size: 18px;
+    color: #333;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  ul {
+    list-style: none;
+    margin-top: 40px;
+
+    li {
+      margin: 20px 0;
+      overflow-y: hidden;
+      user-select: none;
+
+      div {
+        text-align: center;
+        text-transform: capitalize;
+        font-size: 34px;
+      }
+
+      &:hover {
+        font-style: italic;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .contact {
+    margin-top: 80px;
+    display: flex;
+
+    h5 {
+      font-weight: normal;
+
+      &:first-of-type {
+        margin-right: 40px;
+      }
+    }
+  }
+}
+
+.container {
+  /* height: 100vh; */
+  overflow-y: hidden;
+
+  color: #333;
+}
