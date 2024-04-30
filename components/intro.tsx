@@ -21,7 +21,7 @@ export default function Intro() {
     <section
       ref={ref}
       id="home"
-      className="mb-28 max-w-[50rem] text-center sm:mb-0 scroll-mt-[100rem]"
+      className="mb-28 max-w-[52rem] text-center sm:mb-0 scroll-mt-[100rem]"
     >
       <div className="flex items-center justify-center">
         <div className="relative">
@@ -62,7 +62,7 @@ export default function Intro() {
 
       <motion.h1
         className={clsx(
-          "mb-10 mt-4 px-4  font-medium !leading-[1.5] text-xl md:text-4xl",
+          "mb-10 mt-4 px-4 font-medium !leading-[1.5] text-xl md:text-3xl",
           syne.className
         )}
         initial={{ opacity: 0, y: 100 }}
