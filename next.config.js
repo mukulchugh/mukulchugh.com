@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  compress: true,
+  poweredByHeader: false,
+  optimizeFonts: true,
   images: {
     remotePatterns: [
       {
@@ -7,9 +10,6 @@ const nextConfig = {
         hostname: "ik.imagekit.io",
       },
     ],
-  },
-  experimental: {
-    serverActions: true,
   },
 };
 

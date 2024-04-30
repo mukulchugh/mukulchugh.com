@@ -2,11 +2,17 @@
 
 import { useRef } from "react";
 import { projectsData } from "@/lib/data";
-import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { BsGithub, BsGlobe } from "react-icons/bs";
 
-type ProjectProps = (typeof projectsData)[number];
+interface ProjectProps {
+  title: string;
+  description: string;
+  tags: readonly string[];
+  github: string;
+  demo: string; // Make sure this line is included
+  // imageUrl: string; // Uncomment this if you need it
+}
 
 export default function Project({
   title,
