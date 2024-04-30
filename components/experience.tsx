@@ -11,6 +11,8 @@ import "react-vertical-timeline-component/style.min.css";
 import { experiencesData } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
 import { useTheme } from "@/context/theme-context";
+import clsx from "clsx";
+import { syne } from "@/lib/fonts";
 
 export default function Experience() {
   const { ref } = useSectionInView("Experience");
@@ -48,7 +50,9 @@ export default function Experience() {
                 padding: "0.8rem",
               }}
             >
-              <h3 className="font-semibold capitalize">{item.title}</h3>
+              <h3 className={clsx(syne.className, "font-semibold capitalize")}>
+                {item.title}
+              </h3>
               <p className="!font-normal !text-sm text-gray-500 !mt-1">
                 {item.company} | {item.location}
               </p>

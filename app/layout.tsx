@@ -1,6 +1,6 @@
 import Header from "@/components/header";
 import "./globals.css";
-import { Inter } from "next/font/google";
+
 import ActiveSectionContextProvider from "@/context/active-section-context";
 import Footer from "@/components/footer";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -9,8 +9,7 @@ import ThemeContextProvider from "@/context/theme-context";
 import { Toaster } from "react-hot-toast";
 import React from "react";
 import { GoogleAnalytics } from "@next/third-parties/google";
-
-const inter = Inter({ subsets: ["latin"] });
+import { inter } from "@/lib/fonts";
 
 export const metadata = {
   title: "Mukul Chugh - Creating Digital Experiences for Humans",

@@ -4,6 +4,8 @@ import { useRef } from "react";
 import { projectsData } from "@/lib/data";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { BsGithub, BsGlobe } from "react-icons/bs";
+import { syne } from "@/lib/fonts";
+import clsx from "clsx";
 
 interface ProjectProps {
   title: string;
@@ -42,7 +44,9 @@ ProjectProps) {
     >
       <section className="bg-gray-100 max-w-[44rem] border border-black/5 rounded-lg overflow-hidden sm:pr-8 md:p-4 relative sm:h-[15rem] hover:bg-gray-200 transition sm:group-even:pl-8 md:group-even:pl-4 dark:text-white dark:bg-white/10 dark:hover:bg-white/20">
         <div className="pt-4 pb-0 px-2 sm:pl-10 sm:pr-2 sm:pt-10 md:p-0 sm:max-w-[100%] flex flex-col h-full">
-          <h3 className="text-2xl font-semibold">{title}</h3>
+          <h3 className={clsx("text-2xl font-semibold", syne.className)}>
+            {title}
+          </h3>
           <p className="mt-2 leading-relaxed text-gray-700 dark:text-white/70">
             {description}
           </p>

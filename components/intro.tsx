@@ -4,18 +4,14 @@ import Image from "next/image";
 import React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import {
-  BsArrowRight,
-  BsGithub,
-  BsLinkedin,
-  BsTwitter,
-  BsTwitterX,
-} from "react-icons/bs";
+import { BsArrowRight, BsGithub, BsTwitterX } from "react-icons/bs";
 import { HiDownload } from "react-icons/hi";
-import { FaGithubSquare, FaLinkedinIn } from "react-icons/fa";
+import { FaLinkedinIn } from "react-icons/fa";
 import { useSectionInView } from "@/lib/hooks";
 import { useActiveSectionContext } from "@/context/active-section-context";
-import { LuLinkedin } from "react-icons/lu";
+
+import clsx from "clsx";
+import { syne } from "@/lib/fonts";
 
 export default function Intro() {
   const { ref } = useSectionInView("Home", 0.5);
@@ -65,7 +61,10 @@ export default function Intro() {
       </div>
 
       <motion.h1
-        className="mb-10 mt-4 px-4 text-2xl font-medium !leading-[1.5] sm:text-4xl"
+        className={clsx(
+          "mb-10 mt-4 px-4 text-2xl font-medium !leading-[1.5] sm:text-4xl",
+          syne.className
+        )}
         initial={{ opacity: 0, y: 100 }}
         animate={{ opacity: 1, y: 0 }}
       >
@@ -89,7 +88,10 @@ export default function Intro() {
       >
         <Link
           href="#contact"
-          className="group bg-gray-900 text-white px-7 py-3 flex items-center gap-2 rounded-full outline-none focus:scale-110 hover:scale-110 hover:bg-gray-950 active:scale-105 transition"
+          className={clsx(
+            syne.className,
+            "group bg-gray-900 text-white px-7 py-3 flex items-center gap-2 rounded-full outline-none focus:scale-110 hover:scale-110 hover:bg-gray-950 active:scale-105 transition"
+          )}
           onClick={() => {
             setActiveSection("Contact");
             setTimeOfLastClick(Date.now());
@@ -100,7 +102,10 @@ export default function Intro() {
         </Link>
 
         <a
-          className="group bg-white px-7 py-3 flex items-center gap-2 rounded-full outline-none focus:scale-110 hover:scale-110 active:scale-105 transition cursor-pointer borderBlack dark:bg-white/10"
+          className={clsx(
+            syne.className,
+            "group bg-white px-7 py-3 flex items-center gap-2 rounded-full outline-none focus:scale-110 hover:scale-110 active:scale-105 transition cursor-pointer borderBlack dark:bg-white/10"
+          )}
           href="/MukulChughCV.pdf"
           download
         >
