@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React from "react";
+import React, { useCallback } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { BsArrowRight, BsGithub, BsTwitterX } from "react-icons/bs";
@@ -13,10 +13,14 @@ import { useActiveSectionContext } from "@/context/active-section-context";
 import clsx from "clsx";
 import { syne } from "@/lib/fonts";
 
-export default function Intro() {
+const Component = React.memo(() => {
   const { ref } = useSectionInView("Home", 0.5);
   const { setActiveSection, setTimeOfLastClick } = useActiveSectionContext();
 
+  const handleClick = useCallback(() => {
+    setActiveSection("Contact");
+    setTimeOfLastClick(Date.now());
+  }, [setActiveSection, setTimeOfLastClick]);
   return (
     <section
       ref={ref}
@@ -92,10 +96,7 @@ export default function Intro() {
             syne.className,
             "group bg-gray-900 text-white px-7 py-3 flex items-center gap-2 rounded-full outline-none focus:scale-110 hover:scale-110 hover:bg-gray-950 active:scale-105 transition"
           )}
-          onClick={() => {
-            setActiveSection("Contact");
-            setTimeOfLastClick(Date.now());
-          }}
+          onClick={handleClick}
         >
           Contact me here{" "}
           <BsArrowRight className="opacity-70 group-hover:translate-x-1 transition" />
@@ -150,4 +151,9 @@ export default function Intro() {
       </motion.div>
     </section>
   );
-}
+});
+const Intro = () => {
+  return <Component />;
+};
+
+export default Intro;
