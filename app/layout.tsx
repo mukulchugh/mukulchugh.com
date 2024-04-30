@@ -8,6 +8,7 @@ import { Analytics } from "@vercel/analytics/react";
 import ThemeContextProvider from "@/context/theme-context";
 import { Toaster } from "react-hot-toast";
 import React from "react";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -77,6 +78,7 @@ export default function RootLayout({
             <Toaster position="top-right" />
           </ActiveSectionContextProvider>
         </ThemeContextProvider>
+        <GoogleAnalytics gaId="G-VTWNXFFM1L" />
         <SpeedInsights />
         <Analytics />
       </body>
