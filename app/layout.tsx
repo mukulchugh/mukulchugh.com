@@ -63,7 +63,7 @@ export default function RootLayout({
           content="Engineer, Designer & Product Generalist, passionate about building products that solve real world problems. Freelancing, Open Source, and writing about tech."
         />
         <meta name="twitter:image" content="/Thumbnail.webp" />
-        <meta name="google-adsense-account" content="ca-pub-6940897897449652">
+        <meta name="google-adsense-account" content="ca-pub-6940897897449652" />
       </head>
       <body
         className={`${inter.className} bg-gray-50 text-gray-950 relative pt-28 sm:pt-36 dark:bg-gray-900 dark:text-gray-50 dark:text-opacity-90`}
