@@ -24,10 +24,14 @@ const MOBILE_NAV_ITEMS = [
   },
   {
     id: 4,
-    navTitle: "experience",
+    navTitle: "blog",
   },
   {
     id: 5,
+    navTitle: "experience",
+  },
+  {
+    id: 6,
     navTitle: "contact",
   },
 ];
