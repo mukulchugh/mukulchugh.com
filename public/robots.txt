@@ -1,2 +1,4 @@
 User-agent: *
+User-agent: Mediapartners-Google
+User-agent: Google-Display-Ads-Bot
 Sitemap: https://mukulchugh.com/sitemap.xml
