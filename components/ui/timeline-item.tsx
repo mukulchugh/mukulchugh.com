@@ -58,7 +58,7 @@ export function TimelineItem({
       <div
         className={cn(
           "absolute z-10 flex items-center justify-center",
-          "w-16 h-16 rounded-full bg-white dark:bg-gray-900 border-4 border-gray-200 dark:border-gray-700 overflow-hidden",
+          "w-16 h-16 rounded-full bg-white dark:bg-white border-4 border-gray-200 dark:border-gray-700 overflow-hidden",
           "left-0 md:left-1/2 md:-translate-x-1/2",
           "-translate-x-2"
         )}
@@ -68,7 +68,7 @@ export function TimelineItem({
           alt={company}
           width={40}
           height={40}
-          className="object-contain"
+          className="object-contain rounded-full"
         />
       </div>
 
