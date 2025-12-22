@@ -1,74 +1,32 @@
-// @ts-nocheck
 "use client";
 
 import React from "react";
 import SectionHeading from "./section-heading";
-import {
-  VerticalTimeline,
-  VerticalTimelineElement,
-} from "react-vertical-timeline-component";
-import "react-vertical-timeline-component/style.min.css";
+import { Timeline } from "./ui/timeline";
+import { TimelineItem } from "./ui/timeline-item";
 import { experiencesData } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
-import { useTheme } from "@/context/theme-context";
-import clsx from "clsx";
-import { syne } from "@/lib/fonts";
 
 export default function Experience() {
   const { ref } = useSectionInView("Experience");
-  const { theme } = useTheme();
 
   return (
     <section id="experience" ref={ref} className="scroll-mt-28 mb-28 sm:mb-40">
       <SectionHeading>My experience</SectionHeading>
-      <VerticalTimeline lineColor="">
+      <Timeline className="max-w-4xl mx-auto">
         {experiencesData.map((item, index) => (
-          <React.Fragment key={index}>
-            <VerticalTimelineElement
-              contentStyle={{
-                background:
-                  theme === "light" ? "#f3f4f6" : "rgba(255, 255, 255, 0.05)",
-                boxShadow: "none",
-                border: "1px solid rgba(0, 0, 0, 0.05)",
-                textAlign: "left",
-                padding: "1.3rem 2rem",
-              }}
-              contentArrowStyle={{
-                borderRight:
-                  theme === "light"
-                    ? "0.4rem solid #9ca3af"
-                    : "0.4rem solid rgba(255, 255, 255, 0.5)",
-              }}
-              date={item.date}
-              icon={<img src={item.icon} alt={item.company} width={50} height={50} />}
-              iconStyle={{
-                background: theme === "light" ? "white" : "white",
-                fontSize: "1.5rem",
-                width: "4rem",
-                height: "4rem",
-                borderRadius: "50%",
-                padding: "0.8rem",
-              }}
-            >
-              <h3 className={clsx(syne.className, "font-semibold capitalize")}>
-                {item.title}
-              </h3>
-              <p className="!font-normal !text-sm text-gray-500 !mt-1">
-                {item.company} | {item.location}
-              </p>
-              <p className="!mt-1 !font-normal text-gray-700 dark:text-white/75">
-                {item.description &&
-                  item.description.map((desc, index) => (
-                    <React.Fragment key={index}>
-                      - {desc}
-                      <br />
-                    </React.Fragment>
-                  ))}
-              </p>
-            </VerticalTimelineElement>
-          </React.Fragment>
+          <TimelineItem
+            key={index}
+            index={index}
+            title={item.title}
+            company={item.company}
+            location={item.location}
+            date={item.date}
+            description={item.description}
+            icon={item.icon}
+          />
         ))}
-      </VerticalTimeline>
+      </Timeline>
     </section>
   );
 }

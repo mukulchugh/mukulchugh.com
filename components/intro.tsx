@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import React, { Suspense, useCallback } from "react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import Link from "next/link";
 import { BsArrowRight, BsGithub, BsTwitterX } from "react-icons/bs";
 import { HiDownload } from "react-icons/hi";
