@@ -8,11 +8,73 @@ import React from "react";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { inter } from "@/lib/fonts";
 import Header from "@/components/header";
-import { siteConfig } from "@/lib/data";
+import { siteConfig, skillsData } from "@/lib/data";
+import { JsonLd } from "@/components/json-ld";
+import type { Metadata } from "next";
 
-export const metadata = {
-  title: siteConfig.siteTitle,
+export const metadata: Metadata = {
+  title: {
+    default: siteConfig.siteTitle,
+    template: `%s | ${siteConfig.name}`,
+  },
   description: siteConfig.siteDescription,
+  keywords: [
+    ...siteConfig.keywords,
+    ...skillsData,
+    "Mukul Chugh",
+    "Portfolio",
+    "Swiggy Engineer",
+    "Zenduty",
+    "India",
+  ],
+  authors: [{ name: siteConfig.name, url: siteConfig.siteUrl }],
+  creator: siteConfig.name,
+  publisher: siteConfig.name,
+  metadataBase: new URL(siteConfig.siteUrl),
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: siteConfig.siteUrl,
+    siteName: siteConfig.name,
+    title: siteConfig.siteTitle,
+    description: siteConfig.siteDescription,
+    images: [
+      {
+        url: siteConfig.images.ogImage,
+        width: 1200,
+        height: 630,
+        alt: siteConfig.name,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: "@themukulchugh",
+    creator: "@themukulchugh",
+    title: siteConfig.siteTitle,
+    description: siteConfig.siteDescription,
+    images: [siteConfig.images.ogImage],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  icons: {
+    icon: siteConfig.images.favicon,
+  },
+  verification: {
+    google: siteConfig.analytics.googleAdsenseId,
+  },
 };
 
 const Blob = React.memo(() => {
@@ -24,6 +86,8 @@ const Blob = React.memo(() => {
   );
 });
 
+Blob.displayName = "Blob";
+
 export default function RootLayout({
   children,
 }: {
@@ -32,22 +96,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="!scroll-smooth">
       <head>
-        <meta name="robots" content="follow, index" />
-        <link rel="icon" href={siteConfig.images.favicon} type="image/x-icon" />
-        <meta property="og:url" content={siteConfig.siteUrl} />
-        <link rel="canonical" href={siteConfig.siteUrl} />
-        <meta property="og:type" content="website" />
-        <meta property="og:site_name" content={siteConfig.name} />
-        <meta property="og:description" content={siteConfig.siteDescription} />
-        <meta property="og:title" content={siteConfig.siteTitle} />
-        <meta property="og:image" content={siteConfig.images.ogImage} />
-        <meta property="og:image:alt" content={siteConfig.name} />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site" content="@themukulchugh" />
-        <meta name="twitter:title" content={siteConfig.siteTitle} />
-        <meta name="twitter:description" content={siteConfig.siteDescription} />
-        <meta name="twitter:image" content={siteConfig.images.ogImage} />
-        <meta name="google-adsense-account" content={siteConfig.analytics.googleAdsenseId} />
+        <JsonLd />
       </head>
       <body
         className={`${inter.className} bg-gray-50 text-gray-950 relative pt-28 sm:pt-36 dark:bg-black dark:text-gray-50 dark:text-opacity-90`}

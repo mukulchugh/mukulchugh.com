@@ -9,12 +9,27 @@ export const siteConfig = {
   lastName: "Chugh",
   title: "Software Engineer",
   location: "India",
+  locationFull: "Bengaluru, Karnataka, India",
 
   // SEO & Meta
   siteUrl: "https://mukulchugh.com",
-  siteTitle: "Mukul Chugh - Creating Digital Experiences for Humans",
+  siteTitle: "Mukul Chugh | Software Engineer - React, TypeScript & Mobile Development",
   siteDescription:
-    "Engineer, Designer & Product Generalist, passionate about building products that solve real world problems. Freelancing, Open Source, and writing about tech.",
+    "Software Engineer specializing in React, React Native, TypeScript, and Next.js. Building scalable web and mobile applications with modern tech stacks. Previously at Swiggy and Zenduty.",
+
+  // Keywords for SEO (used in JSON-LD)
+  keywords: [
+    "Software Engineer",
+    "Frontend Developer",
+    "React Developer",
+    "React Native Developer",
+    "TypeScript",
+    "Next.js",
+    "JavaScript",
+    "Mobile App Development",
+    "Web Development",
+    "Full Stack Developer",
+  ],
 
   // Social Links
   social: {
@@ -100,12 +115,8 @@ export const links = [
     hash: "#projects",
   },
   {
-    name: "Skills",
-    hash: "#skills",
-  },
-  {
     name: "Blog",
-    hash: "https://blog.mukulchugh.com/",
+    hash: "/blog",
   },
   {
     name: "Experience",

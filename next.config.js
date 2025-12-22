@@ -22,6 +22,14 @@ const nextConfig = {
         protocol: "https",
         hostname: "ik.imagekit.io",
       },
+      {
+        protocol: "https",
+        hostname: "cdn.hashnode.com",
+      },
+      {
+        protocol: "https",
+        hostname: "hashnode.com",
+      },
     ],
   },
 };

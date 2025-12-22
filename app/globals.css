@@ -125,7 +125,151 @@ html.dark {
   }
 }
 
-.container {
+/* Renamed to avoid Tailwind container conflict */
+.mobile-menu-wrapper {
   overflow-y: hidden;
   color: #333;
+}
+
+/* GlowingEffect styles */
+.glow {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.glow::after {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--glowingeffect-border-width, 3px));
+  border: var(--glowingeffect-border-width, 3px) solid transparent;
+  border-radius: inherit;
+  background: var(--gradient);
+  background-attachment: fixed;
+  opacity: var(--active, 0);
+  transition: opacity 0.3s ease;
+  mask-clip: padding-box, border-box;
+  mask-composite: intersect;
+  -webkit-mask-clip: padding-box, border-box;
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(#0000, #0000),
+    conic-gradient(
+      from calc((var(--start, 0) - var(--spread, 20)) * 1deg),
+      #00000000 0deg,
+      #fff,
+      #00000000 calc(var(--spread, 20) * 2deg)
+    );
+  -webkit-mask-image: linear-gradient(#0000, #0000),
+    conic-gradient(
+      from calc((var(--start, 0) - var(--spread, 20)) * 1deg),
+      #00000000 0deg,
+      #fff,
+      #00000000 calc(var(--spread, 20) * 2deg)
+    );
+}
+
+/* Syntax Highlighting - VS Code Dark+ Theme */
+.hljs {
+  background: #1e1e1e !important;
+  color: #d4d4d4;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: #6a9955;
+  font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-type {
+  color: #569cd6;
+}
+
+.hljs-number {
+  color: #b5cea8;
+}
+
+.hljs-string,
+.hljs-doctag,
+.hljs-regexp {
+  color: #ce9178;
+}
+
+.hljs-title,
+.hljs-title.class_,
+.hljs-title.function_ {
+  color: #dcdcaa;
+}
+
+.hljs-variable,
+.hljs-template-variable {
+  color: #9cdcfe;
+}
+
+.hljs-attr,
+.hljs-attribute {
+  color: #9cdcfe;
+}
+
+.hljs-tag {
+  color: #808080;
+}
+
+.hljs-name {
+  color: #569cd6;
+}
+
+.hljs-built_in,
+.hljs-builtin-name {
+  color: #4ec9b0;
+}
+
+.hljs-meta {
+  color: #c586c0;
+}
+
+.hljs-symbol,
+.hljs-bullet {
+  color: #d7ba7d;
+}
+
+.hljs-selector-id,
+.hljs-selector-class {
+  color: #d7ba7d;
+}
+
+.hljs-addition {
+  color: #b5cea8;
+  background-color: rgba(155, 185, 85, 0.2);
+}
+
+.hljs-deletion {
+  color: #ce9178;
+  background-color: rgba(255, 0, 0, 0.2);
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+
+.hljs-link {
+  color: #569cd6;
+  text-decoration: underline;
+}
+
+/* Code block styling */
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1rem;
+}
+
+code.hljs {
+  padding: 3px 5px;
 }

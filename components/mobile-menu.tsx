@@ -9,30 +9,37 @@ const MOBILE_NAV_ITEMS = [
   {
     id: 0,
     navTitle: "home",
+    href: "#home",
   },
   {
     id: 1,
     navTitle: "about",
+    href: "#about",
   },
   {
     id: 2,
     navTitle: "projects",
+    href: "#projects",
   },
   {
     id: 3,
     navTitle: "skills",
+    href: "#skills",
   },
   {
     id: 4,
     navTitle: "blog",
+    href: "/blog",
   },
   {
     id: 5,
     navTitle: "experience",
+    href: "#experience",
   },
   {
     id: 6,
     navTitle: "contact",
+    href: "#contact",
   },
 ];
 
@@ -148,7 +155,7 @@ const MobileMenu = () => {
           </motion.button>
           <motion.ul variants={ulVariant}>
             {MOBILE_NAV_ITEMS.map((navItem) => (
-              <Link key={navItem.id} href={`#${navItem.navTitle}`}>
+              <Link key={navItem.id} href={navItem.href}>
                 <motion.li whileTap={{ scale: 0.95 }} key={navItem.id}>
                   <motion.div
                     onClick={() => setMobileNavOpen(false)}
