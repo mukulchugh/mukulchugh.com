@@ -9,6 +9,7 @@ import { HiDownload } from "react-icons/hi";
 import { FaLinkedinIn } from "react-icons/fa";
 import { useSectionInView } from "@/lib/hooks";
 import { useActiveSectionContext } from "@/context/active-section-context";
+import { siteConfig, introContent } from "@/lib/data";
 
 import clsx from "clsx";
 import { syne } from "@/lib/fonts";
@@ -38,8 +39,8 @@ const Component = React.memo(() => {
             }}
           >
             <Image
-              src="https://ik.imagekit.io/kooxhdceru/portfolio/mukul.webp?updatedAt=1682213515842"
-              alt="Mukul Chugh"
+              src={siteConfig.images.profileImage}
+              alt={siteConfig.name}
               width="200"
               height="200"
               quality="80"
@@ -59,7 +60,7 @@ const Component = React.memo(() => {
               duration: 0.7,
             }}
           >
-            👋
+            {introContent.emoji}
           </motion.span>
         </div>
       </div>
@@ -72,13 +73,13 @@ const Component = React.memo(() => {
         initial={{ opacity: 0, y: 100 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <span className="font-bold">Hi, I'm Mukul Chugh</span>, a{" "}
-        <span className="font-bold">software engineer</span> from India. I
+        <span className="font-bold">{introContent.greeting}</span>, a{" "}
+        <span className="font-bold">{introContent.role}</span> from {siteConfig.location}. I
         specialize in{" "}
-        <span className="font-bold">Web and Mobile Development</span>, and I'm
+        <span className="font-bold">{introContent.specialty}</span>, and I&apos;m
         passionate about{" "}
         <span className="italic">
-          transforming ideas into impactful products
+          {introContent.passion}
         </span>
       </motion.h1>
 
@@ -98,7 +99,7 @@ const Component = React.memo(() => {
           )}
           onClick={handleClick}
         >
-          Contact me here{" "}
+          {introContent.ctaText}{" "}
           <BsArrowRight className="opacity-70 group-hover:translate-x-1 transition" />
         </Link>
 
@@ -107,42 +108,42 @@ const Component = React.memo(() => {
             syne.className,
             "group bg-white px-7 py-3 flex items-center gap-2 rounded-full outline-none focus:scale-110 hover:scale-110 active:scale-105 transition cursor-pointer borderBlack dark:bg-white/10"
           )}
-          href="/MukulChughCV.pdf"
+          href={siteConfig.files.cv}
           download
         >
-          Download CV{" "}
+          {introContent.downloadCvText}{" "}
           <HiDownload className="opacity-60 group-hover:translate-y-1 transition" />
         </a>
 
         <div className="flex gap-2">
           <a
-            className="bg-white 
+            className="bg-white
           md:w-14 md:h-14
 
           p-2 md:p-4 text-gray-700 hover:text-gray-950 flex items-center gap-2 rounded-full focus:scale-[1.15] hover:scale-[1.15] active:scale-105 transition cursor-pointer borderBlack dark:bg-white/10 dark:text-white/60"
-            href="https://linkedin.com/in/mukulchugh"
+            href={siteConfig.social.linkedin}
             target="_blank"
           >
             <FaLinkedinIn />
           </a>
 
           <a
-            className="bg-white  
+            className="bg-white
           md:w-14 md:h-14
-          
+
           p-2 md:p-4 text-gray-700 flex items-center gap-2 text-[1.35rem] rounded-full focus:scale-[1.15] hover:scale-[1.15] hover:text-gray-950 active:scale-105 transition cursor-pointer borderBlack dark:bg-white/10 dark:text-white/60"
-            href="https://github.com/mukulchugh"
+            href={siteConfig.social.github}
             target="_blank"
           >
             <BsGithub />
           </a>
-          {/* twitter */}
+
           <a
-            className="bg-white 
+            className="bg-white
           md:w-14 md:h-14
-          
+
           p-2 md:p-4 text-gray-700 flex items-center gap-2 text-[1.35rem] rounded-full focus:scale-[1.15] hover:scale-[1.15] hover:text-gray-950 active:scale-105 transition cursor-pointer borderBlack dark:bg-white/10 dark:text-white/60"
-            href="https://twitter.com/themukulchugh"
+            href={siteConfig.social.twitter}
             target="_blank"
           >
             <BsTwitterX />

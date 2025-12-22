@@ -40,7 +40,7 @@ export default function Experience() {
                     : "0.4rem solid rgba(255, 255, 255, 0.5)",
               }}
               date={item.date}
-              icon={item.icon}
+              icon={<img src={item.icon} alt={item.company} width={50} height={50} />}
               iconStyle={{
                 background: theme === "light" ? "white" : "white",
                 fontSize: "1.5rem",

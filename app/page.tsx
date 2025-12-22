@@ -1,12 +1,12 @@
 import React, { Suspense } from "react";
 
 const About = React.lazy(() => import("@/components/about"));
-const Contact = React.lazy(() => import("@/components/contact"));
 const Experience = React.lazy(() => import("@/components/experience"));
 const Intro = React.lazy(() => import("@/components/intro"));
 const Projects = React.lazy(() => import("@/components/projects"));
 const SectionDivider = React.lazy(() => import("@/components/section-divider"));
 const Skills = React.lazy(() => import("@/components/skills"));
+import { LetsWorkTogether } from "@/components/ui/lets-work-section";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
 
@@ -20,7 +20,7 @@ export default function Home() {
         <Projects />
         <Skills />
         <Experience />
-        <Contact />
+        <LetsWorkTogether />
         <SpeedInsights />
         <Analytics />
       </Suspense>

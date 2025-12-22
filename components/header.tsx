@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { links } from "@/lib/data";
+import { links, siteConfig } from "@/lib/data";
 import Link from "next/link";
 import clsx from "clsx";
 import { useActiveSectionContext } from "@/context/active-section-context";
@@ -28,16 +28,15 @@ export default function Header() {
         <Image
           src={
             theme === "light"
-              ? "https://ik.imagekit.io/kooxhdceru/portfolio/logo-black.webp"
-              : "https://ik.imagekit.io/kooxhdceru/portfolio/logo-white.webp"
+              ? siteConfig.images.logoLight
+              : siteConfig.images.logoDark
           }
-          alt="Mukul Chugh"
+          alt={siteConfig.name}
           quality="80"
           priority={true}
           width={28}
           height={28}
           className="h-7 w-7 object-cover ml-4"
-          // className="h-12 w-12 rounded-full object-cover border-[0.35rem] border-white shadow-xl"
         />
         <div className="flex items-center gap-4">
           <ThemeSwitch />

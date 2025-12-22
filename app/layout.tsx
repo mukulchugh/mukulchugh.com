@@ -4,16 +4,15 @@ import ActiveSectionContextProvider from "@/context/active-section-context";
 import Footer from "@/components/footer";
 
 import ThemeContextProvider from "@/context/theme-context";
-import { Toaster } from "react-hot-toast";
 import React from "react";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { inter } from "@/lib/fonts";
 import Header from "@/components/header";
+import { siteConfig } from "@/lib/data";
 
 export const metadata = {
-  title: "Mukul Chugh - Creating Digital Experiences for Humans",
-  description:
-    "Engineer, Designer & Product Generalist, passionate about building products that solve real world problems. Freelancing, Open Source, and writing about tech.",
+  title: siteConfig.siteTitle,
+  description: siteConfig.siteDescription,
 };
 
 const Blob = React.memo(() => {
@@ -34,36 +33,21 @@ export default function RootLayout({
     <html lang="en" className="!scroll-smooth">
       <head>
         <meta name="robots" content="follow, index" />
-        <link rel="icon" href="/favicon.png" type="image/x-icon" />
-        <meta property="og:url" content="https://mukulchugh.com" />
-        <link rel="canonical" href="https://mukulchugh.com" />
+        <link rel="icon" href={siteConfig.images.favicon} type="image/x-icon" />
+        <meta property="og:url" content={siteConfig.siteUrl} />
+        <link rel="canonical" href={siteConfig.siteUrl} />
         <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="Mukul Chugh" />
-        <meta
-          property="og:description"
-          content="Engineer, Designer & Product Generalist, passionate about building products that solve real world problems. Freelancing, Open Source, and writing about tech."
-        />
-        <meta
-          property="og:title"
-          content="Mukul Chugh - Creating Digital Experiences for Humans"
-        />
-        <meta property="og:image" content="/Thumbnail.webp" />
-        <meta property="og:image:alt" content="Mukul Chugh" />
-        <meta
-          name="twitter:card"
-          content="Engineer, Designer & Product Generalist, passionate about building products that solve real world problems. Freelancing, Open Source, and writing about tech."
-        />
+        <meta property="og:site_name" content={siteConfig.name} />
+        <meta property="og:description" content={siteConfig.siteDescription} />
+        <meta property="og:title" content={siteConfig.siteTitle} />
+        <meta property="og:image" content={siteConfig.images.ogImage} />
+        <meta property="og:image:alt" content={siteConfig.name} />
+        <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@themukulchugh" />
-        <meta
-          name="twitter:title"
-          content="Mukul Chugh - Creating Digital Experiences for Humans"
-        />
-        <meta
-          name="twitter:description"
-          content="Engineer, Designer & Product Generalist, passionate about building products that solve real world problems. Freelancing, Open Source, and writing about tech."
-        />
-        <meta name="twitter:image" content="/Thumbnail.webp" />
-        <meta name="google-adsense-account" content="ca-pub-6940897897449652" />
+        <meta name="twitter:title" content={siteConfig.siteTitle} />
+        <meta name="twitter:description" content={siteConfig.siteDescription} />
+        <meta name="twitter:image" content={siteConfig.images.ogImage} />
+        <meta name="google-adsense-account" content={siteConfig.analytics.googleAdsenseId} />
       </head>
       <body
         className={`${inter.className} bg-gray-50 text-gray-950 relative pt-28 sm:pt-36 dark:bg-gray-900 dark:text-gray-50 dark:text-opacity-90`}
@@ -74,10 +58,9 @@ export default function RootLayout({
             <Header />
             {children}
             <Footer />
-            <Toaster position="top-right" />
           </ActiveSectionContextProvider>
         </ThemeContextProvider>
-        <GoogleAnalytics gaId="G-VTWNXFFM1L" />
+        <GoogleAnalytics gaId={siteConfig.analytics.googleAnalyticsId} />
       </body>
     </html>
   );
