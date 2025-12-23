@@ -5,7 +5,6 @@ import Image from "next/image";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { syne } from "@/lib/fonts";
-import { useTheme } from "@/context/theme-context";
 
 interface TimelineItemProps {
   title: string;
@@ -42,7 +41,6 @@ export function TimelineItem({
   icon,
   index,
 }: TimelineItemProps) {
-  const { theme } = useTheme();
   const isEven = index % 2 === 0;
 
   return (
@@ -58,7 +56,7 @@ export function TimelineItem({
       <div
         className={cn(
           "absolute z-10 flex items-center justify-center",
-          "w-16 h-16 rounded-full bg-white dark:bg-white border-4 border-gray-200 dark:border-gray-700 overflow-hidden",
+          "w-16 h-16 rounded-full bg-white border-4 border-gray-700 overflow-hidden",
           "left-0 md:left-1/2 md:-translate-x-1/2",
           "-translate-x-2"
         )}
@@ -82,9 +80,7 @@ export function TimelineItem({
         <div
           className={cn(
             "relative p-5 rounded-lg border shadow-none",
-            theme === "light"
-              ? "bg-gray-100 border-black/5"
-              : "bg-white/5 border-white/10"
+            "bg-white/5 border-white/10"
           )}
           style={{
             boxShadow: "none",
@@ -96,14 +92,14 @@ export function TimelineItem({
               "hidden md:block absolute top-6 w-0 h-0",
               "border-[0.4rem] border-transparent",
               isEven
-                ? "right-[-0.8rem] border-l-gray-400 dark:border-l-gray-500"
-                : "left-[-0.8rem] border-r-gray-400 dark:border-r-gray-500"
+                ? "right-[-0.8rem] border-l-gray-500"
+                : "left-[-0.8rem] border-r-gray-500"
             )}
           />
 
           {/* Date */}
           <span className={cn(
-            "text-sm text-gray-500 dark:text-gray-400 block mb-2",
+            "text-sm text-gray-400 block mb-2",
             isEven ? "md:text-right" : "md:text-left"
           )}>
             {date}
@@ -129,7 +125,7 @@ export function TimelineItem({
           {/* Description */}
           {description && (
             <div className={cn(
-              "mt-3 font-normal text-gray-700 dark:text-white/75 text-sm",
+              "mt-3 font-normal text-white/75 text-sm",
               isEven ? "md:text-right" : "md:text-left"
             )}>
               {description.map((desc, idx) => (

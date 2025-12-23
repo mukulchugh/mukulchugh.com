@@ -26,7 +26,7 @@ const Component = React.memo(() => {
     <section
       ref={ref}
       id="home"
-      className="min-h-[calc(100vh-7rem)] sm:min-h-[calc(100vh-9rem)] max-w-4xl mx-auto text-center flex flex-col justify-center scroll-mt-[100rem] px-4"
+      className="min-h-[calc(100vh-10rem)] sm:min-h-[calc(100vh-12rem)] max-w-4xl mx-auto text-center flex flex-col justify-center scroll-mt-[100rem] px-4 -mt-8"
     >
       <div className="flex items-center justify-center">
         <div className="relative">
@@ -72,7 +72,9 @@ const Component = React.memo(() => {
       >
         <span
           className={clsx(
-            "inline-block px-4 py-2 text-sm font-medium tracking-wide lowercase bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 border border-white/10 rounded-full text-white/80",
+            "inline-block px-4 py-2 text-sm font-medium tracking-wide lowercase rounded-full text-white/90",
+            "bg-white/5 backdrop-blur-md border border-white/10",
+            "shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),0_4px_16px_rgba(0,0,0,0.1)]",
             syne.className
           )}
         >

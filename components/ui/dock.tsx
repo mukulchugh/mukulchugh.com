@@ -14,10 +14,7 @@ import {
   BookOpen,
   Briefcase,
   Mail,
-  Sun,
-  Moon,
 } from "lucide-react";
-import { useTheme } from "@/context/theme-context";
 import { motion, AnimatePresence } from "motion/react";
 
 const navItems = [
@@ -32,7 +29,6 @@ const navItems = [
 export function Dock() {
   const { activeSection, setActiveSection, setTimeOfLastClick } =
     useActiveSectionContext();
-  const { theme, toggleTheme } = useTheme();
   const pathname = usePathname();
   const router = useRouter();
   const isHomePage = pathname === "/";
@@ -91,11 +87,7 @@ export function Dock() {
           aria-label="Home"
         >
           <Image
-            src={
-              theme === "light"
-                ? siteConfig.images.logoLight
-                : siteConfig.images.logoDark
-            }
+            src={siteConfig.images.logoDark}
             alt={siteConfig.name}
             width={24}
             height={24}
@@ -159,24 +151,6 @@ export function Dock() {
           );
         })}
 
-        {/* Separator */}
-        <span className="mx-1 h-6 w-px bg-white/10" aria-hidden="true" />
-
-        {/* Theme Toggle */}
-        <button
-          onClick={toggleTheme}
-          className="group relative grid h-10 w-10 place-items-center rounded-xl ring-1 ring-white/10 bg-gradient-to-b from-neutral-800/60 to-neutral-900/70 backdrop-blur-xl shadow-lg transition-all duration-200 hover:-translate-y-1 hover:scale-105 sm:h-12 sm:w-12"
-          aria-label="Toggle theme"
-        >
-          {theme === "light" ? (
-            <Moon className="h-4 w-4 text-white/70 transition-all duration-200 group-hover:scale-110 group-hover:text-white/90 sm:h-5 sm:w-5" strokeWidth={2} />
-          ) : (
-            <Sun className="h-4 w-4 text-white/70 transition-all duration-200 group-hover:scale-110 group-hover:text-white/90 sm:h-5 sm:w-5" strokeWidth={2} />
-          )}
-          <span className="pointer-events-none absolute -top-8 rounded-md bg-neutral-800 px-2 py-1 text-[10px] text-white/80 opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap">
-            {theme === "light" ? "Dark mode" : "Light mode"}
-          </span>
-        </button>
       </div>
         </motion.div>
       )}

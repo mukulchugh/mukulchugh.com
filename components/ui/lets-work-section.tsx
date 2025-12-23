@@ -6,6 +6,8 @@ import { useState } from "react"
 import { ArrowUpRight, Calendar } from "lucide-react"
 import { siteConfig } from "@/lib/data"
 import { useSectionInView } from "@/lib/hooks"
+import { syne } from "@/lib/fonts"
+import clsx from "clsx"
 
 export function LetsWorkTogether() {
   const { ref } = useSectionInView("Contact")
@@ -56,7 +58,7 @@ export function LetsWorkTogether() {
               Perfect
             </span>
             <h3
-              className="text-3xl font-light tracking-tight text-gray-900 dark:text-white transition-all duration-500 sm:text-4xl"
+              className={clsx(syne.className, "text-3xl font-light tracking-tight text-gray-900 dark:text-white transition-all duration-500 sm:text-4xl")}
               style={{
                 transform: showSuccess ? "translateY(0)" : "translateY(10px)",
                 opacity: showSuccess ? 1 : 0,
@@ -180,7 +182,7 @@ export function LetsWorkTogether() {
         >
           <div className="flex flex-col items-center gap-6">
             <h2
-              className="relative text-center text-5xl font-light tracking-tight text-gray-900 dark:text-white sm:text-6xl md:text-7xl lg:text-8xl transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
+              className={clsx(syne.className, "relative text-center text-5xl font-light tracking-tight text-gray-900 dark:text-white sm:text-6xl md:text-7xl lg:text-8xl transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]")}
               style={{
                 opacity: isClicked ? 0 : 1,
                 transform: isClicked ? "translateY(-40px) scale(0.95)" : "translateY(0) scale(1)",

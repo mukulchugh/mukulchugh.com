@@ -14,7 +14,8 @@ export const siteConfig = {
 
   // SEO & Meta
   siteUrl: "https://mukulchugh.com",
-  siteTitle: "Mukul Chugh | Product Engineer - Creating Digital Experiences for Humans",
+  siteTitle:
+    "Mukul Chugh | Product Engineer - Creating Digital Experiences for Humans",
   siteDescription:
     "Founding Engineer at Quivly.ai, building AI-powered products. T-shaped product engineer specializing in mobile and full-stack development. Previously at Swiggy and Zenduty (acquired). Passionate about human-centric design and creating intuitive digital experiences.",
 
@@ -73,7 +74,7 @@ export const siteConfig = {
 export const aboutContent = {
   heading: "About me",
   paragraphs: [
-    "Hey there, I'm Mukul Chugh — a product engineer.",
+    "Hey there, I'm Mukul — a product engineer.",
     "I'm a T-shaped engineer with deep expertise in mobile and full-stack development, combined with a strong foundation in product thinking and human-centric design. Engineering is my backbone, but I thrive at the intersection of technology and user experience.",
     "Currently a Founding Engineer at Quivly.ai, where I work directly with the CTO on building AI-powered products from the ground up. Before this, I was at Swiggy building mobile products used by millions, and at Zenduty where I helped scale the platform until its acquisition.",
     "I've worn many hats: founding engineer, co-founder, and product generalist. What drives me is creating digital experiences that feel intuitive and genuinely serve the humans using them.",

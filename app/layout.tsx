@@ -2,8 +2,6 @@ import "./globals.css";
 
 import ActiveSectionContextProvider from "@/context/active-section-context";
 import Footer from "@/components/footer";
-
-import ThemeContextProvider from "@/context/theme-context";
 import React from "react";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { inter } from "@/lib/fonts";
@@ -85,22 +83,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="!scroll-smooth">
+    <html lang="en" className="!scroll-smooth dark">
       <head>
         <JsonLd />
       </head>
       <body
-        className={`${inter.className} bg-gray-50 text-gray-950 relative dark:bg-black dark:text-gray-50 dark:text-opacity-90`}
+        className={`${inter.className} bg-black text-gray-50 text-opacity-90 relative`}
       >
-        <ThemeContextProvider>
-          <HeroBackground />
-          <ActiveSectionContextProvider>
-            <Header />
-            {children}
-            <Footer />
-            <Dock />
-          </ActiveSectionContextProvider>
-        </ThemeContextProvider>
+        <HeroBackground />
+        <ActiveSectionContextProvider>
+          <Header />
+          {children}
+          <Footer />
+          <Dock />
+        </ActiveSectionContextProvider>
         <GoogleAnalytics gaId={siteConfig.analytics.googleAnalyticsId} />
       </body>
     </html>

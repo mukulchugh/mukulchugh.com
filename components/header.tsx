@@ -5,14 +5,12 @@ import { motion } from "motion/react";
 import { usePathname } from "next/navigation";
 import { siteConfig } from "@/lib/data";
 import Image from "next/image";
-import { useTheme } from "@/context/theme-context";
 import { syne } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { LocationTag } from "./ui/location-tag";
 
 export default function Header() {
-  const { theme } = useTheme();
   const pathname = usePathname();
   const isBlogPage = pathname.startsWith("/blog");
 
@@ -24,11 +22,7 @@ export default function Header() {
       >
         <Link href="/" className="flex items-center gap-3">
           <Image
-            src={
-              theme === "light"
-                ? siteConfig.images.logoLight
-                : siteConfig.images.logoDark
-            }
+            src={siteConfig.images.logoDark}
             alt={siteConfig.name}
             quality="80"
             priority={true}
