@@ -1,12 +1,12 @@
 "use client";
 
 import React from "react";
-import SectionHeading from "./section-heading";
+import { SectionHeader } from "./section-header";
 import { projectsData } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
 import { GlowingEffect } from "@/components/ui/glowing-effect";
 import { cn } from "@/lib/utils";
-import { Box, Lock, Settings, Sparkles, Github, ExternalLink } from "lucide-react";
+import { Box, Lock, Settings, Sparkles, Github, ExternalLink, FolderKanban } from "lucide-react";
 
 interface GridItemProps {
   area: string;
@@ -131,8 +131,16 @@ export default function Projects() {
 
   return (
     <section ref={ref} id="projects" className="scroll-mt-28 mb-28 px-4">
-      <SectionHeading>My projects</SectionHeading>
-      <ul className="grid grid-cols-1 auto-rows-auto gap-4 md:grid-cols-12 lg:gap-4 max-w-5xl mx-auto">
+      <SectionHeader
+        icon={FolderKanban}
+        label="Projects"
+        title="Things I've"
+        highlight="built"
+        subtitle="A selection of projects I've worked on, from open source tools to full-stack applications."
+        iconColor="#d79f1e"
+        highlightGradient="from-[#d79f1e] via-[#dd7bbb] to-[#5a922c]"
+      />
+      <ul className="grid grid-cols-1 auto-rows-auto gap-4 md:grid-cols-12 lg:gap-4 max-w-4xl mx-auto">
         {projectsData.map((project, index) => (
           <GridItem
             key={project.title}

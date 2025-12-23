@@ -26,7 +26,7 @@ const Component = React.memo(() => {
     <section
       ref={ref}
       id="home"
-      className="mb-28 max-w-[52rem] text-center sm:mb-0 scroll-mt-[100rem]"
+      className="min-h-[calc(100vh-7rem)] sm:min-h-[calc(100vh-9rem)] max-w-4xl mx-auto text-center flex flex-col justify-center scroll-mt-[100rem] px-4"
     >
       <div className="flex items-center justify-center">
         <div className="relative">

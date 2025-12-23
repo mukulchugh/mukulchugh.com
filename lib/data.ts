@@ -137,8 +137,8 @@ export const experiencesData = [
       "Contributing to product strategy and technical architecture as an early team member.",
     ],
     company: "Quivly.ai",
-    date: "November 2025 - Present",
-    location: "Remote",
+    date: "November 2024 - November 2025",
+    location: "San Francisco, CA (Hybrid)",
     icon: "https://ik.imagekit.io/kooxhdceru/portfolio/quivly.webp",
   },
   {
