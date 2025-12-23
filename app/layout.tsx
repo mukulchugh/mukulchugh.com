@@ -2,28 +2,80 @@ import "./globals.css";
 
 import ActiveSectionContextProvider from "@/context/active-section-context";
 import Footer from "@/components/footer";
-
-import ThemeContextProvider from "@/context/theme-context";
-import { Toaster } from "react-hot-toast";
 import React from "react";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { inter } from "@/lib/fonts";
 import Header from "@/components/header";
+import { Dock } from "@/components/ui/dock";
+import { siteConfig, skillsData } from "@/lib/data";
+import { JsonLd } from "@/components/json-ld";
+import { HeroBackground } from "@/components/hero-background";
+import type { Metadata } from "next";
 
-export const metadata = {
-  title: "Mukul Chugh - Creating Digital Experiences for Humans",
-  description:
-    "Engineer, Designer & Product Generalist, passionate about building products that solve real world problems. Freelancing, Open Source, and writing about tech.",
+export const metadata: Metadata = {
+  title: {
+    default: siteConfig.siteTitle,
+    template: `%s | ${siteConfig.name}`,
+  },
+  description: siteConfig.siteDescription,
+  keywords: [
+    ...siteConfig.keywords,
+    ...skillsData,
+    "Mukul Chugh",
+    "Portfolio",
+    "Swiggy Engineer",
+    "Zenduty",
+    "India",
+  ],
+  authors: [{ name: siteConfig.name, url: siteConfig.siteUrl }],
+  creator: siteConfig.name,
+  publisher: siteConfig.name,
+  metadataBase: new URL(siteConfig.siteUrl),
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: siteConfig.siteUrl,
+    siteName: siteConfig.name,
+    title: siteConfig.siteTitle,
+    description: siteConfig.siteDescription,
+    images: [
+      {
+        url: siteConfig.images.ogImage,
+        width: 1200,
+        height: 630,
+        alt: siteConfig.name,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: "@themukulchugh",
+    creator: "@themukulchugh",
+    title: siteConfig.siteTitle,
+    description: siteConfig.siteDescription,
+    images: [siteConfig.images.ogImage],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  icons: {
+    icon: siteConfig.images.favicon,
+  },
+  verification: {
+    google: siteConfig.analytics.googleAdsenseId,
+  },
 };
-
-const Blob = React.memo(() => {
-  return (
-    <React.Fragment>
-      <div className="bg-[#fb757a] absolute top-[-6rem] -z-10 right-[11rem] h-[31.25rem] w-[31.25rem] rounded-full blur-[10rem] sm:w-[68.75rem] dark:bg-[#ae4b4d]"></div>
-      <div className="bg-[#9384ff] absolute top-[-1rem] -z-10 left-[-35rem] h-[31.25rem] w-[50rem] rounded-full blur-[10rem] sm:w-[68.75rem] md:left-[-33rem] lg:left-[-28rem] xl:left-[-15rem] 2xl:left-[-5rem] dark:bg-[#6658c4]"></div>
-    </React.Fragment>
-  );
-});
 
 export default function RootLayout({
   children,
@@ -31,53 +83,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="!scroll-smooth">
+    <html lang="en" className="!scroll-smooth dark">
       <head>
-        <meta name="robots" content="follow, index" />
-        <link rel="icon" href="/favicon.png" type="image/x-icon" />
-        <meta property="og:url" content="https://mukulchugh.com" />
-        <link rel="canonical" href="https://mukulchugh.com" />
-        <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="Mukul Chugh" />
-        <meta
-          property="og:description"
-          content="Engineer, Designer & Product Generalist, passionate about building products that solve real world problems. Freelancing, Open Source, and writing about tech."
-        />
-        <meta
-          property="og:title"
-          content="Mukul Chugh - Creating Digital Experiences for Humans"
-        />
-        <meta property="og:image" content="/Thumbnail.webp" />
-        <meta property="og:image:alt" content="Mukul Chugh" />
-        <meta
-          name="twitter:card"
-          content="Engineer, Designer & Product Generalist, passionate about building products that solve real world problems. Freelancing, Open Source, and writing about tech."
-        />
-        <meta name="twitter:site" content="@themukulchugh" />
-        <meta
-          name="twitter:title"
-          content="Mukul Chugh - Creating Digital Experiences for Humans"
-        />
-        <meta
-          name="twitter:description"
-          content="Engineer, Designer & Product Generalist, passionate about building products that solve real world problems. Freelancing, Open Source, and writing about tech."
-        />
-        <meta name="twitter:image" content="/Thumbnail.webp" />
-        <meta name="google-adsense-account" content="ca-pub-6940897897449652" />
+        <JsonLd />
       </head>
       <body
-        className={`${inter.className} bg-gray-50 text-gray-950 relative pt-28 sm:pt-36 dark:bg-gray-900 dark:text-gray-50 dark:text-opacity-90`}
+        className={`${inter.className} bg-black text-gray-50 text-opacity-90 relative`}
       >
-        <Blob />
-        <ThemeContextProvider>
-          <ActiveSectionContextProvider>
-            <Header />
-            {children}
-            <Footer />
-            <Toaster position="top-right" />
-          </ActiveSectionContextProvider>
-        </ThemeContextProvider>
-        <GoogleAnalytics gaId="G-VTWNXFFM1L" />
+        <HeroBackground />
+        <ActiveSectionContextProvider>
+          <Header />
+          {children}
+          <Footer />
+          <Dock />
+        </ActiveSectionContextProvider>
+        <GoogleAnalytics gaId={siteConfig.analytics.googleAnalyticsId} />
       </body>
     </html>
   );

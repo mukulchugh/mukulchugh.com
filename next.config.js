@@ -2,16 +2,14 @@
 const nextConfig = {
   compress: true,
   poweredByHeader: false,
-  optimizeFonts: true,
   headers: async () => {
     return [
       {
         source: "/(.*)",
-
         headers: [
           {
             key: "Cache-Control",
-            value: "public, max-age=9999999999, must-revalidate", // 1 year
+            value: "public, max-age=31536000, must-revalidate", // 1 year
           },
         ],
       },
@@ -23,6 +21,14 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "ik.imagekit.io",
+      },
+      {
+        protocol: "https",
+        hostname: "cdn.hashnode.com",
+      },
+      {
+        protocol: "https",
+        hostname: "hashnode.com",
       },
     ],
   },

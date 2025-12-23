@@ -1,74 +1,46 @@
-// @ts-nocheck
 "use client";
 
-import React from "react";
-import SectionHeading from "./section-heading";
-import {
-  VerticalTimeline,
-  VerticalTimelineElement,
-} from "react-vertical-timeline-component";
-import "react-vertical-timeline-component/style.min.css";
+import React, { useMemo } from "react";
+import { SectionHeader } from "./section-header";
+import ExpandableCard from "./ui/expandable-card";
 import { experiencesData } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
-import { useTheme } from "@/context/theme-context";
-import clsx from "clsx";
-import { syne } from "@/lib/fonts";
+import { Briefcase } from "lucide-react";
 
 export default function Experience() {
   const { ref } = useSectionInView("Experience");
-  const { theme } = useTheme();
+
+  // Transform experiencesData to match the ExpandableCard interface
+  const cardItems = useMemo(
+    () =>
+      experiencesData.map((exp, index) => ({
+        id: `exp-${index}`,
+        title: exp.title,
+        company: exp.company,
+        location: exp.location,
+        date: exp.date,
+        icon: exp.icon,
+        description: exp.description,
+      })),
+    []
+  );
 
   return (
-    <section id="experience" ref={ref} className="scroll-mt-28 mb-28 sm:mb-40">
-      <SectionHeading>My experience</SectionHeading>
-      <VerticalTimeline lineColor="">
-        {experiencesData.map((item, index) => (
-          <React.Fragment key={index}>
-            <VerticalTimelineElement
-              contentStyle={{
-                background:
-                  theme === "light" ? "#f3f4f6" : "rgba(255, 255, 255, 0.05)",
-                boxShadow: "none",
-                border: "1px solid rgba(0, 0, 0, 0.05)",
-                textAlign: "left",
-                padding: "1.3rem 2rem",
-              }}
-              contentArrowStyle={{
-                borderRight:
-                  theme === "light"
-                    ? "0.4rem solid #9ca3af"
-                    : "0.4rem solid rgba(255, 255, 255, 0.5)",
-              }}
-              date={item.date}
-              icon={item.icon}
-              iconStyle={{
-                background: theme === "light" ? "white" : "white",
-                fontSize: "1.5rem",
-                width: "4rem",
-                height: "4rem",
-                borderRadius: "50%",
-                padding: "0.8rem",
-              }}
-            >
-              <h3 className={clsx(syne.className, "font-semibold capitalize")}>
-                {item.title}
-              </h3>
-              <p className="!font-normal !text-sm text-gray-500 !mt-1">
-                {item.company} | {item.location}
-              </p>
-              <p className="!mt-1 !font-normal text-gray-700 dark:text-white/75">
-                {item.description &&
-                  item.description.map((desc, index) => (
-                    <React.Fragment key={index}>
-                      - {desc}
-                      <br />
-                    </React.Fragment>
-                  ))}
-              </p>
-            </VerticalTimelineElement>
-          </React.Fragment>
-        ))}
-      </VerticalTimeline>
+    <section
+      id="experience"
+      ref={ref}
+      className="scroll-mt-28 mb-28 sm:mb-40 px-4 max-w-4xl mx-auto w-full"
+    >
+      <SectionHeader
+        icon={Briefcase}
+        label="Experience"
+        title="My professional"
+        highlight="journey"
+        subtitle="A timeline of my career, from where I started to where I am today."
+        iconColor="#5a922c"
+        highlightGradient="from-[#5a922c] via-[#4c7894] to-[#dd7bbb]"
+      />
+      <ExpandableCard items={cardItems} />
     </section>
   );
 }

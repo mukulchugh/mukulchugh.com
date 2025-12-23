@@ -2,11 +2,34 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
-  --line-color: #e5e7eb;
+@layer base {
+  :root,
+  .dark {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 5%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 5%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 64%;
+    --accent: 0 0% 15%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 18%;
+    --input: 0 0% 18%;
+    --ring: 0 0% 83.9%;
+    --radius: 0.5rem;
+  }
 }
 
-html.dark {
+/* Line color for dark mode */
+html {
   --line-color: rgba(255, 255, 255, 0.2);
 }
 
@@ -23,7 +46,7 @@ html.dark {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: white;
+  background-color: black;
 
   button {
     align-self: flex-end;
@@ -34,7 +57,7 @@ html.dark {
     text-transform: uppercase;
     font-family: inherit;
     font-size: 18px;
-    color: #333;
+    color: #fff;
 
     &:hover {
       cursor: pointer;
@@ -77,9 +100,120 @@ html.dark {
   }
 }
 
-.container {
-  /* height: 100vh; */
+/* Renamed to avoid Tailwind container conflict */
+.mobile-menu-wrapper {
   overflow-y: hidden;
+  color: #fff;
+}
 
-  color: #333;
+/* GlowingEffect - webkit/Safari compatibility */
+.glow-inner::after {
+  -webkit-mask-composite: xor;
+  -webkit-mask-clip: padding-box, border-box;
+}
+
+/* Syntax Highlighting - VS Code Dark+ Theme */
+.hljs {
+  background: #1e1e1e !important;
+  color: #d4d4d4;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: #6a9955;
+  font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-type {
+  color: #569cd6;
+}
+
+.hljs-number {
+  color: #b5cea8;
+}
+
+.hljs-string,
+.hljs-doctag,
+.hljs-regexp {
+  color: #ce9178;
+}
+
+.hljs-title,
+.hljs-title.class_,
+.hljs-title.function_ {
+  color: #dcdcaa;
+}
+
+.hljs-variable,
+.hljs-template-variable {
+  color: #9cdcfe;
+}
+
+.hljs-attr,
+.hljs-attribute {
+  color: #9cdcfe;
+}
+
+.hljs-tag {
+  color: #808080;
+}
+
+.hljs-name {
+  color: #569cd6;
+}
+
+.hljs-built_in,
+.hljs-builtin-name {
+  color: #4ec9b0;
+}
+
+.hljs-meta {
+  color: #c586c0;
+}
+
+.hljs-symbol,
+.hljs-bullet {
+  color: #d7ba7d;
+}
+
+.hljs-selector-id,
+.hljs-selector-class {
+  color: #d7ba7d;
+}
+
+.hljs-addition {
+  color: #b5cea8;
+  background-color: rgba(155, 185, 85, 0.2);
+}
+
+.hljs-deletion {
+  color: #ce9178;
+  background-color: rgba(255, 0, 0, 0.2);
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+
+.hljs-link {
+  color: #569cd6;
+  text-decoration: underline;
+}
+
+/* Code block styling */
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1rem;
+}
+
+code.hljs {
+  padding: 3px 5px;
 }

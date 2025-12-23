@@ -1,94 +1,66 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
-import { links } from "@/lib/data";
-import Link from "next/link";
-import clsx from "clsx";
-import { useActiveSectionContext } from "@/context/active-section-context";
+import { motion } from "motion/react";
+import { usePathname } from "next/navigation";
+import { siteConfig } from "@/lib/data";
 import Image from "next/image";
-import ThemeSwitch from "./theme-switch";
-import { useTheme } from "@/context/theme-context";
 import { syne } from "@/lib/fonts";
-import MobileMenu from "./mobile-menu";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { LocationTag } from "./ui/location-tag";
 
 export default function Header() {
-  const { activeSection, setActiveSection, setTimeOfLastClick } =
-    useActiveSectionContext();
-
-  const { theme } = useTheme();
+  const pathname = usePathname();
+  const isBlogPage = pathname.startsWith("/blog");
 
   return (
-    <header className="z-[999] relative">
+    <header className="w-full flex justify-between items-center py-8 px-4 sm:px-8 max-w-4xl mx-auto">
       <motion.div
-        className="fixed top-0 left-1/2 h-[4.5rem] w-full rounded-none border border-white border-opacity-40 bg-white bg-opacity-80 shadow-lg shadow-black/[0.03] backdrop-blur-[0.2rem] sm:top-6 sm:h-[3.25rem] sm:w-[48rem] sm:rounded-full dark:bg-gray-950 dark:border-black/40 dark:bg-opacity-75 items-center flex justify-between"
-        initial={{ y: -100, x: "-50%", opacity: 0 }}
-        animate={{ y: 0, x: "-50%", opacity: 1 }}
+        initial={{ x: -20, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
       >
-        <Image
-          src={
-            theme === "light"
-              ? "https://ik.imagekit.io/kooxhdceru/portfolio/logo-black.webp"
-              : "https://ik.imagekit.io/kooxhdceru/portfolio/logo-white.webp"
-          }
-          alt="Mukul Chugh"
-          quality="80"
-          priority={true}
-          width={28}
-          height={28}
-          className="h-7 w-7 object-cover ml-4"
-          // className="h-12 w-12 rounded-full object-cover border-[0.35rem] border-white shadow-xl"
-        />
-        <div className="flex items-center gap-4">
-          <ThemeSwitch />
-          <MobileMenu />
-        </div>
+        <Link href="/" className="flex items-center gap-3">
+          <Image
+            src={siteConfig.images.logoDark}
+            alt={siteConfig.name}
+            quality="80"
+            priority={true}
+            width={32}
+            height={32}
+            className="h-8 w-8 object-cover"
+          />
+          {isBlogPage ? (
+            <div className="flex items-center gap-3">
+              <div className="h-5 w-px bg-white/20" />
+              <span
+                className={cn(
+                  syne.className,
+                  "text-lg font-semibold text-white/90"
+                )}
+              >
+                Blog
+              </span>
+            </div>
+          ) : (
+            <span
+              className={cn(
+                syne.className,
+                "text-lg font-semibold text-white/90"
+              )}
+            >
+              {siteConfig.name}
+            </span>
+          )}
+        </Link>
       </motion.div>
 
-      <nav className="md:flex hidden fixed top-[0.15rem] left-1/2 h-12 -translate-x-1/2 py-2 sm:top-[1.7rem] sm:h-[initial] sm:py-0">
-        <ul className="flex w-[22rem] flex-wrap items-center justify-center gap-y-1 text-[0.9rem] font-medium text-gray-500 sm:w-[initial] sm:flex-nowrap sm:gap-5">
-          {links.map((link) => (
-            <motion.li
-              className={clsx(
-                "h-3/4 flex items-center justify-center relative",
-                syne.className
-              )}
-              key={link.hash}
-              initial={{ y: -100, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-            >
-              <Link
-                className={clsx(
-                  "flex w-full items-center justify-center px-3 py-3 hover:text-gray-950 transition dark:text-gray-300 dark:hover:text-gray-300",
-                  {
-                    "text-gray-950 dark:text-gray-200":
-                      activeSection === link.name,
-                  }
-                )}
-                href={link.hash}
-                onClick={() => {
-                  setActiveSection(link.name);
-                  setTimeOfLastClick(Date.now());
-                }}
-              >
-                {link.name}
-
-                {link.name === activeSection && (
-                  <motion.span
-                    className="bg-gray-100 rounded-full absolute inset-0 -z-10 dark:bg-gray-800"
-                    layoutId="activeSection"
-                    transition={{
-                      type: "spring",
-                      stiffness: 380,
-                      damping: 30,
-                    }}
-                  ></motion.span>
-                )}
-              </Link>
-            </motion.li>
-          ))}
-        </ul>
-      </nav>
+      <motion.div
+        initial={{ x: 20, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+      >
+        <LocationTag city="San Francisco" country="CA" timezone="PST" />
+      </motion.div>
     </header>
   );
 }

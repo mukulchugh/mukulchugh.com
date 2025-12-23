@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { projectsData } from "@/lib/data";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform } from "motion/react";
 import { BsGithub, BsGlobe } from "react-icons/bs";
 import { syne } from "@/lib/fonts";
 import clsx from "clsx";
