@@ -65,6 +65,21 @@ const Component = React.memo(() => {
         </div>
       </div>
 
+      <motion.div
+        className="mt-6 mb-4"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
+        <span
+          className={clsx(
+            "inline-block px-4 py-2 text-sm font-medium tracking-wide lowercase bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 border border-white/10 rounded-full text-white/80",
+            syne.className
+          )}
+        >
+          {siteConfig.tagline}
+        </span>
+      </motion.div>
+
       <motion.h1
         className={clsx(
           "mb-10 mt-4 px-4 font-medium !leading-[1.5] text-xl md:text-3xl",
@@ -74,9 +89,8 @@ const Component = React.memo(() => {
         animate={{ opacity: 1, y: 0 }}
       >
         <span className="font-bold">{introContent.greeting}</span>, a{" "}
-        <span className="font-bold">{introContent.role}</span> from {siteConfig.location}. I
-        specialize in{" "}
-        <span className="font-bold">{introContent.specialty}</span>, and I&apos;m
+        <span className="font-bold">{introContent.role}</span> specializing in{" "}
+        <span className="font-bold">{introContent.specialty}</span>. I&apos;m
         passionate about{" "}
         <span className="italic">
           {introContent.passion}

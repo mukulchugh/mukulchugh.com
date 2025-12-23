@@ -131,41 +131,10 @@ html.dark {
   color: #333;
 }
 
-/* GlowingEffect styles */
-.glow {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-}
-
-.glow::after {
-  content: "";
-  position: absolute;
-  inset: calc(-1 * var(--glowingeffect-border-width, 3px));
-  border: var(--glowingeffect-border-width, 3px) solid transparent;
-  border-radius: inherit;
-  background: var(--gradient);
-  background-attachment: fixed;
-  opacity: var(--active, 0);
-  transition: opacity 0.3s ease;
-  mask-clip: padding-box, border-box;
-  mask-composite: intersect;
+/* GlowingEffect - webkit/Safari compatibility */
+.glow-inner::after {
+  -webkit-mask-composite: xor;
   -webkit-mask-clip: padding-box, border-box;
-  -webkit-mask-composite: source-in;
-  mask-image: linear-gradient(#0000, #0000),
-    conic-gradient(
-      from calc((var(--start, 0) - var(--spread, 20)) * 1deg),
-      #00000000 0deg,
-      #fff,
-      #00000000 calc(var(--spread, 20) * 2deg)
-    );
-  -webkit-mask-image: linear-gradient(#0000, #0000),
-    conic-gradient(
-      from calc((var(--start, 0) - var(--spread, 20)) * 1deg),
-      #00000000 0deg,
-      #fff,
-      #00000000 calc(var(--spread, 20) * 2deg)
-    );
 }
 
 /* Syntax Highlighting - VS Code Dark+ Theme */

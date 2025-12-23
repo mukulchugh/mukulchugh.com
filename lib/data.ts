@@ -7,28 +7,30 @@ export const siteConfig = {
   name: "Mukul Chugh",
   firstName: "Mukul",
   lastName: "Chugh",
-  title: "Software Engineer",
-  location: "India",
-  locationFull: "Bengaluru, Karnataka, India",
+  title: "Product Engineer",
+  tagline: "Creating Digital Experiences for Humans",
+  location: "San Francisco, CA",
+  locationFull: "San Francisco, California, USA",
 
   // SEO & Meta
   siteUrl: "https://mukulchugh.com",
-  siteTitle: "Mukul Chugh | Software Engineer - React, TypeScript & Mobile Development",
+  siteTitle: "Mukul Chugh | Product Engineer - Creating Digital Experiences for Humans",
   siteDescription:
-    "Software Engineer specializing in React, React Native, TypeScript, and Next.js. Building scalable web and mobile applications with modern tech stacks. Previously at Swiggy and Zenduty.",
+    "Founding Engineer at Quivly.ai, building AI-powered products. T-shaped product engineer specializing in mobile and full-stack development. Previously at Swiggy and Zenduty (acquired). Passionate about human-centric design and creating intuitive digital experiences.",
 
   // Keywords for SEO (used in JSON-LD)
   keywords: [
     "Software Engineer",
-    "Frontend Developer",
-    "React Developer",
+    "Mobile Engineer",
     "React Native Developer",
+    "Product Engineer",
     "TypeScript",
     "Next.js",
     "JavaScript",
     "Mobile App Development",
-    "Web Development",
+    "Human-Centric Design",
     "Full Stack Developer",
+    "Swiggy Engineer",
   ],
 
   // Social Links
@@ -71,19 +73,21 @@ export const siteConfig = {
 export const aboutContent = {
   heading: "About me",
   paragraphs: [
-    "Hey there, I'm Mukul Chugh, a software engineer based in India.",
-    "I'm all about creating digital experiences that put humans first. Whether it's a slick UI or a cutting-edge app, I'm always on the lookout for ways to make technology more accessible and intuitive.",
-    "My goal is always to create digital experiences that feel intuitive, human-centric, and just plain awesome. I've been working professionally for a few years now, and I've had the chance to work on a wide range of projects. Some of my favorite work has been in the realm of Frontend Development - there's something incredibly satisfying about creating a seamless, user-friendly interface that just clicks.",
-    "Would you like to work together or just chat? Feel free to reach out to me.",
+    "Hey there, I'm Mukul Chugh — a product engineer.",
+    "I'm a T-shaped engineer with deep expertise in mobile and full-stack development, combined with a strong foundation in product thinking and human-centric design. Engineering is my backbone, but I thrive at the intersection of technology and user experience.",
+    "Currently a Founding Engineer at Quivly.ai, where I work directly with the CTO on building AI-powered products from the ground up. Before this, I was at Swiggy building mobile products used by millions, and at Zenduty where I helped scale the platform until its acquisition.",
+    "I've worn many hats: founding engineer, co-founder, and product generalist. What drives me is creating digital experiences that feel intuitive and genuinely serve the humans using them.",
+    "Would you like to work together or just chat? Feel free to reach out.",
   ],
 } as const;
 
 // Intro/Hero Section Content
 export const introContent = {
   greeting: "Hi, I'm Mukul Chugh",
-  role: "software engineer",
-  specialty: "Web and Mobile Development",
-  passion: "transforming ideas into impactful products",
+  tagline: "Creating Digital Experiences for Humans",
+  role: "product engineer",
+  specialty: "Mobile & Full-Stack Development",
+  passion: "building human-centric digital products",
   ctaText: "Contact me here",
   downloadCvText: "Download CV",
   emoji: "👋",
@@ -132,12 +136,13 @@ export const experiencesData = [
   {
     title: "Founding Engineer",
     description: [
-      "Building AI-powered products and features for the Quivly.ai platform.",
-      "Developing full-stack applications using modern web technologies and AI/ML integrations.",
-      "Contributing to product strategy and technical architecture as an early team member.",
+      "Building AI-powered products and features for the Quivly platform as the first engineer.",
+      "Working directly with the CTO on product strategy, technical architecture, and full-stack development.",
+      "Developing across the entire stack using modern web technologies and AI/ML integrations.",
+      "Contributing to product design and engineering decisions as a core founding team member.",
     ],
     company: "Quivly.ai",
-    date: "November 2024 - November 2025",
+    date: "November 2025 - Present",
     location: "San Francisco, CA (Hybrid)",
     icon: "https://ik.imagekit.io/kooxhdceru/portfolio/quivly.webp",
   },
@@ -159,17 +164,15 @@ export const experiencesData = [
   {
     title: "Software Development Engineer",
     description: [
+      "Part of the core team that scaled the platform until acquisition — contributed across mobile, web, and internal tooling.",
+      "Re-architected the React Native mobile app from ground up, building an in-house UI library and shipping multiple releases to Google Play and App Store.",
       "Enhanced incident monitoring tools, reducing response times by 25% and minimizing downtime by 20%.",
       "Worked on the REST API Service, built internal automation tools and SDKs.",
       "Developed a data analysis app using Prometheus, ElasticSearch, GraphQL, ChartJS, and NextJS.",
-      "Created product landing pages, boosting engagement by 15%.",
-      "Contributed to Zenduty's flagship platform, improving user experience and adding new features.",
-      "Shipped multiple releases to Google Play and App Store; build/signing and staged rollouts.",
-      "Re-architected the React Native mobile app, enhancing performance, developing new features, and creating an in-house UI library to support a complete redesign from the ground up.",
-      "Led marketing initiatives, including setting up a Customer Data Platform (CDP) and User Analytics, and managing secondary web platforms such as Product Docs, Blog, and Landing Pages.",
-      "Contributed to developer relations efforts by representing Zenduty at events like KubeCon India and Grayscale AI Week, giving talks and engaging with the developer community.",
+      "Led marketing initiatives, setting up Customer Data Platform (CDP) and User Analytics, managing Product Docs, Blog, and Landing Pages.",
+      "Represented Zenduty at KubeCon India and Grayscale AI Week, contributing to developer relations and community engagement.",
     ],
-    company: "Zenduty",
+    company: "Zenduty (Acquired)",
     date: "June 2022 - May 2025",
     location: "Bengaluru, Karnataka, India",
     icon: "https://ik.imagekit.io/kooxhdceru/portfolio/zenduty.webp",
@@ -269,4 +272,6 @@ export const skillsData = [
   "Git",
   "Fastlane",
   "Kubernetes",
+  "Figma",
+  "Human-Centric Design",
 ] as const;

@@ -2,6 +2,7 @@
 
 import React from "react";
 import { motion } from "motion/react";
+import { usePathname } from "next/navigation";
 import { siteConfig } from "@/lib/data";
 import Image from "next/image";
 import { useTheme } from "@/context/theme-context";
@@ -12,6 +13,8 @@ import { LocationTag } from "./ui/location-tag";
 
 export default function Header() {
   const { theme } = useTheme();
+  const pathname = usePathname();
+  const isBlogPage = pathname.startsWith("/blog");
 
   return (
     <header className="w-full flex justify-between items-center py-8 px-4 sm:px-8 max-w-4xl mx-auto">
@@ -33,14 +36,28 @@ export default function Header() {
             height={32}
             className="h-8 w-8 object-cover"
           />
-          <span
-            className={cn(
-              syne.className,
-              "text-lg font-semibold text-white/90"
-            )}
-          >
-            {siteConfig.name}
-          </span>
+          {isBlogPage ? (
+            <div className="flex items-center gap-3">
+              <div className="h-5 w-px bg-white/20" />
+              <span
+                className={cn(
+                  syne.className,
+                  "text-lg font-semibold text-white/90"
+                )}
+              >
+                Blog
+              </span>
+            </div>
+          ) : (
+            <span
+              className={cn(
+                syne.className,
+                "text-lg font-semibold text-white/90"
+              )}
+            >
+              {siteConfig.name}
+            </span>
+          )}
         </Link>
       </motion.div>
 
