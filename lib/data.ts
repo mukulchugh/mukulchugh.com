@@ -75,7 +75,7 @@ export const aboutContent = {
   heading: "About me",
   paragraphs: [
     "Hey there, I'm Mukul — a product engineer.",
-    "I'm a T-shaped engineer with deep expertise in mobile and full-stack development, combined with a strong foundation in product thinking and human-centric design. Engineering is my backbone, but I thrive at the intersection of technology and user experience.",
+    "I'm a T-shaped engineer with deep expertise in mobile and full-stack development, combined with a strong foundation in product thinking and human-centric design. Engineering is my backbone, but I thrive at the intersection of technology and product.",
     "Currently a Founding Engineer at Quivly.ai, where I work directly with the CTO on building AI-powered products from the ground up. Before this, I was at Swiggy building mobile products used by millions, and at Zenduty where I helped scale the platform until its acquisition.",
     "I've worn many hats: founding engineer, co-founder, and product generalist. What drives me is creating digital experiences that feel intuitive and genuinely serve the humans using them.",
     "Would you like to work together or just chat? Feel free to reach out.",
@@ -215,6 +215,30 @@ export const experiencesData = [
     location: "Gurugram, Haryana, India",
     icon: "https://ik.imagekit.io/kooxhdceru/portfolio/guby-rogers.webp",
   },
+  {
+    title: "Freelance Web Developer",
+    description: [
+      "Designed and developed responsive websites for small businesses and startups.",
+      "Collaborated with clients to understand requirements and deliver tailored solutions.",
+      "Implemented SEO best practices to improve client website visibility.",
+    ],
+    company: "Digital Moshai",
+    date: "October 2020 - June 2022",
+    location: "New Delhi, India",
+    icon: "https://ik.imagekit.io/kooxhdceru/portfolio/digital-moshai.webp",
+  },
+  {
+    title: "Community Lead & Student Ambassador",
+    description: [
+      "Led a community of 500+ students, organizing workshops and hackathons.",
+      "Mentored students in web development and cloud technologies.",
+      "Represented Microsoft at campus events and tech conferences.",
+    ],
+    company: "Microsoft",
+    date: "September 2019 - July 2020",
+    location: "New Delhi, India",
+    icon: "https://ik.imagekit.io/kooxhdceru/portfolio/microsoft.webp",
+  },
 ] as const;
 
 export const projectsData = [
@@ -224,31 +248,61 @@ export const projectsData = [
     demo: "",
     tags: ["React", "Grafana", "TypeScript", "Golang"],
     description:
-      "Developed a Grafana plugin for Root Cause Analysis, enabling rapid detection of anomalies and service failures. This tool significantly accelerated issue resolution, reducing the average resolution time by 30% through data-driven insights.",
+      "Developed a Grafana plugin for Root Cause Analysis, designed to identify anomalies and service disruptions. This tool aids engineers in swiftly tracing and resolving issues, leveraging insightful data for expedited problem-solving.",
   },
   {
-    title: "HostVille - Full Stack Booking Platform",
-    github: "https://github.com/mukulchugh",
-    demo: "",
-    tags: ["GraphQL", "JavaScript", "NextJS", "ExpressJS", "MapBox"],
-    description:
-      "A travel booking app connecting travelers with experiences worldwide, with a user-friendly interface and location-based search via MapBox API. Also built an admin dashboard for global administration utilizing a GraphQL API and React Frontend.",
-  },
-  {
-    title: "ZenDash - Internal Tool",
+    title: "Zendash - Global Admin Dashboard",
     github: "",
     demo: "",
-    tags: ["JavaScript", "ReactJS", "Django", "GraphQL"],
+    tags: ["React", "NextJS", "TailwindCSS", "GraphQL", "Apollo"],
     description:
-      "A comprehensive global admin dashboard during my time at Zenduty. Built an efficient and user-friendly platform for managing administrative tasks and data analysis.",
+      "Built a Global Admin Dashboard during my internship at Zenduty. This tool assists the Engineering, Customer Success and Marketing Team by providing easy access to insights via their dashboard. Additionally, it aids in the identification and efficient resolution of user issues on the platform.",
   },
   {
-    title: "Zepeats - Food Delivery App",
+    title: "Devcord",
+    github: "https://github.com/mukulchugh/devcord",
+    demo: "https://mukulchugh.pythonanywhere.com",
+    tags: ["Django", "Python", "SQLite", "HTML", "CSS", "Javascript"],
+    description:
+      "A full stack django application for developers to build community and collaborate together on projects or discuss on various topics and make study groups.",
+  },
+  {
+    title: "ZepEats",
     github: "https://github.com/mukulchugh/ZepEats",
     demo: "https://expo.dev/@mukulchugh/zepeats",
     tags: ["React Native", "Firebase", "Google Cloud", "Stripe"],
     description:
-      "A food delivery application which provides a seamless and efficient ordering experience for users. Built with React Native, Firebase, Google Cloud, and Stripe integration.",
+      "Inspired by Uber Eats, built a food delivery application keeping in mind simplicity, to order food and have a clean experience. Built with React Native, Firebase, Google Cloud, Firestore, Stripe, etc",
+  },
+  {
+    title: "Cryptomedia - Cryptocurrency Tracker",
+    github: "https://github.com/mukulchugh/CryptoMedia",
+    demo: "https://cryptomedia.netlify.app",
+    tags: ["React", "ChartJS", "MUI", "Firebase", "CoinGecko API"],
+    description:
+      "A React-based CryptoCurrencies tracker, with ranking and coin information, uses a CoinGecko API to fetch data, designed using Material UI. Used Firebase to provide authentication functionality and a database for maintaining the Watchlist for users.",
+  },
+  {
+    title: "Mereko App Concept Design",
+    github: "",
+    demo: "https://www.figma.com/file/16zU20FINHLiu1k4Irw9bl/Mockup--Design---Mereko?node-id=44%3A56",
+    tags: [
+      "Figma",
+      "UX Research",
+      "Usability Study",
+      "UI Design",
+      "Prototyping",
+    ],
+    description:
+      "Designed a concept app as part of my Google UX Design course.",
+  },
+  {
+    title: "Kanboard - Kanban Board",
+    github: "https://github.com/mukulchugh/kanboard-notion-kanban-react",
+    demo: "https://notion-kanboard-mukul.netlify.app",
+    tags: ["React", "React Beautiful DND", "TailwindCSS"],
+    description:
+      "A Notion like a Kanban board using ReactJS, and React Beautiful DND.",
   },
 ] as const;
 

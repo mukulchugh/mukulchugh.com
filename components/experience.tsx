@@ -29,7 +29,7 @@ export default function Experience() {
     <section
       id="experience"
       ref={ref}
-      className="scroll-mt-28 mb-28 sm:mb-40 px-4 max-w-4xl mx-auto"
+      className="scroll-mt-28 mb-28 sm:mb-40 px-4 max-w-4xl mx-auto w-full"
     >
       <SectionHeader
         icon={Briefcase}

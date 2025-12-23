@@ -6,7 +6,7 @@ import { projectsData } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
 import { GlowingEffect } from "@/components/ui/glowing-effect";
 import { cn } from "@/lib/utils";
-import { Box, Lock, Settings, Sparkles, Github, ExternalLink, FolderKanban } from "lucide-react";
+import { Box, Lock, Settings, Sparkles, Github, ExternalLink, FolderKanban, Code, Palette, Layout } from "lucide-react";
 
 interface GridItemProps {
   area: string;
@@ -114,16 +114,22 @@ const GridItem = ({ area, icon, title, description, tags, github, demo }: GridIt
 const icons = [
   <Box key="box" className="h-4 w-4 text-foreground transition-colors duration-300 group-hover:text-[#dd7bbb]" />,
   <Settings key="settings" className="h-4 w-4 text-foreground transition-colors duration-300 group-hover:text-[#d79f1e]" />,
-  <Lock key="lock" className="h-4 w-4 text-foreground transition-colors duration-300 group-hover:text-[#5a922c]" />,
+  <Code key="code" className="h-4 w-4 text-foreground transition-colors duration-300 group-hover:text-[#5a922c]" />,
   <Sparkles key="sparkles" className="h-4 w-4 text-foreground transition-colors duration-300 group-hover:text-[#4c7894]" />,
+  <Lock key="lock" className="h-4 w-4 text-foreground transition-colors duration-300 group-hover:text-[#dd7bbb]" />,
+  <Palette key="palette" className="h-4 w-4 text-foreground transition-colors duration-300 group-hover:text-[#d79f1e]" />,
+  <Layout key="layout" className="h-4 w-4 text-foreground transition-colors duration-300 group-hover:text-[#5a922c]" />,
 ];
 
-// Horizontal bento grid - rows instead of columns
+// Bento grid layout for 7 projects
 const gridAreas = [
   "md:[grid-area:1/1/2/5]",   // Row 1, left (4 cols)
   "md:[grid-area:1/5/2/9]",   // Row 1, middle (4 cols)
   "md:[grid-area:1/9/2/13]",  // Row 1, right (4 cols)
-  "md:[grid-area:2/1/3/13]",  // Row 2, full width (12 cols)
+  "md:[grid-area:2/1/3/7]",   // Row 2, left half (6 cols)
+  "md:[grid-area:2/7/3/13]",  // Row 2, right half (6 cols)
+  "md:[grid-area:3/1/4/7]",   // Row 3, left half (6 cols)
+  "md:[grid-area:3/7/4/13]",  // Row 3, right half (6 cols)
 ];
 
 export default function Projects() {

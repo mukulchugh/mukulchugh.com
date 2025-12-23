@@ -42,7 +42,7 @@ const useOutsideClick = (callback: () => void) => {
 
 // Smooth spring transition for layout animations
 const springTransition = {
-  type: "spring",
+  type: "spring" as const,
   stiffness: 300,
   damping: 30,
   mass: 1,
