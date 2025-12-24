@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { motion } from "motion/react";
 import { siteConfig, footerContent, links } from "@/lib/data";
 
 export default function Footer() {
@@ -11,7 +14,13 @@ export default function Footer() {
           className="mx-auto block size-fit"
         />
 
-        <div className="my-8 flex flex-wrap justify-center gap-6">
+        <motion.div
+          className="my-8 flex flex-wrap justify-center gap-6"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+        >
           {links.map((link, index) => (
             <Link
               key={index}
@@ -21,9 +30,15 @@ export default function Footer() {
               <span>{link.name}</span>
             </Link>
           ))}
-        </div>
+        </motion.div>
 
-        <div className="my-8 flex flex-wrap justify-center gap-6 text-sm">
+        <motion.div
+          className="my-8 flex flex-wrap justify-center gap-6 text-sm"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          viewport={{ once: true }}
+        >
           {/* Twitter/X */}
           <Link
             href={siteConfig.social.twitter}
@@ -111,12 +126,18 @@ export default function Footer() {
               />
             </svg>
           </Link>
-        </div>
+        </motion.div>
 
-        <span className="text-muted-foreground block text-center text-sm">
+        <motion.span
+          className="text-muted-foreground block text-center text-sm"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          viewport={{ once: true }}
+        >
           &copy; {new Date().getFullYear()} {siteConfig.name}.{" "}
           {footerContent.copyright}
-        </span>
+        </motion.span>
       </div>
     </footer>
   );

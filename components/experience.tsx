@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
+import { motion } from "motion/react";
 import { SectionHeader } from "./section-header";
 import ExpandableCard from "./ui/expandable-card";
 import { experiencesData } from "@/lib/data";
@@ -40,7 +41,14 @@ export default function Experience() {
         iconColor="#5a922c"
         highlightGradient="from-[#5a922c] via-[#4c7894] to-[#dd7bbb]"
       />
-      <ExpandableCard items={cardItems} />
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        viewport={{ once: true }}
+      >
+        <ExpandableCard items={cardItems} />
+      </motion.div>
     </section>
   );
 }

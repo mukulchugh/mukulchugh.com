@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { motion } from "motion/react";
 import { SectionHeader } from "./section-header";
 import { projectsData } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
@@ -16,11 +17,18 @@ interface GridItemProps {
   tags: readonly string[];
   github: string;
   demo: string;
+  index: number;
 }
 
-const GridItem = ({ area, icon, title, description, tags, github, demo }: GridItemProps) => {
+const GridItem = ({ area, icon, title, description, tags, github, demo, index }: GridItemProps) => {
   return (
-    <li className={cn("list-none group", area)}>
+    <motion.li
+      className={cn("list-none group", area)}
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      viewport={{ once: true }}
+    >
       <div className="relative h-full rounded-[1.25rem] border-[0.75px] border-border p-2 md:rounded-[1.5rem] md:p-3 transition-all duration-300">
         <GlowingEffect
           spread={40}
@@ -107,7 +115,7 @@ const GridItem = ({ area, icon, title, description, tags, github, demo }: GridIt
           )}
         </div>
       </div>
-    </li>
+    </motion.li>
   );
 };
 
@@ -157,6 +165,7 @@ export default function Projects() {
             tags={project.tags}
             github={project.github}
             demo={project.demo}
+            index={index}
           />
         ))}
       </ul>

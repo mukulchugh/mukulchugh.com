@@ -14,7 +14,6 @@ import { fetchPosts } from "@/lib/hashnode";
 export default function BlogSection() {
   const { ref } = useSectionInView("Blog", 0.3);
   const [posts, setPosts] = useState<Post[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function loadPosts() {
@@ -23,8 +22,6 @@ export default function BlogSection() {
         setPosts(fetchedPosts);
       } catch (error) {
         console.error("Failed to fetch posts:", error);
-      } finally {
-        setIsLoading(false);
       }
     }
     loadPosts();
@@ -90,13 +87,7 @@ export default function BlogSection() {
           viewport={{ once: true }}
           className="relative"
         >
-          {isLoading ? (
-            <div className="flex items-center justify-center h-[420px]">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-foreground"></div>
-            </div>
-          ) : (
-            <AnimatedCardStack posts={posts} />
-          )}
+          <AnimatedCardStack posts={posts} />
         </motion.div>
       </div>
     </section>

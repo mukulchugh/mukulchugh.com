@@ -200,12 +200,15 @@ export default function ExpandableCard({
 
       {/* Card list */}
       <div className={cn("relative flex flex-col gap-4 w-full", className)}>
-        {items.map((item) => (
+        {items.map((item, index) => (
           <motion.div
             key={item.id}
             layoutId={`card-${item.id}`}
             onClick={() => setCurrent(item)}
-            transition={springTransition}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: index * 0.08, ...springTransition }}
+            viewport={{ once: true }}
             className="group relative flex cursor-pointer items-center gap-4 sm:gap-6 rounded-xl border border-white/10 bg-white/5 p-4 sm:p-6 backdrop-blur-sm transition-colors duration-300 hover:bg-white/10 hover:border-white/20 w-full"
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.99 }}

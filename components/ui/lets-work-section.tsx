@@ -2,6 +2,7 @@
 
 import Cal, { getCalApi } from "@calcom/embed-react";
 import { useEffect, useState } from "react";
+import { motion } from "motion/react";
 
 import { ArrowUpRight } from "lucide-react";
 import type React from "react";
@@ -178,7 +179,13 @@ export function LetsWorkTogether() {
                 </h2>
 
                 {/* Circle button with arrow */}
-                <div className="relative mt-4 flex size-16 items-center justify-center sm:size-20">
+                <motion.div
+                  className="relative mt-4 flex size-16 items-center justify-center sm:size-20"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                  viewport={{ once: true }}
+                >
                   <div
                     className={`pointer-events-none absolute inset-0 rounded-full border transition-all ease-out ${
                       isHovered && !isClicked
@@ -209,7 +216,7 @@ export function LetsWorkTogether() {
                       transitionDuration: isClicked ? "600ms" : "500ms",
                     }}
                   />
-                </div>
+                </motion.div>
               </div>
 
               {/* Side lines */}

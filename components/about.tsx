@@ -11,12 +11,9 @@ export default function About() {
   const { ref } = useSectionInView("About");
 
   return (
-    <motion.section
+    <section
       ref={ref}
       className="mb-28 max-w-4xl mx-auto leading-8 sm:mb-40 scroll-mt-28 px-4 pt-20 sm:pt-28"
-      initial={{ opacity: 0, y: 100 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.175 }}
       id="about"
     >
       <SectionHeader
@@ -30,11 +27,18 @@ export default function About() {
       />
       <div className="text-center">
         {aboutContent.paragraphs.map((paragraph, index) => (
-          <p key={index} className={index > 0 ? "mt-4" : ""}>
+          <motion.p
+            key={index}
+            className={index > 0 ? "mt-4" : ""}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: index * 0.1 }}
+            viewport={{ once: true }}
+          >
             {paragraph}
-          </p>
+          </motion.p>
         ))}
       </div>
-    </motion.section>
+    </section>
   );
 }
