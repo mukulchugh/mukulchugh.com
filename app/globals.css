@@ -28,15 +28,6 @@
   }
 }
 
-/* Line color for dark mode */
-html {
-  --line-color: rgba(255, 255, 255, 0.2);
-}
-
-.borderBlack {
-  @apply border border-black/10;
-}
-
 /* GlowingEffect - webkit/Safari compatibility */
 .glow-inner::after {
   -webkit-mask-composite: xor;

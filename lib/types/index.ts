@@ -79,11 +79,6 @@ export interface SkillSet {
 }
 
 // UI Component Types
-export interface TimelineEntry {
-  title: string;
-  content: React.ReactNode;
-}
-
 export interface CardItem {
   icon: string;
   title: string;
