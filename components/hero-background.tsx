@@ -24,7 +24,7 @@ export function HeroBackground() {
 
   return (
     <div className="absolute inset-x-0 top-0 h-screen -z-10 overflow-hidden">
-      {shouldLoad ? <InteractiveNebulaShader theme="dark" /> : <div className="absolute inset-0 bg-black" />}
+      {shouldLoad ? <InteractiveNebulaShader /> : <div className="absolute inset-0 bg-black" />}
       {/* Overlay with blur */}
       <div
         className="absolute inset-0 w-full h-full pointer-events-none backdrop-blur-[2px]"

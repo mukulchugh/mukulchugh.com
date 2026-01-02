@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
-// Tree-shake Three.js - only import what we need (~100KB vs ~600KB)
+import React, { useEffect, useRef, useCallback } from "react";
 import {
   WebGLRenderer,
   Scene,
@@ -10,61 +9,106 @@ import {
   PlaneGeometry,
   Mesh,
   Vector2,
-} from "three";
+  Matrix3,
+} from "@/lib/three-minimal";
 
 export interface InteractiveNebulaShaderProps {
   className?: string;
-  theme?: "light" | "dark";
+}
+
+// Device capability detection for adaptive quality
+function getDeviceCapabilities(): {
+  iterations: number;
+  pixelRatio: number;
+  targetFPS: number;
+} {
+  if (typeof window === "undefined") {
+    return { iterations: 5, pixelRatio: 1.5, targetFPS: 30 };
+  }
+
+  try {
+    const canvas = document.createElement("canvas");
+    const gl = canvas.getContext("webgl");
+    if (!gl) {
+      return { iterations: 3, pixelRatio: 1, targetFPS: 24 };
+    }
+
+    const debugInfo = gl.getExtension("WEBGL_debug_renderer_info");
+    const renderer = debugInfo
+      ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL)
+      : "";
+
+    // Detect low-end GPUs
+    const isLowEnd = /Intel|Mali-4|Mali-T[1-6]|Adreno [1-4]|PowerVR/i.test(
+      renderer
+    );
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+    if (isLowEnd || isMobile) {
+      return { iterations: 3, pixelRatio: 1, targetFPS: 24 };
+    }
+
+    return {
+      iterations: 5,
+      pixelRatio: Math.min(window.devicePixelRatio, 1.5),
+      targetFPS: 30,
+    };
+  } catch {
+    return { iterations: 3, pixelRatio: 1, targetFPS: 24 };
+  }
 }
 
 export function InteractiveNebulaShader({
   className = "",
-  theme = "dark",
 }: InteractiveNebulaShaderProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const rendererRef = useRef<WebGLRenderer | null>(null);
   const animationIdRef = useRef<number | null>(null);
+  const isVisibleRef = useRef(true);
   const uniformsRef = useRef<{
     iTime: { value: number };
     iResolution: { value: Vector2 };
-    isDarkMode: { value: number };
+    uRotXZ: { value: Matrix3 };
+    uRotXY: { value: Matrix3 };
   } | null>(null);
 
-  // Update theme uniform when theme changes
-  useEffect(() => {
-    if (uniformsRef.current) {
-      uniformsRef.current.isDarkMode.value = theme === "dark" ? 1.0 : 0.0;
+  const startAnimation = useCallback((animate: (time: number) => void) => {
+    if (!animationIdRef.current && isVisibleRef.current) {
+      animationIdRef.current = requestAnimationFrame(animate);
     }
-    if (rendererRef.current) {
-      const clearColor = theme === "dark" ? 0x000000 : 0xffffff;
-      rendererRef.current.setClearColor(clearColor, 1);
+  }, []);
+
+  const stopAnimation = useCallback(() => {
+    if (animationIdRef.current) {
+      cancelAnimationFrame(animationIdRef.current);
+      animationIdRef.current = null;
     }
-  }, [theme]);
+  }, []);
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
-    // OPTIMIZATION 1: Lower pixel ratio (max 1.5 instead of 2)
-    const pixelRatio = Math.min(window.devicePixelRatio, 1.5);
+    // Get device-appropriate settings
+    const capabilities = getDeviceCapabilities();
 
-    // OPTIMIZATION 2: Disable antialiasing and use powerPreference
     const renderer = new WebGLRenderer({
       antialias: false,
       alpha: false,
       powerPreference: "low-power",
-      precision: "mediump"
+      precision: "mediump",
+      stencil: false,
+      depth: false,
     });
     rendererRef.current = renderer;
-    renderer.setPixelRatio(pixelRatio);
-    const clearColor = theme === "dark" ? 0x000000 : 0xffffff;
-    renderer.setClearColor(clearColor, 1);
+    renderer.setPixelRatio(capabilities.pixelRatio);
+    renderer.setClearColor(0x000000, 1);
     container.appendChild(renderer.domElement);
 
     const scene = new Scene();
     const camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
-    // Vertex shader
+    // Optimized vertex shader
     const vertexShader = `
       varying vec2 vUv;
       void main() {
@@ -73,88 +117,66 @@ export function InteractiveNebulaShader({
       }
     `;
 
-    // OPTIMIZATION 3: Simplified fragment shader with fewer iterations and calculations
+    // Optimized fragment shader - dark mode only, pre-calculated rotations
     const fragmentShader = `
       precision mediump float;
       uniform vec2 iResolution;
       uniform float iTime;
-      uniform float isDarkMode;
+      uniform mat3 uRotXZ;
+      uniform mat3 uRotXY;
       varying vec2 vUv;
 
-      #define t iTime
-
-      mat2 rot(float a) {
-        float c = cos(a), s = sin(a);
-        return mat2(c, -s, s, c);
-      }
-
       float map(vec3 p) {
-        p.xz *= rot(t * 0.1);
-        p.xy *= rot(t * 0.08);
-        vec3 q = p * 2.0 + t * 0.3;
-        return length(p + vec3(sin(t * 0.2))) * log(length(p) + 1.0)
+        // Apply pre-calculated rotations (much faster than calculating sin/cos per pixel)
+        p = uRotXZ * p;
+        p = uRotXY * p;
+        vec3 q = p * 2.0 + iTime * 0.3;
+        return length(p + vec3(sin(iTime * 0.2))) * log(length(p) + 1.0)
              + sin(q.x + sin(q.z + sin(q.y))) * 0.5 - 1.0;
       }
 
       void main() {
         vec2 fragCoord = vUv * iResolution;
 
-        // Background color based on theme
-        vec3 bgColor = isDarkMode > 0.5 ? vec3(0.0) : vec3(1.0);
-
         // Center the nebula
         vec2 center = iResolution * 0.5;
-        center.y = iResolution.y * (iResolution.x / iResolution.y < 1.0 ? 0.5 : 0.45);
+        float aspectRatio = iResolution.x / iResolution.y;
+        center.y = iResolution.y * mix(0.5, 0.45, step(1.0, aspectRatio));
 
         vec2 uv = (fragCoord - center) / min(iResolution.x, iResolution.y) * 0.6;
         vec3 col = vec3(0.0);
         float d = 2.5;
 
-        // OPTIMIZATION: Reduced iterations from 8 to 5
-        for (int i = 0; i < 5; i++) {
+        // Dynamic iterations based on device capability (injected at compile time)
+        for (int i = 0; i < ${capabilities.iterations}; i++) {
           vec3 p = vec3(0.0, 0.0, 4.0) + normalize(vec3(uv, -1.0)) * d;
           float rz = map(p);
           float f = clamp((rz - map(p + 0.1)) * 0.5, -0.1, 1.0);
 
-          // Theme-aware nebula colors
-          vec3 base = isDarkMode > 0.5
-            ? vec3(0.15, 0.35, 0.45) + vec3(4.0, 2.0, 2.5) * f
-            : vec3(0.85, 0.7, 0.85) + vec3(0.8, 0.5, 0.9) * f;
-
+          // Dark mode nebula colors
+          vec3 base = vec3(0.15, 0.35, 0.45) + vec3(4.0, 2.0, 2.5) * f;
           col = col * base + smoothstep(3.0, 0.0, rz) * 0.55 * base;
           d += min(rz, 1.2);
         }
 
-        // Adjust brightness
-        col *= isDarkMode > 0.5 ? 1.4 : 1.2;
+        col *= 1.4;
 
         // Center dimming for text readability
         float dist = distance(fragCoord, iResolution * 0.5);
         float radius = max(iResolution.x, iResolution.y) * 0.5;
         float dim = smoothstep(radius * 0.15, radius * 0.5, dist);
 
-        // Final color mixing
-        vec3 finalCol;
-        if (isDarkMode > 0.5) {
-          finalCol = mix(col * 0.3, col, dim);
-        } else {
-          vec3 nebulaEffect = col * 0.5;
-          float centerWhite = 1.0 - dim * 0.7;
-          finalCol = bgColor - nebulaEffect * (1.0 - centerWhite * 0.5);
-          finalCol = max(finalCol, vec3(0.75));
-          finalCol = mix(finalCol, finalCol + nebulaEffect * 0.4, dim * 0.8);
-          finalCol = mix(bgColor * 0.95, finalCol, 0.85);
-        }
-
+        vec3 finalCol = mix(col * 0.3, col, dim);
         gl_FragColor = vec4(finalCol, 1.0);
       }
     `;
 
-    // Uniforms (removed unused iMouse)
+    // Uniforms with pre-calculated rotation matrices
     const uniforms = {
       iTime: { value: 0 },
       iResolution: { value: new Vector2() },
-      isDarkMode: { value: theme === "dark" ? 1.0 : 0.0 },
+      uRotXZ: { value: new Matrix3() },
+      uRotXY: { value: new Matrix3() },
     };
     uniformsRef.current = uniforms;
 
@@ -175,7 +197,10 @@ export function InteractiveNebulaShader({
         const w = container.clientWidth;
         const h = container.clientHeight;
         renderer.setSize(w, h);
-        uniforms.iResolution.value.set(w * pixelRatio, h * pixelRatio);
+        uniforms.iResolution.value.set(
+          w * capabilities.pixelRatio,
+          h * capabilities.pixelRatio
+        );
       }, 100);
     };
     window.addEventListener("resize", onResize);
@@ -184,12 +209,14 @@ export function InteractiveNebulaShader({
     const w = container.clientWidth;
     const h = container.clientHeight;
     renderer.setSize(w, h);
-    uniforms.iResolution.value.set(w * pixelRatio, h * pixelRatio);
+    uniforms.iResolution.value.set(
+      w * capabilities.pixelRatio,
+      h * capabilities.pixelRatio
+    );
 
-    // OPTIMIZATION 4: Frame rate limiting (30 FPS instead of 60)
+    // Frame rate limiting
     let lastTime = 0;
-    const targetFPS = 30;
-    const frameInterval = 1000 / targetFPS;
+    const frameInterval = 1000 / capabilities.targetFPS;
 
     const animate = (currentTime: number) => {
       animationIdRef.current = requestAnimationFrame(animate);
@@ -198,35 +225,69 @@ export function InteractiveNebulaShader({
       if (delta < frameInterval) return;
 
       lastTime = currentTime - (delta % frameInterval);
-      uniforms.iTime.value = currentTime * 0.001; // Convert to seconds
+      const time = currentTime * 0.001;
+      uniforms.iTime.value = time;
+
+      // Pre-calculate rotation matrices (once per frame instead of per pixel)
+      const cosXZ = Math.cos(time * 0.1);
+      const sinXZ = Math.sin(time * 0.1);
+      const cosXY = Math.cos(time * 0.08);
+      const sinXY = Math.sin(time * 0.08);
+
+      // XZ rotation matrix (rotation around Y axis)
+      uniforms.uRotXZ.value.set(
+        cosXZ, 0, sinXZ,
+        0, 1, 0,
+        -sinXZ, 0, cosXZ
+      );
+
+      // XY rotation matrix (rotation around Z axis)
+      uniforms.uRotXY.value.set(
+        cosXY, -sinXY, 0,
+        sinXY, cosXY, 0,
+        0, 0, 1
+      );
+
       renderer.render(scene, camera);
     };
 
-    animationIdRef.current = requestAnimationFrame(animate);
+    // Intersection Observer - only render when in viewport
+    const intersectionObserver = new IntersectionObserver(
+      ([entry]) => {
+        isVisibleRef.current = entry.isIntersecting;
+        if (entry.isIntersecting) {
+          lastTime = performance.now();
+          startAnimation(animate);
+        } else {
+          stopAnimation();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    intersectionObserver.observe(container);
 
-    // OPTIMIZATION 5: Pause animation when tab is not visible
+    // Visibility change handler - pause when tab is hidden
     const handleVisibilityChange = () => {
       if (document.hidden) {
-        if (animationIdRef.current) {
-          cancelAnimationFrame(animationIdRef.current);
-          animationIdRef.current = null;
-        }
-      } else {
-        if (!animationIdRef.current) {
-          lastTime = performance.now();
-          animationIdRef.current = requestAnimationFrame(animate);
-        }
+        stopAnimation();
+      } else if (isVisibleRef.current) {
+        lastTime = performance.now();
+        startAnimation(animate);
       }
     };
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
+    // Start animation if visible
+    if (isVisibleRef.current) {
+      animationIdRef.current = requestAnimationFrame(animate);
+    }
+
     return () => {
       window.removeEventListener("resize", onResize);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
+      intersectionObserver.disconnect();
       clearTimeout(resizeTimeout);
-      if (animationIdRef.current) {
-        cancelAnimationFrame(animationIdRef.current);
-      }
+      stopAnimation();
       if (container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
       }
@@ -236,8 +297,7 @@ export function InteractiveNebulaShader({
       rendererRef.current = null;
       uniformsRef.current = null;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [startAnimation, stopAnimation]);
 
   return (
     <div
