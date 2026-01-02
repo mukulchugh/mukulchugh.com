@@ -1,7 +1,16 @@
 "use client";
 
-import React, { useEffect, useRef, useCallback } from "react";
-import * as THREE from "three";
+import React, { useEffect, useRef } from "react";
+// Tree-shake Three.js - only import what we need (~100KB vs ~600KB)
+import {
+  WebGLRenderer,
+  Scene,
+  OrthographicCamera,
+  ShaderMaterial,
+  PlaneGeometry,
+  Mesh,
+  Vector2,
+} from "three";
 
 export interface InteractiveNebulaShaderProps {
   className?: string;
@@ -13,11 +22,11 @@ export function InteractiveNebulaShader({
   theme = "dark",
 }: InteractiveNebulaShaderProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
+  const rendererRef = useRef<WebGLRenderer | null>(null);
   const animationIdRef = useRef<number | null>(null);
   const uniformsRef = useRef<{
     iTime: { value: number };
-    iResolution: { value: THREE.Vector2 };
+    iResolution: { value: Vector2 };
     isDarkMode: { value: number };
   } | null>(null);
 
@@ -40,7 +49,7 @@ export function InteractiveNebulaShader({
     const pixelRatio = Math.min(window.devicePixelRatio, 1.5);
 
     // OPTIMIZATION 2: Disable antialiasing and use powerPreference
-    const renderer = new THREE.WebGLRenderer({
+    const renderer = new WebGLRenderer({
       antialias: false,
       alpha: false,
       powerPreference: "low-power",
@@ -52,8 +61,8 @@ export function InteractiveNebulaShader({
     renderer.setClearColor(clearColor, 1);
     container.appendChild(renderer.domElement);
 
-    const scene = new THREE.Scene();
-    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+    const scene = new Scene();
+    const camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
     // Vertex shader
     const vertexShader = `
@@ -144,18 +153,18 @@ export function InteractiveNebulaShader({
     // Uniforms (removed unused iMouse)
     const uniforms = {
       iTime: { value: 0 },
-      iResolution: { value: new THREE.Vector2() },
+      iResolution: { value: new Vector2() },
       isDarkMode: { value: theme === "dark" ? 1.0 : 0.0 },
     };
     uniformsRef.current = uniforms;
 
-    const material = new THREE.ShaderMaterial({
+    const material = new ShaderMaterial({
       vertexShader,
       fragmentShader,
       uniforms,
     });
-    const geometry = new THREE.PlaneGeometry(2, 2);
-    const mesh = new THREE.Mesh(geometry, material);
+    const geometry = new PlaneGeometry(2, 2);
+    const mesh = new Mesh(geometry, material);
     scene.add(mesh);
 
     // Resize handler with debounce

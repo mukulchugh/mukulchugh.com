@@ -1,13 +1,33 @@
-import React, { Suspense } from "react";
-
-const About = React.lazy(() => import("@/components/about"));
-const BlogSection = React.lazy(() => import("@/components/blog-section"));
-const Experience = React.lazy(() => import("@/components/experience"));
-const Intro = React.lazy(() => import("@/components/intro"));
-const Projects = React.lazy(() => import("@/components/projects"));
-import { LetsWorkTogether } from "@/components/ui/lets-work-section";
+import dynamic from "next/dynamic";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
+
+// Dynamic imports with Next.js for better chunk splitting
+// Priority: Intro loads first (above fold), others load as user scrolls
+const Intro = dynamic(() => import("@/components/intro"), {
+  loading: () => <SectionSkeleton minHeight="100vh" />,
+});
+
+const About = dynamic(() => import("@/components/about"), {
+  loading: () => <SectionSkeleton />,
+});
+
+const Projects = dynamic(() => import("@/components/projects"), {
+  loading: () => <SectionSkeleton />,
+});
+
+const BlogSection = dynamic(() => import("@/components/blog-section"), {
+  loading: () => <SectionSkeleton />,
+});
+
+const Experience = dynamic(() => import("@/components/experience"), {
+  loading: () => <SectionSkeleton />,
+});
+
+const LetsWorkTogether = dynamic(
+  () => import("@/components/ui/lets-work-section").then((mod) => mod.LetsWorkTogether),
+  { loading: () => <SectionSkeleton minHeight="200px" /> }
+);
 
 function SectionSkeleton({ minHeight = "400px" }: { minHeight?: string }) {
   return (
@@ -24,24 +44,13 @@ function SectionSkeleton({ minHeight = "400px" }: { minHeight?: string }) {
 export default function Home() {
   return (
     <main className="flex flex-col items-center px-4">
-      <Suspense fallback={<SectionSkeleton minHeight="100vh" />}>
-        <Intro />
-      </Suspense>
-      <Suspense fallback={<SectionSkeleton />}>
-        <About />
-      </Suspense>
-      <Suspense fallback={<SectionSkeleton />}>
-        <Projects />
-      </Suspense>
-      <Suspense fallback={<SectionSkeleton />}>
-        <BlogSection />
-      </Suspense>
-      <Suspense fallback={<SectionSkeleton />}>
-        <Experience />
-      </Suspense>
-      <Suspense fallback={<SectionSkeleton />}>
-        <LetsWorkTogether />
-      </Suspense>
+      {/* Dynamic imports handle their own loading states */}
+      <Intro />
+      <About />
+      <Projects />
+      <BlogSection />
+      <Experience />
+      <LetsWorkTogether />
       <SpeedInsights />
       <Analytics />
     </main>
