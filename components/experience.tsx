@@ -5,7 +5,7 @@ import { SectionHeader } from "./section-header";
 import ExpandableCard from "./ui/expandable-card";
 import { experiencesData } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
-import { Briefcase } from "lucide-react";
+import { IconBriefcase } from "@tabler/icons-react";
 
 export default function Experience() {
   const { ref } = useSectionInView("Experience");
@@ -32,7 +32,7 @@ export default function Experience() {
       className="scroll-mt-28 mb-28 sm:mb-40 px-4 max-w-4xl mx-auto w-full"
     >
       <SectionHeader
-        icon={Briefcase}
+        icon={IconBriefcase}
         label="Experience"
         title="My professional"
         highlight="journey"

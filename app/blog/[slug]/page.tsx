@@ -4,7 +4,7 @@ import { syne } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Calendar, Clock } from "lucide-react";
+import { IconArrowLeft, IconCalendar, IconClock } from "@tabler/icons-react";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -151,7 +151,7 @@ export default async function PostPage({ params }: PostPageProps) {
           href="/blog"
           className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <IconArrowLeft className="w-4 h-4" />
           Back to Blog
         </Link>
 
@@ -197,11 +197,11 @@ export default async function PostPage({ params }: PostPageProps) {
               </div>
             )}
             <div className="flex items-center gap-2">
-              <Calendar className="w-4 h-4" />
+              <IconCalendar className="w-4 h-4" />
               <time dateTime={post.publishedAt}>{formattedDate}</time>
             </div>
             <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4" />
+              <IconClock className="w-4 h-4" />
               <span>{post.readTimeInMinutes} min read</span>
             </div>
           </div>
@@ -262,7 +262,7 @@ export default async function PostPage({ params }: PostPageProps) {
               href="/blog"
               className="inline-flex items-center gap-2 text-sm font-medium text-foreground hover:text-muted-foreground transition-colors"
             >
-              <ArrowLeft className="w-4 h-4" />
+              <IconArrowLeft className="w-4 h-4" />
               View all posts
             </Link>
 

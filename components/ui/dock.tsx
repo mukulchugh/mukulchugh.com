@@ -8,22 +8,22 @@ import { useActiveSectionContext } from "@/context/active-section-context";
 import { cn } from "@/lib/utils";
 import { siteConfig } from "@/lib/data";
 import {
-  Home,
-  User,
-  FolderKanban,
-  BookOpen,
-  Briefcase,
-  Mail,
-} from "lucide-react";
+  IconHome,
+  IconUser,
+  IconLayoutKanban,
+  IconBook,
+  IconBriefcase,
+  IconMail,
+} from "@tabler/icons-react";
 import { motion, AnimatePresence } from "motion/react";
 
 const navItems = [
-  { name: "Home", hash: "#home", icon: Home },
-  { name: "About", hash: "#about", icon: User },
-  { name: "Projects", hash: "#projects", icon: FolderKanban },
-  { name: "Blog", hash: "/blog", icon: BookOpen },
-  { name: "Experience", hash: "#experience", icon: Briefcase },
-  { name: "Contact", hash: "#contact", icon: Mail },
+  { name: "Home", hash: "#home", icon: IconHome },
+  { name: "About", hash: "#about", icon: IconUser },
+  { name: "Projects", hash: "#projects", icon: IconLayoutKanban },
+  { name: "Blog", hash: "/blog", icon: IconBook },
+  { name: "Experience", hash: "#experience", icon: IconBriefcase },
+  { name: "Contact", hash: "#contact", icon: IconMail },
 ] as const;
 
 export function Dock() {
@@ -121,7 +121,7 @@ export function Dock() {
                   "h-4 w-4 transition-all duration-200 group-hover:scale-110 sm:h-5 sm:w-5",
                   isActive ? "text-indigo-400" : "text-white/70 group-hover:text-white/90"
                 )}
-                strokeWidth={2}
+                stroke={2}
               />
               <span className="pointer-events-none absolute -top-8 rounded-md bg-neutral-800 px-2 py-1 text-[10px] text-white/80 opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap">
                 {item.name}
@@ -142,7 +142,7 @@ export function Dock() {
                   "h-4 w-4 transition-all duration-200 group-hover:scale-110 sm:h-5 sm:w-5",
                   isActive ? "text-indigo-400" : "text-white/70 group-hover:text-white/90"
                 )}
-                strokeWidth={2}
+                stroke={2}
               />
               <span className="pointer-events-none absolute -top-8 rounded-md bg-neutral-800 px-2 py-1 text-[10px] text-white/80 opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap">
                 {item.name}

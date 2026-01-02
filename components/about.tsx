@@ -5,7 +5,7 @@ import { SectionHeader } from "./section-header";
 import { motion } from "motion/react";
 import { useSectionInView } from "@/lib/hooks";
 import { aboutContent } from "@/lib/data";
-import { User } from "lucide-react";
+import { IconUser } from "@tabler/icons-react";
 
 export default function About() {
   const { ref } = useSectionInView("About");
@@ -20,7 +20,7 @@ export default function About() {
       id="about"
     >
       <SectionHeader
-        icon={User}
+        icon={IconUser}
         label="About"
         title="A bit about"
         highlight="me"

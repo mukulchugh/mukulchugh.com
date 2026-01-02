@@ -3,7 +3,7 @@
 import Cal, { getCalApi } from "@calcom/embed-react";
 import { useEffect, useState } from "react";
 
-import { ArrowUpRight } from "lucide-react";
+import { IconArrowUpRight } from "@tabler/icons-react";
 import type React from "react";
 import clsx from "clsx";
 import { siteConfig } from "@/lib/data";
@@ -195,7 +195,7 @@ export function LetsWorkTogether() {
                       transitionDuration: isClicked ? "700ms" : "500ms",
                     }}
                   />
-                  <ArrowUpRight
+                  <IconArrowUpRight
                     className={`size-6 transition-all ease-[cubic-bezier(0.16,1,0.3,1)] sm:size-7 ${
                       isHovered && !isClicked ? "text-gray-900" : "text-white"
                     }`}

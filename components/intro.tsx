@@ -4,9 +4,13 @@ import Image from "next/image";
 import React, { Suspense, useCallback, useState } from "react";
 import { motion } from "motion/react";
 import Link from "next/link";
-import { BsGithub, BsTwitterX } from "react-icons/bs";
-import { FaLinkedinIn } from "react-icons/fa";
-import { FileText, MessageCircle } from "lucide-react";
+import {
+  IconBrandGithub,
+  IconBrandX,
+  IconBrandLinkedin,
+  IconFileText,
+  IconMessage,
+} from "@tabler/icons-react";
 import { useSectionInView } from "@/lib/hooks";
 import { useActiveSectionContext } from "@/context/active-section-context";
 import { siteConfig, introContent } from "@/lib/data";
@@ -134,7 +138,7 @@ const Component = React.memo(() => {
           onClick={handleClick}
         >
           {introContent.ctaText}{" "}
-          <MessageCircle className="w-4 h-4 opacity-80 group-hover:scale-110 transition-transform duration-200" />
+          <IconMessage className="w-4 h-4 opacity-80 group-hover:scale-110 transition-transform duration-200" />
         </Link>
 
         <button
@@ -150,7 +154,7 @@ const Component = React.memo(() => {
           )}
         >
           {introContent.resumeButtonText}{" "}
-          <FileText className="w-4 h-4 opacity-70 group-hover:scale-110 transition-transform duration-200" />
+          <IconFileText className="w-4 h-4 opacity-70 group-hover:scale-110 transition-transform duration-200" />
         </button>
 
         <div className="flex gap-2">
@@ -167,7 +171,7 @@ const Component = React.memo(() => {
             target="_blank"
             aria-label="LinkedIn Profile"
           >
-            <FaLinkedinIn />
+            <IconBrandLinkedin size={20} />
             <span className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-lg bg-neutral-800/90 backdrop-blur-md ring-1 ring-white/10 text-xs text-white/90 whitespace-nowrap opacity-0 scale-90 translate-y-2 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-y-0 transition-all duration-200">
               LinkedIn
             </span>
@@ -186,7 +190,7 @@ const Component = React.memo(() => {
             target="_blank"
             aria-label="GitHub Profile"
           >
-            <BsGithub />
+            <IconBrandGithub size={20} />
             <span className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-lg bg-neutral-800/90 backdrop-blur-md ring-1 ring-white/10 text-xs text-white/90 whitespace-nowrap opacity-0 scale-90 translate-y-2 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-y-0 transition-all duration-200">
               GitHub
             </span>
@@ -205,7 +209,7 @@ const Component = React.memo(() => {
             target="_blank"
             aria-label="Twitter Profile"
           >
-            <BsTwitterX />
+            <IconBrandX size={20} />
             <span className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-lg bg-neutral-800/90 backdrop-blur-md ring-1 ring-white/10 text-xs text-white/90 whitespace-nowrap opacity-0 scale-90 translate-y-2 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-y-0 transition-all duration-200">
               Twitter
             </span>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, type Variants } from "motion/react";
-import { BsList, BsX } from "react-icons/bs";
+import { IconMenu2, IconX } from "@tabler/icons-react";
 import clsx from "clsx";
 import { syne } from "@/lib/fonts";
 import Link from "next/link";
@@ -140,7 +140,7 @@ const MobileMenu = () => {
             variants={hideNavItemsVariant}
             onClick={() => setMobileNavOpen(true)}
           >
-            <BsList className="h-6 w-6 text-gray-900 dark:text-gray-100" />
+            <IconMenu2 className="h-6 w-6 text-gray-900 dark:text-gray-100" />
           </motion.div>
         </div>
         <motion.div
@@ -151,7 +151,7 @@ const MobileMenu = () => {
             variants={fadeInVariant}
             onClick={() => setMobileNavOpen(false)}
           >
-            <BsX className="h-6 w-6 text-gray-900 dark:text-white" />
+            <IconX className="h-6 w-6 text-gray-900 dark:text-white" />
           </motion.button>
           <motion.ul variants={ulVariant}>
             {MOBILE_NAV_ITEMS.map((navItem) => (

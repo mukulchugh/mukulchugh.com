@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { syne } from "@/lib/fonts";
-import { X } from "lucide-react";
+import { IconX } from "@tabler/icons-react";
 
 export interface ExperienceCardItem {
   id: string;
@@ -113,7 +113,7 @@ export default function ExpandableCard({
                 exit={{ opacity: 0, scale: 0.8 }}
                 transition={{ duration: 0.2, delay: 0.1 }}
               >
-                <X className="w-4 h-4 text-white/70" />
+                <IconX className="w-4 h-4 text-white/70" />
               </motion.button>
 
               <div className="p-6 sm:p-8">

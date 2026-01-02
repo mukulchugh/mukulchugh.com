@@ -1,4 +1,4 @@
-import { ArrowLeft } from "lucide-react";
+import { IconArrowLeft } from "@tabler/icons-react";
 import Link from "next/link";
 import { PostsGrid } from "@/components/blog/posts-grid";
 import { cn } from "@/lib/utils";
@@ -35,7 +35,7 @@ export default async function BlogPage() {
           href="/"
           className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors w-fit"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <IconArrowLeft className="w-4 h-4" />
           Back to Home
         </Link>
 

@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { projectsData } from "@/lib/data";
 import { motion, useScroll, useTransform } from "motion/react";
-import { BsGithub, BsGlobe } from "react-icons/bs";
+import { IconBrandGithub, IconWorld } from "@tabler/icons-react";
 import { syne } from "@/lib/fonts";
 import clsx from "clsx";
 
@@ -78,7 +78,7 @@ ProjectProps) {
               mt-4"
                 target="_blank"
               >
-                <BsGithub className="inline-block mr-2" />
+                <IconBrandGithub className="inline-block mr-2 h-4 w-4" />
                 Github
               </a>
             )}
@@ -96,7 +96,7 @@ ProjectProps) {
               mt-4"
                 target="_blank"
               >
-                <BsGlobe className="inline-block mr-2" />
+                <IconWorld className="inline-block mr-2 h-4 w-4" />
                 Demo
               </a>
             )}

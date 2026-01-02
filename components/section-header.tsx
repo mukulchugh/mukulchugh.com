@@ -4,10 +4,10 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import { syne } from "@/lib/fonts";
 import { motion } from "motion/react";
-import { LucideIcon } from "lucide-react";
+import type { Icon } from "@tabler/icons-react";
 
 interface SectionHeaderProps {
-  icon: LucideIcon;
+  icon: Icon;
   label: string;
   title: string;
   highlight?: string;

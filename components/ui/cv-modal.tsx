@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { syne } from "@/lib/fonts";
-import { X, Download, FileText, ExternalLink } from "lucide-react";
+import { IconX, IconDownload, IconFileText, IconExternalLink } from "@tabler/icons-react";
 
 interface CVModalProps {
   isOpen: boolean;
@@ -89,7 +89,7 @@ export function CVModal({ isOpen, onClose, cvUrl, name }: CVModalProps) {
               <div className="flex items-center justify-between p-4 sm:p-6 border-b border-white/10">
                 <div className="flex items-center gap-3">
                   <div className="p-2 rounded-xl bg-gradient-to-b from-neutral-800/60 to-neutral-900/70 ring-1 ring-white/10">
-                    <FileText className="w-5 h-5 text-white/70" />
+                    <IconFileText className="w-5 h-5 text-white/70" />
                   </div>
                   <div>
                     <h3
@@ -121,7 +121,7 @@ export function CVModal({ isOpen, onClose, cvUrl, name }: CVModalProps) {
                       "transition-all duration-200"
                     )}
                   >
-                    <ExternalLink className="w-4 h-4" />
+                    <IconExternalLink className="w-4 h-4" />
                     Open
                   </a>
 
@@ -138,7 +138,7 @@ export function CVModal({ isOpen, onClose, cvUrl, name }: CVModalProps) {
                       "transition-all duration-200"
                     )}
                   >
-                    <Download className="w-4 h-4" />
+                    <IconDownload className="w-4 h-4" />
                     Download
                   </a>
 
@@ -147,7 +147,7 @@ export function CVModal({ isOpen, onClose, cvUrl, name }: CVModalProps) {
                     onClick={onClose}
                     className="p-2 rounded-xl bg-white/10 hover:bg-white/20 transition-colors"
                   >
-                    <X className="w-4 h-4 text-white/70" />
+                    <IconX className="w-4 h-4 text-white/70" />
                   </button>
                 </div>
               </div>
@@ -162,7 +162,7 @@ export function CVModal({ isOpen, onClose, cvUrl, name }: CVModalProps) {
 
                 {/* Fallback for mobile/browsers that don't support PDF embed */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-neutral-950 sm:hidden">
-                  <FileText className="w-16 h-16 text-white/30" />
+                  <IconFileText className="w-16 h-16 text-white/30" />
                   <p className="text-white/60 text-center px-4">
                     PDF preview is best viewed on desktop
                   </p>
@@ -178,7 +178,7 @@ export function CVModal({ isOpen, onClose, cvUrl, name }: CVModalProps) {
                         "text-white/90 text-sm font-medium"
                       )}
                     >
-                      <ExternalLink className="w-4 h-4" />
+                      <IconExternalLink className="w-4 h-4" />
                       View PDF
                     </a>
                     <a
@@ -190,7 +190,7 @@ export function CVModal({ isOpen, onClose, cvUrl, name }: CVModalProps) {
                         "text-neutral-900 text-sm font-medium"
                       )}
                     >
-                      <Download className="w-4 h-4" />
+                      <IconDownload className="w-4 h-4" />
                       Download
                     </a>
                   </div>

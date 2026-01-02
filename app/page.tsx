@@ -1,6 +1,6 @@
-import dynamic from "next/dynamic";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import dynamic from "next/dynamic";
 
 // Dynamic imports with Next.js for better chunk splitting
 // Priority: Intro loads first (above fold), others load as user scrolls

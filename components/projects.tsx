@@ -6,7 +6,18 @@ import { projectsData } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
 import { GlowingEffect } from "@/components/ui/glowing-effect";
 import { cn } from "@/lib/utils";
-import { Box, Lock, Settings, Sparkles, Github, ExternalLink, FolderKanban, Code, Palette, Layout } from "lucide-react";
+import {
+  IconBox,
+  IconLock,
+  IconSettings,
+  IconSparkles,
+  IconBrandGithub,
+  IconExternalLink,
+  IconLayoutKanban,
+  IconCode,
+  IconPalette,
+  IconLayout,
+} from "@tabler/icons-react";
 
 interface GridItemProps {
   area: string;
@@ -65,7 +76,7 @@ const GridItem = ({ area, icon, title, description, tags, github, demo }: GridIt
                   className="p-2 rounded-lg text-muted-foreground hover:text-[#dd7bbb] hover:bg-[#dd7bbb]/10 transition-all duration-200"
                   aria-label="View on GitHub"
                 >
-                  <Github className="h-4 w-4" />
+                  <IconBrandGithub className="h-4 w-4" />
                 </a>
               )}
               {demo && (
@@ -76,7 +87,7 @@ const GridItem = ({ area, icon, title, description, tags, github, demo }: GridIt
                   className="p-2 rounded-lg text-muted-foreground hover:text-[#5a922c] hover:bg-[#5a922c]/10 transition-all duration-200"
                   aria-label="View Demo"
                 >
-                  <ExternalLink className="h-4 w-4" />
+                  <IconExternalLink className="h-4 w-4" />
                 </a>
               )}
             </div>
@@ -112,13 +123,13 @@ const GridItem = ({ area, icon, title, description, tags, github, demo }: GridIt
 };
 
 const icons = [
-  <Box key="box" className="h-4 w-4 text-foreground transition-colors duration-300 group-hover:text-[#dd7bbb]" />,
-  <Settings key="settings" className="h-4 w-4 text-foreground transition-colors duration-300 group-hover:text-[#d79f1e]" />,
-  <Code key="code" className="h-4 w-4 text-foreground transition-colors duration-300 group-hover:text-[#5a922c]" />,
-  <Sparkles key="sparkles" className="h-4 w-4 text-foreground transition-colors duration-300 group-hover:text-[#4c7894]" />,
-  <Lock key="lock" className="h-4 w-4 text-foreground transition-colors duration-300 group-hover:text-[#dd7bbb]" />,
-  <Palette key="palette" className="h-4 w-4 text-foreground transition-colors duration-300 group-hover:text-[#d79f1e]" />,
-  <Layout key="layout" className="h-4 w-4 text-foreground transition-colors duration-300 group-hover:text-[#5a922c]" />,
+  <IconBox key="box" className="h-4 w-4 text-foreground transition-colors duration-300 group-hover:text-[#dd7bbb]" />,
+  <IconSettings key="settings" className="h-4 w-4 text-foreground transition-colors duration-300 group-hover:text-[#d79f1e]" />,
+  <IconCode key="code" className="h-4 w-4 text-foreground transition-colors duration-300 group-hover:text-[#5a922c]" />,
+  <IconSparkles key="sparkles" className="h-4 w-4 text-foreground transition-colors duration-300 group-hover:text-[#4c7894]" />,
+  <IconLock key="lock" className="h-4 w-4 text-foreground transition-colors duration-300 group-hover:text-[#dd7bbb]" />,
+  <IconPalette key="palette" className="h-4 w-4 text-foreground transition-colors duration-300 group-hover:text-[#d79f1e]" />,
+  <IconLayout key="layout" className="h-4 w-4 text-foreground transition-colors duration-300 group-hover:text-[#5a922c]" />,
 ];
 
 // Bento grid layout for 7 projects
@@ -138,7 +149,7 @@ export default function Projects() {
   return (
     <section ref={ref} id="projects" className="scroll-mt-28 mb-28 px-4">
       <SectionHeader
-        icon={FolderKanban}
+        icon={IconLayoutKanban}
         label="Projects"
         title="Things I've"
         highlight="built"

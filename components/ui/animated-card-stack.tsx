@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Clock } from "lucide-react";
+import { IconArrowRight, IconClock } from "@tabler/icons-react";
 import type { Post } from "@/lib/hashnode";
 
 interface Card {
@@ -49,7 +49,7 @@ function CardContent({ post }: { post: Post }) {
       </div>
       <div className="flex w-full flex-col gap-2 px-2 pb-4">
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <Clock className="h-3 w-3" />
+          <IconClock className="h-3 w-3" />
           <span>{post.readTimeInMinutes} min read</span>
           {post.tags?.[0] && (
             <>
@@ -66,7 +66,7 @@ function CardContent({ post }: { post: Post }) {
           aria-label={`Read article: ${post.title}`}
         >
           Read article
-          <ArrowRight className="h-3 w-3" />
+          <IconArrowRight className="h-3 w-3" />
         </Link>
       </div>
     </div>
@@ -165,7 +165,7 @@ export default function AnimatedCardStack({ posts }: AnimatedCardStackProps) {
           className="flex h-9 cursor-pointer select-none items-center justify-center gap-1 overflow-hidden rounded-lg border border-border bg-background px-4 font-medium text-secondary-foreground transition-all hover:bg-secondary/80 active:scale-[0.98]"
         >
           Next Post
-          <ArrowRight className="h-4 w-4" />
+          <IconArrowRight className="h-4 w-4" />
         </button>
       </div>
     </div>

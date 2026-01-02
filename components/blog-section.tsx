@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, BookOpen } from "lucide-react";
+import { IconArrowRight, IconBook } from "@tabler/icons-react";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { syne } from "@/lib/fonts";
@@ -47,7 +47,7 @@ export default function BlogSection() {
         >
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-[#dd7bbb]/10 border border-[#dd7bbb]/20">
-              <BookOpen className="h-5 w-5 text-[#dd7bbb]" />
+              <IconBook className="h-5 w-5 text-[#dd7bbb]" />
             </div>
             <span className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
               Blog
@@ -77,7 +77,7 @@ export default function BlogSection() {
               className="group inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-foreground text-background font-medium hover:opacity-90 transition-all"
             >
               View all posts
-              <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              <IconArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
         </motion.div>
