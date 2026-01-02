@@ -74,8 +74,76 @@ export default async function PostPage({ params }: PostPageProps) {
     day: "numeric",
   });
 
+  // BlogPosting structured data for SEO
+  const blogPostingSchema = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.brief,
+    image: post.coverImage?.url || siteConfig.images.ogImage,
+    datePublished: post.publishedAt,
+    dateModified: post.publishedAt,
+    author: {
+      "@type": "Person",
+      name: post.author?.name || siteConfig.name,
+      image: post.author?.profilePicture || siteConfig.images.profileImage,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: siteConfig.name,
+      logo: {
+        "@type": "ImageObject",
+        url: siteConfig.images.profileImage,
+      },
+    },
+    url: `${siteConfig.siteUrl}/blog/${slug}`,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${siteConfig.siteUrl}/blog/${slug}`,
+    },
+    keywords: post.tags.map((tag) => tag.name).join(", "),
+    articleSection: post.tags[0]?.name || "Technology",
+    timeRequired: `PT${post.readTimeInMinutes}M`,
+  };
+
+  // Breadcrumb structured data
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: siteConfig.siteUrl,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Blog",
+        item: `${siteConfig.siteUrl}/blog`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: post.title,
+        item: `${siteConfig.siteUrl}/blog/${slug}`,
+      },
+    ],
+  };
+
   return (
     <main className="w-full py-20 lg:py-32">
+      {/* Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+
       <article className="container mx-auto px-4 max-w-4xl">
         {/* Back to Blog */}
         <Link

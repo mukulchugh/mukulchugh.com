@@ -1,44 +1,10 @@
+import type { Post, PageInfo, PostsResponse } from "./types/index";
+
 const HASHNODE_GQL_ENDPOINT = "https://gql.hashnode.com";
 export const HASHNODE_HOST = process.env.NEXT_PUBLIC_HASHNODE_HOST || "mukulchugh.hashnode.dev";
 
-// Types
-export interface Post {
-  id: string;
-  title: string;
-  slug: string;
-  brief: string;
-  content?: {
-    html: string;
-    markdown: string;
-  };
-  publishedAt: string;
-  readTimeInMinutes: number;
-  coverImage: {
-    url: string;
-  } | null;
-  author?: {
-    name: string;
-    profilePicture: string;
-  };
-  tags: Array<{
-    name: string;
-    slug: string;
-  }>;
-  seo?: {
-    title: string;
-    description: string;
-  };
-}
-
-export interface PageInfo {
-  endCursor: string | null;
-  hasNextPage: boolean;
-}
-
-export interface PostsResponse {
-  posts: Post[];
-  pageInfo: PageInfo;
-}
+// Re-export types for backwards compatibility
+export type { Post, PageInfo, PostsResponse } from "./types/index";
 
 // GraphQL Queries
 export const GET_POSTS_QUERY = `

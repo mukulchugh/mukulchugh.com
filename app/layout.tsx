@@ -75,6 +75,19 @@ export const metadata: Metadata = {
   verification: {
     google: siteConfig.analytics.googleAdsenseId,
   },
+  applicationName: siteConfig.name,
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: siteConfig.name,
+  },
+  formatDetection: {
+    telephone: false, // Prevent auto-linking phone numbers
+  },
+  category: "Technology",
+  other: {
+    "msapplication-TileColor": "#000000",
+  },
 };
 
 export default function RootLayout({
@@ -90,6 +103,12 @@ export default function RootLayout({
         <link rel="preconnect" href="https://gql.hashnode.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://analytics.google.com" />
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title={`${siteConfig.name} Blog RSS Feed`}
+          href="/blog/rss.xml"
+        />
         <JsonLd />
       </head>
       <body

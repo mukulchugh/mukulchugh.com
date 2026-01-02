@@ -1,3 +1,3 @@
-import { links } from "./data";
-
-export type SectionName = (typeof links)[number]["name"];
+// Re-export all types from centralized location
+// This file exists for backwards compatibility
+export * from "./types/index";

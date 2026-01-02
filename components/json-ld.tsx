@@ -4,19 +4,27 @@ export function JsonLd() {
   const personSchema = {
     "@context": "https://schema.org",
     "@type": "Person",
+    "@id": `${siteConfig.siteUrl}/#person`,
     name: siteConfig.name,
     givenName: siteConfig.firstName,
     familyName: siteConfig.lastName,
     url: siteConfig.siteUrl,
-    image: siteConfig.images.profileImage,
+    image: {
+      "@type": "ImageObject",
+      url: siteConfig.images.profileImage,
+      caption: siteConfig.name,
+    },
     jobTitle: siteConfig.title,
     description: siteConfig.siteDescription,
-    email: `mailto:${siteConfig.email.display}`,
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: "Bengaluru",
-      addressRegion: "Karnataka",
-      addressCountry: "India",
+    email: siteConfig.email.display,
+    workLocation: {
+      "@type": "Place",
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "San Francisco",
+        addressRegion: "CA",
+        addressCountry: "US",
+      },
     },
     sameAs: [
       siteConfig.social.github,
@@ -25,7 +33,13 @@ export function JsonLd() {
       siteConfig.social.blog,
     ],
     knowsAbout: skillsData,
-    alumniOf: experiencesData.map((exp) => ({
+    worksFor: {
+      "@type": "Organization",
+      "@id": `${siteConfig.siteUrl}/#organization`,
+      name: experiencesData[0].company, // Current employer
+      url: "https://quivly.ai",
+    },
+    alumniOf: experiencesData.slice(1, 4).map((exp) => ({
       "@type": "Organization",
       name: exp.company,
     })),
@@ -34,47 +48,59 @@ export function JsonLd() {
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: siteConfig.name,
+    "@id": `${siteConfig.siteUrl}/#website`,
+    name: `${siteConfig.name} - Portfolio`,
     url: siteConfig.siteUrl,
     description: siteConfig.siteDescription,
+    inLanguage: "en-US",
     author: {
-      "@type": "Person",
-      name: siteConfig.name,
+      "@id": `${siteConfig.siteUrl}/#person`,
+    },
+    publisher: {
+      "@id": `${siteConfig.siteUrl}/#person`,
+    },
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${siteConfig.siteUrl}/blog?q={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
     },
   };
 
   const profilePageSchema = {
     "@context": "https://schema.org",
     "@type": "ProfilePage",
+    "@id": siteConfig.siteUrl,
+    url: siteConfig.siteUrl,
+    name: `${siteConfig.name} - ${siteConfig.title}`,
+    description: siteConfig.siteDescription,
+    inLanguage: "en-US",
+    isPartOf: {
+      "@id": `${siteConfig.siteUrl}/#website`,
+    },
+    about: {
+      "@id": `${siteConfig.siteUrl}/#person`,
+    },
     mainEntity: {
-      "@type": "Person",
-      name: siteConfig.name,
-      image: siteConfig.images.profileImage,
-      description: siteConfig.siteDescription,
-      sameAs: [
-        siteConfig.social.github,
-        siteConfig.social.linkedin,
-        siteConfig.social.twitter,
-      ],
+      "@id": `${siteConfig.siteUrl}/#person`,
     },
   };
 
-  // Work experience as occupation/job postings
-  const workExperienceSchema = experiencesData.slice(0, 3).map((exp) => ({
+  // Organization schema for current employer
+  const organizationSchema = {
     "@context": "https://schema.org",
-    "@type": "Occupation",
-    name: exp.title,
-    occupationLocation: {
-      "@type": "City",
-      name: exp.location,
+    "@type": "Organization",
+    "@id": `${siteConfig.siteUrl}/#organization`,
+    name: experiencesData[0].company,
+    url: "https://quivly.ai",
+    logo: experiencesData[0].icon,
+    employee: {
+      "@id": `${siteConfig.siteUrl}/#person`,
     },
-    estimatedSalary: {
-      "@type": "MonetaryAmountDistribution",
-      currency: "INR",
-    },
-    description: exp.description?.join(" "),
-    skills: skillsData.slice(0, 10).join(", "),
-  }));
+    description: "AI-powered product platform",
+  };
 
   return (
     <>
@@ -90,13 +116,10 @@ export function JsonLd() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(profilePageSchema) }}
       />
-      {workExperienceSchema.map((schema, index) => (
-        <script
-          key={index}
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-        />
-      ))}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+      />
     </>
   );
 }
