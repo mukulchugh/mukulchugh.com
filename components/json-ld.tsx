@@ -22,7 +22,13 @@ const seoKeywords = [
   "Android Developer",
   "Tech Generalist",
   "Creative Technologist",
-  // Skills
+  "Staff Engineer",
+  "Principal Engineer",
+  "Tech Lead",
+  "CTO",
+  "T-Shaped Engineer",
+  "Product-Minded Engineer",
+  // Skills & Technologies
   "Software Engineering",
   "Mobile Engineering",
   "Digital Experiences",
@@ -36,6 +42,12 @@ const seoKeywords = [
   "GraphQL",
   "Framer Motion",
   "TailwindCSS",
+  "System Design",
+  "Microservices",
+  "Cloud Architecture",
+  "DevOps",
+  "CI/CD",
+  "API Design",
   // Topics
   "Digital Marketing",
   "Human-Centric Design",
@@ -45,6 +57,11 @@ const seoKeywords = [
   "Headless CMS",
   "Blockchain",
   "AI-powered Products",
+  "MVP Development",
+  "SaaS Development",
+  "Scalability",
+  "Performance Optimization",
+  "Technical Leadership",
   // Organizations & Products
   "Quivly",
   "Quivly.ai",
@@ -81,6 +98,12 @@ const seoKeywords = [
   "HeroApp",
   "Digital Moshai",
   "Instahomes",
+  // Developer Tools
+  "Vercel",
+  "GitHub",
+  "Supabase",
+  "Storybook",
+  "Design System",
 ];
 
 export function JsonLd() {
@@ -212,6 +235,54 @@ export function JsonLd() {
       "Community Building",
       "Tech Evangelism",
       "Workshop Facilitation",
+      // Deep Research Keywords (2025)
+      // System Design & Architecture
+      "System Design",
+      "Software Architecture",
+      "Microservices Architecture",
+      "Event-Driven Architecture",
+      "Distributed Systems",
+      "Cloud Architecture",
+      "Serverless Architecture",
+      "Kubernetes",
+      "Docker",
+      "Container Orchestration",
+      // DevOps & CI/CD
+      "DevOps",
+      "CI/CD",
+      "Continuous Integration",
+      "Continuous Deployment",
+      "GitOps",
+      "Infrastructure as Code",
+      "DevSecOps",
+      "Pipeline Automation",
+      // API & Performance
+      "API Design",
+      "REST API Design",
+      "GraphQL API",
+      "Performance Optimization",
+      "React Native Performance",
+      "Web Performance",
+      "Core Web Vitals",
+      // Leadership & Strategy
+      "Technical Leadership",
+      "Engineering Leadership",
+      "Technical Strategy",
+      "Architecture Decision",
+      "Team Scaling",
+      // Startup & Product
+      "MVP Development",
+      "SaaS Development",
+      "Product-Market Fit",
+      "Lean Startup",
+      "Rapid Prototyping",
+      // Modern Tools
+      "Vercel",
+      "Supabase",
+      "GitHub Actions",
+      "Storybook",
+      "Design System",
+      "AI Coding Assistant",
     ],
     hasOccupation: [
       {
@@ -240,6 +311,33 @@ export function JsonLd() {
           name: "United States",
         },
         skills: "React, Next.js, Node.js, GraphQL, MongoDB, PostgreSQL",
+      },
+      {
+        "@type": "Occupation",
+        name: "Founding Engineer",
+        occupationLocation: {
+          "@type": "Country",
+          name: "United States",
+        },
+        skills: "MVP Development, System Design, Technical Architecture, Full Stack Development",
+      },
+      {
+        "@type": "Occupation",
+        name: "Staff Engineer",
+        occupationLocation: {
+          "@type": "Country",
+          name: "United States",
+        },
+        skills: "Technical Leadership, System Design, Architecture, Mentoring, Cross-team Collaboration",
+      },
+      {
+        "@type": "Occupation",
+        name: "Tech Lead",
+        occupationLocation: {
+          "@type": "Country",
+          name: "United States",
+        },
+        skills: "Technical Leadership, Code Review, Architecture Decision, Team Management",
       },
     ],
     worksFor: {
