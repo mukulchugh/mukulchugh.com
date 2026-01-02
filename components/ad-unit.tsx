@@ -58,8 +58,7 @@ export function AdUnit({
     <div className={`ad-container ${className}`}>
       <ins
         ref={adRef}
-        className="adsbygoogle"
-        style={{ display: "block" }}
+        className="adsbygoogle block"
         data-ad-client={siteConfig.analytics.googleAdsenseId}
         data-ad-slot={adSlot}
         data-ad-format={adFormat}

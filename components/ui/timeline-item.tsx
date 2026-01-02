@@ -82,9 +82,6 @@ export function TimelineItem({
             "relative p-5 rounded-lg border shadow-none",
             "bg-white/5 border-white/10"
           )}
-          style={{
-            boxShadow: "none",
-          }}
         >
           {/* Arrow pointing to timeline - hidden on mobile */}
           <div

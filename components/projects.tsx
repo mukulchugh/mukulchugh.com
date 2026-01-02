@@ -43,21 +43,11 @@ const GridItem = ({ area, icon, title, description, tags, github, demo }: GridIt
         />
         {/* Multicolor gradient border on hover - matches GlowingEffect colors */}
         <div
-          className="absolute inset-0 rounded-[inherit] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-          style={{
-            background: 'linear-gradient(135deg, #dd7bbb, #d79f1e, #5a922c, #4c7894, #dd7bbb)',
-            padding: '2px',
-            WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-            WebkitMaskComposite: 'xor',
-            maskComposite: 'exclude',
-          }}
+          className="absolute inset-0 rounded-[inherit] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none p-0.5 bg-[linear-gradient(135deg,#dd7bbb,#d79f1e,#5a922c,#4c7894,#dd7bbb)] [mask:linear-gradient(#fff_0_0)_content-box,linear-gradient(#fff_0_0)] [mask-composite:exclude] [-webkit-mask-composite:xor]"
         />
         {/* Multicolor glow background effect */}
         <div
-          className="absolute inset-0 rounded-[inherit] opacity-0 group-hover:opacity-60 transition-opacity duration-500 pointer-events-none blur-xl"
-          style={{
-            background: 'radial-gradient(circle at 30% 30%, rgba(221, 123, 187, 0.4) 0%, transparent 50%), radial-gradient(circle at 70% 70%, rgba(90, 146, 44, 0.4) 0%, transparent 50%), radial-gradient(circle at 70% 30%, rgba(215, 159, 30, 0.4) 0%, transparent 50%), radial-gradient(circle at 30% 70%, rgba(76, 120, 148, 0.4) 0%, transparent 50%)',
-          }}
+          className="absolute inset-0 rounded-[inherit] opacity-0 group-hover:opacity-60 transition-opacity duration-500 pointer-events-none blur-xl bg-[radial-gradient(circle_at_30%_30%,rgba(221,123,187,0.4)_0%,transparent_50%),radial-gradient(circle_at_70%_70%,rgba(90,146,44,0.4)_0%,transparent_50%),radial-gradient(circle_at_70%_30%,rgba(215,159,30,0.4)_0%,transparent_50%),radial-gradient(circle_at_30%_70%,rgba(76,120,148,0.4)_0%,transparent_50%)]"
         />
 
         <div className="relative flex h-full flex-col gap-4 rounded-xl border-[0.75px] border-border bg-background p-5 shadow-sm transition-all duration-300 group-hover:shadow-lg dark:shadow-[0px_0px_27px_0px_rgba(45,45,45,0.3)] md:p-6">

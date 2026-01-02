@@ -29,9 +29,15 @@ const LetsWorkTogether = dynamic(
   { loading: () => <SectionSkeleton minHeight="200px" /> }
 );
 
+const minHeightClasses: Record<string, string> = {
+  "100vh": "min-h-screen",
+  "400px": "min-h-[400px]",
+  "200px": "min-h-[200px]",
+};
+
 function SectionSkeleton({ minHeight = "400px" }: { minHeight?: string }) {
   return (
-    <section className="w-full max-w-4xl mb-20 scroll-mt-28" style={{ minHeight }}>
+    <section className={`w-full max-w-4xl mb-20 scroll-mt-28 ${minHeightClasses[minHeight] || "min-h-[400px]"}`}>
       <div className="animate-pulse space-y-4">
         <div className="h-8 bg-gray-800 rounded w-1/3" />
         <div className="h-4 bg-gray-800 rounded w-2/3" />
