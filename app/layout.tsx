@@ -3,7 +3,7 @@ import "./globals.css";
 import ActiveSectionContextProvider from "@/context/active-section-context";
 import Footer from "@/components/footer";
 import React from "react";
-import { GoogleAnalytics } from "@next/third-parties/google";
+import { AnalyticsWrapper } from "@/components/analytics-wrapper";
 import { inter } from "@/lib/fonts";
 import Header from "@/components/header";
 import { Dock } from "@/components/ui/dock";
@@ -85,6 +85,11 @@ export default function RootLayout({
   return (
     <html lang="en" className="!scroll-smooth dark">
       <head>
+        <link rel="preconnect" href="https://ik.imagekit.io" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://cdn.hashnode.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://gql.hashnode.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://analytics.google.com" />
         <JsonLd />
       </head>
       <body
@@ -97,7 +102,7 @@ export default function RootLayout({
           <Footer />
           <Dock />
         </ActiveSectionContextProvider>
-        <GoogleAnalytics gaId={siteConfig.analytics.googleAnalyticsId} />
+        <AnalyticsWrapper gaId={siteConfig.analytics.googleAnalyticsId} />
       </body>
     </html>
   );
