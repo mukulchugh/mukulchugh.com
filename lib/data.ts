@@ -171,14 +171,72 @@ export const siteConfig = {
     "Freelancing",
     "Developer Roadmap",
 
-    // Company Keywords
+    // Company Keywords - Quivly
+    "Quivly",
     "Quivly.ai",
-    "Swiggy Engineer",
+    "Quivly Engineer",
+    "Quivly Founding Engineer",
+    "Quivly AI",
+    "Quivly Product Engineer",
+
+    // Company Keywords - Swiggy
     "Swiggy",
+    "Swiggy Engineer",
+    "Swiggy Developer",
+    "Swiggy SDE",
+    "Swiggy Software Engineer",
+    "Swiggy Mobile Engineer",
+    "Swiggy React Native",
+    "Swiggy App Developer",
+    "Pyng by Swiggy",
+    "Swiggy India",
+    "Swiggy Bengaluru",
+
+    // Company Keywords - Zenduty & xurrent
     "Zenduty",
-    "Microsoft Student Ambassador",
+    "Zenduty Engineer",
+    "Zenduty Developer",
+    "Zenduty SDE",
+    "Zenduty Software Engineer",
+    "Zenduty Acquired",
+    "Zenduty xurrent",
+    "xurrent",
+    "xurrent Zenduty",
+    "xurrent Engineer",
+    "xurrent Developer",
+    "xurrent Software Engineer",
+    "xurrent Acquisition",
+    "Incident Management Platform",
+    "Incident Management Software",
+    "On-call Management",
+    "Alert Management",
+    "DevOps Alerting",
+
+    // Company Keywords - Microsoft
     "Microsoft",
+    "Microsoft Student Ambassador",
+    "Microsoft Learn Student Ambassador",
+    "MLSA",
+    "Microsoft India",
+
+    // Company Keywords - HeroApp
     "HeroApp",
+    "HeroApp Co-Founder",
+    "HeroApp Engineer",
+
+    // Company Keywords - Instahomes
+    "Instahomes",
+    "Instahomes PH",
+    "Instahomes Philippines",
+    "Instahomes Engineer",
+
+    // Company Keywords - Guby Rogers
+    "Guby Rogers",
+    "Guby Rogers Developer",
+
+    // Company Keywords - Digital Moshai
+    "Digital Moshai Developer",
+    "Digital Moshai Freelance",
 
     // Location Keywords
     "San Francisco Engineer",

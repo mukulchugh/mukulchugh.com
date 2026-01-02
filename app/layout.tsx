@@ -70,6 +70,18 @@ export const metadata: Metadata = {
     "Custom App Development",
     "Startup Technical Advisor",
     "Product Development Consultant",
+
+    // Organization Long-tail Keywords
+    "Ex Swiggy Engineer",
+    "Former Swiggy Developer",
+    "Ex Zenduty Engineer",
+    "Former Zenduty Developer",
+    "xurrent Former Employee",
+    "Quivly Founding Team",
+    "Microsoft Ambassador Alumni",
+    "Swiggy Mobile Team",
+    "Zenduty Core Team",
+    "xurrent Zenduty Team",
   ],
   authors: [{ name: siteConfig.name, url: siteConfig.siteUrl }],
   creator: siteConfig.name,

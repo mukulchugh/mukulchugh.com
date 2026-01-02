@@ -45,6 +45,20 @@ const seoKeywords = [
   "Headless CMS",
   "Blockchain",
   "AI-powered Products",
+  // Organizations
+  "Quivly",
+  "Quivly.ai",
+  "Swiggy",
+  "Swiggy Engineer",
+  "Zenduty",
+  "Zenduty Engineer",
+  "xurrent",
+  "xurrent Engineer",
+  "Microsoft",
+  "Microsoft Student Ambassador",
+  "HeroApp",
+  "Digital Moshai",
+  "Instahomes",
 ];
 
 export function JsonLd() {
@@ -186,10 +200,19 @@ export function JsonLd() {
       name: experiencesData[0].company, // Current employer
       url: "https://quivly.ai",
     },
-    alumniOf: experiencesData.slice(1, 4).map((exp) => ({
-      "@type": "Organization",
-      name: exp.company,
-    })),
+    alumniOf: [
+      // Previous employers from experience data
+      ...experiencesData.slice(1).map((exp) => ({
+        "@type": "Organization",
+        name: exp.company,
+      })),
+      // xurrent (acquired Zenduty)
+      {
+        "@type": "Organization",
+        name: "xurrent",
+        description: "Enterprise Service Management platform that acquired Zenduty",
+      },
+    ],
     hasCredential: [
       {
         "@type": "EducationalOccupationalCredential",
