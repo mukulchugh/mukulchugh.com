@@ -1,16 +1,16 @@
 import "./globals.css";
 
-import ActiveSectionContextProvider from "@/context/active-section-context";
-import Footer from "@/components/footer";
-import React from "react";
 import { AnalyticsWrapper } from "@/components/analytics-wrapper";
-import { inter } from "@/lib/fonts";
+import Footer from "@/components/footer";
 import Header from "@/components/header";
-import { Dock } from "@/components/ui/dock";
-import { siteConfig, skillsData } from "@/lib/data";
-import { JsonLd } from "@/components/json-ld";
 import { HeroBackground } from "@/components/hero-background";
+import { JsonLd } from "@/components/json-ld";
+import { Dock } from "@/components/ui/dock";
+import ActiveSectionContextProvider from "@/context/active-section-context";
+import { siteConfig, skillsData } from "@/lib/data";
+import { inter } from "@/lib/fonts";
 import type { Metadata } from "next";
+import React from "react";
 
 export const metadata: Metadata = {
   title: {
@@ -21,9 +21,9 @@ export const metadata: Metadata = {
   keywords: [
     ...siteConfig.keywords,
     ...skillsData,
-    // Additional SEO Keywords
-    "Mukul",
+      "Mukul",
     "Chugh",
+    // Additional SEO Keywords - Portfolio & Hiring
     "Portfolio",
     "Engineer Portfolio",
     "Developer Portfolio",
@@ -31,6 +31,7 @@ export const metadata: Metadata = {
     "Hire React Native Developer",
     "Hire Mobile Developer",
     "Hire Full Stack Developer",
+    "Hire Product Engineer",
     "Freelance Developer India",
     "React Native Expert",
     "Mobile App Expert",
@@ -44,7 +45,31 @@ export const metadata: Metadata = {
     "T-shaped Engineer",
     "Product Minded Engineer",
     "Design Engineer",
-    "Creative Technologist",
+
+    // Blog Topics Keywords
+    "React Tutorial",
+    "JavaScript Tutorial",
+    "Web Development Blog",
+    "Mobile Development Blog",
+    "Tech Blog",
+    "Coding Blog",
+    "React Best Practices",
+    "React Native Tutorial",
+    "Next.js Tutorial",
+    "Frontend Development Blog",
+    "Software Engineering Blog",
+
+    // Long-tail Keywords
+    "Best React Native Developer",
+    "Top Mobile App Developer India",
+    "Experienced Full Stack Developer",
+    "Senior Product Engineer",
+    "React Native Consultant",
+    "Mobile App Development Services",
+    "Web Application Development",
+    "Custom App Development",
+    "Startup Technical Advisor",
+    "Product Development Consultant",
   ],
   authors: [{ name: siteConfig.name, url: siteConfig.siteUrl }],
   creator: siteConfig.name,

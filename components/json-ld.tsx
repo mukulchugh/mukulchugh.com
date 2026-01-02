@@ -2,20 +2,49 @@ import { siteConfig, skillsData, experiencesData } from "@/lib/data";
 
 // SEO Keywords for structured data
 const seoKeywords = [
+  // Brand
   "Mukul",
   "Chugh",
   "Mukul Chugh",
   "Digital Mukul",
   "Digital Moshai",
   "Nerd Engineer",
+  "themukulchugh",
+  // Roles
   "Product Engineer",
   "Mobile Engineer",
   "Full Stack Developer",
   "React Native Developer",
+  "Founding Engineer",
+  "Software Development Engineer",
+  "Web Developer",
+  "iOS Developer",
+  "Android Developer",
+  "Tech Generalist",
+  "Creative Technologist",
+  // Skills
   "Software Engineering",
+  "Mobile Engineering",
   "Digital Experiences",
   "UI UX Design",
-  "Tech Generalist",
+  "Product Design",
+  "React Native",
+  "TypeScript",
+  "Next.js",
+  "JavaScript",
+  "Python",
+  "GraphQL",
+  "Framer Motion",
+  "TailwindCSS",
+  // Topics
+  "Digital Marketing",
+  "Human-Centric Design",
+  "Mobile-First Design",
+  "Responsive Design",
+  "JAMstack",
+  "Headless CMS",
+  "Blockchain",
+  "AI-powered Products",
 ];
 
 export function JsonLd() {
@@ -26,7 +55,16 @@ export function JsonLd() {
     name: siteConfig.name,
     givenName: siteConfig.firstName,
     familyName: siteConfig.lastName,
-    alternateName: ["Mukul", "Chugh", "Digital Mukul", "Digital Moshai", "Nerd Engineer"],
+    alternateName: [
+      "Mukul",
+      "Chugh",
+      "Digital Mukul",
+      "Digital Moshai",
+      "Nerd Engineer",
+      "themukulchugh",
+      "Mukul Chugh Developer",
+      "Mukul Chugh Engineer",
+    ],
     url: siteConfig.siteUrl,
     image: {
       "@type": "ImageObject",
@@ -72,6 +110,8 @@ export function JsonLd() {
       "Android Development",
       "Tech",
       "Coding",
+      "Programming",
+      "Computer Science",
       "AI-powered Products",
       "Startup Development",
       "Product Strategy",
@@ -85,6 +125,31 @@ export function JsonLd() {
       "Data Analysis",
       "Prototyping",
       "Human-Centric Design",
+      // Additional from Blog
+      "React Component Library",
+      "React Performance Optimization",
+      "JavaScript Debugging",
+      "Error Handling",
+      "Font Optimization",
+      "Scalability",
+      "Framer Motion Animation",
+      "Mobile-First Design",
+      "Responsive Design",
+      "Headless CMS",
+      "JAMstack",
+      // Additional from LinkedIn/GitHub
+      "Styled Components",
+      "GatsbyJS",
+      "Apollo Client",
+      "Blockchain",
+      "Ethereum",
+      "WordPress",
+      "Growth Hacking",
+      "Content Creation",
+      "Graphic Design",
+      "Interaction Design",
+      "Web Design",
+      "Custom Software Development",
     ],
     hasOccupation: [
       {
@@ -125,6 +190,22 @@ export function JsonLd() {
       "@type": "Organization",
       name: exp.company,
     })),
+    hasCredential: [
+      {
+        "@type": "EducationalOccupationalCredential",
+        name: "Google UX Design Professional Certificate",
+        credentialCategory: "Professional Certificate",
+        recognizedBy: {
+          "@type": "Organization",
+          name: "Google",
+        },
+      },
+      {
+        "@type": "EducationalOccupationalCredential",
+        name: "Complete Web Development Bootcamp",
+        credentialCategory: "Certificate",
+      },
+    ],
   };
 
   const websiteSchema = {

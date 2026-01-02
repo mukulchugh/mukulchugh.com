@@ -28,6 +28,7 @@ export const siteConfig = {
     "Digital Mukul",
     "Digital Moshai",
     "Nerd Engineer",
+    "themukulchugh",
 
     // Role Keywords
     "Product Engineer",
@@ -49,35 +50,82 @@ export const siteConfig = {
     "Product Generalist",
     "Co-Founder Engineer",
     "AI Engineer",
+    "Graphic Designer",
+    "Content Creator",
+    "Tech Lead",
+    "Team Lead",
+    "Interaction Designer",
+    "Creative Technologist",
 
-    // Skills & Technologies
+    // Skills & Technologies - Frontend
     "React Native",
     "React",
+    "ReactJS",
     "TypeScript",
     "JavaScript",
     "Next.js",
+    "NextJS",
+    "TailwindCSS",
+    "Tailwind CSS",
+    "Styled Components",
+    "Material UI",
+    "MUI",
+    "Framer Motion",
+    "GatsbyJS",
+    "Gatsby",
+    "HTML5",
+    "CSS3",
+    "Redux",
+
+    // Skills & Technologies - Backend
     "Node.js",
     "Python",
     "Django",
     "GraphQL",
     "REST API",
-    "TailwindCSS",
-    "Redux",
+    "Apollo GraphQL",
+    "Apollo Client",
+
+    // Skills & Technologies - Database
     "Firebase",
+    "MongoDB",
+    "MySQL",
+    "PostgreSQL",
+    "Redis",
+    "SQL",
+
+    // Skills & Technologies - DevOps & Cloud
     "AWS",
     "Docker",
     "Kubernetes",
-    "MongoDB",
-    "MySQL",
-    "Redis",
-    "Golang",
-    "Apollo GraphQL",
-    "Material UI",
+    "Cloud Computing",
     "Grafana",
     "Prometheus",
     "ElasticSearch",
+    "Celery",
 
-    // Domain Keywords
+    // Skills & Technologies - Tools
+    "Git",
+    "GitHub",
+    "Figma",
+    "VS Code",
+    "Vite",
+    "Netlify",
+    "Vercel",
+
+    // Skills & Technologies - Other
+    "Golang",
+    "Blockchain",
+    "Ethereum",
+    "WordPress",
+    "Headless CMS",
+    "JAMstack",
+    "MapBox API",
+    "Chart.js",
+    "ChartJS",
+    "CoinGecko API",
+
+    // Domain Keywords - Design
     "Digital Experiences",
     "Human-Centric Design",
     "Product Design",
@@ -86,31 +134,64 @@ export const siteConfig = {
     "UI UX Designer",
     "UX Research",
     "Prototyping",
+    "Mobile-First Design",
+    "Responsive Design",
+    "Web Design",
+    "Animation",
+    "Interaction Design",
+
+    // Domain Keywords - Development
     "Mobile App Development",
     "Software Engineering",
     "Mobile Engineering",
     "End-to-End Development",
+    "Full Stack Development",
+    "Custom Software Development",
+    "React Component Library",
+    "React Performance",
+    "JavaScript Debugging",
+    "Error Handling",
+    "Font Optimization",
+    "Building for Scale",
+    "Scalability",
+
+    // Domain Keywords - Other
     "Digital Marketing",
     "Coding",
     "Tech",
+    "Programming",
+    "Computer Science",
     "AI-powered Products",
     "OTA Updates",
     "Incident Monitoring",
     "SDK Development",
     "Developer Relations",
     "Agile Development",
+    "Growth Hacking",
+    "Freelancing",
+    "Developer Roadmap",
 
     // Company Keywords
     "Quivly.ai",
     "Swiggy Engineer",
+    "Swiggy",
     "Zenduty",
     "Microsoft Student Ambassador",
+    "Microsoft",
+    "HeroApp",
 
     // Location Keywords
     "San Francisco Engineer",
     "Bay Area Developer",
     "India Developer",
     "Bengaluru Engineer",
+    "Indian Developer",
+    "Developer India",
+
+    // Certification Keywords
+    "Google UX Design",
+    "Google UX Design Certificate",
+    "Web Development Bootcamp",
   ],
 
   // Social Links
