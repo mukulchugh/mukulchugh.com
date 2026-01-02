@@ -1,5 +1,23 @@
 import { siteConfig, skillsData, experiencesData } from "@/lib/data";
 
+// SEO Keywords for structured data
+const seoKeywords = [
+  "Mukul",
+  "Chugh",
+  "Mukul Chugh",
+  "Digital Mukul",
+  "Digital Moshai",
+  "Nerd Engineer",
+  "Product Engineer",
+  "Mobile Engineer",
+  "Full Stack Developer",
+  "React Native Developer",
+  "Software Engineering",
+  "Digital Experiences",
+  "UI UX Design",
+  "Tech Generalist",
+];
+
 export function JsonLd() {
   const personSchema = {
     "@context": "https://schema.org",
@@ -8,6 +26,7 @@ export function JsonLd() {
     name: siteConfig.name,
     givenName: siteConfig.firstName,
     familyName: siteConfig.lastName,
+    alternateName: ["Mukul", "Chugh", "Digital Mukul", "Digital Moshai", "Nerd Engineer"],
     url: siteConfig.siteUrl,
     image: {
       "@type": "ImageObject",
@@ -32,7 +51,70 @@ export function JsonLd() {
       siteConfig.social.twitter,
       siteConfig.social.blog,
     ],
-    knowsAbout: skillsData,
+    knowsAbout: [
+      ...skillsData,
+      // Domain Expertise
+      "Digital Experiences",
+      "Digital Marketing",
+      "Software Engineering",
+      "Mobile Engineering",
+      "Product Design",
+      "UI Design",
+      "UX Design",
+      "UX Research",
+      "Front-end Development",
+      "Back-end Development",
+      "End-to-End Development",
+      "Full Stack Development",
+      "Mobile App Development",
+      "Cross-platform Development",
+      "iOS Development",
+      "Android Development",
+      "Tech",
+      "Coding",
+      "AI-powered Products",
+      "Startup Development",
+      "Product Strategy",
+      "Technical Architecture",
+      "Agile Methodologies",
+      "Developer Relations",
+      "OTA Updates",
+      "Incident Monitoring",
+      "REST API Development",
+      "SDK Development",
+      "Data Analysis",
+      "Prototyping",
+      "Human-Centric Design",
+    ],
+    hasOccupation: [
+      {
+        "@type": "Occupation",
+        name: "Product Engineer",
+        occupationLocation: {
+          "@type": "Country",
+          name: "United States",
+        },
+        skills: "React Native, TypeScript, Next.js, Node.js, Python, AWS, Docker",
+      },
+      {
+        "@type": "Occupation",
+        name: "Mobile Engineer",
+        occupationLocation: {
+          "@type": "Country",
+          name: "United States",
+        },
+        skills: "React Native, iOS, Android, Mobile App Development",
+      },
+      {
+        "@type": "Occupation",
+        name: "Full Stack Developer",
+        occupationLocation: {
+          "@type": "Country",
+          name: "United States",
+        },
+        skills: "React, Next.js, Node.js, GraphQL, MongoDB, PostgreSQL",
+      },
+    ],
     worksFor: {
       "@type": "Organization",
       "@id": `${siteConfig.siteUrl}/#organization`,
@@ -50,8 +132,14 @@ export function JsonLd() {
     "@type": "WebSite",
     "@id": `${siteConfig.siteUrl}/#website`,
     name: `${siteConfig.name} - Portfolio`,
+    alternateName: [
+      "Digital Mukul Portfolio",
+      "Digital Moshai Portfolio",
+      "Mukul Chugh Developer Portfolio",
+    ],
     url: siteConfig.siteUrl,
     description: siteConfig.siteDescription,
+    keywords: seoKeywords.join(", "),
     inLanguage: "en-US",
     author: {
       "@id": `${siteConfig.siteUrl}/#person`,
@@ -75,7 +163,9 @@ export function JsonLd() {
     "@id": siteConfig.siteUrl,
     url: siteConfig.siteUrl,
     name: `${siteConfig.name} - ${siteConfig.title}`,
+    alternateName: "Digital Mukul - Nerd Engineer Portfolio",
     description: siteConfig.siteDescription,
+    keywords: seoKeywords.join(", "),
     inLanguage: "en-US",
     isPartOf: {
       "@id": `${siteConfig.siteUrl}/#website`,

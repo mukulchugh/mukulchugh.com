@@ -1,15 +1,16 @@
 "use client";
 
 import Image from "next/image";
-import React, { Suspense, useCallback } from "react";
+import React, { Suspense, useCallback, useState } from "react";
 import { motion } from "motion/react";
 import Link from "next/link";
 import { BsArrowRight, BsGithub, BsTwitterX } from "react-icons/bs";
-import { HiDownload } from "react-icons/hi";
 import { FaLinkedinIn } from "react-icons/fa";
+import { FileText } from "lucide-react";
 import { useSectionInView } from "@/lib/hooks";
 import { useActiveSectionContext } from "@/context/active-section-context";
 import { siteConfig, introContent } from "@/lib/data";
+import { CVModal } from "./ui/cv-modal";
 
 import clsx from "clsx";
 import { syne } from "@/lib/fonts";
@@ -17,11 +18,20 @@ import { syne } from "@/lib/fonts";
 const Component = React.memo(() => {
   const { ref } = useSectionInView("Home", 0.5);
   const { setActiveSection, setTimeOfLastClick } = useActiveSectionContext();
+  const [isCVModalOpen, setIsCVModalOpen] = useState(false);
 
   const handleClick = useCallback(() => {
     setActiveSection("Contact");
     setTimeOfLastClick(Date.now());
   }, [setActiveSection, setTimeOfLastClick]);
+
+  const handleOpenCV = useCallback(() => {
+    setIsCVModalOpen(true);
+  }, []);
+
+  const handleCloseCV = useCallback(() => {
+    setIsCVModalOpen(false);
+  }, []);
   return (
     <section
       ref={ref}
@@ -103,7 +113,7 @@ const Component = React.memo(() => {
       </motion.h1>
 
       <motion.div
-        className="flex flex-col sm:flex-row items-center justify-center gap-2 px-4 text-lg font-medium"
+        className="flex flex-col sm:flex-row items-center justify-center gap-3 px-4 text-lg font-medium"
         initial={{ opacity: 0, y: 100 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{
@@ -114,67 +124,107 @@ const Component = React.memo(() => {
           href="#contact"
           className={clsx(
             syne.className,
-            "group bg-gray-900 text-white px-7 py-3 flex items-center gap-2 rounded-full outline-none focus:scale-110 hover:scale-110 hover:bg-gray-950 active:scale-105 transition"
+            "group px-7 py-3 flex items-center gap-2 rounded-2xl outline-none",
+            "bg-white/95 backdrop-blur-xl",
+            "ring-1 ring-white/20 shadow-lg",
+            "text-neutral-900 font-medium",
+            "hover:-translate-y-1 hover:scale-105 hover:bg-white",
+            "active:scale-100 transition-all duration-200"
           )}
           onClick={handleClick}
         >
           {introContent.ctaText}{" "}
-          <BsArrowRight className="opacity-70 group-hover:translate-x-1 transition" />
+          <BsArrowRight className="opacity-70 group-hover:translate-x-1 transition-transform duration-200" />
         </Link>
 
-        <a
+        <button
+          onClick={handleOpenCV}
           className={clsx(
             syne.className,
-            "group bg-white px-7 py-3 flex items-center gap-2 rounded-full outline-none focus:scale-110 hover:scale-110 active:scale-105 transition cursor-pointer borderBlack dark:bg-white/10"
+            "group px-7 py-3 flex items-center gap-2 rounded-2xl outline-none cursor-pointer",
+            "bg-gradient-to-b from-neutral-800/60 to-neutral-900/70 backdrop-blur-xl",
+            "ring-1 ring-white/10 shadow-lg",
+            "text-white/90 font-medium",
+            "hover:-translate-y-1 hover:scale-105 hover:ring-white/20",
+            "active:scale-100 transition-all duration-200"
           )}
-          href={siteConfig.files.cv}
-          download
         >
-          {introContent.downloadCvText}{" "}
-          <HiDownload className="opacity-60 group-hover:translate-y-1 transition" />
-        </a>
+          {introContent.resumeButtonText}{" "}
+          <FileText className="w-4 h-4 opacity-70 group-hover:scale-110 transition-transform duration-200" />
+        </button>
 
         <div className="flex gap-2">
           <a
-            className="bg-white
-          md:w-14 md:h-14
-
-          p-2 md:p-4 text-gray-700 hover:text-gray-950 flex items-center gap-2 rounded-full focus:scale-[1.15] hover:scale-[1.15] active:scale-105 transition cursor-pointer borderBlack dark:bg-white/10 dark:text-white/60"
+            className={clsx(
+              "group relative grid place-items-center w-12 h-12 rounded-xl cursor-pointer",
+              "bg-gradient-to-b from-neutral-800/60 to-neutral-900/70 backdrop-blur-xl",
+              "ring-1 ring-white/10 shadow-lg",
+              "text-white/70 text-lg",
+              "hover:-translate-y-1 hover:scale-110 hover:text-white/90 hover:ring-white/20",
+              "active:scale-100 transition-all duration-200"
+            )}
             href={siteConfig.social.linkedin}
             target="_blank"
             aria-label="LinkedIn Profile"
           >
             <FaLinkedinIn />
+            <span className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-lg bg-neutral-800/90 backdrop-blur-md ring-1 ring-white/10 text-xs text-white/90 whitespace-nowrap opacity-0 scale-90 translate-y-2 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-y-0 transition-all duration-200">
+              LinkedIn
+            </span>
           </a>
 
           <a
-            className="bg-white
-          md:w-14 md:h-14
-
-          p-2 md:p-4 text-gray-700 flex items-center gap-2 text-[1.35rem] rounded-full focus:scale-[1.15] hover:scale-[1.15] hover:text-gray-950 active:scale-105 transition cursor-pointer borderBlack dark:bg-white/10 dark:text-white/60"
+            className={clsx(
+              "group relative grid place-items-center w-12 h-12 rounded-xl cursor-pointer",
+              "bg-gradient-to-b from-neutral-800/60 to-neutral-900/70 backdrop-blur-xl",
+              "ring-1 ring-white/10 shadow-lg",
+              "text-white/70 text-lg",
+              "hover:-translate-y-1 hover:scale-110 hover:text-white/90 hover:ring-white/20",
+              "active:scale-100 transition-all duration-200"
+            )}
             href={siteConfig.social.github}
             target="_blank"
             aria-label="GitHub Profile"
           >
             <BsGithub />
+            <span className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-lg bg-neutral-800/90 backdrop-blur-md ring-1 ring-white/10 text-xs text-white/90 whitespace-nowrap opacity-0 scale-90 translate-y-2 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-y-0 transition-all duration-200">
+              GitHub
+            </span>
           </a>
 
           <a
-            className="bg-white
-          md:w-14 md:h-14
-
-          p-2 md:p-4 text-gray-700 flex items-center gap-2 text-[1.35rem] rounded-full focus:scale-[1.15] hover:scale-[1.15] hover:text-gray-950 active:scale-105 transition cursor-pointer borderBlack dark:bg-white/10 dark:text-white/60"
+            className={clsx(
+              "group relative grid place-items-center w-12 h-12 rounded-xl cursor-pointer",
+              "bg-gradient-to-b from-neutral-800/60 to-neutral-900/70 backdrop-blur-xl",
+              "ring-1 ring-white/10 shadow-lg",
+              "text-white/70 text-lg",
+              "hover:-translate-y-1 hover:scale-110 hover:text-white/90 hover:ring-white/20",
+              "active:scale-100 transition-all duration-200"
+            )}
             href={siteConfig.social.twitter}
             target="_blank"
             aria-label="Twitter Profile"
           >
             <BsTwitterX />
+            <span className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-lg bg-neutral-800/90 backdrop-blur-md ring-1 ring-white/10 text-xs text-white/90 whitespace-nowrap opacity-0 scale-90 translate-y-2 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-y-0 transition-all duration-200">
+              Twitter
+            </span>
           </a>
         </div>
       </motion.div>
+
+      <CVModal
+        isOpen={isCVModalOpen}
+        onClose={handleCloseCV}
+        cvUrl={siteConfig.files.cv}
+        name={siteConfig.firstName}
+      />
     </section>
   );
 });
+
+Component.displayName = "IntroComponent";
+
 const Intro = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
