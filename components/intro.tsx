@@ -4,9 +4,9 @@ import Image from "next/image";
 import React, { Suspense, useCallback, useState } from "react";
 import { motion } from "motion/react";
 import Link from "next/link";
-import { BsArrowRight, BsGithub, BsTwitterX } from "react-icons/bs";
+import { BsGithub, BsTwitterX } from "react-icons/bs";
 import { FaLinkedinIn } from "react-icons/fa";
-import { FileText } from "lucide-react";
+import { FileText, MessageCircle } from "lucide-react";
 import { useSectionInView } from "@/lib/hooks";
 import { useActiveSectionContext } from "@/context/active-section-context";
 import { siteConfig, introContent } from "@/lib/data";
@@ -134,7 +134,7 @@ const Component = React.memo(() => {
           onClick={handleClick}
         >
           {introContent.ctaText}{" "}
-          <BsArrowRight className="opacity-70 group-hover:translate-x-1 transition-transform duration-200" />
+          <MessageCircle className="w-4 h-4 opacity-80 group-hover:scale-110 transition-transform duration-200" />
         </Link>
 
         <button
