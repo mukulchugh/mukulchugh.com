@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 import { syne } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
 
@@ -50,12 +51,12 @@ export default function Error({
           >
             Try Again
           </button>
-          <a
+          <Link
             href="/"
             className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-border text-foreground font-medium hover:bg-secondary transition-colors"
           >
             Go Home
-          </a>
+          </Link>
         </div>
       </div>
     </div>
