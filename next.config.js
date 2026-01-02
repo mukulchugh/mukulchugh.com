@@ -8,6 +8,9 @@ const nextConfig = {
     optimizePackageImports: [
       "@radix-ui/react-avatar",
       "@radix-ui/react-slot",
+      "@radix-ui/react-dialog",
+      "@radix-ui/react-tooltip",
+      "@radix-ui/react-visually-hidden",
       "motion",
       "clsx",
       "class-variance-authority",

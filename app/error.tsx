@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { syne } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 export default function Error({
   error,
@@ -45,18 +46,12 @@ export default function Error({
           </p>
         )}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <button
-            onClick={reset}
-            className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors"
-          >
+          <Button onClick={reset} className="rounded-full">
             Try Again
-          </button>
-          <Link
-            href="/"
-            className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-border text-foreground font-medium hover:bg-secondary transition-colors"
-          >
-            Go Home
-          </Link>
+          </Button>
+          <Button variant="outline" asChild className="rounded-full">
+            <Link href="/">Go Home</Link>
+          </Button>
         </div>
       </div>
     </div>

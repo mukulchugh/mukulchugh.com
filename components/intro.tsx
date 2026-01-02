@@ -15,6 +15,13 @@ import { useSectionInView } from "@/lib/hooks";
 import { useActiveSectionContext } from "@/context/active-section-context";
 import { siteConfig, introContent } from "@/lib/data";
 import { CVModal } from "./ui/cv-modal";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Button } from "@/components/ui/button";
 
 import clsx from "clsx";
 import { syne } from "@/lib/fonts";
@@ -141,80 +148,84 @@ const Component = React.memo(() => {
           <IconMessage className="w-4 h-4 opacity-80 group-hover:scale-110 transition-transform duration-200" />
         </Link>
 
-        <button
+        <Button
+          variant="secondary"
           onClick={handleOpenCV}
-          className={clsx(
-            syne.className,
-            "group px-7 py-3 flex items-center gap-2 rounded-2xl outline-none cursor-pointer",
-            "bg-gradient-to-b from-neutral-800/60 to-neutral-900/70 backdrop-blur-xl",
-            "ring-1 ring-white/10 shadow-lg",
-            "text-white/90 font-medium",
-            "hover:-translate-y-1 hover:scale-105 hover:ring-white/20",
-            "active:scale-100 transition-all duration-200"
-          )}
+          className={clsx(syne.className, "group px-7 py-3 rounded-2xl hover:scale-105")}
         >
           {introContent.resumeButtonText}{" "}
           <IconFileText className="w-4 h-4 opacity-70 group-hover:scale-110 transition-transform duration-200" />
-        </button>
+        </Button>
 
-        <div className="flex gap-2">
-          <a
-            className={clsx(
-              "group relative grid place-items-center w-12 h-12 rounded-xl cursor-pointer",
-              "bg-gradient-to-b from-neutral-800/60 to-neutral-900/70 backdrop-blur-xl",
-              "ring-1 ring-white/10 shadow-lg",
-              "text-white/70 text-lg",
-              "hover:-translate-y-1 hover:scale-110 hover:text-white/90 hover:ring-white/20",
-              "active:scale-100 transition-all duration-200"
-            )}
-            href={siteConfig.social.linkedin}
-            target="_blank"
-            aria-label="LinkedIn Profile"
-          >
-            <IconBrandLinkedin size={20} />
-            <span className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-lg bg-neutral-800/90 backdrop-blur-md ring-1 ring-white/10 text-xs text-white/90 whitespace-nowrap opacity-0 scale-90 translate-y-2 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-y-0 transition-all duration-200">
-              LinkedIn
-            </span>
-          </a>
+        <TooltipProvider delayDuration={200}>
+          <div className="flex gap-2">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <a
+                  className={clsx(
+                    "group relative grid place-items-center w-12 h-12 rounded-xl cursor-pointer",
+                    "bg-gradient-to-b from-neutral-800/60 to-neutral-900/70 backdrop-blur-xl",
+                    "ring-1 ring-white/10 shadow-lg",
+                    "text-white/70 text-lg",
+                    "hover:-translate-y-1 hover:scale-110 hover:text-white/90 hover:ring-white/20",
+                    "active:scale-100 transition-all duration-200"
+                  )}
+                  href={siteConfig.social.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="LinkedIn Profile"
+                >
+                  <IconBrandLinkedin size={20} />
+                </a>
+              </TooltipTrigger>
+              <TooltipContent side="top">LinkedIn</TooltipContent>
+            </Tooltip>
 
-          <a
-            className={clsx(
-              "group relative grid place-items-center w-12 h-12 rounded-xl cursor-pointer",
-              "bg-gradient-to-b from-neutral-800/60 to-neutral-900/70 backdrop-blur-xl",
-              "ring-1 ring-white/10 shadow-lg",
-              "text-white/70 text-lg",
-              "hover:-translate-y-1 hover:scale-110 hover:text-white/90 hover:ring-white/20",
-              "active:scale-100 transition-all duration-200"
-            )}
-            href={siteConfig.social.github}
-            target="_blank"
-            aria-label="GitHub Profile"
-          >
-            <IconBrandGithub size={20} />
-            <span className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-lg bg-neutral-800/90 backdrop-blur-md ring-1 ring-white/10 text-xs text-white/90 whitespace-nowrap opacity-0 scale-90 translate-y-2 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-y-0 transition-all duration-200">
-              GitHub
-            </span>
-          </a>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <a
+                  className={clsx(
+                    "group relative grid place-items-center w-12 h-12 rounded-xl cursor-pointer",
+                    "bg-gradient-to-b from-neutral-800/60 to-neutral-900/70 backdrop-blur-xl",
+                    "ring-1 ring-white/10 shadow-lg",
+                    "text-white/70 text-lg",
+                    "hover:-translate-y-1 hover:scale-110 hover:text-white/90 hover:ring-white/20",
+                    "active:scale-100 transition-all duration-200"
+                  )}
+                  href={siteConfig.social.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="GitHub Profile"
+                >
+                  <IconBrandGithub size={20} />
+                </a>
+              </TooltipTrigger>
+              <TooltipContent side="top">GitHub</TooltipContent>
+            </Tooltip>
 
-          <a
-            className={clsx(
-              "group relative grid place-items-center w-12 h-12 rounded-xl cursor-pointer",
-              "bg-gradient-to-b from-neutral-800/60 to-neutral-900/70 backdrop-blur-xl",
-              "ring-1 ring-white/10 shadow-lg",
-              "text-white/70 text-lg",
-              "hover:-translate-y-1 hover:scale-110 hover:text-white/90 hover:ring-white/20",
-              "active:scale-100 transition-all duration-200"
-            )}
-            href={siteConfig.social.twitter}
-            target="_blank"
-            aria-label="Twitter Profile"
-          >
-            <IconBrandX size={20} />
-            <span className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-lg bg-neutral-800/90 backdrop-blur-md ring-1 ring-white/10 text-xs text-white/90 whitespace-nowrap opacity-0 scale-90 translate-y-2 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-y-0 transition-all duration-200">
-              Twitter
-            </span>
-          </a>
-        </div>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <a
+                  className={clsx(
+                    "group relative grid place-items-center w-12 h-12 rounded-xl cursor-pointer",
+                    "bg-gradient-to-b from-neutral-800/60 to-neutral-900/70 backdrop-blur-xl",
+                    "ring-1 ring-white/10 shadow-lg",
+                    "text-white/70 text-lg",
+                    "hover:-translate-y-1 hover:scale-110 hover:text-white/90 hover:ring-white/20",
+                    "active:scale-100 transition-all duration-200"
+                  )}
+                  href={siteConfig.social.twitter}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Twitter Profile"
+                >
+                  <IconBrandX size={20} />
+                </a>
+              </TooltipTrigger>
+              <TooltipContent side="top">Twitter</TooltipContent>
+            </Tooltip>
+          </div>
+        </TooltipProvider>
       </motion.div>
 
       <CVModal

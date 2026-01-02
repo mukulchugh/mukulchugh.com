@@ -3,6 +3,7 @@
 import { usePosts } from "@/lib/use-blog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { syne } from "@/lib/fonts";
 import Image from "next/image";
@@ -151,13 +152,13 @@ export function PostsGrid({ initialData }: PostsGridProps) {
 
       {hasNextPage && (
         <div className="flex justify-center pt-4">
-          <button
+          <Button
             onClick={() => fetchNextPage()}
             disabled={isFetchingNextPage}
-            className="px-6 py-3 rounded-full bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="rounded-full"
           >
             {isFetchingNextPage ? "Loading..." : "Load More"}
-          </button>
+          </Button>
         </div>
       )}
     </div>

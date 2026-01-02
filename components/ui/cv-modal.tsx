@@ -1,10 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import * as Dialog from "@radix-ui/react-dialog";
+import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
+import { motion, AnimatePresence } from "motion/react";
 import { cn } from "@/lib/utils";
 import { syne } from "@/lib/fonts";
 import { IconX, IconDownload, IconFileText, IconExternalLink } from "@tabler/icons-react";
+import { forwardRef } from "react";
+import { Button } from "@/components/ui/button";
 
 interface CVModalProps {
   isOpen: boolean;
@@ -20,186 +23,183 @@ const springTransition = {
   mass: 1,
 };
 
+// Animated overlay component for Radix
+const AnimatedOverlay = forwardRef<HTMLDivElement>((props, ref) => (
+  <motion.div
+    ref={ref}
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    transition={{ duration: 0.3, ease: "easeOut" }}
+    className="fixed inset-0 z-[1000] bg-black/80 backdrop-blur-md"
+    {...props}
+  />
+));
+AnimatedOverlay.displayName = "AnimatedOverlay";
+
+// Animated content component for Radix
+const AnimatedContent = forwardRef<HTMLDivElement, { children: React.ReactNode }>(
+  ({ children, ...props }, ref) => (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, scale: 0.9, y: 20 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.95, y: 10 }}
+      transition={springTransition}
+      className="relative w-full max-w-4xl overflow-hidden rounded-2xl border border-white/20 bg-neutral-900 shadow-2xl my-8"
+      {...props}
+    >
+      {children}
+    </motion.div>
+  )
+);
+AnimatedContent.displayName = "AnimatedContent";
+
 export function CVModal({ isOpen, onClose, cvUrl, name }: CVModalProps) {
-  const modalRef = useRef<HTMLDivElement>(null);
-
-  // Handle escape key
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        onClose();
-      }
-    };
-    if (isOpen) {
-      document.addEventListener("keydown", handleEscape);
-    }
-    return () => document.removeEventListener("keydown", handleEscape);
-  }, [isOpen, onClose]);
-
-  // Prevent body scroll when open
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isOpen]);
-
-  // Handle outside click
-  useEffect(() => {
-    const handleClick = (event: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-        onClose();
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener("mousedown", handleClick);
-    }
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, [isOpen, onClose]);
-
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <>
-          {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-            className="fixed inset-0 z-[1000] bg-black/80 backdrop-blur-md"
-          />
+    <Dialog.Root open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <AnimatePresence>
+        {isOpen && (
+          <Dialog.Portal forceMount>
+            {/* Overlay */}
+            <Dialog.Overlay asChild>
+              <AnimatedOverlay />
+            </Dialog.Overlay>
 
-          {/* Modal container */}
-          <div className="fixed inset-0 z-[1001] grid place-items-center p-4 overflow-y-auto">
-            <motion.div
-              ref={modalRef}
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              transition={springTransition}
-              className="relative w-full max-w-4xl overflow-hidden rounded-2xl border border-white/20 bg-neutral-900 shadow-2xl my-8"
+            {/* Modal container */}
+            <Dialog.Content
+              asChild
+              aria-describedby={undefined}
+              className="fixed inset-0 z-[1001] grid place-items-center p-4 overflow-y-auto"
             >
-              {/* Header */}
-              <div className="flex items-center justify-between p-4 sm:p-6 border-b border-white/10">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-xl bg-gradient-to-b from-neutral-800/60 to-neutral-900/70 ring-1 ring-white/10">
-                    <IconFileText className="w-5 h-5 text-white/70" />
+              <div className="fixed inset-0 z-[1001] grid place-items-center p-4 overflow-y-auto">
+                <AnimatedContent>
+                  {/* Header */}
+                  <div className="flex items-center justify-between p-4 sm:p-6 border-b border-white/10">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 rounded-xl bg-gradient-to-b from-neutral-800/60 to-neutral-900/70 ring-1 ring-white/10">
+                        <IconFileText className="w-5 h-5 text-white/70" />
+                      </div>
+                      <div>
+                        <Dialog.Title
+                          className={cn(
+                            syne.className,
+                            "font-semibold text-lg sm:text-xl text-white"
+                          )}
+                        >
+                          {name}&apos;s Resume
+                        </Dialog.Title>
+                        <VisuallyHidden.Root>
+                          <Dialog.Description>
+                            View or download {name}&apos;s resume in PDF format
+                          </Dialog.Description>
+                        </VisuallyHidden.Root>
+                        <p className="text-sm text-gray-400">
+                          View or download my resume
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      {/* Open in new tab */}
+                      <a
+                        href={cvUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={cn(
+                          "hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl",
+                          "bg-gradient-to-b from-neutral-800/60 to-neutral-900/70 backdrop-blur-xl",
+                          "ring-1 ring-white/10",
+                          "text-white/70 text-sm font-medium",
+                          "hover:text-white/90 hover:ring-white/20",
+                          "transition-all duration-200"
+                        )}
+                      >
+                        <IconExternalLink className="w-4 h-4" />
+                        Open
+                      </a>
+
+                      {/* Download button */}
+                      <a
+                        href={cvUrl}
+                        download
+                        className={cn(
+                          "flex items-center gap-2 px-4 py-2 rounded-xl",
+                          "bg-white/95 backdrop-blur-xl",
+                          "ring-1 ring-white/20",
+                          "text-neutral-900 text-sm font-medium",
+                          "hover:bg-white",
+                          "transition-all duration-200"
+                        )}
+                      >
+                        <IconDownload className="w-4 h-4" />
+                        Download
+                      </a>
+
+                      {/* Close button */}
+                      <Dialog.Close asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="rounded-xl bg-white/10 hover:bg-white/20"
+                          aria-label="Close modal"
+                        >
+                          <IconX className="w-4 h-4 text-white/70" />
+                        </Button>
+                      </Dialog.Close>
+                    </div>
                   </div>
-                  <div>
-                    <h3
-                      className={cn(
-                        syne.className,
-                        "font-semibold text-lg sm:text-xl text-white"
-                      )}
-                    >
-                      {name}&apos;s Resume
-                    </h3>
-                    <p className="text-sm text-gray-400">
-                      View or download my resume
-                    </p>
+
+                  {/* PDF Viewer */}
+                  <div className="relative w-full h-[60vh] sm:h-[70vh] bg-neutral-950">
+                    <iframe
+                      src={`${cvUrl}#toolbar=0&navpanes=0`}
+                      className="w-full h-full"
+                      title="Resume PDF"
+                    />
+
+                    {/* Fallback for mobile/browsers that don't support PDF embed */}
+                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-neutral-950 sm:hidden">
+                      <IconFileText className="w-16 h-16 text-white/30" />
+                      <p className="text-white/60 text-center px-4">
+                        PDF preview is best viewed on desktop
+                      </p>
+                      <div className="flex gap-3">
+                        <a
+                          href={cvUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={cn(
+                            "flex items-center gap-2 px-4 py-2 rounded-xl",
+                            "bg-gradient-to-b from-neutral-800/60 to-neutral-900/70",
+                            "ring-1 ring-white/10",
+                            "text-white/90 text-sm font-medium"
+                          )}
+                        >
+                          <IconExternalLink className="w-4 h-4" />
+                          View PDF
+                        </a>
+                        <a
+                          href={cvUrl}
+                          download
+                          className={cn(
+                            "flex items-center gap-2 px-4 py-2 rounded-xl",
+                            "bg-white/95",
+                            "text-neutral-900 text-sm font-medium"
+                          )}
+                        >
+                          <IconDownload className="w-4 h-4" />
+                          Download
+                        </a>
+                      </div>
+                    </div>
                   </div>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  {/* Open in new tab */}
-                  <a
-                    href={cvUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={cn(
-                      "hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl",
-                      "bg-gradient-to-b from-neutral-800/60 to-neutral-900/70 backdrop-blur-xl",
-                      "ring-1 ring-white/10",
-                      "text-white/70 text-sm font-medium",
-                      "hover:text-white/90 hover:ring-white/20",
-                      "transition-all duration-200"
-                    )}
-                  >
-                    <IconExternalLink className="w-4 h-4" />
-                    Open
-                  </a>
-
-                  {/* Download button */}
-                  <a
-                    href={cvUrl}
-                    download
-                    className={cn(
-                      "flex items-center gap-2 px-4 py-2 rounded-xl",
-                      "bg-white/95 backdrop-blur-xl",
-                      "ring-1 ring-white/20",
-                      "text-neutral-900 text-sm font-medium",
-                      "hover:bg-white",
-                      "transition-all duration-200"
-                    )}
-                  >
-                    <IconDownload className="w-4 h-4" />
-                    Download
-                  </a>
-
-                  {/* Close button */}
-                  <button
-                    onClick={onClose}
-                    className="p-2 rounded-xl bg-white/10 hover:bg-white/20 transition-colors"
-                  >
-                    <IconX className="w-4 h-4 text-white/70" />
-                  </button>
-                </div>
+                </AnimatedContent>
               </div>
-
-              {/* PDF Viewer */}
-              <div className="relative w-full h-[60vh] sm:h-[70vh] bg-neutral-950">
-                <iframe
-                  src={`${cvUrl}#toolbar=0&navpanes=0`}
-                  className="w-full h-full"
-                  title="Resume PDF"
-                />
-
-                {/* Fallback for mobile/browsers that don't support PDF embed */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-neutral-950 sm:hidden">
-                  <IconFileText className="w-16 h-16 text-white/30" />
-                  <p className="text-white/60 text-center px-4">
-                    PDF preview is best viewed on desktop
-                  </p>
-                  <div className="flex gap-3">
-                    <a
-                      href={cvUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={cn(
-                        "flex items-center gap-2 px-4 py-2 rounded-xl",
-                        "bg-gradient-to-b from-neutral-800/60 to-neutral-900/70",
-                        "ring-1 ring-white/10",
-                        "text-white/90 text-sm font-medium"
-                      )}
-                    >
-                      <IconExternalLink className="w-4 h-4" />
-                      View PDF
-                    </a>
-                    <a
-                      href={cvUrl}
-                      download
-                      className={cn(
-                        "flex items-center gap-2 px-4 py-2 rounded-xl",
-                        "bg-white/95",
-                        "text-neutral-900 text-sm font-medium"
-                      )}
-                    >
-                      <IconDownload className="w-4 h-4" />
-                      Download
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </>
-      )}
-    </AnimatePresence>
+            </Dialog.Content>
+          </Dialog.Portal>
+        )}
+      </AnimatePresence>
+    </Dialog.Root>
   );
 }

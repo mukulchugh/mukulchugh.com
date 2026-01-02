@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 import { IconArrowRight, IconClock } from "@tabler/icons-react";
+import { Button } from "@/components/ui/button";
 import type { Post } from "@/lib/hashnode";
 
 interface Card {
@@ -160,13 +161,15 @@ export default function AnimatedCardStack({ posts }: AnimatedCardStackProps) {
       </div>
 
       <div className="relative z-10 -mt-px flex w-full items-center justify-center border-t border-border py-4">
-        <button
+        <Button
+          variant="outline"
+          size="sm"
           onClick={handleAnimate}
-          className="flex h-9 cursor-pointer select-none items-center justify-center gap-1 overflow-hidden rounded-lg border border-border bg-background px-4 font-medium text-secondary-foreground transition-all hover:bg-secondary/80 active:scale-[0.98]"
+          className="gap-1"
         >
           Next Post
           <IconArrowRight className="h-4 w-4" />
-        </button>
+        </Button>
       </div>
     </div>
   );

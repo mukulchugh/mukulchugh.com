@@ -1,6 +1,6 @@
 "use client";
 
-import Cal, { getCalApi } from "@calcom/embed-react";
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 
 import { IconArrowUpRight } from "@tabler/icons-react";
@@ -9,6 +9,19 @@ import clsx from "clsx";
 import { siteConfig } from "@/lib/data";
 import { syne } from "@/lib/fonts";
 import { useSectionInView } from "@/lib/hooks";
+
+// Dynamically import Cal.com to defer loading polyfills until user clicks
+const Cal = dynamic(
+  () => import("@calcom/embed-react").then((mod) => mod.default),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center min-h-[700px]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white" />
+      </div>
+    ),
+  }
+);
 
 export function LetsWorkTogether() {
   const { ref } = useSectionInView("Contact");
@@ -20,6 +33,7 @@ export function LetsWorkTogether() {
   useEffect(() => {
     if (showSuccess) {
       (async function () {
+        const { getCalApi } = await import("@calcom/embed-react");
         const cal = await getCalApi({ namespace: "15min" });
         cal("ui", {
           theme: "dark",

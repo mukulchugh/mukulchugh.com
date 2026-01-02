@@ -16,6 +16,13 @@ import {
   IconMail,
 } from "@tabler/icons-react";
 import { motion, AnimatePresence } from "motion/react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Button } from "@/components/ui/button";
 
 const navItems = [
   { name: "Home", hash: "#home", icon: IconHome },
@@ -70,90 +77,98 @@ export function Dock() {
   };
 
   return (
-    <AnimatePresence>
-      {!isAtBottom && (
-        <motion.div
-          className="fixed bottom-6 left-1/2 z-[999]"
-          initial={{ y: 100, x: "-50%", opacity: 0 }}
-          animate={{ y: 0, x: "-50%", opacity: 1 }}
-          exit={{ y: 100, x: "-50%", opacity: 0 }}
-          transition={{ type: "spring", stiffness: 200, damping: 20 }}
-        >
-      <div className="flex items-center gap-2 rounded-2xl bg-neutral-900/80 px-3 py-2 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl sm:gap-3 sm:rounded-3xl sm:px-4 sm:py-3">
-        {/* Logo */}
-        <Link
-          href="/"
-          className="group relative grid h-10 w-10 place-items-center rounded-xl ring-1 ring-white/10 bg-gradient-to-b from-neutral-800/60 to-neutral-900/70 backdrop-blur-xl shadow-lg transition-all duration-200 hover:-translate-y-1 hover:scale-105 sm:h-12 sm:w-12"
-          aria-label="Home"
-        >
-          <Image
-            src={siteConfig.images.logoDark}
-            alt={siteConfig.name}
-            width={24}
-            height={24}
-            className="h-5 w-5 object-contain sm:h-6 sm:w-6"
-          />
-          <span className="pointer-events-none absolute -top-8 rounded-md bg-neutral-800 px-2 py-1 text-[10px] text-white/80 opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap">
-            {siteConfig.name}
-          </span>
-        </Link>
+    <TooltipProvider delayDuration={200}>
+      <AnimatePresence>
+        {!isAtBottom && (
+          <motion.div
+            className="fixed bottom-6 left-1/2 z-[999]"
+            initial={{ y: 100, x: "-50%", opacity: 0 }}
+            animate={{ y: 0, x: "-50%", opacity: 1 }}
+            exit={{ y: 100, x: "-50%", opacity: 0 }}
+            transition={{ type: "spring", stiffness: 200, damping: 20 }}
+          >
+            <div className="flex items-center gap-2 rounded-2xl bg-neutral-900/80 px-3 py-2 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl sm:gap-3 sm:rounded-3xl sm:px-4 sm:py-3">
+              {/* Logo */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Link
+                    href="/"
+                    className="group relative grid h-10 w-10 place-items-center rounded-xl ring-1 ring-white/10 bg-gradient-to-b from-neutral-800/60 to-neutral-900/70 backdrop-blur-xl shadow-lg transition-all duration-200 hover:-translate-y-1 hover:scale-105 sm:h-12 sm:w-12"
+                    aria-label="Home"
+                  >
+                    <Image
+                      src={siteConfig.images.logoDark}
+                      alt={siteConfig.name}
+                      width={24}
+                      height={24}
+                      className="h-5 w-5 object-contain sm:h-6 sm:w-6"
+                    />
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent side="top">
+                  {siteConfig.name}
+                </TooltipContent>
+              </Tooltip>
 
-        {/* Separator */}
-        <span className="mx-1 h-6 w-px bg-white/10" aria-hidden="true" />
+              {/* Separator */}
+              <span className="mx-1 h-6 w-px bg-white/10" aria-hidden="true" />
 
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = activeSection === item.name;
-          const isLink = item.hash.startsWith("/");
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = activeSection === item.name;
+                const isLink = item.hash.startsWith("/");
 
-          return isLink ? (
-            <Link
-              key={item.name}
-              href={item.hash}
-              className={cn(
-                "group relative grid h-10 w-10 place-items-center rounded-xl ring-1 ring-white/10 bg-gradient-to-b from-neutral-800/60 to-neutral-900/70 backdrop-blur-xl shadow-lg transition-all duration-200 hover:-translate-y-1 hover:scale-105 sm:h-12 sm:w-12",
-                isActive && "ring-indigo-500/50 from-indigo-900/40 to-neutral-900/70"
-              )}
-              aria-label={item.name}
-            >
-              <Icon
-                className={cn(
-                  "h-4 w-4 transition-all duration-200 group-hover:scale-110 sm:h-5 sm:w-5",
-                  isActive ? "text-indigo-400" : "text-white/70 group-hover:text-white/90"
-                )}
-                stroke={2}
-              />
-              <span className="pointer-events-none absolute -top-8 rounded-md bg-neutral-800 px-2 py-1 text-[10px] text-white/80 opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap">
-                {item.name}
-              </span>
-            </Link>
-          ) : (
-            <button
-              key={item.name}
-              onClick={() => handleSectionClick(item)}
-              className={cn(
-                "group relative grid h-10 w-10 place-items-center rounded-xl ring-1 ring-white/10 bg-gradient-to-b from-neutral-800/60 to-neutral-900/70 backdrop-blur-xl shadow-lg transition-all duration-200 hover:-translate-y-1 hover:scale-105 sm:h-12 sm:w-12",
-                isActive && "ring-indigo-500/50 from-indigo-900/40 to-neutral-900/70"
-              )}
-              aria-label={item.name}
-            >
-              <Icon
-                className={cn(
-                  "h-4 w-4 transition-all duration-200 group-hover:scale-110 sm:h-5 sm:w-5",
-                  isActive ? "text-indigo-400" : "text-white/70 group-hover:text-white/90"
-                )}
-                stroke={2}
-              />
-              <span className="pointer-events-none absolute -top-8 rounded-md bg-neutral-800 px-2 py-1 text-[10px] text-white/80 opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap">
-                {item.name}
-              </span>
-            </button>
-          );
-        })}
-
-      </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+                return (
+                  <Tooltip key={item.name}>
+                    <TooltipTrigger asChild>
+                      {isLink ? (
+                        <Link
+                          href={item.hash}
+                          className={cn(
+                            "group relative grid h-10 w-10 place-items-center rounded-xl ring-1 ring-white/10 bg-gradient-to-b from-neutral-800/60 to-neutral-900/70 backdrop-blur-xl shadow-lg transition-all duration-200 hover:-translate-y-1 hover:scale-105 sm:h-12 sm:w-12",
+                            isActive && "ring-indigo-500/50 from-indigo-900/40 to-neutral-900/70"
+                          )}
+                          aria-label={item.name}
+                        >
+                          <Icon
+                            className={cn(
+                              "h-4 w-4 transition-all duration-200 group-hover:scale-110 sm:h-5 sm:w-5",
+                              isActive ? "text-indigo-400" : "text-white/70 group-hover:text-white/90"
+                            )}
+                            stroke={2}
+                          />
+                        </Link>
+                      ) : (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleSectionClick(item)}
+                          className={cn(
+                            "group relative grid h-10 w-10 place-items-center rounded-xl ring-1 ring-white/10 bg-gradient-to-b from-neutral-800/60 to-neutral-900/70 backdrop-blur-xl shadow-lg transition-all duration-200 hover:-translate-y-1 hover:scale-105 hover:bg-transparent sm:h-12 sm:w-12",
+                            isActive && "ring-indigo-500/50 from-indigo-900/40 to-neutral-900/70"
+                          )}
+                          aria-label={item.name}
+                        >
+                          <Icon
+                            className={cn(
+                              "h-4 w-4 transition-all duration-200 group-hover:scale-110 sm:h-5 sm:w-5",
+                              isActive ? "text-indigo-400" : "text-white/70 group-hover:text-white/90"
+                            )}
+                            stroke={2}
+                          />
+                        </Button>
+                      )}
+                    </TooltipTrigger>
+                    <TooltipContent side="top">
+                      {item.name}
+                    </TooltipContent>
+                  </Tooltip>
+                );
+              })}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </TooltipProvider>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
 
 interface LocationTagProps {
   city?: string;
@@ -34,10 +35,11 @@ export function LocationTag({
   }, []);
 
   return (
-    <button
+    <Button
+      variant="ghost"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="group relative flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2.5 transition-all duration-500 ease-out hover:border-white/20 hover:bg-white/10 hover:shadow-[0_0_20px_rgba(0,0,0,0.1)]"
+      className="group relative flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2.5 h-auto transition-all duration-500 ease-out hover:border-white/20 hover:bg-white/10 hover:shadow-[0_0_20px_rgba(0,0,0,0.1)]"
     >
       {/* Live pulse indicator */}
       <div className="relative flex items-center justify-center">
@@ -90,6 +92,6 @@ export function LocationTag({
           d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"
         />
       </svg>
-    </button>
+    </Button>
   );
 }
