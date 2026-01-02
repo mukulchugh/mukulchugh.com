@@ -1,5 +1,6 @@
 import { QueryProvider } from "@/lib/query-provider";
 import { siteConfig } from "@/lib/data";
+import { GoogleAdSense } from "@/components/google-adsense";
 
 export const metadata = {
   title: `Blog | ${siteConfig.name}`,
@@ -11,5 +12,10 @@ export default function BlogLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <QueryProvider>{children}</QueryProvider>;
+  return (
+    <>
+      <GoogleAdSense />
+      <QueryProvider>{children}</QueryProvider>
+    </>
+  );
 }

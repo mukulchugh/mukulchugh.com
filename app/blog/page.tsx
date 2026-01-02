@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { getPostsServer } from "@/lib/hashnode";
 import { syne } from "@/lib/fonts";
 import { siteConfig } from "@/lib/data";
+import { AdUnit } from "@/components/ad-unit";
 import type { Metadata } from "next";
 
 export const revalidate = 3600; // Revalidate every hour
@@ -55,6 +56,9 @@ export default async function BlogPage() {
             </p>
           </div>
         </div>
+
+        {/* Ad Unit */}
+        <AdUnit adFormat="horizontal" className="my-4" />
 
         {/* Posts Grid */}
         <PostsGrid initialData={initialData} />

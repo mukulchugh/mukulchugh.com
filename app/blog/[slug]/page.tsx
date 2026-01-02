@@ -9,6 +9,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { AdUnit } from "@/components/ad-unit";
 
 export const revalidate = 3600; // Revalidate every hour
 
@@ -220,6 +221,9 @@ export default async function PostPage({ params }: PostPageProps) {
           </div>
         )}
 
+        {/* Ad Unit - Above content */}
+        <AdUnit adFormat="horizontal" className="mb-10" />
+
         {/* Content - Using Tailwind Typography for out-of-the-box styling */}
         {post.content?.html && (
           <div
@@ -247,6 +251,9 @@ export default async function PostPage({ params }: PostPageProps) {
             dangerouslySetInnerHTML={{ __html: post.content.html }}
           />
         )}
+
+        {/* Ad Unit - Below content */}
+        <AdUnit adFormat="auto" className="mt-10" />
 
         {/* Footer */}
         <footer className="mt-16 pt-8 border-t border-border">
