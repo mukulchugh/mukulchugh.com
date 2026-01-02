@@ -41,10 +41,12 @@ const Component = React.memo(() => {
             <Image
               src={siteConfig.images.profileImage}
               alt={siteConfig.name}
-              width="200"
-              height="200"
-              quality="80"
+              width={160}
+              height={160}
+              quality={90}
               priority={true}
+              fetchPriority="high"
+              sizes="(max-width: 768px) 160px, 160px"
               className="h-40 w-40 rounded-full object-cover border-[0.35rem] border-white shadow-xl"
             />
           </motion.div>
@@ -87,8 +89,9 @@ const Component = React.memo(() => {
           "mb-10 mt-4 px-4 font-medium !leading-[1.5] text-xl md:text-3xl",
           syne.className
         )}
-        initial={{ opacity: 0, y: 100 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.3 }}
       >
         <span className="font-bold">{introContent.greeting}</span>, a{" "}
         <span className="font-bold">{introContent.role}</span> specializing in{" "}
@@ -139,6 +142,7 @@ const Component = React.memo(() => {
           p-2 md:p-4 text-gray-700 hover:text-gray-950 flex items-center gap-2 rounded-full focus:scale-[1.15] hover:scale-[1.15] active:scale-105 transition cursor-pointer borderBlack dark:bg-white/10 dark:text-white/60"
             href={siteConfig.social.linkedin}
             target="_blank"
+            aria-label="LinkedIn Profile"
           >
             <FaLinkedinIn />
           </a>
@@ -150,6 +154,7 @@ const Component = React.memo(() => {
           p-2 md:p-4 text-gray-700 flex items-center gap-2 text-[1.35rem] rounded-full focus:scale-[1.15] hover:scale-[1.15] hover:text-gray-950 active:scale-105 transition cursor-pointer borderBlack dark:bg-white/10 dark:text-white/60"
             href={siteConfig.social.github}
             target="_blank"
+            aria-label="GitHub Profile"
           >
             <BsGithub />
           </a>
@@ -161,6 +166,7 @@ const Component = React.memo(() => {
           p-2 md:p-4 text-gray-700 flex items-center gap-2 text-[1.35rem] rounded-full focus:scale-[1.15] hover:scale-[1.15] hover:text-gray-950 active:scale-105 transition cursor-pointer borderBlack dark:bg-white/10 dark:text-white/60"
             href={siteConfig.social.twitter}
             target="_blank"
+            aria-label="Twitter Profile"
           >
             <BsTwitterX />
           </a>

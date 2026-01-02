@@ -3,7 +3,7 @@ import { siteConfig, footerContent, links } from "@/lib/data";
 
 export default function Footer() {
   return (
-    <footer className="py-16 pb-28">
+    <footer className="py-16 pb-28 min-h-[400px]">
       <div className="mx-auto max-w-4xl px-6">
         <Link
           href="/"
@@ -29,7 +29,7 @@ export default function Footer() {
             href={siteConfig.social.twitter}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="X/Twitter"
+            aria-label="Follow on Twitter/X"
             className="text-muted-foreground hover:text-primary block"
           >
             <svg
@@ -51,7 +51,7 @@ export default function Footer() {
             href={siteConfig.social.linkedin}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="LinkedIn"
+            aria-label="Connect on LinkedIn"
             className="text-muted-foreground hover:text-primary block"
           >
             <svg
@@ -73,7 +73,7 @@ export default function Footer() {
             href={siteConfig.social.github}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="GitHub"
+            aria-label="View GitHub profile"
             className="text-muted-foreground hover:text-primary block"
           >
             <svg
@@ -95,7 +95,7 @@ export default function Footer() {
             href={siteConfig.social.blog}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Blog"
+            aria-label="Read my blog on Hashnode"
             className="text-muted-foreground hover:text-primary block"
           >
             <svg

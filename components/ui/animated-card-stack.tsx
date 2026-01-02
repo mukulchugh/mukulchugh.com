@@ -63,8 +63,9 @@ function CardContent({ post }: { post: Post }) {
         <Link
           href={`/blog/${post.slug}`}
           className="mt-1 flex w-fit items-center gap-1 text-xs font-medium text-foreground hover:text-[#dd7bbb] transition-colors"
+          aria-label={`Read article: ${post.title}`}
         >
-          Read more
+          Read article
           <ArrowRight className="h-3 w-3" />
         </Link>
       </div>

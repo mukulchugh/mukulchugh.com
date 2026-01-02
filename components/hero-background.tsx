@@ -1,17 +1,30 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
 
 // Dynamic import to avoid SSR issues with Three.js
+// Defer loading until after initial paint for better LCP
 const InteractiveNebulaShader = dynamic(
   () => import("@/components/ui/liquid-shader").then((mod) => mod.InteractiveNebulaShader),
-  { ssr: false }
+  { ssr: false, loading: () => <div className="absolute inset-0 bg-black" /> }
 );
 
 export function HeroBackground() {
+  const [shouldLoad, setShouldLoad] = useState(false);
+
+  useEffect(() => {
+    // Defer loading until after LCP (use requestIdleCallback or setTimeout)
+    const timer = setTimeout(() => {
+      setShouldLoad(true);
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="absolute inset-x-0 top-0 h-screen -z-10 overflow-hidden">
-      <InteractiveNebulaShader theme="dark" />
+      {shouldLoad ? <InteractiveNebulaShader theme="dark" /> : <div className="absolute inset-0 bg-black" />}
       {/* Overlay with blur */}
       <div
         className="absolute inset-0 w-full h-full pointer-events-none backdrop-blur-[2px]"

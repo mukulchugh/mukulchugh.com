@@ -4,8 +4,24 @@ import { PostsGrid } from "@/components/blog/posts-grid";
 import { cn } from "@/lib/utils";
 import { getPostsServer } from "@/lib/hashnode";
 import { syne } from "@/lib/fonts";
+import { siteConfig } from "@/lib/data";
+import type { Metadata } from "next";
 
 export const revalidate = 3600; // Revalidate every hour
+
+export const metadata: Metadata = {
+  title: "Blog",
+  description: "Thoughts on software engineering, web development, and building products that matter.",
+  alternates: {
+    canonical: "/blog",
+  },
+  openGraph: {
+    title: "Blog | Mukul Chugh",
+    description: "Thoughts on software engineering, web development, and building products that matter.",
+    url: `${siteConfig.siteUrl}/blog`,
+    type: "website",
+  },
+};
 
 export default async function BlogPage() {
   const initialData = await getPostsServer(12);

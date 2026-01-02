@@ -1,0 +1,25 @@
+# Modern browsers that support ES6+
+# This removes the need for legacy polyfills
+
+# Chrome, Edge (Chromium-based)
+last 2 Chrome versions
+last 2 Edge versions
+
+# Firefox
+last 2 Firefox versions
+
+# Safari
+last 2 Safari versions
+
+# iOS Safari
+last 2 iOS versions
+
+# Not dead browsers (>0.2% market share and official support/updates)
+not dead
+
+# Exclude IE 11 and older browsers
+not IE 11
+not IE_Mob 11
+
+# Exclude very old browsers
+not op_mini all

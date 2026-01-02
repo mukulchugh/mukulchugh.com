@@ -40,12 +40,16 @@ export async function generateMetadata({
   return {
     title: `${post.seo?.title || post.title} | ${siteConfig.name}`,
     description: post.seo?.description || post.brief,
+    alternates: {
+      canonical: `/blog/${slug}`,
+    },
     openGraph: {
       title: post.title,
       description: post.brief,
       images: post.coverImage?.url ? [post.coverImage.url] : [],
       type: "article",
       publishedTime: post.publishedAt,
+      url: `${siteConfig.siteUrl}/blog/${slug}`,
     },
     twitter: {
       card: "summary_large_image",
