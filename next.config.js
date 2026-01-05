@@ -11,6 +11,8 @@ const nextConfig = {
       "@radix-ui/react-dialog",
       "@radix-ui/react-tooltip",
       "@radix-ui/react-visually-hidden",
+      "@radix-ui/react-separator",
+      "@radix-ui/react-accessible-icon",
       "motion",
       "clsx",
       "class-variance-authority",

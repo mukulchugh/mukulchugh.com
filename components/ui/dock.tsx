@@ -23,6 +23,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 
 const navItems = [
   { name: "Home", hash: "#home", icon: IconHome },
@@ -111,7 +112,7 @@ export function Dock() {
               </Tooltip>
 
               {/* Separator */}
-              <span className="mx-1 h-6 w-px bg-white/10" aria-hidden="true" />
+              <Separator orientation="vertical" className="mx-1 h-6" />
 
               {navItems.map((item) => {
                 const Icon = item.icon;

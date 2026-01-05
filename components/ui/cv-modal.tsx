@@ -16,6 +16,26 @@ interface CVModalProps {
   name: string;
 }
 
+// CV action buttons configuration
+const cvActions = [
+  {
+    type: "open" as const,
+    label: "Open",
+    mobileLabel: "View PDF",
+    Icon: IconExternalLink,
+    isDownload: false,
+    desktopOnly: true,
+  },
+  {
+    type: "download" as const,
+    label: "Download",
+    mobileLabel: "Download",
+    Icon: IconDownload,
+    isDownload: true,
+    desktopOnly: false,
+  },
+] as const;
+
 const springTransition = {
   type: "spring" as const,
   stiffness: 300,
@@ -101,40 +121,25 @@ export function CVModal({ isOpen, onClose, cvUrl, name }: CVModalProps) {
                     </div>
 
                     <div className="flex items-center gap-2">
-                      {/* Open in new tab */}
-                      <a
-                        href={cvUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={cn(
-                          "hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl",
-                          "bg-gradient-to-b from-neutral-800/60 to-neutral-900/70 backdrop-blur-xl",
-                          "ring-1 ring-white/10",
-                          "text-white/70 text-sm font-medium",
-                          "hover:text-white/90 hover:ring-white/20",
-                          "transition-all duration-200"
-                        )}
-                      >
-                        <IconExternalLink className="w-4 h-4" />
-                        Open
-                      </a>
-
-                      {/* Download button */}
-                      <a
-                        href={cvUrl}
-                        download
-                        className={cn(
-                          "flex items-center gap-2 px-4 py-2 rounded-xl",
-                          "bg-white/95 backdrop-blur-xl",
-                          "ring-1 ring-white/20",
-                          "text-neutral-900 text-sm font-medium",
-                          "hover:bg-white",
-                          "transition-all duration-200"
-                        )}
-                      >
-                        <IconDownload className="w-4 h-4" />
-                        Download
-                      </a>
+                      {cvActions.map((action) => (
+                        <a
+                          key={action.type}
+                          href={cvUrl}
+                          target={action.isDownload ? undefined : "_blank"}
+                          rel={action.isDownload ? undefined : "noopener noreferrer"}
+                          download={action.isDownload || undefined}
+                          className={cn(
+                            "items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200",
+                            action.desktopOnly ? "hidden sm:flex" : "flex",
+                            action.isDownload
+                              ? "bg-white/95 backdrop-blur-xl ring-1 ring-white/20 text-neutral-900 hover:bg-white"
+                              : "bg-gradient-to-b from-neutral-800/60 to-neutral-900/70 backdrop-blur-xl ring-1 ring-white/10 text-white/70 hover:text-white/90 hover:ring-white/20"
+                          )}
+                        >
+                          <action.Icon className="w-4 h-4" />
+                          {action.label}
+                        </a>
+                      ))}
 
                       {/* Close button */}
                       <Dialog.Close asChild>
@@ -165,32 +170,24 @@ export function CVModal({ isOpen, onClose, cvUrl, name }: CVModalProps) {
                         PDF preview is best viewed on desktop
                       </p>
                       <div className="flex gap-3">
-                        <a
-                          href={cvUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={cn(
-                            "flex items-center gap-2 px-4 py-2 rounded-xl",
-                            "bg-gradient-to-b from-neutral-800/60 to-neutral-900/70",
-                            "ring-1 ring-white/10",
-                            "text-white/90 text-sm font-medium"
-                          )}
-                        >
-                          <IconExternalLink className="w-4 h-4" />
-                          View PDF
-                        </a>
-                        <a
-                          href={cvUrl}
-                          download
-                          className={cn(
-                            "flex items-center gap-2 px-4 py-2 rounded-xl",
-                            "bg-white/95",
-                            "text-neutral-900 text-sm font-medium"
-                          )}
-                        >
-                          <IconDownload className="w-4 h-4" />
-                          Download
-                        </a>
+                        {cvActions.map((action) => (
+                          <a
+                            key={action.type}
+                            href={cvUrl}
+                            target={action.isDownload ? undefined : "_blank"}
+                            rel={action.isDownload ? undefined : "noopener noreferrer"}
+                            download={action.isDownload || undefined}
+                            className={cn(
+                              "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium",
+                              action.isDownload
+                                ? "bg-white/95 text-neutral-900"
+                                : "bg-gradient-to-b from-neutral-800/60 to-neutral-900/70 ring-1 ring-white/10 text-white/90"
+                            )}
+                          >
+                            <action.Icon className="w-4 h-4" />
+                            {action.mobileLabel}
+                          </a>
+                        ))}
                       </div>
                     </div>
                   </div>

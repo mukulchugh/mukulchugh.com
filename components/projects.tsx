@@ -31,8 +31,8 @@ interface GridItemProps {
 
 const GridItem = ({ area, icon, title, description, tags, github, demo }: GridItemProps) => {
   return (
-    <li className={cn("list-none group", area)}>
-      <div className="relative h-full rounded-[1.25rem] border-[0.75px] border-border p-2 md:rounded-[1.5rem] md:p-3 transition-all duration-300">
+    <li className={cn("min-h-[14rem] list-none", area)}>
+      <div className="relative h-full rounded-[1.25rem] border-[0.75px] border-border p-2 md:rounded-[1.5rem] md:p-3">
         <GlowingEffect
           spread={40}
           glow={true}
@@ -41,65 +41,58 @@ const GridItem = ({ area, icon, title, description, tags, github, demo }: GridIt
           inactiveZone={0.01}
           borderWidth={3}
         />
-        {/* Multicolor gradient border on hover - matches GlowingEffect colors */}
-        <div
-          className="absolute inset-0 rounded-[inherit] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none p-0.5 bg-[linear-gradient(135deg,#dd7bbb,#d79f1e,#5a922c,#4c7894,#dd7bbb)] [mask:linear-gradient(#fff_0_0)_content-box,linear-gradient(#fff_0_0)] [mask-composite:exclude] [-webkit-mask-composite:xor]"
-        />
-        {/* Multicolor glow background effect */}
-        <div
-          className="absolute inset-0 rounded-[inherit] opacity-0 group-hover:opacity-60 transition-opacity duration-500 pointer-events-none blur-xl bg-[radial-gradient(circle_at_30%_30%,rgba(221,123,187,0.4)_0%,transparent_50%),radial-gradient(circle_at_70%_70%,rgba(90,146,44,0.4)_0%,transparent_50%),radial-gradient(circle_at_70%_30%,rgba(215,159,30,0.4)_0%,transparent_50%),radial-gradient(circle_at_30%_70%,rgba(76,120,148,0.4)_0%,transparent_50%)]"
-        />
-
-        <div className="relative flex h-full flex-col gap-4 rounded-xl border-[0.75px] border-border bg-background p-5 shadow-sm transition-all duration-300 group-hover:shadow-lg dark:shadow-[0px_0px_27px_0px_rgba(45,45,45,0.3)] md:p-6">
-          {/* Header with icon and links */}
-          <div className="flex items-start justify-between">
-            <div className="w-fit rounded-lg border-[0.75px] border-border bg-muted p-2 transition-all duration-300 group-hover:border-[#dd7bbb]/40 group-hover:bg-[#dd7bbb]/10 flex-shrink-0">
-              {icon}
+        <div className="relative flex h-full flex-col justify-between gap-6 overflow-hidden rounded-xl border-[0.75px] border-border bg-background p-6 shadow-sm dark:shadow-[0px_0px_27px_0px_rgba(45,45,45,0.3)]">
+          <div className="relative flex flex-1 flex-col justify-between gap-3">
+            {/* Header with icon and links */}
+            <div className="flex items-start justify-between">
+              <div className="w-fit rounded-lg border-[0.75px] border-border bg-muted p-2">
+                {icon}
+              </div>
+              {/* Links */}
+              <div className="flex items-center gap-2">
+                {github && (
+                  <a
+                    href={github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-all duration-200"
+                    aria-label="View on GitHub"
+                  >
+                    <IconBrandGithub className="h-4 w-4" />
+                  </a>
+                )}
+                {demo && (
+                  <a
+                    href={demo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-all duration-200"
+                    aria-label="View Demo"
+                  >
+                    <IconExternalLink className="h-4 w-4" />
+                  </a>
+                )}
+              </div>
             </div>
-            {/* Links */}
-            <div className="flex items-center gap-2">
-              {github && (
-                <a
-                  href={github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 rounded-lg text-muted-foreground hover:text-[#dd7bbb] hover:bg-[#dd7bbb]/10 transition-all duration-200"
-                  aria-label="View on GitHub"
-                >
-                  <IconBrandGithub className="h-4 w-4" />
-                </a>
-              )}
-              {demo && (
-                <a
-                  href={demo}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 rounded-lg text-muted-foreground hover:text-[#5a922c] hover:bg-[#5a922c]/10 transition-all duration-200"
-                  aria-label="View Demo"
-                >
-                  <IconExternalLink className="h-4 w-4" />
-                </a>
-              )}
-            </div>
-          </div>
 
-          {/* Content */}
-          <div className="flex-1 flex flex-col gap-3">
-            <h3 className="text-lg font-semibold font-sans tracking-[-0.02em] md:text-xl text-foreground transition-colors duration-300 group-hover:text-[#dd7bbb]">
-              {title}
-            </h3>
-            <p className="font-sans text-sm leading-relaxed md:text-base text-muted-foreground">
-              {description}
-            </p>
+            {/* Content */}
+            <div className="space-y-3">
+              <h3 className="pt-0.5 text-xl leading-[1.375rem] font-semibold font-sans tracking-[-0.04em] md:text-2xl md:leading-[1.875rem] text-balance text-foreground">
+                {title}
+              </h3>
+              <p className="font-sans text-sm leading-[1.125rem] md:text-base md:leading-[1.375rem] text-muted-foreground">
+                {description}
+              </p>
+            </div>
           </div>
 
           {/* Tags */}
           {tags && tags.length > 0 && (
-            <div className="flex flex-wrap gap-2 pt-2">
+            <div className="flex flex-wrap gap-2">
               {tags.map((tag, index) => (
                 <span
                   key={index}
-                  className="px-2.5 py-1 text-xs font-medium rounded-full bg-muted text-muted-foreground border border-border/50 transition-all duration-200 group-hover:border-[#d79f1e]/30 group-hover:bg-[#d79f1e]/10"
+                  className="px-2.5 py-1 text-xs font-medium rounded-full bg-muted text-muted-foreground border border-border/50"
                 >
                   {tag}
                 </span>
@@ -112,25 +105,26 @@ const GridItem = ({ area, icon, title, description, tags, github, demo }: GridIt
   );
 };
 
-const icons = [
-  <IconBox key="box" className="h-4 w-4 text-foreground transition-colors duration-300 group-hover:text-[#dd7bbb]" />,
-  <IconSettings key="settings" className="h-4 w-4 text-foreground transition-colors duration-300 group-hover:text-[#d79f1e]" />,
-  <IconCode key="code" className="h-4 w-4 text-foreground transition-colors duration-300 group-hover:text-[#5a922c]" />,
-  <IconSparkles key="sparkles" className="h-4 w-4 text-foreground transition-colors duration-300 group-hover:text-[#4c7894]" />,
-  <IconLock key="lock" className="h-4 w-4 text-foreground transition-colors duration-300 group-hover:text-[#dd7bbb]" />,
-  <IconPalette key="palette" className="h-4 w-4 text-foreground transition-colors duration-300 group-hover:text-[#d79f1e]" />,
-  <IconLayout key="layout" className="h-4 w-4 text-foreground transition-colors duration-300 group-hover:text-[#5a922c]" />,
+// Project icons
+const projectIcons = [
+  <IconBox key="box" className="h-4 w-4 text-foreground" />,
+  <IconSettings key="settings" className="h-4 w-4 text-foreground" />,
+  <IconCode key="code" className="h-4 w-4 text-foreground" />,
+  <IconSparkles key="sparkles" className="h-4 w-4 text-foreground" />,
+  <IconLock key="lock" className="h-4 w-4 text-foreground" />,
+  <IconPalette key="palette" className="h-4 w-4 text-foreground" />,
+  <IconLayout key="layout" className="h-4 w-4 text-foreground" />,
 ];
 
-// Bento grid layout for 7 projects
+// Bento grid layout for projects - max 2 per row
 const gridAreas = [
-  "md:[grid-area:1/1/2/5]",   // Row 1, left (4 cols)
-  "md:[grid-area:1/5/2/9]",   // Row 1, middle (4 cols)
-  "md:[grid-area:1/9/2/13]",  // Row 1, right (4 cols)
-  "md:[grid-area:2/1/3/7]",   // Row 2, left half (6 cols)
-  "md:[grid-area:2/7/3/13]",  // Row 2, right half (6 cols)
-  "md:[grid-area:3/1/4/7]",   // Row 3, left half (6 cols)
-  "md:[grid-area:3/7/4/13]",  // Row 3, right half (6 cols)
+  "md:[grid-area:1/1/2/7]",   // Row 1, left (6 cols)
+  "md:[grid-area:1/7/2/13]",  // Row 1, right (6 cols)
+  "md:[grid-area:2/1/3/7]",   // Row 2, left (6 cols)
+  "md:[grid-area:2/7/3/13]",  // Row 2, right (6 cols)
+  "md:[grid-area:3/1/4/7]",   // Row 3, left (6 cols)
+  "md:[grid-area:3/7/4/13]",  // Row 3, right (6 cols)
+  "md:[grid-area:4/1/5/13]",  // Row 4, full width (12 cols)
 ];
 
 export default function Projects() {
@@ -147,12 +141,12 @@ export default function Projects() {
         iconColor="#d79f1e"
         highlightGradient="from-[#d79f1e] via-[#dd7bbb] to-[#5a922c]"
       />
-      <ul className="grid grid-cols-1 auto-rows-auto gap-4 md:grid-cols-12 lg:gap-4 max-w-4xl mx-auto">
+      <ul className="grid grid-cols-1 grid-rows-none gap-4 md:grid-cols-12 lg:gap-4 max-w-4xl mx-auto">
         {projectsData.map((project, index) => (
           <GridItem
             key={project.title}
             area={gridAreas[index]}
-            icon={icons[index]}
+            icon={projectIcons[index]}
             title={project.title}
             description={project.description}
             tags={project.tags}

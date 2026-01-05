@@ -10,10 +10,11 @@ import {
   IconBrandLinkedin,
   IconFileText,
   IconMessage,
+  type Icon,
 } from "@tabler/icons-react";
 import { useSectionInView } from "@/lib/hooks";
 import { useActiveSectionContext } from "@/context/active-section-context";
-import { siteConfig, introContent } from "@/lib/data";
+import { siteConfig, introContent, introSocialLinks } from "@/lib/data";
 import { CVModal } from "./ui/cv-modal";
 import {
   Tooltip,
@@ -131,99 +132,62 @@ const Component = React.memo(() => {
           delay: 0.1,
         }}
       >
-        <Link
-          href="#contact"
+        <Button
+          asChild
           className={clsx(
             syne.className,
-            "group px-7 py-3 flex items-center gap-2 rounded-2xl outline-none",
-            "bg-white/95 backdrop-blur-xl",
-            "ring-1 ring-white/20 shadow-lg",
-            "text-neutral-900 font-medium",
-            "hover:-translate-y-1 hover:scale-105 hover:bg-white",
-            "active:scale-100 transition-all duration-200"
+            "rounded-2xl bg-indigo-600 text-white hover:bg-indigo-500"
           )}
-          onClick={handleClick}
         >
-          {introContent.ctaText}{" "}
-          <IconMessage className="w-4 h-4 opacity-80 group-hover:scale-110 transition-transform duration-200" />
-        </Link>
+          <Link href="#contact" onClick={handleClick}>
+            {introContent.ctaText}
+            <IconMessage className="w-4 h-4 opacity-80" />
+          </Link>
+        </Button>
 
         <Button
           variant="secondary"
           onClick={handleOpenCV}
-          className={clsx(syne.className, "group px-7 py-3 rounded-2xl hover:scale-105")}
+          className={clsx(syne.className, "rounded-2xl")}
         >
-          {introContent.resumeButtonText}{" "}
-          <IconFileText className="w-4 h-4 opacity-70 group-hover:scale-110 transition-transform duration-200" />
+          {introContent.resumeButtonText}
+          <IconFileText className="w-4 h-4 opacity-70" />
         </Button>
 
         <TooltipProvider delayDuration={200}>
           <div className="flex gap-2">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <a
-                  className={clsx(
-                    "group relative grid place-items-center w-12 h-12 rounded-xl cursor-pointer",
-                    "bg-gradient-to-b from-neutral-800/60 to-neutral-900/70 backdrop-blur-xl",
-                    "ring-1 ring-white/10 shadow-lg",
-                    "text-white/70 text-lg",
-                    "hover:-translate-y-1 hover:scale-110 hover:text-white/90 hover:ring-white/20",
-                    "active:scale-100 transition-all duration-200"
-                  )}
-                  href={siteConfig.social.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="LinkedIn Profile"
-                >
-                  <IconBrandLinkedin size={20} />
-                </a>
-              </TooltipTrigger>
-              <TooltipContent side="top">LinkedIn</TooltipContent>
-            </Tooltip>
+            {introSocialLinks.map((link) => {
+              const iconMap: Record<string, typeof IconBrandLinkedin> = {
+                IconBrandLinkedin,
+                IconBrandGithub,
+                IconBrandX,
+              };
+              const IconComponent = iconMap[link.icon];
 
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <a
-                  className={clsx(
-                    "group relative grid place-items-center w-12 h-12 rounded-xl cursor-pointer",
-                    "bg-gradient-to-b from-neutral-800/60 to-neutral-900/70 backdrop-blur-xl",
-                    "ring-1 ring-white/10 shadow-lg",
-                    "text-white/70 text-lg",
-                    "hover:-translate-y-1 hover:scale-110 hover:text-white/90 hover:ring-white/20",
-                    "active:scale-100 transition-all duration-200"
-                  )}
-                  href={siteConfig.social.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="GitHub Profile"
-                >
-                  <IconBrandGithub size={20} />
-                </a>
-              </TooltipTrigger>
-              <TooltipContent side="top">GitHub</TooltipContent>
-            </Tooltip>
-
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <a
-                  className={clsx(
-                    "group relative grid place-items-center w-12 h-12 rounded-xl cursor-pointer",
-                    "bg-gradient-to-b from-neutral-800/60 to-neutral-900/70 backdrop-blur-xl",
-                    "ring-1 ring-white/10 shadow-lg",
-                    "text-white/70 text-lg",
-                    "hover:-translate-y-1 hover:scale-110 hover:text-white/90 hover:ring-white/20",
-                    "active:scale-100 transition-all duration-200"
-                  )}
-                  href={siteConfig.social.twitter}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Twitter Profile"
-                >
-                  <IconBrandX size={20} />
-                </a>
-              </TooltipTrigger>
-              <TooltipContent side="top">Twitter</TooltipContent>
-            </Tooltip>
+              return (
+                <Tooltip key={link.name}>
+                  <TooltipTrigger asChild>
+                    <a
+                      className={clsx(
+                        "group relative grid place-items-center w-12 h-12 rounded-xl cursor-pointer",
+                        "bg-gradient-to-b from-neutral-800/60 to-neutral-900/70 backdrop-blur-xl",
+                        "ring-1 ring-white/10 shadow-lg",
+                        "text-white/70 text-lg",
+                        "hover:-translate-y-1 hover:scale-110 hover:text-white/90 hover:ring-white/20",
+                        "active:scale-100 transition-all duration-200"
+                      )}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${link.name} Profile`}
+                    >
+                      <IconComponent size={20} />
+                    </a>
+                  </TooltipTrigger>
+                  <TooltipContent side="top">{link.name}</TooltipContent>
+                </Tooltip>
+              );
+            })}
           </div>
         </TooltipProvider>
       </motion.div>

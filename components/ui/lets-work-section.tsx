@@ -227,32 +227,26 @@ export function LetsWorkTogether() {
               </div>
 
               {/* Side lines */}
-              <div className="absolute -left-8 top-1/2 -translate-y-1/2 sm:-left-16">
+              {(["left", "right"] as const).map((side) => (
                 <div
-                  className="h-px w-8 bg-gray-600 transition-all duration-500 sm:w-12"
-                  style={{
-                    transform: isClicked
-                      ? "scaleX(0) translateX(-20px)"
-                      : isHovered
-                      ? "scaleX(1.5)"
-                      : "scaleX(1)",
-                    opacity: isClicked ? 0 : isHovered ? 1 : 0.5,
-                  }}
-                />
-              </div>
-              <div className="absolute -right-8 top-1/2 -translate-y-1/2 sm:-right-16">
-                <div
-                  className="h-px w-8 bg-gray-600 transition-all duration-500 sm:w-12"
-                  style={{
-                    transform: isClicked
-                      ? "scaleX(0) translateX(20px)"
-                      : isHovered
-                      ? "scaleX(1.5)"
-                      : "scaleX(1)",
-                    opacity: isClicked ? 0 : isHovered ? 1 : 0.5,
-                  }}
-                />
-              </div>
+                  key={side}
+                  className={`absolute top-1/2 -translate-y-1/2 ${
+                    side === "left" ? "-left-8 sm:-left-16" : "-right-8 sm:-right-16"
+                  }`}
+                >
+                  <div
+                    className="h-px w-8 bg-gray-600 transition-all duration-500 sm:w-12"
+                    style={{
+                      transform: isClicked
+                        ? `scaleX(0) translateX(${side === "left" ? "-20px" : "20px"})`
+                        : isHovered
+                        ? "scaleX(1.5)"
+                        : "scaleX(1)",
+                      opacity: isClicked ? 0 : isHovered ? 1 : 0.5,
+                    }}
+                  />
+                </div>
+              ))}
             </div>
 
             {/* Description text */}
