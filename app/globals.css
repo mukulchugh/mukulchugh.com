@@ -28,20 +28,7 @@
   }
 }
 
-/* GlowingEffect styles */
-.glow {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-}
-
-/* GlowingEffect - webkit/Safari compatibility */
-.glow::after {
-  -webkit-mask-composite: xor;
-  -webkit-mask-clip: padding-box, border-box;
-  mask-composite: intersect;
-  mask-clip: padding-box, border-box;
-}
+/* GlowingEffect styles - base class only, dynamic styles injected by component */
 
 /* Syntax Highlighting - VS Code Dark+ Theme */
 .hljs {

@@ -31,6 +31,7 @@ const GlowingEffect = memo(
     disabled = true,
   }: GlowingEffectProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
+    const glowRef = useRef<HTMLDivElement>(null);
     const lastPosition = useRef({ x: 0, y: 0 });
     const animationFrameRef = useRef<number>(0);
 
@@ -118,6 +119,40 @@ const GlowingEffect = memo(
       };
     }, [handleMove, disabled]);
 
+    // Update ::after pseudo-element styles with webkit prefixes
+    useEffect(() => {
+      if (disabled || !glowRef.current) return;
+
+      const style = document.createElement("style");
+      const maskImage = `linear-gradient(#0000, #0000), conic-gradient(from calc((var(--start, 0) - var(--spread, 20)) * 1deg), #00000000 0deg, #fff, #00000000 calc(var(--spread, 20) * 2deg))`;
+
+      style.textContent = `
+        .glowing-effect-${borderWidth}::after {
+          content: "";
+          position: absolute;
+          inset: calc(-1 * ${borderWidth}px);
+          border-radius: inherit;
+          border: ${borderWidth}px solid transparent;
+          background: var(--gradient);
+          background-attachment: fixed;
+          opacity: var(--active, 0);
+          transition: opacity 0.3s;
+          mask-image: ${maskImage};
+          mask-clip: padding-box, border-box;
+          mask-composite: intersect;
+          -webkit-mask-image: ${maskImage};
+          -webkit-mask-clip: padding-box, border-box;
+          -webkit-mask-composite: xor;
+        }
+      `;
+
+      document.head.appendChild(style);
+
+      return () => {
+        document.head.removeChild(style);
+      };
+    }, [disabled, borderWidth, spread]);
+
     return (
       <>
         <div
@@ -136,14 +171,12 @@ const GlowingEffect = memo(
               "--spread": spread,
               "--start": "0",
               "--active": "0",
-              "--glowingeffect-border-width": `${borderWidth}px`,
-              "--repeating-conic-gradient-times": "5",
               "--gradient":
                 variant === "white"
                   ? `repeating-conic-gradient(
                   from 236.84deg at 50% 50%,
                   var(--black),
-                  var(--black) calc(25% / var(--repeating-conic-gradient-times))
+                  var(--black) calc(25% / 5)
                 )`
                   : `radial-gradient(circle, #dd7bbb 10%, #dd7bbb00 20%),
                 radial-gradient(circle at 40% 40%, #d79f1e 5%, #d79f1e00 15%),
@@ -152,32 +185,26 @@ const GlowingEffect = memo(
                 repeating-conic-gradient(
                   from 236.84deg at 50% 50%,
                   #dd7bbb 0%,
-                  #d79f1e calc(25% / var(--repeating-conic-gradient-times)),
-                  #5a922c calc(50% / var(--repeating-conic-gradient-times)),
-                  #4c7894 calc(75% / var(--repeating-conic-gradient-times)),
-                  #dd7bbb calc(100% / var(--repeating-conic-gradient-times))
+                  #d79f1e 5%,
+                  #5a922c 10%,
+                  #4c7894 15%,
+                  #dd7bbb 20%
                 )`,
             } as React.CSSProperties
           }
           className={cn(
             "pointer-events-none absolute inset-0 rounded-[inherit] opacity-100 transition-opacity",
             glow && "opacity-100",
-            blur > 0 && "blur-[var(--blur)] ",
+            blur > 0 && "blur-[var(--blur)]",
             className,
             disabled && "!hidden"
           )}
         >
           <div
+            ref={glowRef}
             className={cn(
-              "glow",
-              "rounded-[inherit]",
-              'after:content-[""] after:rounded-[inherit] after:absolute after:inset-[calc(-1*var(--glowingeffect-border-width))]',
-              "after:[border:var(--glowingeffect-border-width)_solid_transparent]",
-              "after:[background:var(--gradient)] after:[background-attachment:fixed]",
-              "after:opacity-[var(--active)] after:transition-opacity after:duration-300",
-              "after:[mask-clip:padding-box,border-box]",
-              "after:[mask-composite:intersect]",
-              "after:[mask-image:linear-gradient(#0000,#0000),conic-gradient(from_calc((var(--start)-var(--spread))*1deg),#00000000_0deg,#fff,#00000000_calc(var(--spread)*2deg))]"
+              "absolute inset-0 overflow-hidden rounded-[inherit]",
+              `glowing-effect-${borderWidth}`
             )}
           />
         </div>
