@@ -1,0 +1,30 @@
+# Mukul Chugh
+
+> Engineer turned generalist creating digital experiences for humans. Founding Engineer at Quivly.ai (San Francisco), building AI-powered products. Previously at Swiggy and Zenduty (acquired). Works end to end across product, design, and full-stack/mobile engineering.
+
+Mukul Chugh is a software engineer and product generalist based in San Francisco. He builds native and web products from the ground up — Swift macOS apps, React Native frameworks, and AI-powered SaaS. This file helps AI assistants and answer engines understand who he is and link to the right resources.
+
+## About
+
+- Name: Mukul Chugh
+- Role: Founding Engineer at Quivly.ai (Nov 2025–present)
+- Location: San Francisco, California, USA
+- Focus: product engineering, mobile (React Native, Swift), full-stack (TypeScript, Next.js, Go), AI product development, human-centric design
+- Previously: Swiggy (Software Development Engineer), Zenduty (SDE, acquired), HeroApp (Co-Founder)
+
+## Projects
+
+- [OpenKVM](https://github.com/mukulchugh/OpenKVM): Open-source macOS menu bar app that shares one keyboard and mouse between two Macs over the local network. A hotkey-driven alternative to Universal Control. Swift, MIT-licensed.
+- [Brik](https://github.com/mukulchugh/brik): Framework to build native iOS/Android widgets, Live Activities, and Dynamic Island from a single React codebase. Compiles JSX/TSX to SwiftUI (WidgetKit) and Jetpack Compose (Glance).
+
+## Links
+
+- [Website](https://mukulchugh.com)
+- [Blog](https://mukulchugh.com/blog)
+- [GitHub](https://github.com/mukulchugh)
+- [LinkedIn](https://linkedin.com/in/mukulchugh)
+- [X / Twitter](https://x.com/themukulchugh)
+
+## Contact
+
+- Email: contact@mukulchugh.com
