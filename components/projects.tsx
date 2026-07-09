@@ -3,7 +3,7 @@
 import { SectionHeader } from "./section-header";
 import { projectsData } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import {
   IconCode,
   IconBrandGithub,
@@ -11,7 +11,7 @@ import {
   IconLayoutKanban,
 } from "@tabler/icons-react";
 
-// Featured projects (index 0-1) are shown as dedicated tiles; list the rest here.
+// Featured projects (index 0-1) shown as dedicated tiles; list the rest here.
 const restProjects = projectsData.slice(2);
 
 function ProjectCard({
@@ -32,12 +32,24 @@ function ProjectCard({
   return (
     <motion.li
       className="list-none"
-      initial={{ opacity: 0, y: 16 }}
+      initial={{ opacity: 0, y: 18 }}
       whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }}
-      viewport={{ once: true, margin: "-40px" }}
+      transition={{
+        type: "spring",
+        stiffness: 100,
+        damping: 20,
+        delay: index * 0.06,
+      }}
+      viewport={{ once: true, amount: 0.15 }}
     >
-      <div className="flex h-full flex-col justify-between gap-4 rounded-2xl border border-black/[0.07] bg-black/[0.03] p-5 transition-colors hover:border-black/[0.12] hover:bg-black/[0.05]">
+      <div
+        className="flex h-full flex-col justify-between gap-4 rounded-2xl
+                   border border-black/[0.08] bg-white p-5
+                   shadow-[0_1px_2px_rgba(24,24,27,0.04),0_10px_30px_-14px_rgba(24,24,27,0.12)]
+                   transition-all duration-300
+                   hover:border-black/[0.16] hover:-translate-y-1
+                   hover:shadow-[0_2px_4px_rgba(24,24,27,0.05),0_18px_40px_-16px_rgba(24,24,27,0.18)]"
+      >
         <div className="flex flex-col gap-3">
           <div className="flex items-start justify-between">
             <div className="w-fit rounded-lg border border-zinc-200 bg-zinc-100 p-2 text-zinc-500">
@@ -69,7 +81,7 @@ function ProjectCard({
             </div>
           </div>
           <div className="space-y-1.5">
-            <h3 className="text-base font-semibold tracking-tight text-foreground">
+            <h3 className="text-base font-semibold tracking-tight text-zinc-950">
               {title}
             </h3>
             <p className="text-[13.5px] leading-relaxed text-muted-foreground">
@@ -98,13 +110,15 @@ export default function Projects() {
   const { ref } = useSectionInView("Projects", 0.5);
 
   return (
-    <section ref={ref} id="projects" className="scroll-mt-28 w-full">
+    <section ref={ref} id="projects" className="scroll-mt-28 w-full p-6 sm:p-8">
       <SectionHeader
         icon={IconLayoutKanban}
         label="Projects"
+        index="04"
         title="More things I've"
         highlight="built"
         subtitle="A selection of past work, from open-source tools to full-stack apps."
+        align="left"
       />
       <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         {restProjects.map((project, index) => (

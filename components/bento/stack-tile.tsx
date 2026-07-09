@@ -35,8 +35,8 @@ export function StackTile() {
           <span
             key={skill}
             className="px-2.5 py-1 text-[11px] font-medium rounded-full
-                       border border-black/[0.07] bg-black/[0.03] text-muted-foreground
-                       hover:border-zinc-400/60 hover:text-zinc-700 hover:bg-zinc-50
+                       border border-black/[0.09] bg-white text-zinc-600 shadow-sm
+                       hover:border-zinc-400/70 hover:text-zinc-900 hover:-translate-y-px
                        transition-all duration-200 ease-premium
                        cursor-default select-none"
           >

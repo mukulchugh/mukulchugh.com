@@ -1,83 +1,157 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
-import { IconMail, IconFileText, IconArrowUpRight } from "@tabler/icons-react";
+import { motion, useReducedMotion } from "motion/react";
+import { IconArrowUpRight, IconFileText, IconMail } from "@tabler/icons-react";
+import { MagneticButton } from "@/components/ui/magnetic-button";
 import { useSectionInView } from "@/lib/hooks";
 import { siteConfig } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import { syne } from "@/lib/fonts";
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.09, delayChildren: 0.05 },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { type: "spring" as const, stiffness: 100, damping: 20 },
+  },
+};
+
 export function CTATile() {
   const { ref } = useSectionInView("Contact");
+  const shouldReduce = useReducedMotion();
 
   return (
+    /*
+     * ── Inverted anchor tile — zinc-950 dark background ──
+     * This is the ONE strong black contrast block that gives
+     * the light bento grid its focal weight (Move 5).
+     */
     <section
       ref={ref}
       id="contact"
-      className="h-full p-8 sm:p-10 lg:p-12 flex flex-col items-center justify-center
-                 gap-6 text-center min-h-[220px] scroll-mt-28"
+      className="h-full min-h-[240px] scroll-mt-28 relative overflow-hidden rounded-3xl"
+      style={{ background: "rgb(9,9,11)" }}
     >
-      {/* Icon */}
+      {/* Subtle noise texture on dark bg */}
       <div
-        className="w-12 h-12 rounded-2xl bg-zinc-100 border border-zinc-200
-                   flex items-center justify-center shadow-inner shadow-zinc-900/5"
+        className="absolute inset-0 pointer-events-none grain-overlay opacity-[0.035]"
+        aria-hidden="true"
+      />
+
+      {/* Faint radial glow — off-white, top-left — adds depth without color */}
+      <div
+        className="absolute -top-24 -left-24 w-[480px] h-[480px] rounded-full pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(255,255,255,0.045) 0%, transparent 65%)",
+        }}
+        aria-hidden="true"
+      />
+
+      {/* Inner content */}
+      <motion.div
+        className="relative z-10 h-full flex flex-col lg:flex-row lg:items-center justify-between
+                   gap-8 p-8 sm:p-10 lg:p-12"
+        variants={shouldReduce ? undefined : containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.15 }}
       >
-        <IconMail className="h-5 w-5 text-zinc-500" aria-hidden="true" />
-      </div>
+        {/* Left — editorial statement */}
+        <div className="flex flex-col gap-4 max-w-xl">
+          {/* Monospace marker */}
+          <motion.p
+            variants={shouldReduce ? undefined : itemVariants}
+            className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/30"
+          >
+            06 — Contact
+          </motion.p>
 
-      {/* Heading + sub */}
-      <div className="space-y-2 max-w-lg">
-        <h2
-          className={cn(
-            syne.className,
-            "text-2xl sm:text-3xl font-bold tracking-tight text-foreground"
-          )}
+          <motion.h2
+            variants={shouldReduce ? undefined : itemVariants}
+            className={cn(
+              syne.className,
+              "text-[2rem] sm:text-[2.75rem] lg:text-[3.2rem]",
+              "font-black tracking-[-0.035em] leading-[0.95] text-white"
+            )}
+          >
+            Let&apos;s build
+            <br />
+            <span className="text-white/40 font-light">something</span>
+            <br />
+            <span className="text-white">together.</span>
+          </motion.h2>
+
+          <motion.p
+            variants={shouldReduce ? undefined : itemVariants}
+            className="text-[13.5px] text-white/40 leading-relaxed max-w-[44ch]"
+          >
+            Have a problem worth solving? I want to hear about it.
+          </motion.p>
+
+          {/* Email hint */}
+          <motion.p
+            variants={shouldReduce ? undefined : itemVariants}
+            className="font-mono text-[11px] text-white/25 tracking-wide"
+          >
+            {siteConfig.email.display}
+          </motion.p>
+        </div>
+
+        {/* Right — CTAs */}
+        <motion.div
+          variants={shouldReduce ? undefined : itemVariants}
+          className="flex flex-wrap items-center gap-3 flex-shrink-0"
         >
-          Let&apos;s work together
-        </h2>
-        <p className="text-[14px] text-muted-foreground leading-relaxed max-w-[46ch] mx-auto">
-          Have a project in mind? I&apos;d love to hear about it — drop a line or
-          pull up my resume.
-        </p>
-      </div>
+          {/* Primary — off-white filled, magnetic */}
+          <MagneticButton
+            href={`mailto:${siteConfig.email.display}`}
+            as="a"
+            aria-label="Send email"
+            strength={12}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full
+                       bg-white text-zinc-950
+                       text-[13px] font-bold tracking-tight
+                       shadow-[0_4px_28px_-4px_rgba(255,255,255,0.18)]
+                       hover:shadow-[0_4px_36px_-4px_rgba(255,255,255,0.28)]
+                       transition-shadow duration-200
+                       active:scale-[0.97]"
+          >
+            <IconMail size={15} />
+            Get in touch
+          </MagneticButton>
 
-      {/* CTAs */}
-      <div className="flex flex-wrap items-center justify-center gap-3">
-        {/* Primary — ink filled */}
-        <a
-          href={`mailto:${siteConfig.email.display}`}
-          className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full
-                     bg-zinc-900 hover:bg-zinc-800
-                     text-white text-sm font-semibold
-                     shadow-[0_4px_20px_-4px_rgba(24,24,27,0.20)]
-                     transition-all duration-200 hover:-translate-y-0.5"
-        >
-          <IconMail size={15} />
-          Get in touch
-        </a>
-
-        {/* Secondary — outlined */}
-        <a
-          href={siteConfig.files.cv}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full
-                     bg-black/[0.04] border border-black/[0.10]
-                     text-sm font-semibold text-foreground
-                     hover:bg-black/[0.07] hover:border-black/[0.16]
-                     transition-all duration-200 hover:-translate-y-0.5"
-        >
-          <IconFileText size={15} />
-          View Resume
-          <IconArrowUpRight size={13} className="opacity-60" />
-        </a>
-      </div>
-
-      {/* Email hint */}
-      <p className="text-[11px] text-muted-foreground/60 tracking-wide">
-        {siteConfig.email.display}
-      </p>
+          {/* Secondary — outlined on dark */}
+          <MagneticButton
+            href={siteConfig.files.cv}
+            as="a"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="View resume"
+            strength={10}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full
+                       bg-white/[0.07] border border-white/[0.14]
+                       text-[13px] font-semibold text-white/80
+                       hover:bg-white/[0.12] hover:border-white/[0.24] hover:text-white
+                       transition-all duration-200
+                       active:scale-[0.97]"
+          >
+            <IconFileText size={15} />
+            View Resume
+            <IconArrowUpRight size={13} className="opacity-60" />
+          </MagneticButton>
+        </motion.div>
+      </motion.div>
     </section>
   );
 }

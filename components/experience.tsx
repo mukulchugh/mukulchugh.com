@@ -28,14 +28,16 @@ export default function Experience() {
     <section
       id="experience"
       ref={ref}
-      className="scroll-mt-28 px-2 py-8 w-full"
+      className="scroll-mt-28 px-6 sm:px-8 py-8 w-full"
     >
       <SectionHeader
         icon={IconBriefcase}
         label="Experience"
-        title="My professional"
+        index="05"
+        title="Professional"
         highlight="journey"
-        subtitle="A timeline of my career, from where I started to where I am today."
+        subtitle="From student ambassador to founding engineer."
+        align="left"
       />
       <ExpandableCard items={cardItems} />
     </section>

@@ -12,6 +12,8 @@ interface SectionHeaderProps {
   title: string;
   highlight?: string;
   subtitle?: string;
+  /** Monospace index marker e.g. "02" — rendered as "02 — Label" */
+  index?: string;
   /** @deprecated — accent is now unified; this prop is ignored */
   iconColor?: string;
   /** @deprecated — accent is now unified; this prop is ignored */
@@ -21,11 +23,11 @@ interface SectionHeaderProps {
 }
 
 export function SectionHeader({
-  icon: Icon,
   label,
   title,
   highlight,
   subtitle,
+  index,
   className,
   align = "center",
 }: SectionHeaderProps) {
@@ -33,8 +35,8 @@ export function SectionHeader({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-      viewport={{ once: true, margin: "-40px" }}
+      transition={{ type: "spring", stiffness: 100, damping: 20 }}
+      viewport={{ once: true, amount: 0.15 }}
       className={cn(
         "flex flex-col gap-3 mb-10",
         align === "center" && "items-center text-center",
@@ -42,28 +44,32 @@ export function SectionHeader({
         className
       )}
     >
-      {/* Icon + label pill */}
-      <div className="flex items-center gap-2.5">
-        <div className="p-1.5 rounded-md bg-zinc-100 border border-zinc-200 ring-0">
-          <Icon className="h-4 w-4 text-zinc-500" />
-        </div>
-        <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.12em]">
-          {label}
-        </span>
-      </div>
+      {/* Monospace editorial marker — e.g. "02 — Projects" */}
+      <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-zinc-400">
+        {index ? `${index} — ` : ""}{label}
+      </p>
 
-      {/* Title with optional highlight */}
+      {/* Hairline under marker */}
+      <div
+        className={cn(
+          "h-px bg-zinc-900/[0.07]",
+          align === "center" ? "w-16 self-center" : "w-10 self-start"
+        )}
+        aria-hidden="true"
+      />
+
+      {/* Section title */}
       <h2
         className={cn(
           syne.className,
-          "text-[2rem] sm:text-[2.5rem] font-bold text-foreground leading-[1.15] tracking-tight"
+          "text-[1.85rem] sm:text-[2.25rem] font-black text-zinc-950 leading-[1.1] tracking-[-0.03em]"
         )}
       >
         {title}
         {highlight && (
           <>
             {" "}
-            <span className="text-foreground font-semibold">
+            <span className="text-zinc-400 font-light">
               {highlight}
             </span>
           </>
@@ -72,7 +78,7 @@ export function SectionHeader({
 
       {/* Subtitle */}
       {subtitle && (
-        <p className="text-muted-foreground text-[15px] leading-relaxed max-w-[48ch] mt-1">
+        <p className="text-muted-foreground text-[14px] leading-relaxed max-w-[48ch] mt-0.5">
           {subtitle}
         </p>
       )}

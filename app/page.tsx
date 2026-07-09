@@ -4,17 +4,22 @@ import dynamic from "next/dynamic";
 import { getAllPosts } from "@/lib/blog";
 import { projectsData } from "@/lib/data";
 import { cn } from "@/lib/utils";
-import { LocationTile, StackTile, FeaturedProjectTile } from "@/components/bento";
+import {
+  LocationTile,
+  StackTile,
+  FeaturedProjectTile,
+  SkillsMarquee,
+} from "@/components/bento";
 
 // ─── Client tiles (need browser hooks) ───────────────────────────────────────
 const ProfileTile = dynamic(
   () => import("@/components/bento/profile-tile").then((m) => m.ProfileTile),
-  { loading: () => <div className="min-h-[360px]" /> }
+  { loading: () => <div className="min-h-[400px]" /> }
 );
 
 const CTATile = dynamic(
   () => import("@/components/bento/cta-tile").then((m) => m.CTATile),
-  { loading: () => <div className="min-h-[220px]" /> }
+  { loading: () => <div className="min-h-[240px]" /> }
 );
 
 // ─── Lazy section components (deferred below fold) ───────────────────────────
@@ -38,43 +43,77 @@ const Experience = dynamic(() => import("@/components/experience"), {
 function SectionSkeleton({ minHeight = "400px" }: { minHeight?: string }) {
   return (
     <div className="p-8 animate-pulse space-y-4" style={{ minHeight }}>
-      <div className="h-5 bg-black/[0.06] rounded w-1/3" />
-      <div className="h-3.5 bg-black/[0.04] rounded w-2/3" />
-      <div className="h-3.5 bg-black/[0.04] rounded w-1/2" />
+      <div className="h-3 bg-black/[0.05] rounded w-1/4" />
+      <div className="h-8 bg-black/[0.05] rounded w-2/3 mt-3" />
+      <div className="h-3.5 bg-black/[0.03] rounded w-1/2 mt-6" />
+      <div className="h-3.5 bg-black/[0.03] rounded w-2/5" />
     </div>
   );
 }
 
 // ─── Glass bento tile ─────────────────────────────────────────────────────────
 /**
- * Dark glass card — the universal wrapper for every bento cell.
+ * Light glass card — universal wrapper for bento cells.
  *
  * Tokens:
- *   fill:          bg-white/[0.042]  (near-solid dark under aurora)
- *   blur:          backdrop-blur-[12px]
- *   border:        1px solid rgba(255,255,255,0.08)
- *   top highlight: inset 0 1px 0 rgba(255,255,255,0.09)
- *   shadow:        0 4px 32px rgba(0,0,0,0.28)
+ *   fill:          warm white translucent gradient
+ *   blur:          backdrop-blur-[16px]
+ *   border:        1px solid rgba(20,20,40,0.06)
+ *   top highlight: inset 0 1px 0 rgba(255,255,255,0.70)
+ *   outer shadow:  soft diffuse light gray
  *   radius:        rounded-3xl (1.5rem)
- *   hover lift:    translateY(-2px) + deeper shadow
+ *   hover lift:    translateY(-3px) + hairline border darken
  */
 function BentoTile({
   className,
   style,
   children,
   hover = true,
+  dark = false,
 }: {
   className?: string;
   style?: React.CSSProperties;
   children: React.ReactNode;
   hover?: boolean;
+  dark?: boolean;
 }) {
+  if (dark) {
+    // Inverted tile — zinc-950 bg, no glass treatment
+    return (
+      <div
+        className={cn(
+          "rounded-3xl overflow-hidden",
+          className
+        )}
+        style={style}
+      >
+        {children}
+      </div>
+    );
+  }
+
   return (
     <div
       className={cn("glass-tile", hover && "glass-tile-hover", className)}
       style={style}
     >
       {children}
+    </div>
+  );
+}
+
+// ─── Marquee band — full-width, no glass ─────────────────────────────────────
+function MarqueeBand({ className }: { className?: string }) {
+  return (
+    <div
+      className={cn(
+        "col-span-1 sm:col-span-2 lg:col-span-12",
+        "border border-black/[0.06] rounded-2xl overflow-hidden",
+        "bg-white/60",
+        className
+      )}
+    >
+      <SkillsMarquee />
     </div>
   );
 }
@@ -93,54 +132,56 @@ export default function Home() {
             Row 1    : Profile (col 1-8)          | Location (col 9-12)
             Row 2    : Profile continues           | Stack (col 9-12)  ← row-span-2
             Row 3    : About (col 1-8)             | Stack continues
-            Row 4    : Featured Proj 1 (col 1-6)  | Featured Proj 2 (col 7-12)
-            Row 5+   : All Projects (col 1-12)
-            Row 6    : Blog (col 1-7)              | Experience (col 8-12)
-            Row 7    : CTA (col 1-12)
-
-          grid-auto-flow: dense packs small tiles into any open gap.
+            Row 4    : [MARQUEE — full width]
+            Row 5    : Featured Proj 1 (col 1-6)  | Featured Proj 2 (col 7-12)
+            Row 6    : All Projects (col 1-12)
+            Row 7    : Blog (col 1-7)              | Experience (col 8-12)
+            Row 8    : CTA (col 1-12)  — DARK ANCHOR
         */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 [grid-auto-flow:dense]">
 
-          {/* ── 1. Profile tile — avatar · available · name · chips · socials ── */}
+          {/* ── 1. Profile tile — HERO ────────────────────────────────────── */}
           <BentoTile
             hover={false}
             className="col-span-1 sm:col-span-2 lg:col-span-8 lg:row-span-2"
-            style={{ background: "rgba(255,255,255,0.78)" } as React.CSSProperties}
+            style={{ background: "rgba(255,255,255,0.80)" } as React.CSSProperties}
           >
             <ProfileTile />
           </BentoTile>
 
-          {/* ── 2. Location mini tile ─────────────────────────────────────────── */}
+          {/* ── 2. Location mini tile ─────────────────────────────────────── */}
           <BentoTile className="col-span-1 lg:col-span-4">
             <LocationTile />
           </BentoTile>
 
-          {/* ── 3. Stack / Tools tile — row-span-2 fills rows 2-3 on right ────── */}
+          {/* ── 3. Stack / Tools tile — row-span-2 ───────────────────────── */}
           <BentoTile className="col-span-1 sm:col-span-1 lg:col-span-4 lg:row-span-2">
             <StackTile />
           </BentoTile>
 
-          {/* ── 4. About tile ────────────────────────────────────────────────── */}
+          {/* ── 4. About tile ─────────────────────────────────────────────── */}
           <BentoTile
             hover={false}
             className="col-span-1 sm:col-span-2 lg:col-span-8"
-            style={{ background: "rgba(255,255,255,0.78)" } as React.CSSProperties}
+            style={{ background: "rgba(255,255,255,0.80)" } as React.CSSProperties}
           >
             <About />
           </BentoTile>
 
-          {/* ── 5. Featured project — OpenKVM ────────────────────────────────── */}
+          {/* ── 5. SKILLS MARQUEE — kinetic full-width band ───────────────── */}
+          <MarqueeBand />
+
+          {/* ── 6. Featured project — OpenKVM ────────────────────────────── */}
           <BentoTile className="col-span-1 lg:col-span-6">
             <FeaturedProjectTile project={projectsData[0]} index={0} />
           </BentoTile>
 
-          {/* ── 6. Featured project — Brik ───────────────────────────────────── */}
+          {/* ── 7. Featured project — Brik ───────────────────────────────── */}
           <BentoTile className="col-span-1 lg:col-span-6">
             <FeaturedProjectTile project={projectsData[1]} index={1} />
           </BentoTile>
 
-          {/* ── 7. All projects tile ─────────────────────────────────────────── */}
+          {/* ── 8. All projects tile ─────────────────────────────────────── */}
           <BentoTile
             hover={false}
             className="col-span-1 sm:col-span-2 lg:col-span-12"
@@ -148,7 +189,7 @@ export default function Home() {
             <Projects />
           </BentoTile>
 
-          {/* ── 8. Blog tile ─────────────────────────────────────────────────── */}
+          {/* ── 9. Blog tile ─────────────────────────────────────────────── */}
           <BentoTile
             hover={false}
             className="col-span-1 sm:col-span-2 lg:col-span-7"
@@ -156,7 +197,7 @@ export default function Home() {
             <BlogSection posts={posts} />
           </BentoTile>
 
-          {/* ── 9. Experience tile ───────────────────────────────────────────── */}
+          {/* ── 10. Experience tile ──────────────────────────────────────── */}
           <BentoTile
             hover={false}
             className="col-span-1 sm:col-span-2 lg:col-span-5"
@@ -164,11 +205,11 @@ export default function Home() {
             <Experience />
           </BentoTile>
 
-          {/* ── 10. CTA tile — Let's work together ───────────────────────────── */}
+          {/* ── 11. CTA tile — DARK INK ANCHOR (Move 5) ─────────────────── */}
           <BentoTile
+            dark={true}
             hover={false}
             className="col-span-1 sm:col-span-2 lg:col-span-12"
-            style={{ background: "rgba(255,255,255,0.65)" } as React.CSSProperties}
           >
             <CTATile />
           </BentoTile>

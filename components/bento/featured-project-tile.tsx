@@ -1,41 +1,32 @@
 import React from "react";
-import {
-  IconBrandGithub,
-  IconExternalLink,
-  IconCpu,
-  IconBrandReact,
-} from "@tabler/icons-react";
+import { IconBrandGithub, IconExternalLink } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 import { syne } from "@/lib/fonts";
 import type { projectsData } from "@/lib/data";
 
 type ProjectData = (typeof projectsData)[number];
 
-// Per-project cover configuration — gradient colours + icon + monogram
+// Per-project cover config — monochrome editorial typography
 const COVERS = [
   {
-    // OpenKVM — deep graphite, hardware feel
-    gradient:
-      "linear-gradient(135deg, rgba(24,24,27,0.92) 0%, rgba(39,39,42,0.85) 45%, rgba(63,63,70,0.75) 100%)",
-    mesh:
-      "radial-gradient(circle at 20% 80%, rgba(82,82,91,0.40) 0%, transparent 55%), " +
-      "radial-gradient(circle at 82% 18%, rgba(24,24,27,0.55) 0%, transparent 50%)",
-    labelColor: "text-white/60",
+    // OpenKVM — deep graphite
+    bgFrom: "rgb(12,12,14)",
+    bgTo: "rgb(28,28,32)",
+    titleColor: "rgba(255,255,255,0.92)",
+    subtitleColor: "rgba(255,255,255,0.22)",
     labelBg: "bg-white/[0.08] border-white/[0.14]",
-    icon: <IconCpu className="h-8 w-8 text-white/70" />,
-    accentLine: "from-white/20 via-zinc-400/10 to-transparent",
+    labelColor: "text-white/55",
+    categoryLabel: "macOS · Open Source",
   },
   {
-    // Brik — warm graphite, UI feel
-    gradient:
-      "linear-gradient(135deg, rgba(39,39,42,0.90) 0%, rgba(63,63,70,0.80) 45%, rgba(82,82,91,0.65) 100%)",
-    mesh:
-      "radial-gradient(circle at 78% 75%, rgba(113,113,122,0.35) 0%, transparent 52%), " +
-      "radial-gradient(circle at 18% 22%, rgba(39,39,42,0.50) 0%, transparent 50%)",
-    labelColor: "text-white/60",
+    // Brik — slightly warmer graphite
+    bgFrom: "rgb(18,17,15)",
+    bgTo: "rgb(38,36,32)",
+    titleColor: "rgba(255,255,255,0.92)",
+    subtitleColor: "rgba(255,255,255,0.22)",
     labelBg: "bg-white/[0.08] border-white/[0.14]",
-    icon: <IconBrandReact className="h-8 w-8 text-white/70" />,
-    accentLine: "from-white/20 via-zinc-400/10 to-transparent",
+    labelColor: "text-white/55",
+    categoryLabel: "React Native · SDK",
   },
 ] as const;
 
@@ -49,78 +40,90 @@ export function FeaturedProjectTile({
   index = 0,
 }: FeaturedProjectTileProps) {
   const cover = COVERS[index % COVERS.length];
-  // Build monogram from up to 2 words
-  const words = project.title.trim().split(/\s+/);
-  const monogram =
-    words.length >= 2
-      ? words[0][0] + words[1][0]
-      : project.title.slice(0, 2);
+
+  // Split title into main word and rest for hierarchy
+  const titleWords = project.title.trim().split(/\s+/);
+  const titleFirst = titleWords[0];
+  const titleRest = titleWords.slice(1).join(" ");
 
   return (
-    <div className="h-full flex flex-col min-h-[260px] relative overflow-hidden">
+    <div className="h-full flex flex-col min-h-[280px] relative overflow-hidden">
 
-      {/* ── Cover panel ────────────────────────────────────────── */}
-      <div className="relative h-[156px] flex-shrink-0 overflow-hidden rounded-t-3xl">
-        {/* Gradient background */}
-        <div className="absolute inset-0" style={{ background: cover.gradient }} />
-        {/* Mesh radials */}
+      {/* ── Editorial Cover Panel ───────────────────────── */}
+      <div
+        className="relative flex-shrink-0 overflow-hidden rounded-t-3xl"
+        style={{
+          minHeight: "180px",
+          background: `linear-gradient(145deg, ${cover.bgFrom} 0%, ${cover.bgTo} 100%)`,
+        }}
+      >
+        {/* Subtle grid texture */}
         <div
-          className="absolute inset-0"
-          style={{ backgroundImage: cover.mesh }}
-        />
-        {/* Subtle grid lines */}
-        <div
-          className="absolute inset-0 opacity-[0.04]"
+          className="absolute inset-0 opacity-[0.035]"
           style={{
             backgroundImage:
-              "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), " +
-              "linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
-            backgroundSize: "32px 32px",
+              "linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px), " +
+              "linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px)",
+            backgroundSize: "40px 40px",
           }}
+          aria-hidden="true"
         />
-        {/* Large monogram as texture — very subtle */}
+
+        {/* OVERSIZED typographic title — the editorial visual */}
         <div
-          className="absolute inset-0 flex items-center justify-center select-none pointer-events-none"
+          className="absolute inset-0 flex flex-col justify-center pl-6 pr-16 select-none pointer-events-none"
           aria-hidden="true"
         >
           <span
-            className="font-black leading-none tracking-tighter"
-            style={{ fontSize: "120px", color: "rgba(255,255,255,0.055)" }}
+            className={cn(
+              syne.className,
+              "block font-black tracking-[-0.06em] leading-[0.82]"
+            )}
+            style={{
+              fontSize: "clamp(52px, 9vw, 80px)",
+              color: cover.titleColor,
+            }}
           >
-            {monogram}
+            {titleFirst}
           </span>
+          {titleRest && (
+            <span
+              className={cn(
+                syne.className,
+                "block font-light tracking-[-0.02em] leading-[1.1]"
+              )}
+              style={{
+                fontSize: "clamp(28px, 5vw, 44px)",
+                color: cover.subtitleColor,
+              }}
+            >
+              {titleRest}
+            </span>
+          )}
         </div>
-        {/* Centred icon badge */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div
-            className="w-16 h-16 rounded-2xl flex items-center justify-center
-                       bg-white/[0.09] border border-white/[0.14]
-                       shadow-xl shadow-black/30 backdrop-blur-sm"
-          >
-            {cover.icon}
-          </div>
-        </div>
-        {/* "Featured" label — top-left */}
-        <div className="absolute top-3.5 left-4">
+
+        {/* Category label — top-left */}
+        <div className="absolute top-4 left-5">
           <span
             className={cn(
-              "inline-flex items-center px-2 py-0.5 rounded-full border text-[10px] font-semibold uppercase tracking-[0.12em]",
+              "inline-flex items-center px-2.5 py-0.5 rounded-full border text-[10px] font-mono uppercase tracking-[0.14em]",
               cover.labelBg,
               cover.labelColor
             )}
           >
-            Featured
+            {cover.categoryLabel}
           </span>
         </div>
+
         {/* Link icons — top-right */}
-        <div className="absolute top-2.5 right-3 flex gap-0.5">
+        <div className="absolute top-3 right-4 flex gap-0.5 z-10">
           {project.github ? (
             <a
               href={project.github}
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`${project.title} on GitHub`}
-              className="p-2 rounded-xl text-white/50 hover:text-white/90 hover:bg-white/[0.1]
+              className="p-2 rounded-xl text-white/40 hover:text-white/90 hover:bg-white/[0.1]
                          transition-colors duration-150"
             >
               <IconBrandGithub className="h-[15px] w-[15px]" />
@@ -132,42 +135,41 @@ export function FeaturedProjectTile({
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`${project.title} demo`}
-              className="p-2 rounded-xl text-white/50 hover:text-white/90 hover:bg-white/[0.1]
+              className="p-2 rounded-xl text-white/40 hover:text-white/90 hover:bg-white/[0.1]
                          transition-colors duration-150"
             >
               <IconExternalLink className="h-[15px] w-[15px]" />
             </a>
           ) : null}
         </div>
-        {/* Bottom fade into tile body */}
+
+        {/* Bottom edge fade */}
         <div
-          className="absolute bottom-0 inset-x-0 h-10 pointer-events-none"
+          className="absolute bottom-0 inset-x-0 h-12 pointer-events-none"
           style={{
             background:
-              "linear-gradient(to top, rgba(0,0,0,0.20) 0%, transparent 100%)",
+              "linear-gradient(to top, rgba(0,0,0,0.28) 0%, transparent 100%)",
           }}
+          aria-hidden="true"
         />
       </div>
 
-      {/* ── Body — title · description · tags ───────────────── */}
+      {/* ── Body — description · tags ───────────────────── */}
       <div className="flex flex-col gap-3 p-5 sm:p-6 pt-4 flex-1">
-        {/* Accent line */}
-        <div
-          className={cn(
-            "h-px w-16 bg-gradient-to-r mb-1",
-            cover.accentLine
-          )}
-          aria-hidden="true"
-        />
+        {/* Hairline accent */}
+        <div className="h-px w-12 bg-zinc-900/20 mb-0.5" aria-hidden="true" />
+
+        {/* Project title as accessible heading (visually redundant but semantic) */}
         <h3
           className={cn(
             syne.className,
-            "text-[1.0625rem] font-bold text-foreground leading-tight tracking-tight"
+            "text-[1.05rem] font-bold text-zinc-950 leading-tight tracking-tight"
           )}
         >
           {project.title}
         </h3>
-        <p className="text-[13px] text-muted-foreground leading-[1.72] flex-1">
+
+        <p className="text-[13px] text-muted-foreground leading-[1.74] flex-1">
           {project.description}
         </p>
 
