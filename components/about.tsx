@@ -13,10 +13,10 @@ export default function About() {
   return (
     <motion.section
       ref={ref}
-      className="mb-28 max-w-4xl mx-auto leading-8 sm:mb-40 scroll-mt-28 px-4 pt-20 sm:pt-28"
-      initial={{ opacity: 0, y: 100 }}
+      className="scroll-mt-28 px-2 py-8 w-full"
+      initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.175 }}
+      transition={{ delay: 0.175, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
       id="about"
     >
       <SectionHeader
@@ -25,12 +25,13 @@ export default function About() {
         title="A bit about"
         highlight="me"
         subtitle="Get to know who I am and what drives me as a developer."
-        iconColor="#4c7894"
-        highlightGradient="from-[#4c7894] via-[#5a922c] to-[#d79f1e]"
       />
-      <div className="text-center">
+      <div className="text-center space-y-4">
         {aboutContent.paragraphs.map((paragraph, index) => (
-          <p key={index} className={index > 0 ? "mt-4" : ""}>
+          <p
+            key={index}
+            className="mx-auto text-[15px] text-muted-foreground leading-[1.8] max-w-[56ch]"
+          >
             {paragraph}
           </p>
         ))}

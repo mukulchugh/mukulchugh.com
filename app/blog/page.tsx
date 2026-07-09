@@ -2,7 +2,7 @@ import { IconArrowLeft } from "@tabler/icons-react";
 import Link from "next/link";
 import { PostsGrid } from "@/components/blog/posts-grid";
 import { cn } from "@/lib/utils";
-import { getPostsServer } from "@/lib/hashnode";
+import { getAllPosts } from "@/lib/blog";
 import { syne } from "@/lib/fonts";
 import { siteConfig } from "@/lib/data";
 import { AdUnit } from "@/components/ad-unit";
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 };
 
 export default async function BlogPage() {
-  const initialData = await getPostsServer(12);
+  const posts = getAllPosts();
 
   return (
     <main className="w-full py-20">
@@ -41,16 +41,16 @@ export default async function BlogPage() {
 
         {/* Header */}
         <div className="flex w-full flex-col sm:flex-row sm:justify-between sm:items-center gap-8">
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-3">
             <h1
               className={cn(
                 syne.className,
-                "text-3xl md:text-5xl tracking-tighter max-w-xl font-regular"
+                "text-[2rem] md:text-[3rem] tracking-tight font-bold leading-[1.15]"
               )}
             >
               Latest articles
             </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl">
+            <p className="text-[15px] text-muted-foreground leading-relaxed max-w-[52ch]">
               Thoughts on software engineering, web development, and building
               products that matter.
             </p>
@@ -61,7 +61,7 @@ export default async function BlogPage() {
         <AdUnit adFormat="horizontal" className="my-4" />
 
         {/* Posts Grid */}
-        <PostsGrid initialData={initialData} />
+        <PostsGrid posts={posts} />
       </div>
     </main>
   );

@@ -1,18 +1,16 @@
 "use client";
 
-import { usePosts } from "@/lib/use-blog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { syne } from "@/lib/fonts";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "motion/react";
-import type { PostsResponse, Post } from "@/lib/hashnode";
+import type { Post } from "@/lib/blog";
 
 interface PostsGridProps {
-  initialData: PostsResponse;
+  posts: Post[];
 }
 
 const fadeInAnimationVariants = {
@@ -112,55 +110,20 @@ function PostCard({ post, index }: { post: Post; index: number }) {
   );
 }
 
-export function PostsGrid({ initialData }: PostsGridProps) {
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
-    usePosts(initialData);
-
-  const allPosts = data?.pages.flatMap((page) => page.posts) ?? [];
-
-  if (isLoading && allPosts.length === 0) {
-    return (
-      <div className="flex flex-col gap-12">
-        {[...Array(3)].map((_, i) => (
-          <div key={i} className="flex flex-col gap-4">
-            <div className="animate-pulse rounded-xl bg-muted aspect-video" />
-            <div className="animate-pulse rounded bg-muted h-4 w-32" />
-            <div className="animate-pulse rounded bg-muted h-8 w-3/4" />
-            <div className="animate-pulse rounded bg-muted h-4 w-full" />
-          </div>
-        ))}
-      </div>
-    );
-  }
-
-  if (allPosts.length === 0) {
+export function PostsGrid({ posts }: PostsGridProps) {
+  if (posts.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-muted-foreground">No posts found.</p>
+        <p className="text-muted-foreground">No posts yet. Check back soon.</p>
       </div>
     );
   }
 
   return (
     <div className="flex flex-col gap-12">
-      {/* Posts List */}
-      <div className="flex flex-col gap-12">
-        {allPosts.map((post, index) => (
-          <PostCard key={post.id} post={post} index={index} />
-        ))}
-      </div>
-
-      {hasNextPage && (
-        <div className="flex justify-center pt-4">
-          <Button
-            onClick={() => fetchNextPage()}
-            disabled={isFetchingNextPage}
-            className="rounded-full"
-          >
-            {isFetchingNextPage ? "Loading..." : "Load More"}
-          </Button>
-        </div>
-      )}
+      {posts.map((post, index) => (
+        <PostCard key={post.id} post={post} index={index} />
+      ))}
     </div>
   );
 }

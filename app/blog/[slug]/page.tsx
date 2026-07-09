@@ -1,4 +1,4 @@
-import { getPostServer, getPostsServer } from "@/lib/hashnode";
+import { getPostServer, getPostsServer } from "@/lib/blog";
 import { siteConfig } from "@/lib/data";
 import { syne } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
@@ -234,7 +234,7 @@ export default async function PostPage({ params }: PostPageProps) {
               // Headings
               "prose-headings:font-semibold prose-headings:tracking-tight",
               // Links
-              "prose-a:text-primary prose-a:no-underline hover:prose-a:underline",
+              "prose-a:text-zinc-600 prose-a:no-underline hover:prose-a:underline hover:prose-a:text-zinc-900",
               // Images
               "prose-img:rounded-xl prose-img:shadow-md",
               // Code blocks
@@ -242,7 +242,7 @@ export default async function PostPage({ params }: PostPageProps) {
               // Inline code
               "prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none",
               // Blockquotes
-              "prose-blockquote:border-l-primary prose-blockquote:bg-muted/30 prose-blockquote:py-1 prose-blockquote:pr-4 prose-blockquote:rounded-r-lg",
+              "prose-blockquote:border-l-zinc-400 prose-blockquote:bg-zinc-50 prose-blockquote:py-1 prose-blockquote:pr-4 prose-blockquote:rounded-r-lg",
               // Tables
               "prose-table:border prose-table:border-border prose-th:bg-muted prose-td:border prose-td:border-border prose-th:border prose-th:border-border",
               // Lists

@@ -17,7 +17,7 @@ const Cal = dynamic(
     ssr: false,
     loading: () => (
       <div className="flex items-center justify-center min-h-[700px]">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white" />
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-zinc-900" />
       </div>
     ),
   }
@@ -58,28 +58,25 @@ export function LetsWorkTogether() {
     <section
       id="contact"
       ref={ref}
-      className="flex min-h-[70vh] items-center justify-center px-4 sm:px-6 mb-20 sm:mb-28 scroll-mt-28"
-      style={{
-        width: "-webkit-fill-available",
-      }}
+      className="flex min-h-[60vh] items-center justify-center px-4 sm:px-6 py-12 scroll-mt-28 w-full"
     >
       <div className="relative flex flex-col items-center gap-12 w-full max-w-[1400px]">
         {/* Success state - Perfect, Let's talk with Cal.com embed */}
         {showSuccess && (
           <div
-            className="w-full flex flex-col items-center justify-start gap-8 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
+            className="w-full flex flex-col items-center justify-start gap-8 transition-all duration-700"
             style={{
+              transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)",
               opacity: showSuccess ? 1 : 0,
               transform: showSuccess
                 ? "translateY(0) scale(1)"
                 : "translateY(20px) scale(0.95)",
-              width: "-webkit-fill-available",
             }}
           >
             {/* Heading */}
             <div className="flex flex-col items-center gap-2">
               <span
-                className="text-xs font-medium tracking-[0.3em] uppercase text-gray-400 transition-all duration-500"
+                className="text-xs font-medium tracking-[0.3em] uppercase text-muted-foreground transition-all duration-500"
                 style={{
                   transform: showSuccess ? "translateY(0)" : "translateY(10px)",
                   opacity: showSuccess ? 1 : 0,
@@ -91,7 +88,7 @@ export function LetsWorkTogether() {
               <h3
                 className={clsx(
                   syne.className,
-                  "text-3xl font-light tracking-tight text-white transition-all duration-500 sm:text-4xl"
+                  "text-3xl font-light tracking-tight text-foreground transition-all duration-500 sm:text-4xl"
                 )}
                 style={{
                   transform: showSuccess ? "translateY(0)" : "translateY(10px)",
@@ -135,7 +132,7 @@ export function LetsWorkTogether() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
               </span>
-              <span className="text-sm font-medium tracking-widest uppercase text-gray-400">
+              <span className="text-sm font-medium tracking-widest uppercase text-muted-foreground">
                 Available for projects
               </span>
             </div>
@@ -154,7 +151,7 @@ export function LetsWorkTogether() {
                 <h2
                   className={clsx(
                     syne.className,
-                    "relative text-center text-5xl font-light tracking-tight text-white sm:text-6xl md:text-7xl lg:text-8xl transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                    "relative text-center text-5xl font-light tracking-tight text-foreground sm:text-6xl md:text-7xl lg:text-8xl transition-all duration-700 ease-out"
                   )}
                   style={{
                     opacity: isClicked ? 0 : 1,
@@ -165,7 +162,7 @@ export function LetsWorkTogether() {
                 >
                   <span className="block overflow-hidden">
                     <span
-                      className="block transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                      className="block transition-transform duration-700 ease-out"
                       style={{
                         transform:
                           isHovered && !isClicked
@@ -178,7 +175,7 @@ export function LetsWorkTogether() {
                   </span>
                   <span className="block overflow-hidden">
                     <span
-                      className="block transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] delay-75"
+                      className="block transition-transform duration-700 ease-out delay-75"
                       style={{
                         transform:
                           isHovered && !isClicked
@@ -186,7 +183,7 @@ export function LetsWorkTogether() {
                             : "translateY(0)",
                       }}
                     >
-                      <span className="text-gray-500">together</span>
+                      <span className="text-foreground/35">together</span>
                     </span>
                   </span>
                 </h2>
@@ -196,8 +193,8 @@ export function LetsWorkTogether() {
                   <div
                     className={`pointer-events-none absolute inset-0 rounded-full border transition-all ease-out ${
                       isHovered && !isClicked
-                        ? "border-white bg-white"
-                        : "border-gray-600 bg-transparent"
+                        ? "border-foreground bg-foreground"
+                        : "border-foreground/30 bg-transparent"
                     }`}
                     style={{
                       transform: isClicked
@@ -210,8 +207,8 @@ export function LetsWorkTogether() {
                     }}
                   />
                   <IconArrowUpRight
-                    className={`size-6 transition-all ease-[cubic-bezier(0.16,1,0.3,1)] sm:size-7 ${
-                      isHovered && !isClicked ? "text-gray-900" : "text-white"
+                    className={`size-6 transition-all ease-out sm:size-7 ${
+                      isHovered && !isClicked ? "text-background" : "text-foreground"
                     }`}
                     style={{
                       transform: isClicked
@@ -235,7 +232,7 @@ export function LetsWorkTogether() {
                   }`}
                 >
                   <div
-                    className="h-px w-8 bg-gray-600 transition-all duration-500 sm:w-12"
+                    className="h-px w-8 bg-foreground/30 transition-all duration-500 sm:w-12"
                     style={{
                       transform: isClicked
                         ? `scaleX(0) translateX(${side === "left" ? "-20px" : "20px"})`
@@ -258,11 +255,11 @@ export function LetsWorkTogether() {
                 pointerEvents: isClicked ? "none" : "auto",
               }}
             >
-              <p className="max-w-md text-sm leading-relaxed text-gray-400">
+              <p className="max-w-md text-sm leading-relaxed text-muted-foreground">
                 Have a project in mind? I&apos;d love to hear about it.
                 Let&apos;s create something exceptional together.
               </p>
-              <span className="text-xs tracking-widest uppercase text-gray-500">
+              <span className="text-xs tracking-widest uppercase text-muted-foreground/70">
                 {siteConfig.email.display}
               </span>
             </div>

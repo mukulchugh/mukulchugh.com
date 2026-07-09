@@ -8,16 +8,16 @@ export const siteConfig = {
   firstName: "Mukul",
   lastName: "Chugh",
   title: "Product Engineer",
-  tagline: "Creating Digital Experiences for Humans",
+  tagline: "Engineer turned generalist. Building products end to end.",
   location: "San Francisco, CA",
   locationFull: "San Francisco, California, USA",
 
   // SEO & Meta
   siteUrl: "https://mukulchugh.com",
   siteTitle:
-    "Mukul Chugh | Product Engineer - Creating Digital Experiences for Humans",
+    "Mukul Chugh | Product Engineer · Mobile, Full-Stack & AI",
   siteDescription:
-    "Founding Engineer at Quivly.ai, building AI-powered products. An engineer turned generalist who crosses product, design, and full-stack development. Previously at Swiggy and Zenduty (acquired). Passionate about human-centric design and creating intuitive digital experiences for humans.",
+    "Founding Engineer at Quivly.ai, building AI-powered products. An engineer turned generalist spanning mobile, full-stack, product, and design. Previously at Swiggy and Zenduty (acquired).",
 
   // Keywords for SEO (used in JSON-LD)
   keywords: [
@@ -86,21 +86,21 @@ export const siteConfig = {
 export const aboutContent = {
   heading: "About me",
   paragraphs: [
-    "Hey there, I'm Mukul — an engineer turned generalist.",
-    "I started in engineering and grew into a generalist: mobile and full-stack development at the core, with product thinking and human-centric design layered on top. Engineering is my backbone, but I thrive at the intersection of technology, design, and product.",
-    "Currently a Founding Engineer at Quivly.ai, where I work directly with the CTO on building AI-powered products from the ground up. Before this, I was at Swiggy building mobile products used by millions, and at Zenduty where I helped scale the platform until its acquisition.",
-    "I've worn many hats: founding engineer, co-founder, and product generalist. What drives me is creating digital experiences that feel intuitive and genuinely serve the humans using them.",
-    "Would you like to work together or just chat? Feel free to reach out.",
+    "Hey, I'm Mukul — an engineer who gradually absorbed product and design until the job title stopped making sense.",
+    "Mobile and full-stack development are my core, but I've spent years working close enough to product and design that the lines blur. I write code, shape features, and push pixels when needed — usually all in the same week.",
+    "Right now I'm a Founding Engineer at Quivly.ai in San Francisco, building AI-powered products from scratch alongside the CTO. Before that, I was at Swiggy building mobile products at scale, and at Zenduty where I shipped across mobile, web, and internal tooling until the company was acquired.",
+    "I've also co-founded a startup (HeroApp) and done enough freelance work to know what I don't want. What I do want: hard problems, small fast teams, and software that earns its keep by being genuinely useful.",
+    "Building something interesting? I'd like to hear about it.",
   ],
 } as const;
 
 // Intro/Hero Section Content
 export const introContent = {
   greeting: "Hi, I'm Mukul Chugh",
-  tagline: "Creating Digital Experiences for Humans",
+  tagline: "I build products end to end — mobile, web, and everything between.",
   role: "product engineer",
   specialty: "Mobile & Full-Stack Development",
-  passion: "building human-centric digital products",
+  passion: "shipping useful software with small, fast teams",
   ctaText: "Let's Talk",
   resumeButtonText: "View Resume",
   emoji: "👋",
@@ -110,7 +110,7 @@ export const introContent = {
 export const contactContent = {
   heading: "Contact me",
   description:
-    "Feel free to reach out to me directly via email or connect with me on social media.",
+    "Drop me an email or find me on social — I'm always up for talking about interesting problems.",
 } as const;
 
 // Footer Content
@@ -149,10 +149,10 @@ export const experiencesData = [
   {
     title: "Founding Engineer",
     description: [
-      "Building AI-powered products and features for the Quivly platform as the first engineer.",
-      "Working directly with the CTO on product strategy, technical architecture, and full-stack development.",
-      "Developing across the entire stack using modern web technologies and AI/ML integrations.",
-      "Contributing to product design and engineering decisions as a core founding team member.",
+      "First engineering hire; building the Quivly platform end-to-end from day one.",
+      "Work directly with the CTO on architecture decisions, product direction, and full-stack implementation.",
+      "Develop across the full stack — frontend, backend, and AI/ML integrations.",
+      "Shape product design and engineering culture as a core founding team member.",
     ],
     company: "Quivly.ai",
     date: "November 2025 - Present",
@@ -167,7 +167,7 @@ export const experiencesData = [
       "Built an AI-based QC & moderation engine to automate compliance and quality checks across forms, media, and profile signals, reducing manual review effort and accelerating approvals.",
       "Delivered self-serve capabilities for sellers (catalog/profile management, pricing & availability, slot scheduling, and policy workflows) to improve activation and retention.",
       "Developed internal tools for product and category managers to monitor funnels, SLAs, and quality metrics.",
-      "Profiling with Flipper, Metro, and Android/iOS tools; resolved performance issues; optimized bundle size and memory.",
+      "Profiled with Flipper, Metro, and platform-native tools; cut bundle size and resolved memory bottlenecks.",
     ],
     company: "Swiggy",
     date: "May 2025 - November 2025",
@@ -180,9 +180,9 @@ export const experiencesData = [
       "Part of the core team that scaled the platform until acquisition — contributed across mobile, web, and internal tooling.",
       "Re-architected the React Native mobile app from ground up, building an in-house UI library and shipping multiple releases to Google Play and App Store.",
       "Enhanced incident monitoring tools, reducing response times by 25% and minimizing downtime by 20%.",
-      "Worked on the REST API Service, built internal automation tools and SDKs.",
+      "Built REST API services, internal automation tools, and SDKs.",
       "Developed a data analysis app using Prometheus, ElasticSearch, GraphQL, ChartJS, and NextJS.",
-      "Led marketing initiatives, setting up Customer Data Platform (CDP) and User Analytics, managing Product Docs, Blog, and Landing Pages.",
+      "Set up Customer Data Platform (CDP) and user analytics; owned product docs, blog, and landing pages.",
       "Represented Zenduty at KubeCon India and Grayscale AI Week, contributing to developer relations and community engagement.",
     ],
     company: "Zenduty (Acquired)",
@@ -194,8 +194,8 @@ export const experiencesData = [
     title: "Co-Founder & Engineer",
     description: [
       "Designed and developed a React Native-based mobile app.",
-      "Managed technology initiatives, product design, and development as a founding team member.",
-      "Led development efforts, ensuring timely delivery of high-quality products within budget constraints, and implemented agile methodologies resulting in a 30% efficiency gain.",
+      "Owned product design, technology decisions, and development end-to-end as a co-founder.",
+      "Ran agile sprints and led development from spec to ship, improving team delivery speed by 30%.",
     ],
     company: "HeroApp",
     date: "December 2021 - June 2022",
@@ -205,10 +205,10 @@ export const experiencesData = [
   {
     title: "Software Engineer Associate",
     description: [
-      "Collaborated with the CTO and CIO to enhance the web app, resulting in a 20% improvement in user experience.",
+      "Worked with the CTO and CIO to overhaul the web app; improvements lifted user experience scores by 20%.",
       "Optimized app performance and increased user engagement by 15%.",
-      "Delivered high-quality work within project timelines and budget constraints.",
-      "Fostered effective cross-functional team communication and collaboration, boosting productivity.",
+      "Shipped all deliverables on time and within budget.",
+      "Improved cross-team communication and handoffs, raising overall team productivity.",
     ],
     company: "Instahomes PH",
     date: "April 2022 - June 2022",
@@ -231,7 +231,7 @@ export const experiencesData = [
     title: "Freelance Web Developer",
     description: [
       "Designed and developed responsive websites for small businesses and startups.",
-      "Collaborated with clients to understand requirements and deliver tailored solutions.",
+      "Translated client requirements into clean, functional websites.",
       "Implemented SEO best practices to improve client website visibility.",
     ],
     company: "Digital Moshai",
@@ -276,7 +276,7 @@ export const projectsData = [
     demo: "",
     tags: ["React", "Grafana", "TypeScript", "Golang"],
     description:
-      "Developed a Grafana plugin for Root Cause Analysis, designed to identify anomalies and service disruptions. This tool aids engineers in swiftly tracing and resolving issues, leveraging insightful data for expedited problem-solving.",
+      "A Grafana plugin for root cause analysis — flags anomalies and service disruptions, then surfaces the relevant telemetry so engineers can trace and resolve incidents faster.",
   },
   {
     title: "Zendash - Global Admin Dashboard",
@@ -284,7 +284,7 @@ export const projectsData = [
     demo: "",
     tags: ["React", "NextJS", "TailwindCSS", "GraphQL", "Apollo"],
     description:
-      "Built a Global Admin Dashboard during my internship at Zenduty. This tool assists the Engineering, Customer Success and Marketing Team by providing easy access to insights via their dashboard. Additionally, it aids in the identification and efficient resolution of user issues on the platform.",
+      "A global admin dashboard built at Zenduty, giving Engineering, Customer Success, and Marketing teams a single view into platform health, user activity, and issue resolution.",
   },
   {
     title: "Devcord",
@@ -292,7 +292,7 @@ export const projectsData = [
     demo: "https://mukulchugh.pythonanywhere.com",
     tags: ["Django", "Python", "SQLite", "HTML", "CSS", "Javascript"],
     description:
-      "A full stack django application for developers to build community and collaborate together on projects or discuss on various topics and make study groups.",
+      "A Django-based community platform for developers to collaborate on projects, discuss topics, and form study groups.",
   },
   {
     title: "ZepEats",
@@ -300,7 +300,7 @@ export const projectsData = [
     demo: "https://expo.dev/@mukulchugh/zepeats",
     tags: ["React Native", "Firebase", "Google Cloud", "Stripe"],
     description:
-      "Inspired by Uber Eats, built a food delivery application keeping in mind simplicity, to order food and have a clean experience. Built with React Native, Firebase, Google Cloud, Firestore, Stripe, etc",
+      "A food delivery app built with React Native, Firebase, and Stripe — clean ordering flow, real-time updates, and payment processing end-to-end.",
   },
   {
     title: "Cryptomedia - Cryptocurrency Tracker",
@@ -308,7 +308,7 @@ export const projectsData = [
     demo: "https://cryptomedia.netlify.app",
     tags: ["React", "ChartJS", "MUI", "Firebase", "CoinGecko API"],
     description:
-      "A React-based CryptoCurrencies tracker, with ranking and coin information, uses a CoinGecko API to fetch data, designed using Material UI. Used Firebase to provide authentication functionality and a database for maintaining the Watchlist for users.",
+      "A cryptocurrency tracker in React — pulls live data from CoinGecko, lets users build a personal watchlist backed by Firebase auth and Firestore.",
   },
   {
     title: "Mereko App Concept Design",
@@ -322,7 +322,7 @@ export const projectsData = [
       "Prototyping",
     ],
     description:
-      "Designed a concept app as part of my Google UX Design course.",
+      "A concept app designed during the Google UX Design course — covers UX research, usability testing, and a high-fidelity Figma prototype.",
   },
   {
     title: "Kanboard - Kanban Board",
@@ -330,7 +330,7 @@ export const projectsData = [
     demo: "https://notion-kanboard-mukul.netlify.app",
     tags: ["React", "React Beautiful DND", "TailwindCSS"],
     description:
-      "A Notion like a Kanban board using ReactJS, and React Beautiful DND.",
+      "A Notion-style Kanban board built with React and React Beautiful DND — drag-and-drop cards across columns.",
   },
 ] as const;
 

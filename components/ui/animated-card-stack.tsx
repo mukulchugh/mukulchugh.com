@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { IconArrowRight, IconClock } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
-import type { Post } from "@/lib/hashnode";
+import type { Post } from "@/lib/blog";
 
 interface Card {
   id: number;
@@ -43,7 +43,7 @@ function CardContent({ post }: { post: Post }) {
             className="h-full w-full select-none object-cover"
           />
         ) : (
-          <div className="h-full w-full bg-gradient-to-br from-[#dd7bbb] via-[#d79f1e] to-[#5a922c] flex items-center justify-center">
+          <div className="h-full w-full bg-gradient-to-br from-zinc-800 via-zinc-700 to-zinc-900 flex items-center justify-center">
             <span className="text-white text-lg font-bold text-center px-4 line-clamp-2">{post.title}</span>
           </div>
         )}
@@ -63,7 +63,7 @@ function CardContent({ post }: { post: Post }) {
         <span className="text-xs text-muted-foreground line-clamp-2">{post.brief}</span>
         <Link
           href={`/blog/${post.slug}`}
-          className="mt-1 flex w-fit items-center gap-1 text-xs font-medium text-foreground hover:text-[#dd7bbb] transition-colors"
+          className="mt-1 flex w-fit items-center gap-1 text-xs font-medium text-foreground/70 hover:text-foreground transition-colors"
           aria-label={`Read article: ${post.title}`}
         >
           Read article

@@ -10,7 +10,6 @@ import { IconBriefcase } from "@tabler/icons-react";
 export default function Experience() {
   const { ref } = useSectionInView("Experience");
 
-  // Transform experiencesData to match the ExpandableCard interface
   const cardItems = useMemo(
     () =>
       experiencesData.map((exp, index) => ({
@@ -29,7 +28,7 @@ export default function Experience() {
     <section
       id="experience"
       ref={ref}
-      className="scroll-mt-28 mb-28 sm:mb-40 px-4 max-w-4xl mx-auto w-full"
+      className="scroll-mt-28 px-2 py-8 w-full"
     >
       <SectionHeader
         icon={IconBriefcase}
@@ -37,8 +36,6 @@ export default function Experience() {
         title="My professional"
         highlight="journey"
         subtitle="A timeline of my career, from where I started to where I am today."
-        iconColor="#5a922c"
-        highlightGradient="from-[#5a922c] via-[#4c7894] to-[#dd7bbb]"
       />
       <ExpandableCard items={cardItems} />
     </section>

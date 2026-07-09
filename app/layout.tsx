@@ -8,7 +8,7 @@ import { JsonLd } from "@/components/json-ld";
 import { Dock } from "@/components/ui/dock";
 import ActiveSectionContextProvider from "@/context/active-section-context";
 import { siteConfig, skillsData } from "@/lib/data";
-import { inter } from "@/lib/fonts";
+import { geist } from "@/lib/fonts";
 import type { Metadata } from "next";
 import React from "react";
 
@@ -152,11 +152,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="!scroll-smooth dark">
+    <html lang="en" className="!scroll-smooth">
       <head>
         <link rel="preconnect" href="https://ik.imagekit.io" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://cdn.hashnode.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://gql.hashnode.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://analytics.google.com" />
         <link
@@ -168,7 +166,7 @@ export default function RootLayout({
         <JsonLd />
       </head>
       <body
-        className={`${inter.className} bg-black text-gray-50 text-opacity-90 relative`}
+        className={`${geist.className} bg-background text-foreground relative`}
       >
         <HeroBackground />
         <ActiveSectionContextProvider>

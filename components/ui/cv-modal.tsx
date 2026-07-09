@@ -66,7 +66,7 @@ const AnimatedContent = forwardRef<HTMLDivElement, { children: React.ReactNode }
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95, y: 10 }}
       transition={springTransition}
-      className="relative w-full max-w-4xl overflow-hidden rounded-2xl border border-white/20 bg-neutral-900 shadow-2xl my-8"
+      className="relative w-full max-w-4xl overflow-hidden rounded-2xl border border-black/[0.08] bg-white shadow-[0_8px_48px_rgba(20,20,40,0.14)] my-8"
       {...props}
     >
       {children}
@@ -95,16 +95,16 @@ export function CVModal({ isOpen, onClose, cvUrl, name }: CVModalProps) {
               <div className="fixed inset-0 z-[1001] grid place-items-center p-4 overflow-y-auto">
                 <AnimatedContent>
                   {/* Header */}
-                  <div className="flex items-center justify-between p-4 sm:p-6 border-b border-white/10">
+                  <div className="flex items-center justify-between p-4 sm:p-6 border-b border-black/[0.08]">
                     <div className="flex items-center gap-3">
-                      <div className="p-2 rounded-xl bg-gradient-to-b from-neutral-800/60 to-neutral-900/70 ring-1 ring-white/10">
-                        <IconFileText className="w-5 h-5 text-white/70" />
+                      <div className="p-2 rounded-xl bg-black/[0.05] ring-1 ring-black/[0.08]">
+                        <IconFileText className="w-5 h-5 text-foreground/60" />
                       </div>
                       <div>
                         <Dialog.Title
                           className={cn(
                             syne.className,
-                            "font-semibold text-lg sm:text-xl text-white"
+                            "font-semibold text-lg sm:text-xl text-foreground"
                           )}
                         >
                           {name}&apos;s Resume
@@ -114,7 +114,7 @@ export function CVModal({ isOpen, onClose, cvUrl, name }: CVModalProps) {
                             View or download {name}&apos;s resume in PDF format
                           </Dialog.Description>
                         </VisuallyHidden.Root>
-                        <p className="text-sm text-gray-400">
+                        <p className="text-sm text-muted-foreground">
                           View or download my resume
                         </p>
                       </div>
@@ -132,8 +132,8 @@ export function CVModal({ isOpen, onClose, cvUrl, name }: CVModalProps) {
                             "items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200",
                             action.desktopOnly ? "hidden sm:flex" : "flex",
                             action.isDownload
-                              ? "bg-white/95 backdrop-blur-xl ring-1 ring-white/20 text-neutral-900 hover:bg-white"
-                              : "bg-gradient-to-b from-neutral-800/60 to-neutral-900/70 backdrop-blur-xl ring-1 ring-white/10 text-white/70 hover:text-white/90 hover:ring-white/20"
+                              ? "bg-zinc-900 text-white hover:bg-zinc-800 shadow-sm shadow-zinc-900/15"
+                              : "bg-black/[0.05] ring-1 ring-black/[0.08] text-foreground/70 hover:text-foreground hover:ring-black/[0.14]"
                           )}
                         >
                           <action.Icon className="w-4 h-4" />
@@ -146,17 +146,17 @@ export function CVModal({ isOpen, onClose, cvUrl, name }: CVModalProps) {
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="rounded-xl bg-white/10 hover:bg-white/20"
+                          className="rounded-xl bg-black/[0.05] hover:bg-black/[0.10]"
                           aria-label="Close modal"
                         >
-                          <IconX className="w-4 h-4 text-white/70" />
+                          <IconX className="w-4 h-4 text-foreground/60" />
                         </Button>
                       </Dialog.Close>
                     </div>
                   </div>
 
                   {/* PDF Viewer */}
-                  <div className="relative w-full h-[60vh] sm:h-[70vh] bg-neutral-950">
+                  <div className="relative w-full h-[60vh] sm:h-[70vh] bg-gray-50">
                     <iframe
                       src={`${cvUrl}#toolbar=0&navpanes=0`}
                       className="w-full h-full"
@@ -164,9 +164,9 @@ export function CVModal({ isOpen, onClose, cvUrl, name }: CVModalProps) {
                     />
 
                     {/* Fallback for mobile/browsers that don't support PDF embed */}
-                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-neutral-950 sm:hidden">
-                      <IconFileText className="w-16 h-16 text-white/30" />
-                      <p className="text-white/60 text-center px-4">
+                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-gray-50 sm:hidden">
+                      <IconFileText className="w-16 h-16 text-foreground/25" />
+                      <p className="text-muted-foreground text-center px-4">
                         PDF preview is best viewed on desktop
                       </p>
                       <div className="flex gap-3">
@@ -180,8 +180,8 @@ export function CVModal({ isOpen, onClose, cvUrl, name }: CVModalProps) {
                             className={cn(
                               "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium",
                               action.isDownload
-                                ? "bg-white/95 text-neutral-900"
-                                : "bg-gradient-to-b from-neutral-800/60 to-neutral-900/70 ring-1 ring-white/10 text-white/90"
+                                ? "bg-zinc-900 text-white"
+                                : "bg-black/[0.05] ring-1 ring-black/[0.08] text-foreground/80"
                             )}
                           >
                             <action.Icon className="w-4 h-4" />

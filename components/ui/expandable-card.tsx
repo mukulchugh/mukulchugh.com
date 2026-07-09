@@ -102,18 +102,18 @@ export default function ExpandableCard({
               ref={ref}
               layoutId={`card-${current.id}`}
               transition={springTransition}
-              className="relative w-full max-w-2xl overflow-hidden rounded-2xl border border-white/20 bg-neutral-900 shadow-2xl my-8"
+              className="relative w-full max-w-2xl overflow-hidden rounded-2xl border border-black/[0.08] bg-white shadow-[0_8px_48px_rgba(20,20,40,0.14)] my-8"
             >
               {/* Close button */}
               <motion.button
                 onClick={() => setCurrent(null)}
-                className="absolute top-4 right-4 z-10 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+                className="absolute top-4 right-4 z-10 p-2 rounded-full bg-black/[0.06] hover:bg-black/[0.10] transition-colors"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.8 }}
                 transition={{ duration: 0.2, delay: 0.1 }}
               >
-                <IconX className="w-4 h-4 text-white/70" />
+                <IconX className="w-4 h-4 text-foreground/60" />
               </motion.button>
 
               <div className="p-6 sm:p-8">
@@ -122,7 +122,7 @@ export default function ExpandableCard({
                   <motion.div
                     layoutId={`icon-${current.id}`}
                     transition={springTransition}
-                    className="w-14 h-14 sm:w-16 sm:h-16 rounded-full border-4 border-indigo-500 overflow-hidden flex items-center justify-center bg-white flex-shrink-0 shadow-lg shadow-indigo-500/20"
+                    className="w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-zinc-200 overflow-hidden flex items-center justify-center bg-white flex-shrink-0 shadow-lg shadow-zinc-900/[0.08]"
                   >
                     <Image
                       src={current.icon}
@@ -137,7 +137,7 @@ export default function ExpandableCard({
                     <motion.span
                       layoutId={`date-${current.id}`}
                       transition={springTransition}
-                      className="text-sm text-gray-400 block mb-1"
+                      className="text-sm text-muted-foreground block mb-1"
                     >
                       {current.date}
                     </motion.span>
@@ -146,7 +146,7 @@ export default function ExpandableCard({
                       transition={springTransition}
                       className={cn(
                         syne.className,
-                        "font-semibold text-xl sm:text-2xl text-white"
+                        "font-semibold text-xl sm:text-2xl text-foreground"
                       )}
                     >
                       {current.title}
@@ -154,7 +154,7 @@ export default function ExpandableCard({
                     <motion.p
                       layoutId={`company-${current.id}`}
                       transition={springTransition}
-                      className="text-sm text-gray-400 mt-1"
+                      className="text-sm text-muted-foreground mt-1"
                     >
                       {current.company} • {current.location}
                     </motion.p>
@@ -169,14 +169,14 @@ export default function ExpandableCard({
                     exit={{ opacity: 0, y: 10 }}
                     transition={{ duration: 0.4, delay: 0.15, ease: "easeOut" }}
                   >
-                    <h4 className="text-sm font-medium text-gray-300 mb-3">
+                    <h4 className="text-sm font-medium text-foreground/80 mb-3">
                       Key Responsibilities & Achievements
                     </h4>
                     <ul className="space-y-3">
                       {current.description.map((desc, i) => (
                         <motion.li
                           key={i}
-                          className="flex items-start text-sm text-gray-300"
+                          className="flex items-start text-sm text-foreground/80"
                           initial={{ opacity: 0, x: -10 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{
@@ -185,7 +185,7 @@ export default function ExpandableCard({
                             ease: "easeOut"
                           }}
                         >
-                          <span className="mr-3 mt-1.5 w-1.5 h-1.5 rounded-full bg-indigo-500 flex-shrink-0" />
+                          <span className="mr-3 mt-1.5 w-1.5 h-1.5 rounded-full bg-zinc-400 flex-shrink-0" />
                           <span>{desc}</span>
                         </motion.li>
                       ))}
@@ -206,7 +206,7 @@ export default function ExpandableCard({
             layoutId={`card-${item.id}`}
             onClick={() => setCurrent(item)}
             transition={springTransition}
-            className="group relative flex cursor-pointer items-center gap-4 sm:gap-6 rounded-xl border border-white/10 bg-white/5 p-4 sm:p-6 backdrop-blur-sm transition-colors duration-300 hover:bg-white/10 hover:border-white/20 w-full"
+            className="group relative flex cursor-pointer items-center gap-4 sm:gap-6 rounded-xl border border-black/[0.07] bg-black/[0.02] p-4 sm:p-6 backdrop-blur-sm transition-colors duration-300 hover:bg-black/[0.05] hover:border-black/[0.12] w-full"
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.99 }}
           >
@@ -214,7 +214,7 @@ export default function ExpandableCard({
             <motion.div
               layoutId={`icon-${item.id}`}
               transition={springTransition}
-              className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border-4 border-indigo-500 overflow-hidden flex items-center justify-center bg-white flex-shrink-0 shadow-md shadow-indigo-500/20"
+              className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border-2 border-zinc-200 overflow-hidden flex items-center justify-center bg-white flex-shrink-0 shadow-md shadow-zinc-900/[0.08]"
             >
               <Image
                 src={item.icon}
@@ -230,7 +230,7 @@ export default function ExpandableCard({
               <motion.span
                 layoutId={`date-${item.id}`}
                 transition={springTransition}
-                className="text-xs text-gray-400 block mb-0.5"
+                className="text-xs text-muted-foreground block mb-0.5"
               >
                 {item.date}
               </motion.span>
@@ -239,7 +239,7 @@ export default function ExpandableCard({
                 transition={springTransition}
                 className={cn(
                   syne.className,
-                  "font-semibold text-base sm:text-lg text-white truncate"
+                  "font-semibold text-base sm:text-lg text-foreground truncate"
                 )}
               >
                 {item.title}
@@ -247,15 +247,15 @@ export default function ExpandableCard({
               <motion.p
                 layoutId={`company-${item.id}`}
                 transition={springTransition}
-                className="text-sm text-gray-400 truncate"
+                className="text-sm text-muted-foreground truncate"
               >
                 {item.company} • {item.location}
               </motion.p>
             </div>
 
             {/* Click indicator */}
-            <div className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <span className="text-xs text-gray-400">Click to expand</span>
+            <div className="flex-shrink-0 opacity-0 group-hover:opacity-60 transition-opacity duration-300">
+              <span className="text-[11px] text-muted-foreground tracking-wide">Expand</span>
             </div>
           </motion.div>
         ))}

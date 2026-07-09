@@ -32,11 +32,11 @@ export default function Header() {
           />
           {isBlogPage ? (
             <div className="flex items-center gap-3">
-              <div className="h-5 w-px bg-white/20" />
+              <div className="h-5 w-px bg-foreground/20" />
               <span
                 className={cn(
                   syne.className,
-                  "text-lg font-semibold text-white/90"
+                  "text-lg font-semibold text-foreground/90"
                 )}
               >
                 Blog
@@ -46,7 +46,7 @@ export default function Header() {
             <span
               className={cn(
                 syne.className,
-                "text-lg font-semibold text-white/90"
+                "text-lg font-semibold text-foreground/90"
               )}
             >
               {siteConfig.name}
