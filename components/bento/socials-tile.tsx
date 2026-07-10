@@ -1,3 +1,5 @@
+"use client";
+
 import {
   IconBrandGithub,
   IconBrandLinkedin,
@@ -6,6 +8,7 @@ import {
   IconArrowUpRight,
 } from "@tabler/icons-react";
 import { siteConfig } from "@/lib/data";
+import { TiltCard } from "@/components/ui/tilt-card";
 
 /**
  * SocialsTile — a section of its own. The one place the monochrome ink system
@@ -59,56 +62,57 @@ export function SocialsTile() {
 
       <div className="grid flex-1 grid-cols-2 gap-2.5 [grid-auto-rows:1fr]">
         {socials.map(({ name, handle, href, Icon, color }) => (
-          <a
-            key={name}
-            href={href}
-            target={href.startsWith("http") ? "_blank" : undefined}
-            rel="noopener noreferrer"
-            aria-label={`${name} — ${handle}`}
-            title={handle}
-            className="social-card group relative flex min-h-[80px] sm:min-h-[88px] flex-col items-start justify-between
-                       gap-2 sm:gap-3 overflow-hidden rounded-2xl bg-white
-                       p-3 sm:p-3.5
-                       transition-all duration-[260ms] [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]
-                       active:scale-[0.975] active:duration-[100ms]
-                       [@media(hover:hover)]:hover:-translate-y-[3px]"
-            style={{
-              border: "1px solid rgba(20,20,40,0.07)",
-              boxShadow: "0 1px 2px rgba(28,25,23,0.04), 0 4px 12px -6px rgba(28,25,23,0.08)",
-            }}
-          >
-            {/* brand-tint wash — always partially visible (not hover-only) */}
-            <span
-              className="pointer-events-none absolute inset-0 transition-opacity duration-200"
-              style={{ background: `${color}08` }}
-              aria-hidden="true"
-            />
-            {/* amplified tint on hover (pointer devices only) */}
-            <span
-              className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-200
-                         [@media(hover:hover)]:group-hover:opacity-100"
-              style={{ background: `${color}0f` }}
-              aria-hidden="true"
-            />
-            <span className="relative flex w-full items-start justify-between">
+          <TiltCard key={name} maxDeg={4} lift={5} className="h-full">
+            <a
+              href={href}
+              target={href.startsWith("http") ? "_blank" : undefined}
+              rel="noopener noreferrer"
+              aria-label={`${name} — ${handle}`}
+              title={handle}
+              className="social-card group relative flex min-h-[80px] sm:min-h-[88px] h-full flex-col items-start justify-between
+                         gap-2 sm:gap-3 overflow-hidden rounded-2xl bg-white
+                         p-3 sm:p-3.5
+                         transition-all duration-[260ms] [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]
+                         active:scale-[0.975] active:duration-[100ms]"
+              style={{
+                border: "1px solid rgba(20,20,40,0.07)",
+                boxShadow:
+                  "0 1px 2px rgba(28,25,23,0.04), 0 4px 12px -6px rgba(28,25,23,0.08)",
+              }}
+            >
+              {/* brand-tint wash — always partially visible (not hover-only) */}
               <span
-                className="grid h-9 w-9 place-items-center rounded-xl"
-                style={{ background: `${color}14`, color }}
-              >
-                <Icon className="h-[18px] w-[18px]" />
-              </span>
-              <IconArrowUpRight
-                className="h-4 w-4 text-zinc-300 transition-all duration-200
-                           [@media(hover:hover)]:group-hover:-translate-y-0.5
-                           [@media(hover:hover)]:group-hover:translate-x-0.5
-                           [@media(hover:hover)]:group-hover:text-zinc-600"
+                className="pointer-events-none absolute inset-0 transition-opacity duration-200"
+                style={{ background: `${color}08` }}
+                aria-hidden="true"
               />
-            </span>
-            {/* Platform name — tile/card title scale (14px semibold) */}
-            <span className="relative block truncate text-[14px] font-semibold text-zinc-900">
-              {name}
-            </span>
-          </a>
+              {/* amplified tint on hover (pointer devices only) */}
+              <span
+                className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-200
+                           [@media(hover:hover)]:group-hover:opacity-100"
+                style={{ background: `${color}0f` }}
+                aria-hidden="true"
+              />
+              <span className="relative flex w-full items-start justify-between">
+                <span
+                  className="grid h-9 w-9 place-items-center rounded-xl"
+                  style={{ background: `${color}14`, color }}
+                >
+                  <Icon className="h-[18px] w-[18px]" />
+                </span>
+                <IconArrowUpRight
+                  className="h-4 w-4 text-zinc-300 transition-all duration-200
+                             [@media(hover:hover)]:group-hover:-translate-y-0.5
+                             [@media(hover:hover)]:group-hover:translate-x-0.5
+                             [@media(hover:hover)]:group-hover:text-zinc-600"
+                />
+              </span>
+              {/* Platform name — tile/card title scale (14px semibold) */}
+              <span className="relative block truncate text-[14px] font-semibold text-zinc-900">
+                {name}
+              </span>
+            </a>
+          </TiltCard>
         ))}
       </div>
     </div>

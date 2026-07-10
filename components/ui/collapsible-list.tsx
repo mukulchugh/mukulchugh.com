@@ -2,6 +2,7 @@
 
 import { useState, type ReactNode } from "react";
 import { IconChevronDown } from "@tabler/icons-react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 
 interface CollapsibleListProps<T> {
   items: T[];
@@ -22,24 +23,42 @@ export function CollapsibleList<T>({
   renderList,
 }: CollapsibleListProps<T>) {
   const [open, setOpen] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
   const hasMore = items.length > initial;
   const visible = open || !hasMore ? items : items.slice(0, initial);
   const hiddenCount = items.length - initial;
 
   return (
     <div>
-      <div className="relative">
+      {/* layout on the list container so it grows/shrinks with spring physics */}
+      <motion.div
+        className="relative"
+        layout={!shouldReduceMotion}
+        transition={
+          shouldReduceMotion
+            ? undefined
+            : { type: "spring", stiffness: 200, damping: 26 }
+        }
+      >
         {renderList(visible)}
 
         {/* Bottom fade — only while collapsed */}
-        {!open && hasMore && (
-          <div
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-24"
-            style={{ background: `linear-gradient(to top, ${fadeColor} 15%, transparent)` }}
-            aria-hidden="true"
-          />
-        )}
-      </div>
+        <AnimatePresence>
+          {!open && hasMore && (
+            <motion.div
+              key="fade"
+              className="pointer-events-none absolute inset-x-0 bottom-0 h-24"
+              style={{
+                background: `linear-gradient(to top, ${fadeColor} 15%, transparent)`,
+              }}
+              initial={{ opacity: 1 }}
+              exit={shouldReduceMotion ? undefined : { opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              aria-hidden="true"
+            />
+          )}
+        </AnimatePresence>
+      </motion.div>
 
       {hasMore && (
         <div className="mt-4 flex justify-center">
@@ -55,12 +74,17 @@ export function CollapsibleList<T>({
                        focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-400"
             style={{
               border: "1px solid rgba(20,20,40,0.08)",
-              boxShadow: "0 1px 2px rgba(28,25,23,0.04), 0 3px 8px -4px rgba(28,25,23,0.08)",
+              boxShadow:
+                "0 1px 2px rgba(28,25,23,0.04), 0 3px 8px -4px rgba(28,25,23,0.08)",
             }}
           >
-            {open ? "Show less" : `Show ${hiddenCount} more${noun ? ` ${noun}` : ""}`}
+            {open
+              ? "Show less"
+              : `Show ${hiddenCount} more${noun ? ` ${noun}` : ""}`}
             <IconChevronDown
-              className={`h-4 w-4 text-zinc-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+              className={`h-4 w-4 text-zinc-400 transition-transform duration-200 ${
+                open ? "rotate-180" : ""
+              }`}
               aria-hidden="true"
             />
           </button>

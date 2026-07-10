@@ -2,6 +2,7 @@
 
 import { SectionHeader } from "./section-header";
 import { CollapsibleList } from "./ui/collapsible-list";
+import { TiltCard } from "./ui/tilt-card";
 import { projectsData } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
 import { motion, useReducedMotion } from "motion/react";
@@ -35,23 +36,23 @@ function ProjectCard({
   return (
     <motion.li
       className="list-none"
-      initial={shouldReduce ? false : { opacity: 0, y: 18 }}
-      whileInView={shouldReduce ? undefined : { opacity: 1, y: 0 }}
+      initial={shouldReduce ? false : { opacity: 0, y: 18, filter: "blur(5px)" }}
+      whileInView={shouldReduce ? undefined : { opacity: 1, y: 0, filter: "blur(0px)" }}
       transition={{
         type: "spring",
-        stiffness: 100,
+        stiffness: 110,
         damping: 20,
         delay: index * 0.06,
       }}
       viewport={{ once: true, amount: 0.15 }}
     >
+      <TiltCard maxDeg={3} lift={5}>
       <div
         className="project-card flex h-full flex-col justify-between gap-4 rounded-2xl
                    border border-black/[0.07] bg-white p-5
                    transition-all duration-[260ms] [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]
                    active:scale-[0.985] active:duration-[100ms]
-                   [@media(hover:hover)]:hover:border-black/[0.12]
-                   [@media(hover:hover)]:hover:-translate-y-[3px]"
+                   [@media(hover:hover)]:hover:border-black/[0.12]"
         style={{
           boxShadow: "0 1px 2px rgba(28,25,23,0.04), 0 8px 24px -12px rgba(28,25,23,0.10), 0 24px 48px -24px rgba(28,25,23,0.06)",
         }}
@@ -118,6 +119,7 @@ function ProjectCard({
           </div>
         )}
       </div>
+      </TiltCard>
     </motion.li>
   );
 }

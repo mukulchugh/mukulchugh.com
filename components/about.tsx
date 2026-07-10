@@ -8,19 +8,19 @@ import { aboutContent } from "@/lib/data";
 import { IconUser } from "@tabler/icons-react";
 
 const containerVariants = {
-  hidden: { opacity: 0 },
+  hidden: {},
   visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.08, delayChildren: 0.05 },
+    transition: { staggerChildren: 0.09, delayChildren: 0.04 },
   },
 };
 
 const paraVariants = {
-  hidden: { opacity: 0, y: 14 },
+  hidden: { opacity: 0, y: 16, filter: "blur(6px)" },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { type: "spring" as const, stiffness: 100, damping: 20 },
+    filter: "blur(0px)",
+    transition: { type: "spring" as const, stiffness: 110, damping: 20 },
   },
 };
 
@@ -46,8 +46,8 @@ export default function About() {
       <motion.div
         className="space-y-4"
         variants={shouldReduce ? undefined : containerVariants}
-        initial="hidden"
-        whileInView="visible"
+        initial={shouldReduce ? false : "hidden"}
+        whileInView={shouldReduce ? undefined : "visible"}
         viewport={{ once: true, amount: 0.15 }}
       >
         {aboutContent.paragraphs.map((paragraph, index) => (

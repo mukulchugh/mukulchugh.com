@@ -15,7 +15,7 @@ import {
   IconBriefcase,
   IconMail,
 } from "@tabler/icons-react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import {
   Tooltip,
   TooltipContent,
@@ -34,6 +34,7 @@ const navItems = [
   { name: "Contact", hash: "#contact", icon: IconMail },
 ] as const;
 
+
 export function Dock() {
   const { activeSection, setActiveSection, setTimeOfLastClick } =
     useActiveSectionContext();
@@ -41,6 +42,7 @@ export function Dock() {
   const router = useRouter();
   const isHomePage = pathname === "/";
   const [isAtBottom, setIsAtBottom] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -143,13 +145,29 @@ export function Dock() {
               {/* Separator */}
               <Separator orientation="vertical" className="mx-0.5 h-6" />
 
-              {navItems.map((item) => {
+              {/* Nav items with stagger on first appear */}
+              {navItems.map((item, i) => {
                 const Icon = item.icon;
                 const isActive = activeSection === item.name;
                 const isLink = item.hash.startsWith("/");
 
                 return (
-                  <Tooltip key={item.name}>
+                  <motion.div
+                    key={item.name}
+                    initial={shouldReduceMotion ? false : { opacity: 0, y: 8, scale: 0.88 }}
+                    animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
+                    transition={
+                      shouldReduceMotion
+                        ? undefined
+                        : {
+                            type: "spring",
+                            stiffness: 260,
+                            damping: 22,
+                            delay: 0.05 + i * 0.04,
+                          }
+                    }
+                  >
+                  <Tooltip>
                     <TooltipTrigger asChild>
                       {isLink ? (
                         <Link
@@ -177,6 +195,7 @@ export function Dock() {
                       {item.name}
                     </TooltipContent>
                   </Tooltip>
+                  </motion.div>
                 );
               })}
             </div>

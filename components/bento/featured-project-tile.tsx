@@ -1,5 +1,14 @@
-import React from "react";
+"use client";
+
+import React, { useRef } from "react";
 import { IconBrandGithub, IconExternalLink } from "@tabler/icons-react";
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+  useSpring,
+} from "motion/react";
 import { cn } from "@/lib/utils";
 import { syne } from "@/lib/fonts";
 import type { projectsData } from "@/lib/data";
@@ -40,15 +49,30 @@ export function FeaturedProjectTile({
   index = 0,
 }: FeaturedProjectTileProps) {
   const cover = COVERS[index % COVERS.length];
+  const shouldReduceMotion = useReducedMotion();
+  const tileRef = useRef<HTMLDivElement>(null);
 
   // Split title into main word and rest for hierarchy
   const titleWords = project.title.trim().split(/\s+/);
   const titleFirst = titleWords[0];
   const titleRest = titleWords.slice(1).join(" ");
 
-  return (
-    <div className="h-full flex flex-col min-h-[280px] relative overflow-hidden">
+  // Scroll-linked parallax for the oversized wordmark
+  // Tracks the tile element itself so each card gets its own scroll context
+  const { scrollYProgress } = useScroll({
+    target: tileRef,
+    offset: ["start end", "end start"],
+  });
 
+  // Clamp displacement to ≤24px; spring-smooth
+  const rawY = useTransform(scrollYProgress, [0, 1], [16, -16]);
+  const springY = useSpring(rawY, { stiffness: 50, damping: 20 });
+
+  return (
+    <div
+      ref={tileRef}
+      className="h-full flex flex-col min-h-[280px] relative overflow-hidden"
+    >
       {/* ── Editorial Cover Panel ───────────────────────── */}
       <div
         className="relative flex-shrink-0 overflow-hidden rounded-t-3xl"
@@ -76,39 +100,43 @@ export function FeaturedProjectTile({
           aria-hidden="true"
         />
 
-        {/* OVERSIZED typographic title — the editorial visual */}
+        {/* OVERSIZED typographic title — the editorial visual, with scroll parallax */}
         <div
           className="absolute inset-0 flex flex-col justify-center pl-4 sm:pl-6 pr-14 select-none pointer-events-none overflow-hidden"
           aria-hidden="true"
         >
-          <span
-            className={cn(
-              syne.className,
-              "block whitespace-nowrap font-black tracking-[-0.04em] leading-[0.95]"
-            )}
-            style={{
-              fontSize: "clamp(20px, 4.5vw, 36px)",
-              color: cover.titleColor,
-            }}
+          <motion.div
+            style={shouldReduceMotion ? undefined : { y: springY }}
           >
-            {titleFirst}
-          </span>
-          {titleRest && (
             <span
               className={cn(
                 syne.className,
-                "block font-light tracking-[-0.02em] leading-[1.1] break-words min-w-0"
+                "block whitespace-nowrap font-black tracking-[-0.04em] leading-[0.95]"
               )}
               style={{
-                fontSize: "clamp(18px, 5vw, 40px)",
-                color: cover.subtitleColor,
-                wordBreak: "break-word",
-                overflowWrap: "break-word",
+                fontSize: "clamp(20px, 4.5vw, 36px)",
+                color: cover.titleColor,
               }}
             >
-              {titleRest}
+              {titleFirst}
             </span>
-          )}
+            {titleRest && (
+              <span
+                className={cn(
+                  syne.className,
+                  "block font-light tracking-[-0.02em] leading-[1.1] break-words min-w-0"
+                )}
+                style={{
+                  fontSize: "clamp(18px, 5vw, 40px)",
+                  color: cover.subtitleColor,
+                  wordBreak: "break-word",
+                  overflowWrap: "break-word",
+                }}
+              >
+                {titleRest}
+              </span>
+            )}
+          </motion.div>
         </div>
 
         {/* Category label — top-left — mono 10px unified */}

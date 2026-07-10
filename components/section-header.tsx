@@ -3,7 +3,7 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 import { syne } from "@/lib/fonts";
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import type { Icon } from "@tabler/icons-react";
 
 interface SectionHeaderProps {
@@ -31,12 +31,79 @@ export function SectionHeader({
   className,
   align = "center",
 }: SectionHeaderProps) {
+  const shouldReduceMotion = useReducedMotion();
+
+  // Spring config for the hairline draw
+  const hairlineSpring = {
+    type: "spring" as const,
+    stiffness: 100,
+    damping: 20,
+    delay: 0.08,
+  };
+
+  // Spring for the heading blur-rise
+  const headingSpring = {
+    type: "spring" as const,
+    stiffness: 110,
+    damping: 20,
+    delay: 0.18,
+  };
+
+  // Spring for subtitle
+  const subtitleSpring = {
+    type: "spring" as const,
+    stiffness: 110,
+    damping: 22,
+    delay: 0.26,
+  };
+
+  if (shouldReduceMotion) {
+    // Reduced motion: render everything at final state instantly
+    return (
+      <div
+        className={cn(
+          "flex flex-col gap-2.5 mb-8",
+          align === "center" && "items-center text-center",
+          align === "left" && "items-start text-left",
+          className
+        )}
+      >
+        <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-zinc-400">
+          {index ? `${index} — ` : ""}{label}
+        </p>
+        <div
+          className={cn(
+            "h-px bg-zinc-900/[0.07]",
+            align === "center" ? "w-16 self-center" : "w-10 self-start"
+          )}
+          aria-hidden="true"
+        />
+        <h2
+          className={cn(
+            syne.className,
+            "font-black text-zinc-950 leading-[1.05] tracking-[-0.04em] break-words min-w-0 text-balance"
+          )}
+          style={{ fontSize: "clamp(1.4rem, 3.4vw, 2.1rem)" }}
+        >
+          {title}
+          {highlight && (
+            <>
+              {" "}
+              <span className="text-zinc-400 font-light">{highlight}</span>
+            </>
+          )}
+        </h2>
+        {subtitle && (
+          <p className="text-zinc-500 text-[14px] leading-[1.7] max-w-[60ch] mt-0.5 text-pretty">
+            {subtitle}
+          </p>
+        )}
+      </div>
+    );
+  }
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ type: "spring", stiffness: 100, damping: 20 }}
-      viewport={{ once: true, amount: 0.15 }}
+    <div
       className={cn(
         "flex flex-col gap-2.5 mb-8",
         align === "center" && "items-center text-center",
@@ -44,45 +111,64 @@ export function SectionHeader({
         className
       )}
     >
-      {/* Monospace editorial marker — 10px, unified mono label scale */}
-      <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-zinc-400">
+      {/* 1. Mono index label — fades + slides in first */}
+      <motion.p
+        className="font-mono text-[10px] uppercase tracking-[0.14em] text-zinc-400"
+        initial={{ opacity: 0, y: 8 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.15 }}
+        transition={{ type: "spring", stiffness: 120, damping: 20, delay: 0 }}
+      >
         {index ? `${index} — ` : ""}{label}
-      </p>
+      </motion.p>
 
-      {/* Hairline under marker */}
-      <div
+      {/* 2. Hairline — draws from left (scaleX 0→1) */}
+      <motion.div
         className={cn(
           "h-px bg-zinc-900/[0.07]",
           align === "center" ? "w-16 self-center" : "w-10 self-start"
         )}
         aria-hidden="true"
+        initial={{ scaleX: 0 }}
+        whileInView={{ scaleX: 1 }}
+        viewport={{ once: true, amount: 0.15 }}
+        transition={hairlineSpring}
+        style={{ transformOrigin: align === "center" ? "center" : "left" }}
       />
 
-      {/* Section title — unified Section Heading scale: clamp(1.4rem, 3.4vw, 2.1rem) */}
-      <h2
+      {/* 3. Heading — blur-rise after hairline */}
+      <motion.h2
         className={cn(
           syne.className,
           "font-black text-zinc-950 leading-[1.05] tracking-[-0.04em] break-words min-w-0 text-balance"
         )}
         style={{ fontSize: "clamp(1.4rem, 3.4vw, 2.1rem)" }}
+        initial={{ opacity: 0, y: 14, filter: "blur(6px)" }}
+        whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+        viewport={{ once: true, amount: 0.15 }}
+        transition={headingSpring}
       >
         {title}
         {highlight && (
           <>
             {" "}
-            <span className="text-zinc-400 font-light">
-              {highlight}
-            </span>
+            <span className="text-zinc-400 font-light">{highlight}</span>
           </>
         )}
-      </h2>
+      </motion.h2>
 
-      {/* Subtitle — unified body scale, capped measure */}
+      {/* 4. Subtitle — blur-rise last */}
       {subtitle && (
-        <p className="text-zinc-500 text-[14px] leading-[1.7] max-w-[60ch] mt-0.5 text-pretty">
+        <motion.p
+          className="text-zinc-500 text-[14px] leading-[1.7] max-w-[60ch] mt-0.5 text-pretty"
+          initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
+          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          viewport={{ once: true, amount: 0.15 }}
+          transition={subtitleSpring}
+        >
           {subtitle}
-        </p>
+        </motion.p>
       )}
-    </motion.div>
+    </div>
   );
 }
