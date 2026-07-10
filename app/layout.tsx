@@ -2,7 +2,6 @@ import "./globals.css";
 
 import { AnalyticsWrapper } from "@/components/analytics-wrapper";
 import Footer from "@/components/footer";
-import Header from "@/components/header";
 import { HeroBackground } from "@/components/hero-background";
 import { JsonLd } from "@/components/json-ld";
 import { Dock } from "@/components/ui/dock";
@@ -170,7 +169,6 @@ export default function RootLayout({
       >
         <HeroBackground />
         <ActiveSectionContextProvider>
-          <Header />
           {children}
           <Footer />
           <Dock />

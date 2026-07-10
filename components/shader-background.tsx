@@ -15,7 +15,7 @@
 
 import React, { Component, type ReactNode } from "react";
 import { useReducedMotion } from "motion/react";
-import { MeshGradient } from "@paper-design/shaders-react";
+import { Dithering } from "@paper-design/shaders-react";
 
 /* ─── Static CSS fallback (reduced-motion / no WebGL / shader error) ─────── */
 function CSSFallback() {
@@ -64,13 +64,15 @@ export function ShaderBackground() {
         style={{ background: "#faf9f7" }}
         aria-hidden="true"
       >
-        {/* Soft, slow, monochrome flowing field */}
-        <MeshGradient
-          colors={["#faf9f7", "#efede8", "#e2dfd8", "#f3f1ee", "#e8e5df"]}
-          speed={0.28}
-          distortion={0.75}
-          swirl={0.18}
-          grainOverlay={0}
+        {/* Cool monochrome warp-dithering field (2-color Bayer) */}
+        <Dithering
+          colorBack="#faf9f7"
+          colorFront="#cbc7bd"
+          shape="warp"
+          type="4x4"
+          size={2}
+          scale={0.9}
+          speed={0.6}
           style={{
             position: "absolute",
             inset: 0,
@@ -78,10 +80,10 @@ export function ShaderBackground() {
             height: "100%",
           }}
         />
-        {/* Scrim to keep it whisper-quiet under content */}
+        {/* Light scrim so text over the margins stays readable */}
         <div
           className="absolute inset-0"
-          style={{ background: "rgba(250,249,247,0.34)" }}
+          style={{ background: "rgba(250,249,247,0.20)" }}
         />
         {/* Vignette + grain for editorial texture */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_90%_70%_at_50%_-5%,transparent_0%,rgba(250,249,247,0.55)_100%)]" />

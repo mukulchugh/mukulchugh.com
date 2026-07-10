@@ -9,6 +9,7 @@ import {
   StackTile,
   FeaturedProjectTile,
   SkillsMarquee,
+  BrandBar,
 } from "@/components/bento";
 
 // ─── Client tiles (need browser hooks) ───────────────────────────────────────
@@ -124,7 +125,7 @@ export default function Home() {
 
   return (
     <main className="px-4 sm:px-6 pb-28 pt-2">
-      <div className="mx-auto max-w-6xl">
+      <div className="mx-auto max-w-7xl">
         {/*
           ── Bento grid — 12 cols (lg) · 2 cols (sm) · 1 col (mobile) ──────────
 
@@ -139,6 +140,14 @@ export default function Home() {
             Row 8    : CTA (col 1-12)  — DARK ANCHOR
         */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 [grid-auto-flow:dense]">
+
+          {/* ── 0. Brand bar — logo + nav, folded in from the old header ──── */}
+          <BentoTile
+            hover={false}
+            className="col-span-1 sm:col-span-2 lg:col-span-12"
+          >
+            <BrandBar />
+          </BentoTile>
 
           {/* ── 1. Profile tile — HERO ────────────────────────────────────── */}
           <BentoTile
