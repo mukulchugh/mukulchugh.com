@@ -45,15 +45,14 @@ const socials = [
 
 export function SocialsTile() {
   return (
-    <div className="p-5 sm:p-6">
-      <div className="mb-4 flex items-center justify-between">
+    <div className="flex h-full flex-col p-5 sm:p-6">
+      <div className="mb-4 flex items-center gap-2">
         <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-zinc-400">
-          07 — Connect
+          Connect
         </span>
-        <span className="text-[11px] text-zinc-400">Let&apos;s be in touch</span>
       </div>
 
-      <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid flex-1 grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-1 lg:[grid-auto-rows:1fr]">
         {socials.map(({ name, handle, href, Icon, color }) => (
           <a
             key={name}

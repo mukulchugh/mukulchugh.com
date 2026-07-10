@@ -6,9 +6,7 @@ import { projectsData } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import {
   LocationTile,
-  StackTile,
   FeaturedProjectTile,
-  SkillsMarquee,
   BrandBar,
   SocialsTile,
 } from "@/components/bento";
@@ -104,22 +102,6 @@ function BentoTile({
   );
 }
 
-// ─── Marquee band — full-width, no glass ─────────────────────────────────────
-function MarqueeBand({ className }: { className?: string }) {
-  return (
-    <div
-      className={cn(
-        "col-span-1 sm:col-span-2 lg:col-span-12",
-        "border border-black/[0.06] rounded-2xl overflow-hidden",
-        "bg-white/60",
-        className
-      )}
-    >
-      <SkillsMarquee />
-    </div>
-  );
-}
-
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function Home() {
   const posts = getAllPosts().slice(0, 6);
@@ -164,9 +146,12 @@ export default function Home() {
             <LocationTile />
           </BentoTile>
 
-          {/* ── 3. Stack / Tools tile — row-span-2 ───────────────────────── */}
-          <BentoTile className="col-span-1 sm:col-span-1 lg:col-span-4 lg:row-span-2">
-            <StackTile />
+          {/* ── 3. Socials — brand-colored, fills the tall top-right slot ─── */}
+          <BentoTile
+            hover={false}
+            className="col-span-1 sm:col-span-1 lg:col-span-4 lg:row-span-2"
+          >
+            <SocialsTile />
           </BentoTile>
 
           {/* ── 4. About tile ─────────────────────────────────────────────── */}
@@ -177,9 +162,6 @@ export default function Home() {
           >
             <About />
           </BentoTile>
-
-          {/* ── 5. SKILLS MARQUEE — kinetic full-width band ───────────────── */}
-          <MarqueeBand />
 
           {/* ── 6. Featured project — OpenKVM ────────────────────────────── */}
           <BentoTile className="col-span-1 lg:col-span-6">
@@ -213,14 +195,6 @@ export default function Home() {
             className="col-span-1 sm:col-span-2 lg:col-span-5"
           >
             <Experience />
-          </BentoTile>
-
-          {/* ── 10b. Socials — a section of its own, brand-colored ───────── */}
-          <BentoTile
-            hover={false}
-            className="col-span-1 sm:col-span-2 lg:col-span-12"
-          >
-            <SocialsTile />
           </BentoTile>
 
           {/* ── 11. CTA tile — DARK INK ANCHOR (Move 5) ─────────────────── */}
