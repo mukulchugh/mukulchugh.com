@@ -83,7 +83,7 @@ function PostCard({ post, index }: { post: Post; index: number }) {
           <h2
             className={cn(
               syne.className,
-              "text-2xl md:text-3xl tracking-tight font-semibold text-foreground"
+              "text-xl sm:text-2xl md:text-3xl tracking-tight font-semibold text-foreground break-words"
             )}
           >
             {post.title}

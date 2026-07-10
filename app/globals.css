@@ -50,11 +50,13 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    /* Prevent horizontal overflow at any viewport width */
+    overflow-x: hidden;
+    max-width: 100vw;
   }
 
-  /* Paragraph readability */
+  /* Paragraph readability — only constrain in prose contexts */
   p {
-    max-width: 68ch;
     line-height: 1.75;
   }
 

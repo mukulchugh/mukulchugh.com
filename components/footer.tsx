@@ -3,8 +3,8 @@ import { siteConfig, footerContent, links, footerSocialLinks } from "@/lib/data"
 
 export default function Footer() {
   return (
-    <footer className="py-16 pb-28 min-h-[400px]">
-      <div className="mx-auto max-w-4xl px-6">
+    <footer className="py-10 sm:py-16 pb-24 sm:pb-28 min-h-fit sm:min-h-[400px]">
+      <div className="mx-auto max-w-4xl px-4 sm:px-6">
         <Link
           href="/"
           aria-label="go home"

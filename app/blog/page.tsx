@@ -28,8 +28,8 @@ export default async function BlogPage() {
   const posts = getAllPosts();
 
   return (
-    <main className="w-full py-20">
-      <div className="container mx-auto px-4 max-w-4xl flex flex-col gap-14">
+    <main className="w-full py-12 sm:py-20">
+      <div className="container mx-auto px-4 sm:px-6 max-w-4xl flex flex-col gap-10 sm:gap-14">
         {/* Back to Home */}
         <Link
           href="/"
@@ -45,8 +45,9 @@ export default async function BlogPage() {
             <h1
               className={cn(
                 syne.className,
-                "text-[2rem] md:text-[3rem] tracking-tight font-bold leading-[1.15]"
+                "tracking-tight font-bold leading-[1.15]"
               )}
+              style={{ fontSize: "clamp(1.5rem, 5vw, 3rem)" }}
             >
               Latest articles
             </h1>

@@ -28,7 +28,7 @@ export default function Experience() {
     <section
       id="experience"
       ref={ref}
-      className="scroll-mt-28 px-6 sm:px-8 py-8 w-full"
+      className="scroll-mt-28 px-4 sm:px-6 lg:px-8 py-6 sm:py-8 w-full min-w-0"
     >
       <SectionHeader
         icon={IconBriefcase}

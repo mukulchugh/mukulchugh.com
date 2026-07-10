@@ -62,8 +62,9 @@ export function SectionHeader({
       <h2
         className={cn(
           syne.className,
-          "text-[1.85rem] sm:text-[2.25rem] font-black text-zinc-950 leading-[1.1] tracking-[-0.03em]"
+          "font-black text-zinc-950 leading-[1.1] tracking-[-0.03em] break-words min-w-0"
         )}
+        style={{ fontSize: "clamp(1.5rem, 5vw, 2.25rem)" }}
       >
         {title}
         {highlight && (

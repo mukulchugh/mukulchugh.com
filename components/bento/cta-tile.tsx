@@ -67,7 +67,7 @@ export function CTATile() {
         {/* Inner content */}
         <motion.div
           className="relative z-10 h-full flex flex-col lg:flex-row lg:items-center justify-between
-                     gap-8 p-8 sm:p-10 lg:p-12"
+                     gap-6 sm:gap-8 p-6 sm:p-8 lg:p-12"
           variants={shouldReduce ? undefined : containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -87,9 +87,9 @@ export function CTATile() {
               variants={shouldReduce ? undefined : itemVariants}
               className={cn(
                 syne.className,
-                "text-[2rem] sm:text-[2.75rem] lg:text-[3.2rem]",
                 "font-black tracking-[-0.035em] leading-[0.95] text-white"
               )}
+              style={{ fontSize: "clamp(1.6rem, 6vw, 3.2rem)" }}
             >
               Let&apos;s build
               <br />
@@ -108,7 +108,7 @@ export function CTATile() {
             {/* Email hint */}
             <motion.p
               variants={shouldReduce ? undefined : itemVariants}
-              className="font-mono text-[11px] text-white/25 tracking-wide"
+              className="font-mono text-[11px] text-white/25 tracking-wide break-all"
             >
               {siteConfig.email.display}
             </motion.p>
@@ -117,7 +117,7 @@ export function CTATile() {
           {/* Right — CTAs */}
           <motion.div
             variants={shouldReduce ? undefined : itemVariants}
-            className="flex flex-wrap items-center gap-3 flex-shrink-0"
+            className="flex flex-wrap items-start gap-3 flex-shrink-0"
           >
             {/* Primary — opens Cal.com booking modal */}
             <MagneticButton

@@ -56,7 +56,7 @@ export function ProfileTile() {
     <section
       ref={ref}
       id="home"
-      className="h-full min-h-[400px] p-7 sm:p-10 flex flex-col gap-6 scroll-mt-28"
+      className="h-full min-h-[400px] p-5 sm:p-8 lg:p-10 flex flex-col gap-5 sm:gap-6 scroll-mt-28"
     >
       {/* Top row: Avatar + Available pill */}
       <motion.div
@@ -122,9 +122,9 @@ export function ProfileTile() {
           variants={shouldReduceMotion ? undefined : itemVariants}
           className={cn(
             syne.className,
-            "text-[2.6rem] sm:text-[3.4rem] md:text-[4rem] lg:text-[4.5rem]",
             "font-black tracking-[-0.04em] leading-[0.92] text-zinc-950"
           )}
+          style={{ fontSize: "clamp(2rem, 8vw, 4.5rem)" }}
         >
           Mukul
           <br />
@@ -134,7 +134,7 @@ export function ProfileTile() {
         {/* Role descriptor */}
         <motion.p
           variants={shouldReduceMotion ? undefined : itemVariants}
-          className="text-[14px] sm:text-[15px] text-zinc-500 leading-relaxed max-w-[42ch]"
+          className="text-[13px] sm:text-[14px] lg:text-[15px] text-zinc-500 leading-relaxed max-w-[42ch]"
         >
           Founding Engineer at{" "}
           <span className="text-zinc-800 font-medium">Quivly</span>

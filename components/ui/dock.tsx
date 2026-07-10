@@ -88,13 +88,13 @@ export function Dock() {
             exit={{ y: 100, x: "-50%", opacity: 0 }}
             transition={{ type: "spring", stiffness: 200, damping: 20 }}
           >
-            <div className="flex items-center gap-2 rounded-2xl bg-white/80 px-3 py-2 shadow-[0_4px_24px_rgba(20,20,40,0.10)] ring-1 ring-black/[0.07] backdrop-blur-xl sm:gap-3 sm:rounded-3xl sm:px-4 sm:py-3">
+            <div className="flex items-center gap-1 rounded-2xl bg-white/80 px-2 py-1.5 shadow-[0_4px_24px_rgba(20,20,40,0.10)] ring-1 ring-black/[0.07] backdrop-blur-xl xs:gap-2 xs:px-3 xs:py-2 sm:gap-3 sm:rounded-3xl sm:px-4 sm:py-3">
               {/* Logo */}
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Link
                     href="/"
-                    className="group relative grid h-10 w-10 place-items-center rounded-xl ring-1 ring-black/[0.08] bg-gradient-to-b from-white/80 to-gray-50/90 backdrop-blur-xl shadow-sm transition-all duration-200 hover:-translate-y-1 hover:scale-105 sm:h-12 sm:w-12"
+                    className="group relative grid h-8 w-8 place-items-center rounded-xl ring-1 ring-black/[0.08] bg-gradient-to-b from-white/80 to-gray-50/90 backdrop-blur-xl shadow-sm transition-all duration-200 hover:-translate-y-1 hover:scale-105 xs:h-10 xs:w-10 sm:h-12 sm:w-12"
                     aria-label="Home"
                   >
                     <Image
@@ -102,7 +102,7 @@ export function Dock() {
                       alt={siteConfig.name}
                       width={24}
                       height={24}
-                      className="h-5 w-5 object-contain sm:h-6 sm:w-6"
+                      className="h-4 w-4 object-contain xs:h-5 xs:w-5 sm:h-6 sm:w-6"
                     />
                   </Link>
                 </TooltipTrigger>
@@ -126,14 +126,14 @@ export function Dock() {
                         <Link
                           href={item.hash}
                           className={cn(
-                            "group relative grid h-10 w-10 place-items-center rounded-xl ring-1 ring-black/[0.08] bg-gradient-to-b from-white/80 to-gray-50/90 backdrop-blur-xl shadow-sm transition-all duration-200 hover:-translate-y-1 hover:scale-105 sm:h-12 sm:w-12",
+                            "group relative grid h-8 w-8 place-items-center rounded-xl ring-1 ring-black/[0.08] bg-gradient-to-b from-white/80 to-gray-50/90 backdrop-blur-xl shadow-sm transition-all duration-200 hover:-translate-y-1 hover:scale-105 xs:h-10 xs:w-10 sm:h-12 sm:w-12",
                             isActive && "ring-zinc-900/30 from-zinc-50/90 to-zinc-100/70"
                           )}
                           aria-label={item.name}
                         >
                           <Icon
                             className={cn(
-                              "h-4 w-4 transition-all duration-200 group-hover:scale-110 sm:h-5 sm:w-5",
+                              "h-3.5 w-3.5 transition-all duration-200 group-hover:scale-110 xs:h-4 xs:w-4 sm:h-5 sm:w-5",
                               isActive ? "text-zinc-900" : "text-zinc-500 group-hover:text-zinc-900"
                             )}
                             stroke={2}
@@ -145,14 +145,14 @@ export function Dock() {
                           size="icon"
                           onClick={() => handleSectionClick(item)}
                           className={cn(
-                            "group relative grid h-10 w-10 place-items-center rounded-xl ring-1 ring-black/[0.08] bg-gradient-to-b from-white/80 to-gray-50/90 backdrop-blur-xl shadow-sm transition-all duration-200 hover:-translate-y-1 hover:scale-105 hover:bg-transparent sm:h-12 sm:w-12",
+                            "group relative grid h-8 w-8 place-items-center rounded-xl ring-1 ring-black/[0.08] bg-gradient-to-b from-white/80 to-gray-50/90 backdrop-blur-xl shadow-sm transition-all duration-200 hover:-translate-y-1 hover:scale-105 hover:bg-transparent xs:h-10 xs:w-10 sm:h-12 sm:w-12",
                             isActive && "ring-zinc-900/30 from-zinc-50/90 to-zinc-100/70"
                           )}
                           aria-label={item.name}
                         >
                           <Icon
                             className={cn(
-                              "h-4 w-4 transition-all duration-200 group-hover:scale-110 sm:h-5 sm:w-5",
+                              "h-3.5 w-3.5 transition-all duration-200 group-hover:scale-110 xs:h-4 xs:w-4 sm:h-5 sm:w-5",
                               isActive ? "text-zinc-900" : "text-zinc-500 group-hover:text-zinc-900"
                             )}
                             stroke={2}

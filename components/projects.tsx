@@ -110,7 +110,7 @@ export default function Projects() {
   const { ref } = useSectionInView("Projects", 0.5);
 
   return (
-    <section ref={ref} id="projects" className="scroll-mt-28 w-full p-6 sm:p-8">
+    <section ref={ref} id="projects" className="scroll-mt-28 w-full p-4 sm:p-6 lg:p-8 min-w-0">
       <SectionHeader
         icon={IconLayoutKanban}
         label="Projects"

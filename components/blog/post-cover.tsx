@@ -76,8 +76,8 @@ export function PostCover({ post, priority = false, className, hero = false }: P
   const h = hashTitle(post.title);
   const gradient = GRADIENTS[h % GRADIENTS.length];
   const pattern = PATTERNS[h % PATTERNS.length];
-  // Oversized initial font-size: vary between 90–140px for visual rhythm.
-  const initialSize = 90 + (h % 5) * 12;
+  // Oversized initial font-size: vary between 60–100px for visual rhythm.
+  const initialSize = 60 + (h % 5) * 10;
 
   return (
     <div

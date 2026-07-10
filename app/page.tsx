@@ -107,8 +107,8 @@ export default function Home() {
   const posts = getAllPosts().slice(0, 6);
 
   return (
-    <main className="px-4 sm:px-6 pb-28 pt-2">
-      <div className="mx-auto max-w-7xl">
+    <main className="px-3 sm:px-5 lg:px-6 pb-24 sm:pb-28 pt-2 overflow-x-hidden">
+      <div className="mx-auto max-w-7xl min-w-0">
         {/*
           ── Bento grid — 12 cols (lg) · 2 cols (sm) · 1 col (mobile) ──────────
 
@@ -122,7 +122,7 @@ export default function Home() {
             Row 7    : Blog (col 1-7)              | Experience (col 8-12)
             Row 8    : CTA (col 1-12)  — DARK ANCHOR
         */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 [grid-auto-flow:dense]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 sm:gap-4 [grid-auto-flow:dense]">
 
           {/* ── 0. Brand bar — logo + nav, folded in from the old header ──── */}
           <BentoTile

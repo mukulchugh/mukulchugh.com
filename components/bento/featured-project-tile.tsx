@@ -53,7 +53,7 @@ export function FeaturedProjectTile({
       <div
         className="relative flex-shrink-0 overflow-hidden rounded-t-3xl"
         style={{
-          minHeight: "180px",
+          minHeight: "160px",
           background: `linear-gradient(145deg, ${cover.bgFrom} 0%, ${cover.bgTo} 100%)`,
         }}
       >
@@ -71,17 +71,19 @@ export function FeaturedProjectTile({
 
         {/* OVERSIZED typographic title — the editorial visual */}
         <div
-          className="absolute inset-0 flex flex-col justify-center pl-6 pr-16 select-none pointer-events-none"
+          className="absolute inset-0 flex flex-col justify-center pl-4 sm:pl-6 pr-14 select-none pointer-events-none overflow-hidden"
           aria-hidden="true"
         >
           <span
             className={cn(
               syne.className,
-              "block font-black tracking-[-0.06em] leading-[0.82]"
+              "block font-black tracking-[-0.06em] leading-[0.82] break-words min-w-0"
             )}
             style={{
-              fontSize: "clamp(52px, 9vw, 80px)",
+              fontSize: "clamp(30px, 11vw, 76px)",
               color: cover.titleColor,
+              wordBreak: "break-word",
+              overflowWrap: "break-word",
             }}
           >
             {titleFirst}
@@ -90,11 +92,13 @@ export function FeaturedProjectTile({
             <span
               className={cn(
                 syne.className,
-                "block font-light tracking-[-0.02em] leading-[1.1]"
+                "block font-light tracking-[-0.02em] leading-[1.1] break-words min-w-0"
               )}
               style={{
-                fontSize: "clamp(28px, 5vw, 44px)",
+                fontSize: "clamp(18px, 5vw, 40px)",
                 color: cover.subtitleColor,
+                wordBreak: "break-word",
+                overflowWrap: "break-word",
               }}
             >
               {titleRest}
@@ -155,7 +159,7 @@ export function FeaturedProjectTile({
       </div>
 
       {/* ── Body — description · tags ───────────────────── */}
-      <div className="flex flex-col gap-3 p-5 sm:p-6 pt-4 flex-1">
+      <div className="flex flex-col gap-3 p-4 sm:p-5 pt-3 sm:pt-4 flex-1 min-w-0">
         {/* Hairline accent */}
         <div className="h-px w-12 bg-zinc-900/20 mb-0.5" aria-hidden="true" />
 

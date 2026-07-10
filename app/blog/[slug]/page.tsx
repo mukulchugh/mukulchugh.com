@@ -134,7 +134,7 @@ export default async function PostPage({ params }: PostPageProps) {
   };
 
   return (
-    <main className="w-full py-20 lg:py-32">
+    <main className="w-full py-12 sm:py-20 lg:py-32">
       {/* Structured Data */}
       <script
         type="application/ld+json"
@@ -172,14 +172,15 @@ export default async function PostPage({ params }: PostPageProps) {
           <h1
             className={cn(
               syne.className,
-              "text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight tracking-tight"
+              "font-bold text-foreground mb-6 leading-tight tracking-tight break-words"
             )}
+            style={{ fontSize: "clamp(1.6rem, 5vw, 3rem)" }}
           >
             {post.title}
           </h1>
 
           {/* Meta */}
-          <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground">
+          <div className="flex flex-wrap items-center gap-3 sm:gap-6 text-sm text-muted-foreground">
             {post.author && (
               <div className="flex items-center gap-2">
                 <Avatar className="h-8 w-8">

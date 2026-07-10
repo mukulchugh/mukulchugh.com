@@ -83,9 +83,9 @@ export default function BlogSection({ posts = [] }: { posts?: Post[] }) {
     <section
       ref={ref}
       id="blog"
-      className="scroll-mt-28 w-full p-6 sm:p-7"
+      className="scroll-mt-28 w-full p-4 sm:p-6 lg:p-7 min-w-0"
     >
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6 lg:gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-5 lg:gap-8 items-start min-w-0">
 
         {/* Left — editorial statement + CTA */}
         <motion.div
@@ -110,8 +110,9 @@ export default function BlogSection({ posts = [] }: { posts?: Post[] }) {
             variants={shouldReduce ? undefined : itemVariants}
             className={cn(
               syne.className,
-              "text-[1.75rem] sm:text-[2.1rem] font-black text-zinc-950 leading-[1.08] tracking-[-0.03em]"
+              "font-black text-zinc-950 leading-[1.08] tracking-[-0.03em]"
             )}
+            style={{ fontSize: "clamp(1.4rem, 4.5vw, 2.1rem)" }}
           >
             Thoughts &{" "}
             <span className="text-zinc-400 font-light">
@@ -146,12 +147,12 @@ export default function BlogSection({ posts = [] }: { posts?: Post[] }) {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.12 }}
             viewport={{ once: true, amount: 0.15 }}
-            className="w-full lg:w-[280px]"
+            className="w-full lg:w-[260px] xl:w-[280px] min-w-0"
           >
             <FeaturedPostCard post={featuredPost} />
           </motion.div>
         ) : (
-          <div className="w-full lg:w-[280px] rounded-2xl border border-black/[0.07] bg-black/[0.02] h-[220px] flex items-center justify-center">
+          <div className="w-full lg:w-[260px] xl:w-[280px] rounded-2xl border border-black/[0.07] bg-black/[0.02] h-[220px] flex items-center justify-center min-w-0">
             <p className="text-[12px] text-muted-foreground/50">No posts yet</p>
           </div>
         )}
