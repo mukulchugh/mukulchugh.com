@@ -146,18 +146,18 @@ export default function Home() {
             <LocationTile />
           </BentoTile>
 
-          {/* ── 3. Socials — brand-colored, fills the tall top-right slot ─── */}
+          {/* ── 3. Socials — brand-colored, single-row top-right ─────────── */}
           <BentoTile
             hover={false}
-            className="col-span-1 sm:col-span-1 lg:col-span-4 lg:row-span-2"
+            className="col-span-1 sm:col-span-1 lg:col-span-4"
           >
             <SocialsTile />
           </BentoTile>
 
-          {/* ── 4. About tile ─────────────────────────────────────────────── */}
+          {/* ── 4. About tile — full width ────────────────────────────────── */}
           <BentoTile
             hover={false}
-            className="col-span-1 sm:col-span-2 lg:col-span-8"
+            className="col-span-1 sm:col-span-2 lg:col-span-12"
             style={{ background: "rgba(255,255,255,0.80)" } as React.CSSProperties}
           >
             <About />
