@@ -8,6 +8,12 @@ import { links } from "../data";
 export type SectionName = (typeof links)[number]["name"];
 
 // Blog / Hashnode Types
+export interface PostHeading {
+  id: string;
+  text: string;
+  level: 2 | 3;
+}
+
 export interface Post {
   id: string;
   title: string;
@@ -17,6 +23,7 @@ export interface Post {
     html: string;
     markdown: string;
   };
+  headings?: PostHeading[];
   publishedAt: string;
   readTimeInMinutes: number;
   coverImage: {

@@ -7,11 +7,11 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
-import { marked } from "marked";
+import { marked, Renderer } from "marked";
 import { siteConfig } from "./data";
-import type { Post, PostsResponse } from "./types/index";
+import type { Post, PostHeading, PostsResponse } from "./types/index";
 
-export type { Post, PageInfo, PostsResponse } from "./types/index";
+export type { Post, PageInfo, PostsResponse, PostHeading } from "./types/index";
 
 const BLOG_DIR = path.join(process.cwd(), "content", "blog");
 
@@ -33,6 +33,55 @@ interface Frontmatter {
   draft?: boolean;
 }
 
+/**
+ * Slugify heading text to a stable HTML id:
+ * lowercase, spaces → hyphens, strip non-alphanumeric/hyphen chars, collapse hyphens.
+ */
+function slugifyHeading(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^\w-]/g, "")
+    .replace(/-{2,}/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+/**
+ * Build a marked Renderer that injects id attributes on h2/h3 and
+ * simultaneously populates a headings array (side-effect via closure).
+ */
+function buildRenderer(headings: PostHeading[]): Renderer {
+  const renderer = new Renderer();
+  const seen: Record<string, number> = {};
+
+  renderer.heading = function ({
+    text,
+    depth,
+  }: {
+    text: string;
+    depth: number;
+  }): string {
+    // Strip any HTML tags that marked might nest inside the heading text
+    const plainText = text.replace(/<[^>]+>/g, "");
+
+    if (depth === 2 || depth === 3) {
+      let id = slugifyHeading(plainText);
+      // Deduplicate: append -2, -3, … on collision
+      if (seen[id] !== undefined) {
+        seen[id]++;
+        id = `${id}-${seen[id]}`;
+      } else {
+        seen[id] = 1;
+      }
+      headings.push({ id, text: plainText, level: depth as 2 | 3 });
+      return `<h${depth} id="${id}" class="scroll-mt-24">${text}</h${depth}>\n`;
+    }
+    return `<h${depth}>${text}</h${depth}>\n`;
+  };
+
+  return renderer;
+}
+
 function fileToPost(file: string, withContent: boolean): Post | null {
   const raw = fs.readFileSync(path.join(BLOG_DIR, file), "utf8");
   const { data, content } = matter(raw);
@@ -47,6 +96,16 @@ function fileToPost(file: string, withContent: boolean): Post | null {
       : t
   );
 
+  let html: string | undefined;
+  let headings: PostHeading[] | undefined;
+
+  if (withContent) {
+    const collectedHeadings: PostHeading[] = [];
+    const renderer = buildRenderer(collectedHeadings);
+    html = marked.parse(content, { async: false, renderer }) as string;
+    headings = collectedHeadings;
+  }
+
   return {
     id: slug,
     title: fm.title || slug,
@@ -60,9 +119,10 @@ function fileToPost(file: string, withContent: boolean): Post | null {
       profilePicture: siteConfig.images.profileImage,
     },
     tags,
-    content: withContent
-      ? { html: marked.parse(content, { async: false }) as string, markdown: content }
+    content: withContent && html !== undefined
+      ? { html, markdown: content }
       : undefined,
+    headings,
     seo:
       fm.seoTitle || fm.seoDescription
         ? { title: fm.seoTitle || fm.title || slug, description: fm.seoDescription || fm.brief || "" }
@@ -100,4 +160,47 @@ export async function getPostsServer(
 export async function getPostServer(slug: string): Promise<Post | null> {
   const posts = readAll(true);
   return posts.find((p) => p.slug === slug) || null;
+}
+
+/**
+ * Returns the previous and next post relative to the given slug,
+ * in date-descending order (newest first).
+ * "prev" = the post published AFTER (more recent),
+ * "next" = the post published BEFORE (older).
+ * This matches the conventional blog UX: prev = newer, next = older.
+ */
+export function getAdjacentPosts(slug: string): { prev: Post | null; next: Post | null } {
+  const posts = readAll(false);
+  const idx = posts.findIndex((p) => p.slug === slug);
+  if (idx === -1) return { prev: null, next: null };
+  return {
+    prev: idx > 0 ? posts[idx - 1] : null,
+    next: idx < posts.length - 1 ? posts[idx + 1] : null,
+  };
+}
+
+/**
+ * Returns up to `limit` related posts:
+ * 1. Posts sharing ≥1 tag with the current post (highest overlap first).
+ * 2. Falls back to most-recent posts if not enough tag matches.
+ * Always excludes the current post.
+ */
+export function getRelatedPosts(slug: string, limit = 3): Post[] {
+  const posts = readAll(false);
+  const current = posts.find((p) => p.slug === slug);
+  if (!current) return posts.filter((p) => p.slug !== slug).slice(0, limit);
+
+  const currentTagSlugs = new Set(current.tags.map((t) => t.slug));
+  const others = posts.filter((p) => p.slug !== slug);
+
+  // Score by tag overlap
+  const scored = others.map((p) => {
+    const overlap = p.tags.filter((t) => currentTagSlugs.has(t.slug)).length;
+    return { post: p, overlap };
+  });
+
+  // Sort: highest tag overlap first, then by date (already newest-first from readAll)
+  scored.sort((a, b) => b.overlap - a.overlap);
+
+  return scored.slice(0, limit).map((s) => s.post);
 }

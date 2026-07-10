@@ -1,9 +1,18 @@
-import { getPostServer, getPostsServer } from "@/lib/blog";
+import {
+  getPostServer,
+  getPostsServer,
+  getAdjacentPosts,
+  getRelatedPosts,
+} from "@/lib/blog";
 import { siteConfig } from "@/lib/data";
 import { syne } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { PostCover } from "@/components/blog/post-cover";
+import { TableOfContents } from "@/components/blog/table-of-contents";
+import { PostNav } from "@/components/blog/post-nav";
+import { RelatedPosts } from "@/components/blog/related-posts";
+import { ReadingProgress } from "@/components/blog/reading-progress";
 import { IconArrowLeft, IconCalendar, IconClock } from "@tabler/icons-react";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -11,13 +20,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { AdUnit } from "@/components/ad-unit";
 
-export const revalidate = 3600; // Revalidate every hour
+export const revalidate = 3600;
 
 interface PostPageProps {
   params: Promise<{ slug: string }>;
 }
 
-// Generate static paths for popular posts
 export async function generateStaticParams() {
   const { posts } = await getPostsServer(20);
   return posts.map((post) => ({
@@ -25,7 +33,6 @@ export async function generateStaticParams() {
   }));
 }
 
-// Generate metadata for SEO
 export async function generateMetadata({
   params,
 }: PostPageProps): Promise<Metadata> {
@@ -33,9 +40,7 @@ export async function generateMetadata({
   const post = await getPostServer(slug);
 
   if (!post) {
-    return {
-      title: "Post Not Found",
-    };
+    return { title: "Post Not Found" };
   }
 
   return {
@@ -63,7 +68,11 @@ export async function generateMetadata({
 
 export default async function PostPage({ params }: PostPageProps) {
   const { slug } = await params;
-  const post = await getPostServer(slug);
+  const [post, adjacent, related] = await Promise.all([
+    getPostServer(slug),
+    Promise.resolve(getAdjacentPosts(slug)),
+    Promise.resolve(getRelatedPosts(slug, 3)),
+  ]);
 
   if (!post) {
     notFound();
@@ -75,7 +84,6 @@ export default async function PostPage({ params }: PostPageProps) {
     day: "numeric",
   });
 
-  // BlogPosting structured data for SEO
   const blogPostingSchema = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -107,7 +115,6 @@ export default async function PostPage({ params }: PostPageProps) {
     timeRequired: `PT${post.readTimeInMinutes}M`,
   };
 
-  // Breadcrumb structured data
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -133,8 +140,13 @@ export default async function PostPage({ params }: PostPageProps) {
     ],
   };
 
+  const headings = post.headings ?? [];
+
   return (
-    <main className="w-full py-12 sm:py-20 lg:py-32">
+    <main className="w-full py-12 sm:py-20 lg:py-28 overflow-x-hidden">
+      {/* Reading progress bar */}
+      <ReadingProgress />
+
       {/* Structured Data */}
       <script
         type="application/ld+json"
@@ -145,20 +157,20 @@ export default async function PostPage({ params }: PostPageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
 
-      <article className="container mx-auto px-4 max-w-4xl">
-        {/* Back to Blog — touch-target via inline-flex + py */}
+      {/* Outer container — constrains horizontal width */}
+      <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
+        {/* Back link */}
         <Link
           href="/blog"
           className="inline-flex items-center gap-2 py-2 text-[14px] text-zinc-500
-                     [@media(hover:hover)]:hover:text-foreground transition-colors mb-8"
+                     [@media(hover:hover)]:hover:text-zinc-900 transition-colors mb-10"
         >
           <IconArrowLeft className="w-4 h-4" />
           Back to Blog
         </Link>
 
-        {/* Header */}
-        <header className="mb-10">
-          {/* Tags */}
+        {/* Article header — full width (no sidebar yet) */}
+        <header className="max-w-3xl mb-10">
           {post.tags.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-6">
               {post.tags.map((tag) => (
@@ -169,18 +181,16 @@ export default async function PostPage({ params }: PostPageProps) {
             </div>
           )}
 
-          {/* Title — section heading scale, capped at ~3rem */}
           <h1
             className={cn(
               syne.className,
-              "font-black text-foreground mb-6 leading-[1.08] tracking-tight break-words"
+              "font-black text-zinc-950 mb-6 leading-[1.08] tracking-tight break-words"
             )}
             style={{ fontSize: "clamp(1.6rem, 5vw, 3rem)" }}
           >
             {post.title}
           </h1>
 
-          {/* Meta — 12px unified meta scale */}
           <div className="flex flex-wrap items-center gap-3 sm:gap-6 text-[12px] text-zinc-400">
             {post.author && (
               <div className="flex items-center gap-2">
@@ -209,69 +219,117 @@ export default async function PostPage({ params }: PostPageProps) {
           </div>
         </header>
 
-        {/* Cover Image */}
-        <PostCover post={post} priority hero className="mb-10" />
+        {/* Cover image — full width */}
+        <div className="max-w-3xl mb-10">
+          <PostCover post={post} priority hero />
+        </div>
 
-        {/* Ad Unit - Above content */}
-        <AdUnit adFormat="horizontal" className="mb-10" />
+        {/* Ad Unit above content */}
+        <div className="max-w-3xl mb-10">
+          <AdUnit adFormat="horizontal" />
+        </div>
 
-        {/* Content - Using Tailwind Typography for out-of-the-box styling */}
-        {post.content?.html && (
-          <div
-            className={cn(
-              "prose prose-lg max-w-none",
-              // Dark mode
-              "dark:prose-invert",
-              // Headings
-              "prose-headings:font-semibold prose-headings:tracking-tight",
-              // Links
-              "prose-a:text-zinc-600 prose-a:no-underline hover:prose-a:underline hover:prose-a:text-zinc-900",
-              // Images
-              "prose-img:rounded-xl prose-img:shadow-md",
-              // Code blocks
-              "prose-pre:bg-[#1e1e1e] prose-pre:border prose-pre:border-border",
-              // Inline code
-              "prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none",
-              // Blockquotes
-              "prose-blockquote:border-l-zinc-400 prose-blockquote:bg-zinc-50 prose-blockquote:py-1 prose-blockquote:pr-4 prose-blockquote:rounded-r-lg",
-              // Tables
-              "prose-table:border prose-table:border-border prose-th:bg-muted prose-td:border prose-td:border-border prose-th:border prose-th:border-border",
-              // Lists
-              "prose-li:marker:text-muted-foreground"
+        {/* Reading layout: TOC sidebar + article column */}
+        <div className="flex gap-12 items-start">
+          {/* TOC sidebar — sticky, Desktop lg+ only (hidden on smaller screens via CSS) */}
+          {headings.length >= 2 && (
+            <TableOfContents headings={headings} />
+          )}
+
+          {/* Article column */}
+          <div className="min-w-0 flex-1 max-w-3xl">
+            {/* Mobile TOC disclosure — visible below lg, hidden at lg+ */}
+            {headings.length >= 2 && (
+              <TableOfContents headings={headings} />
             )}
-            dangerouslySetInnerHTML={{ __html: post.content.html }}
-          />
-        )}
 
-        {/* Ad Unit - Below content */}
-        <AdUnit adFormat="auto" className="mt-10" />
+            {/* Article body */}
+            {post.content?.html && (
+              <article
+                className={cn(
+                  // Base prose setup
+                  "prose prose-zinc max-w-none",
+                  // Body text — 16px, 1.75 line-height
+                  "prose-p:text-[16px] prose-p:leading-[1.8] prose-p:text-zinc-700",
+                  // Headings — tight tracking, ink-dark
+                  "prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-zinc-900",
+                  "prose-h2:text-[1.375rem] prose-h2:mt-10 prose-h2:mb-4",
+                  "prose-h3:text-[1.125rem] prose-h3:mt-8 prose-h3:mb-3",
+                  // Scroll margin so TOC jumps land below any fixed header
+                  "[&_h2]:scroll-mt-24 [&_h3]:scroll-mt-24",
+                  // Links — subtle underline on hover
+                  "prose-a:text-zinc-700 prose-a:no-underline prose-a:font-medium",
+                  "[@media(hover:hover)]:prose-a:hover:underline [@media(hover:hover)]:prose-a:hover:text-zinc-950",
+                  // Blockquotes — left ink border, warm bg
+                  "prose-blockquote:border-l-2 prose-blockquote:border-zinc-300",
+                  "prose-blockquote:bg-zinc-50 prose-blockquote:py-1 prose-blockquote:pr-4",
+                  "prose-blockquote:rounded-r-md prose-blockquote:not-italic",
+                  "prose-blockquote:text-zinc-600",
+                  // Inline code — light chip
+                  "prose-code:bg-zinc-100 prose-code:text-zinc-800",
+                  "prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded",
+                  "prose-code:text-[0.85em] prose-code:font-mono",
+                  "prose-code:before:content-none prose-code:after:content-none",
+                  // Code blocks — dark ink slab
+                  "prose-pre:bg-zinc-950 prose-pre:text-zinc-100",
+                  "prose-pre:rounded-xl prose-pre:border prose-pre:border-zinc-800",
+                  "prose-pre:overflow-x-auto prose-pre:max-w-full",
+                  "prose-pre:text-[0.85em] prose-pre:leading-relaxed",
+                  // Images
+                  "prose-img:rounded-xl prose-img:shadow-sm",
+                  // Lists
+                  "prose-li:text-[16px] prose-li:text-zinc-700",
+                  "prose-li:marker:text-zinc-400",
+                  // Tables
+                  "prose-table:text-[14px]",
+                  "prose-th:bg-zinc-50 prose-th:text-zinc-700 prose-th:font-semibold",
+                  "prose-td:text-zinc-600",
+                  "prose-th:border prose-th:border-zinc-200",
+                  "prose-td:border prose-td:border-zinc-100",
+                  // Strong
+                  "prose-strong:text-zinc-900 prose-strong:font-semibold",
+                  // HR
+                  "prose-hr:border-zinc-100",
+                )}
+                dangerouslySetInnerHTML={{ __html: post.content.html }}
+              />
+            )}
 
-        {/* Footer */}
-        <footer className="mt-16 pt-8 border-t border-border">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <Link
-              href="/blog"
-              className="inline-flex items-center gap-2 text-sm font-medium text-foreground hover:text-muted-foreground transition-colors"
-            >
-              <IconArrowLeft className="w-4 h-4" />
-              View all posts
-            </Link>
+            {/* Ad Unit below content */}
+            <AdUnit adFormat="auto" className="mt-10" />
 
-            {/* Tags */}
-            <div className="flex items-center gap-4">
-              {post.tags.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {post.tags.slice(0, 3).map((tag) => (
-                    <Badge key={tag.slug} variant="outline" className="text-xs">
-                      {tag.name}
-                    </Badge>
-                  ))}
-                </div>
-              )}
-            </div>
+            {/* Prev / Next */}
+            <PostNav prev={adjacent.prev} next={adjacent.next} />
+
+            {/* Related reads */}
+            <RelatedPosts posts={related} />
+
+            {/* Footer */}
+            <footer className="mt-16 pt-8 border-t border-zinc-100">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <Link
+                  href="/blog"
+                  className="inline-flex items-center gap-2 text-sm font-medium text-zinc-700
+                             [@media(hover:hover)]:hover:text-zinc-950 transition-colors"
+                >
+                  <IconArrowLeft className="w-4 h-4" />
+                  View all posts
+                </Link>
+
+                {post.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {post.tags.slice(0, 3).map((tag) => (
+                      <Badge key={tag.slug} variant="outline" className="text-xs">
+                        {tag.name}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </footer>
           </div>
-        </footer>
-      </article>
+        </div>
+      </div>
     </main>
   );
 }
