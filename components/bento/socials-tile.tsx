@@ -52,7 +52,7 @@ export function SocialsTile() {
         </span>
       </div>
 
-      <div className="grid flex-1 grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-1 lg:[grid-auto-rows:1fr]">
+      <div className="grid flex-1 grid-cols-2 gap-2.5 [grid-auto-rows:1fr]">
         {socials.map(({ name, handle, href, Icon, color }) => (
           <a
             key={name}
@@ -60,8 +60,8 @@ export function SocialsTile() {
             target={href.startsWith("http") ? "_blank" : undefined}
             rel="noopener noreferrer"
             aria-label={name}
-            className="group relative flex items-center gap-3 overflow-hidden rounded-2xl border border-black/[0.08] bg-white p-3.5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_10px_30px_-14px_rgba(24,24,27,0.18)]"
-            style={{ ["--brand" as string]: color }}
+            title={handle}
+            className="group relative flex min-h-[92px] flex-col items-start justify-between gap-3 overflow-hidden rounded-2xl border border-black/[0.08] bg-white p-3.5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_10px_30px_-14px_rgba(24,24,27,0.18)]"
           >
             {/* brand-tint wash that reveals on hover */}
             <span
@@ -69,21 +69,18 @@ export function SocialsTile() {
               style={{ background: `${color}0f` }}
               aria-hidden="true"
             />
-            <span
-              className="relative grid h-9 w-9 shrink-0 place-items-center rounded-xl transition-colors duration-200"
-              style={{ background: `${color}14`, color }}
-            >
-              <Icon className="h-[18px] w-[18px]" />
-            </span>
-            <span className="relative min-w-0">
-              <span className="block text-sm font-semibold text-zinc-900">
-                {name}
+            <span className="relative flex w-full items-start justify-between">
+              <span
+                className="grid h-9 w-9 place-items-center rounded-xl"
+                style={{ background: `${color}14`, color }}
+              >
+                <Icon className="h-[18px] w-[18px]" />
               </span>
-              <span className="block truncate text-[11px] text-zinc-500">
-                {handle}
-              </span>
+              <IconArrowUpRight className="h-4 w-4 text-zinc-300 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-zinc-600" />
             </span>
-            <IconArrowUpRight className="relative ml-auto h-4 w-4 shrink-0 text-zinc-300 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-zinc-600" />
+            <span className="relative block truncate text-sm font-semibold text-zinc-900">
+              {name}
+            </span>
           </a>
         ))}
       </div>
