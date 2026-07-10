@@ -145,22 +145,22 @@ export default function Home() {
             <SocialsTile />
           </BentoTile>
 
-          {/* ── 4. About tile — full width ────────────────────────────────── */}
+          {/* ── 4. About tile — left, with featured projects stacked right ── */}
           <BentoTile
             hover={false}
-            className="col-span-1 sm:col-span-2 lg:col-span-12"
+            className="col-span-1 sm:col-span-2 lg:col-span-8 lg:row-span-2"
             style={{ background: "rgba(255,255,255,0.80)" } as React.CSSProperties}
           >
             <About />
           </BentoTile>
 
-          {/* ── 6. Featured project — OpenKVM ────────────────────────────── */}
-          <BentoTile className="col-span-1 lg:col-span-6">
+          {/* ── 6. Featured project — OpenKVM (top-right) ────────────────── */}
+          <BentoTile className="col-span-1 lg:col-span-4">
             <FeaturedProjectTile project={projectsData[0]} index={0} />
           </BentoTile>
 
-          {/* ── 7. Featured project — Brik ───────────────────────────────── */}
-          <BentoTile className="col-span-1 lg:col-span-6">
+          {/* ── 7. Featured project — Brik (below OpenKVM) ───────────────── */}
+          <BentoTile className="col-span-1 lg:col-span-4">
             <FeaturedProjectTile project={projectsData[1]} index={1} />
           </BentoTile>
 

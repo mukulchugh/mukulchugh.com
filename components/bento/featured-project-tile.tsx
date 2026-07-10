@@ -77,13 +77,11 @@ export function FeaturedProjectTile({
           <span
             className={cn(
               syne.className,
-              "block font-black tracking-[-0.06em] leading-[0.82] break-words min-w-0"
+              "block whitespace-nowrap font-black tracking-[-0.04em] leading-[0.95]"
             )}
             style={{
-              fontSize: "clamp(30px, 11vw, 76px)",
+              fontSize: "clamp(20px, 4.5vw, 36px)",
               color: cover.titleColor,
-              wordBreak: "break-word",
-              overflowWrap: "break-word",
             }}
           >
             {titleFirst}
