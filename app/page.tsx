@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils";
 import {
   LocationTile,
   FeaturedProjectTile,
-  BrandBar,
   SocialsTile,
 } from "@/components/bento";
 
@@ -123,14 +122,6 @@ export default function Home() {
             Row 8    : CTA (col 1-12)  — DARK ANCHOR
         */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 sm:gap-4 [grid-auto-flow:dense]">
-
-          {/* ── 0. Brand bar — logo + nav, folded in from the old header ──── */}
-          <BentoTile
-            hover={false}
-            className="col-span-1 sm:col-span-2 lg:col-span-12"
-          >
-            <BrandBar />
-          </BentoTile>
 
           {/* ── 1. Profile tile — HERO ────────────────────────────────────── */}
           <BentoTile
