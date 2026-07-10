@@ -98,7 +98,7 @@ export function Dock() {
                     aria-label="Home"
                   >
                     <Image
-                      src={siteConfig.images.logoDark}
+                      src={siteConfig.images.logoLight}
                       alt={siteConfig.name}
                       width={24}
                       height={24}
@@ -134,7 +134,7 @@ export function Dock() {
                           <Icon
                             className={cn(
                               "h-4 w-4 transition-all duration-200 group-hover:scale-110 sm:h-5 sm:w-5",
-                              isActive ? "text-zinc-900" : "text-foreground/60 group-hover:text-foreground/90"
+                              isActive ? "text-zinc-900" : "text-zinc-500 group-hover:text-zinc-900"
                             )}
                             stroke={2}
                           />
@@ -153,7 +153,7 @@ export function Dock() {
                           <Icon
                             className={cn(
                               "h-4 w-4 transition-all duration-200 group-hover:scale-110 sm:h-5 sm:w-5",
-                              isActive ? "text-zinc-900" : "text-foreground/60 group-hover:text-foreground/90"
+                              isActive ? "text-zinc-900" : "text-zinc-500 group-hover:text-zinc-900"
                             )}
                             stroke={2}
                           />

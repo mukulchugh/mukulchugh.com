@@ -22,7 +22,7 @@ export default function Header() {
       >
         <Link href="/" className="flex items-center gap-3">
           <Image
-            src={siteConfig.images.logoDark}
+            src={siteConfig.images.logoLight}
             alt={siteConfig.name}
             quality="80"
             priority={true}
