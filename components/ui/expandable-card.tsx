@@ -104,10 +104,12 @@ export default function ExpandableCard({
               transition={springTransition}
               className="relative w-full max-w-2xl overflow-hidden rounded-2xl border border-black/[0.08] bg-white shadow-[0_8px_48px_rgba(20,20,40,0.14)] my-8"
             >
-              {/* Close button */}
+              {/* Close button — touch target 44×44 */}
               <motion.button
                 onClick={() => setCurrent(null)}
-                className="absolute top-4 right-4 z-10 p-2 rounded-full bg-black/[0.06] hover:bg-black/[0.10] transition-colors"
+                aria-label="Close"
+                className="absolute top-3 right-3 z-10 flex items-center justify-center w-11 h-11 rounded-full bg-black/[0.06]
+                           [@media(hover:hover)]:hover:bg-black/[0.10] transition-colors active:bg-black/[0.14]"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.8 }}
@@ -134,13 +136,15 @@ export default function ExpandableCard({
                   </motion.div>
 
                   <div className="flex-1 min-w-0">
+                    {/* Meta — 12px */}
                     <motion.span
                       layoutId={`date-${current.id}`}
                       transition={springTransition}
-                      className="text-sm text-muted-foreground block mb-1"
+                      className="text-[12px] text-zinc-400 block mb-1"
                     >
                       {current.date}
                     </motion.span>
+                    {/* Tile/card title scale */}
                     <motion.h3
                       layoutId={`title-${current.id}`}
                       transition={springTransition}
@@ -151,10 +155,11 @@ export default function ExpandableCard({
                     >
                       {current.title}
                     </motion.h3>
+                    {/* Body scale */}
                     <motion.p
                       layoutId={`company-${current.id}`}
                       transition={springTransition}
-                      className="text-sm text-muted-foreground mt-1"
+                      className="text-[14px] text-zinc-500 mt-1"
                     >
                       {current.company} • {current.location}
                     </motion.p>
@@ -169,14 +174,14 @@ export default function ExpandableCard({
                     exit={{ opacity: 0, y: 10 }}
                     transition={{ duration: 0.4, delay: 0.15, ease: "easeOut" }}
                   >
-                    <h4 className="text-sm font-medium text-foreground/80 mb-3">
+                    <h4 className="text-[13px] font-medium text-foreground/80 mb-3">
                       Key Responsibilities & Achievements
                     </h4>
                     <ul className="space-y-3">
                       {current.description.map((desc, i) => (
                         <motion.li
                           key={i}
-                          className="flex items-start text-sm text-foreground/80"
+                          className="flex items-start text-[14px] text-zinc-500"
                           initial={{ opacity: 0, x: -10 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{
@@ -199,16 +204,26 @@ export default function ExpandableCard({
       </AnimatePresence>
 
       {/* Card list */}
-      <div className={cn("relative flex flex-col gap-4 w-full", className)}>
+      <div className={cn("relative flex flex-col gap-3 w-full", className)}>
         {items.map((item) => (
           <motion.div
             key={item.id}
             layoutId={`card-${item.id}`}
             onClick={() => setCurrent(item)}
+            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setCurrent(item); }}
+            role="button"
+            tabIndex={0}
+            aria-label={`${item.title} at ${item.company} — click to expand`}
             transition={springTransition}
-            className="group relative flex cursor-pointer items-center gap-4 sm:gap-6 rounded-xl border border-black/[0.07] bg-black/[0.02] p-4 sm:p-6 backdrop-blur-sm transition-colors duration-300 hover:bg-black/[0.05] hover:border-black/[0.12] w-full"
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.99 }}
+            className="group relative flex cursor-pointer items-center gap-4 rounded-xl
+                       border border-black/[0.07] bg-black/[0.02] p-4 sm:p-5
+                       backdrop-blur-sm transition-colors duration-300 w-full
+                       active:scale-[0.98]
+                       [@media(hover:hover)]:hover:bg-black/[0.05]
+                       [@media(hover:hover)]:hover:border-black/[0.12]
+                       focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900"
+            whileHover={{ scale: 1.005 }}
+            whileTap={{ scale: 0.98 }}
           >
             {/* Icon */}
             <motion.div
@@ -227,35 +242,38 @@ export default function ExpandableCard({
 
             {/* Content */}
             <div className="flex-1 min-w-0">
+              {/* Meta — 12px */}
               <motion.span
                 layoutId={`date-${item.id}`}
                 transition={springTransition}
-                className="text-xs text-muted-foreground block mb-0.5"
+                className="text-[12px] text-zinc-400 block mb-0.5"
               >
                 {item.date}
               </motion.span>
+              {/* Tile/card title — 1rem semibold */}
               <motion.h3
                 layoutId={`title-${item.id}`}
                 transition={springTransition}
                 className={cn(
                   syne.className,
-                  "font-semibold text-base sm:text-lg text-foreground truncate"
+                  "font-semibold text-[1rem] sm:text-[1.0625rem] text-foreground truncate"
                 )}
               >
                 {item.title}
               </motion.h3>
+              {/* Body — 14px muted */}
               <motion.p
                 layoutId={`company-${item.id}`}
                 transition={springTransition}
-                className="text-sm text-muted-foreground truncate"
+                className="text-[14px] text-zinc-500 truncate"
               >
                 {item.company} • {item.location}
               </motion.p>
             </div>
 
-            {/* Click indicator */}
-            <div className="flex-shrink-0 opacity-0 group-hover:opacity-60 transition-opacity duration-300">
-              <span className="text-[11px] text-muted-foreground tracking-wide">Expand</span>
+            {/* Click indicator — always visible at low opacity, amplifies on hover */}
+            <div className="flex-shrink-0 opacity-30 transition-opacity duration-300 [@media(hover:hover)]:group-hover:opacity-60">
+              <span className="text-[11px] text-zinc-500 tracking-wide">Expand</span>
             </div>
           </motion.div>
         ))}

@@ -56,7 +56,7 @@ export function ProfileTile() {
     <section
       ref={ref}
       id="home"
-      className="h-full min-h-[400px] p-5 sm:p-8 lg:p-10 flex flex-col gap-5 sm:gap-6 scroll-mt-28"
+      className="h-full min-h-[360px] p-5 sm:p-6 lg:p-8 flex flex-col gap-5 sm:gap-6 scroll-mt-28"
     >
       {/* Top row: Avatar + Available pill */}
       <motion.div
@@ -69,7 +69,7 @@ export function ProfileTile() {
         <motion.div variants={shouldReduceMotion ? undefined : itemVariants}>
           {/* Avatar */}
           <div
-            className="relative w-[68px] h-[68px] rounded-2xl overflow-hidden flex-shrink-0
+            className="relative w-[60px] h-[60px] sm:w-[68px] sm:h-[68px] rounded-2xl overflow-hidden flex-shrink-0
                        bg-gradient-to-br from-zinc-100 to-zinc-200
                        ring-1 ring-black/[0.08] shadow-lg shadow-black/[0.06]"
           >
@@ -103,38 +103,38 @@ export function ProfileTile() {
 
       {/* ── Editorial headline block ── */}
       <motion.div
-        className="flex flex-col gap-3"
+        className="flex flex-col gap-2.5"
         variants={shouldReduceMotion ? undefined : containerVariants}
         initial="hidden"
         animate="visible"
         viewport={{ once: true, amount: 0.15 }}
       >
-        {/* Monospace role marker */}
+        {/* Monospace role marker — unified 10px mono label */}
         <motion.p
           variants={shouldReduceMotion ? undefined : itemVariants}
-          className="font-mono text-[10px] uppercase tracking-[0.22em] text-zinc-400"
+          className="font-mono text-[10px] uppercase tracking-[0.14em] text-zinc-400"
         >
           01 — Product Engineer
         </motion.p>
 
-        {/* Oversized name headline */}
+        {/* Oversized name headline — unified Display scale */}
         <motion.h1
           variants={shouldReduceMotion ? undefined : itemVariants}
           className={cn(
             syne.className,
             "font-black tracking-[-0.04em] leading-[0.92] text-zinc-950"
           )}
-          style={{ fontSize: "clamp(2rem, 8vw, 4.5rem)" }}
+          style={{ fontSize: "clamp(2rem, 8vw, 4.25rem)" }}
         >
           Mukul
           <br />
           <span className="text-zinc-400 font-light">Chugh</span>
         </motion.h1>
 
-        {/* Role descriptor */}
+        {/* Role descriptor — unified body scale, capped measure */}
         <motion.p
           variants={shouldReduceMotion ? undefined : itemVariants}
-          className="text-[13px] sm:text-[14px] lg:text-[15px] text-zinc-500 leading-relaxed max-w-[42ch]"
+          className="text-[14px] sm:text-[15px] text-zinc-500 leading-relaxed max-w-[42ch]"
         >
           Founding Engineer at{" "}
           <span className="text-zinc-800 font-medium">Quivly</span>
@@ -146,7 +146,7 @@ export function ProfileTile() {
       {/* Hairline divider */}
       <div className="h-px bg-zinc-900/[0.06] w-full" aria-hidden="true" />
 
-      {/* Chips + socials row */}
+      {/* Chips row — pushed to bottom */}
       <motion.div
         className="flex flex-col gap-3 mt-auto"
         variants={shouldReduceMotion ? undefined : containerVariants}

@@ -3,6 +3,7 @@
 import React, { useMemo } from "react";
 import { SectionHeader } from "./section-header";
 import ExpandableCard from "./ui/expandable-card";
+import { CollapsibleList } from "./ui/collapsible-list";
 import { experiencesData } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
 import { IconBriefcase } from "@tabler/icons-react";
@@ -28,7 +29,7 @@ export default function Experience() {
     <section
       id="experience"
       ref={ref}
-      className="scroll-mt-28 px-4 sm:px-6 lg:px-8 py-6 sm:py-8 w-full min-w-0"
+      className="scroll-mt-28 p-5 sm:p-6 lg:p-8 w-full min-w-0"
     >
       <SectionHeader
         icon={IconBriefcase}
@@ -39,7 +40,12 @@ export default function Experience() {
         subtitle="From student ambassador to founding engineer."
         align="left"
       />
-      <ExpandableCard items={cardItems} />
+      <CollapsibleList
+        items={cardItems}
+        initial={4}
+        noun="roles"
+        renderList={(visible) => <ExpandableCard items={visible} />}
+      />
     </section>
   );
 }

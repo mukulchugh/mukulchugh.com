@@ -53,7 +53,7 @@ export function FeaturedProjectTile({
       <div
         className="relative flex-shrink-0 overflow-hidden rounded-t-3xl"
         style={{
-          minHeight: "160px",
+          minHeight: "152px",
           background: `linear-gradient(145deg, ${cover.bgFrom} 0%, ${cover.bgTo} 100%)`,
         }}
       >
@@ -104,7 +104,7 @@ export function FeaturedProjectTile({
           )}
         </div>
 
-        {/* Category label — top-left */}
+        {/* Category label — top-left — mono 10px unified */}
         <div className="absolute top-4 left-5">
           <span
             className={cn(
@@ -117,16 +117,17 @@ export function FeaturedProjectTile({
           </span>
         </div>
 
-        {/* Link icons — top-right */}
-        <div className="absolute top-3 right-4 flex gap-0.5 z-10">
+        {/* Link icons — top-right — touch target 44×44 */}
+        <div className="absolute top-2 right-2 flex gap-0 z-10">
           {project.github ? (
             <a
               href={project.github}
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`${project.title} on GitHub`}
-              className="p-2 rounded-xl text-white/40 hover:text-white/90 hover:bg-white/[0.1]
-                         transition-colors duration-150"
+              className="flex items-center justify-center w-11 h-11 rounded-xl text-white/50
+                         [@media(hover:hover)]:hover:text-white/90 [@media(hover:hover)]:hover:bg-white/[0.1]
+                         transition-colors duration-150 active:bg-white/[0.08]"
             >
               <IconBrandGithub className="h-[15px] w-[15px]" />
             </a>
@@ -137,8 +138,9 @@ export function FeaturedProjectTile({
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`${project.title} demo`}
-              className="p-2 rounded-xl text-white/40 hover:text-white/90 hover:bg-white/[0.1]
-                         transition-colors duration-150"
+              className="flex items-center justify-center w-11 h-11 rounded-xl text-white/50
+                         [@media(hover:hover)]:hover:text-white/90 [@media(hover:hover)]:hover:bg-white/[0.1]
+                         transition-colors duration-150 active:bg-white/[0.08]"
             >
               <IconExternalLink className="h-[15px] w-[15px]" />
             </a>
@@ -161,29 +163,30 @@ export function FeaturedProjectTile({
         {/* Hairline accent */}
         <div className="h-px w-12 bg-zinc-900/20 mb-0.5" aria-hidden="true" />
 
-        {/* Project title as accessible heading (visually redundant but semantic) */}
+        {/* Project title — tile/card title scale: ~1rem–1.125rem semibold */}
         <h3
           className={cn(
             syne.className,
-            "text-[1.05rem] font-bold text-zinc-950 leading-tight tracking-tight"
+            "text-[1rem] sm:text-[1.0625rem] font-bold text-zinc-950 leading-tight tracking-tight"
           )}
         >
           {project.title}
         </h3>
 
-        <p className="text-[13px] text-muted-foreground leading-[1.74] flex-1">
+        {/* Description — body scale: 14px leading-relaxed muted */}
+        <p className="text-[14px] text-zinc-500 leading-[1.74] flex-1">
           {project.description}
         </p>
 
-        {/* Tag chips */}
+        {/* Tag chips — meta scale: 11px */}
         {project.tags.length > 0 && (
           <div className="flex flex-wrap gap-1.5 mt-auto">
             {project.tags.map((tag) => (
               <span
                 key={tag}
                 className="px-2.5 py-0.5 text-[11px] font-medium rounded-full
-                           border border-black/[0.08] bg-black/[0.03] text-muted-foreground
-                           hover:border-zinc-400/60 hover:text-zinc-700
+                           border border-black/[0.08] bg-black/[0.03] text-zinc-500
+                           [@media(hover:hover)]:hover:border-zinc-400/60 [@media(hover:hover)]:hover:text-zinc-700
                            transition-all duration-150 cursor-default select-none"
               >
                 {tag}

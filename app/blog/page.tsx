@@ -30,28 +30,31 @@ export default async function BlogPage() {
   return (
     <main className="w-full py-12 sm:py-20">
       <div className="container mx-auto px-4 sm:px-6 max-w-4xl flex flex-col gap-10 sm:gap-14">
-        {/* Back to Home */}
+        {/* Back to Home — touch-target via inline-flex + padding */}
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors w-fit"
+          className="inline-flex items-center gap-2 py-2 text-[14px] text-zinc-500
+                     [@media(hover:hover)]:hover:text-foreground transition-colors w-fit"
         >
           <IconArrowLeft className="w-4 h-4" />
           Back to Home
         </Link>
 
         {/* Header */}
-        <div className="flex w-full flex-col sm:flex-row sm:justify-between sm:items-center gap-8">
+        <div className="flex w-full flex-col sm:flex-row sm:justify-between sm:items-center gap-6">
           <div className="flex flex-col gap-3">
+            {/* Blog page title — section heading scale */}
             <h1
               className={cn(
                 syne.className,
-                "tracking-tight font-bold leading-[1.15]"
+                "tracking-tight font-black leading-[1.08]"
               )}
-              style={{ fontSize: "clamp(1.5rem, 5vw, 3rem)" }}
+              style={{ fontSize: "clamp(1.6rem, 5vw, 3rem)" }}
             >
               Latest articles
             </h1>
-            <p className="text-[15px] text-muted-foreground leading-relaxed max-w-[52ch]">
+            {/* Body — 15px muted, capped measure */}
+            <p className="text-[14px] sm:text-[15px] text-zinc-500 leading-relaxed max-w-[52ch]">
               Thoughts on software engineering, web development, and building
               products that matter.
             </p>

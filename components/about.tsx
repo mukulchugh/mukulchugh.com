@@ -31,7 +31,7 @@ export default function About() {
   return (
     <section
       ref={ref}
-      className="scroll-mt-28 px-4 sm:px-6 lg:px-8 py-6 sm:py-8 w-full min-w-0"
+      className="scroll-mt-28 p-5 sm:p-6 lg:p-8 w-full min-w-0"
       id="about"
     >
       <SectionHeader
@@ -54,7 +54,7 @@ export default function About() {
           <motion.p
             key={index}
             variants={shouldReduce ? undefined : paraVariants}
-            className="text-[14px] sm:text-[14.5px] text-muted-foreground leading-[1.8] max-w-[60ch]"
+            className="text-[14px] sm:text-[15px] text-zinc-500 leading-[1.8] max-w-[64ch]"
           >
             {paragraph}
           </motion.p>

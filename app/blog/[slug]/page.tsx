@@ -146,10 +146,11 @@ export default async function PostPage({ params }: PostPageProps) {
       />
 
       <article className="container mx-auto px-4 max-w-4xl">
-        {/* Back to Blog */}
+        {/* Back to Blog — touch-target via inline-flex + py */}
         <Link
           href="/blog"
-          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
+          className="inline-flex items-center gap-2 py-2 text-[14px] text-zinc-500
+                     [@media(hover:hover)]:hover:text-foreground transition-colors mb-8"
         >
           <IconArrowLeft className="w-4 h-4" />
           Back to Blog
@@ -168,22 +169,22 @@ export default async function PostPage({ params }: PostPageProps) {
             </div>
           )}
 
-          {/* Title */}
+          {/* Title — section heading scale, capped at ~3rem */}
           <h1
             className={cn(
               syne.className,
-              "font-bold text-foreground mb-6 leading-tight tracking-tight break-words"
+              "font-black text-foreground mb-6 leading-[1.08] tracking-tight break-words"
             )}
             style={{ fontSize: "clamp(1.6rem, 5vw, 3rem)" }}
           >
             {post.title}
           </h1>
 
-          {/* Meta */}
-          <div className="flex flex-wrap items-center gap-3 sm:gap-6 text-sm text-muted-foreground">
+          {/* Meta — 12px unified meta scale */}
+          <div className="flex flex-wrap items-center gap-3 sm:gap-6 text-[12px] text-zinc-400">
             {post.author && (
               <div className="flex items-center gap-2">
-                <Avatar className="h-8 w-8">
+                <Avatar className="h-7 w-7">
                   <AvatarImage src={post.author.profilePicture} />
                   <AvatarFallback>
                     {post.author.name
@@ -192,17 +193,17 @@ export default async function PostPage({ params }: PostPageProps) {
                       .join("")}
                   </AvatarFallback>
                 </Avatar>
-                <span className="text-foreground font-medium">
+                <span className="text-zinc-700 font-medium">
                   {post.author.name}
                 </span>
               </div>
             )}
             <div className="flex items-center gap-2">
-              <IconCalendar className="w-4 h-4" />
+              <IconCalendar className="w-3.5 h-3.5" />
               <time dateTime={post.publishedAt}>{formattedDate}</time>
             </div>
             <div className="flex items-center gap-2">
-              <IconClock className="w-4 h-4" />
+              <IconClock className="w-3.5 h-3.5" />
               <span>{post.readTimeInMinutes} min read</span>
             </div>
           </div>

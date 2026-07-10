@@ -1,6 +1,7 @@
 "use client";
 
 import { SectionHeader } from "./section-header";
+import { CollapsibleList } from "./ui/collapsible-list";
 import { projectsData } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
 import { motion, useReducedMotion } from "motion/react";
@@ -29,11 +30,13 @@ function ProjectCard({
   demo: string;
   index: number;
 }) {
+  const shouldReduce = useReducedMotion();
+
   return (
     <motion.li
       className="list-none"
-      initial={{ opacity: 0, y: 18 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={shouldReduce ? false : { opacity: 0, y: 18 }}
+      whileInView={shouldReduce ? undefined : { opacity: 1, y: 0 }}
       transition={{
         type: "spring",
         stiffness: 100,
@@ -47,8 +50,10 @@ function ProjectCard({
                    border border-black/[0.08] bg-white p-5
                    shadow-[0_1px_2px_rgba(24,24,27,0.04),0_10px_30px_-14px_rgba(24,24,27,0.12)]
                    transition-all duration-300
-                   hover:border-black/[0.16] hover:-translate-y-1
-                   hover:shadow-[0_2px_4px_rgba(24,24,27,0.05),0_18px_40px_-16px_rgba(24,24,27,0.18)]"
+                   active:scale-[0.98]
+                   [@media(hover:hover)]:hover:border-black/[0.16]
+                   [@media(hover:hover)]:hover:-translate-y-1
+                   [@media(hover:hover)]:hover:shadow-[0_2px_4px_rgba(24,24,27,0.05),0_18px_40px_-16px_rgba(24,24,27,0.18)]"
       >
         <div className="flex flex-col gap-3">
           <div className="flex items-start justify-between">
@@ -61,8 +66,11 @@ function ProjectCard({
                   href={github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-black/[0.05] hover:text-foreground"
-                  aria-label="View on GitHub"
+                  className="flex items-center justify-center w-11 h-11 rounded-lg text-muted-foreground
+                             transition-colors
+                             [@media(hover:hover)]:hover:bg-black/[0.05] [@media(hover:hover)]:hover:text-foreground
+                             active:bg-black/[0.07]"
+                  aria-label={`${title} on GitHub`}
                 >
                   <IconBrandGithub className="h-4 w-4" />
                 </a>
@@ -72,8 +80,11 @@ function ProjectCard({
                   href={demo}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-black/[0.05] hover:text-foreground"
-                  aria-label="View demo"
+                  className="flex items-center justify-center w-11 h-11 rounded-lg text-muted-foreground
+                             transition-colors
+                             [@media(hover:hover)]:hover:bg-black/[0.05] [@media(hover:hover)]:hover:text-foreground
+                             active:bg-black/[0.07]"
+                  aria-label={`${title} demo`}
                 >
                   <IconExternalLink className="h-4 w-4" />
                 </a>
@@ -81,10 +92,12 @@ function ProjectCard({
             </div>
           </div>
           <div className="space-y-1.5">
-            <h3 className="text-base font-semibold tracking-tight text-zinc-950">
+            {/* Tile/card title — 1rem semibold tracking-tight */}
+            <h3 className="text-[1rem] font-semibold tracking-tight text-zinc-950">
               {title}
             </h3>
-            <p className="text-[13.5px] leading-relaxed text-muted-foreground">
+            {/* Body scale — 14px leading-relaxed muted */}
+            <p className="text-[14px] leading-relaxed text-zinc-500">
               {description}
             </p>
           </div>
@@ -94,7 +107,7 @@ function ProjectCard({
             {tags.map((tag) => (
               <span
                 key={tag}
-                className="rounded-full border border-black/[0.08] bg-black/[0.04] px-2.5 py-0.5 text-[11px] font-medium text-muted-foreground"
+                className="rounded-full border border-black/[0.08] bg-black/[0.04] px-2.5 py-0.5 text-[11px] font-medium text-zinc-500"
               >
                 {tag}
               </span>
@@ -110,7 +123,7 @@ export default function Projects() {
   const { ref } = useSectionInView("Projects", 0.5);
 
   return (
-    <section ref={ref} id="projects" className="scroll-mt-28 w-full p-4 sm:p-6 lg:p-8 min-w-0">
+    <section ref={ref} id="projects" className="scroll-mt-28 w-full p-5 sm:p-6 lg:p-8 min-w-0">
       <SectionHeader
         icon={IconLayoutKanban}
         label="Projects"
@@ -120,19 +133,26 @@ export default function Projects() {
         subtitle="A selection of past work, from open-source tools to full-stack apps."
         align="left"
       />
-      <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        {restProjects.map((project, index) => (
-          <ProjectCard
-            key={project.title}
-            title={project.title}
-            description={project.description}
-            tags={project.tags}
-            github={project.github}
-            demo={project.demo}
-            index={index}
-          />
-        ))}
-      </ul>
+      <CollapsibleList
+        items={[...restProjects]}
+        initial={4}
+        noun="projects"
+        renderList={(visible) => (
+          <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {visible.map((project, index) => (
+              <ProjectCard
+                key={project.title}
+                title={project.title}
+                description={project.description}
+                tags={project.tags}
+                github={project.github}
+                demo={project.demo}
+                index={index}
+              />
+            ))}
+          </ul>
+        )}
+      />
     </section>
   );
 }
