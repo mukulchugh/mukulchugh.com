@@ -47,12 +47,16 @@ export function CollapsibleList<T>({
             type="button"
             onClick={() => setOpen((o) => !o)}
             aria-expanded={open}
-            className="group inline-flex items-center gap-1.5 rounded-full border border-black/[0.08]
-                       bg-white px-4 py-2 text-[13px] font-medium text-zinc-600 shadow-sm
-                       transition-all duration-200
-                       [@media(hover:hover)]:hover:border-zinc-300 [@media(hover:hover)]:hover:text-zinc-900
-                       active:scale-[0.98]
+            className="group inline-flex items-center gap-1.5 rounded-full
+                       bg-white px-4 py-2 text-[13px] font-medium text-zinc-600
+                       transition-all duration-[240ms] [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]
+                       [@media(hover:hover)]:hover:text-zinc-950 [@media(hover:hover)]:hover:-translate-y-[1px]
+                       active:scale-[0.97]
                        focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-400"
+            style={{
+              border: "1px solid rgba(20,20,40,0.08)",
+              boxShadow: "0 1px 2px rgba(28,25,23,0.04), 0 3px 8px -4px rgba(28,25,23,0.08)",
+            }}
           >
             {open ? "Show less" : `Show ${hiddenCount} more${noun ? ` ${noun}` : ""}`}
             <IconChevronDown

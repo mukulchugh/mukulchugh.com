@@ -97,11 +97,11 @@ export function BlogPostCard({
             {compact && (
               <>
                 <IconClock className="h-3 w-3 flex-shrink-0" />
-                <span className="font-mono">{post.readTimeInMinutes} min read</span>
+                <span className="font-mono tabular-nums">{post.readTimeInMinutes} min read</span>
                 <span className="opacity-40">·</span>
               </>
             )}
-            <span className={compact ? "font-mono" : undefined}>
+            <span className={compact ? "font-mono tabular-nums" : undefined}>
               {fmtDate(post.publishedAt)}
             </span>
             {!compact && (
@@ -116,7 +116,7 @@ export function BlogPostCard({
           <h3
             className={cn(
               syne.className,
-              "font-semibold tracking-tight text-zinc-950 break-words",
+              "font-semibold tracking-[-0.025em] text-zinc-950 break-words text-balance",
               compact
                 ? "text-[1rem] leading-snug"
                 : "text-xl font-bold leading-tight sm:text-2xl md:text-3xl"
@@ -128,7 +128,7 @@ export function BlogPostCard({
           {/* Brief */}
           <p
             className={cn(
-              "text-zinc-500 leading-relaxed line-clamp-2",
+              "text-zinc-600 leading-[1.7] line-clamp-2 text-pretty",
               compact ? "text-[13px]" : "text-[14px] sm:text-[15px] max-w-[68ch]"
             )}
           >

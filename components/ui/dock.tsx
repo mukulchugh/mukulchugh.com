@@ -81,19 +81,22 @@ export function Dock() {
   const itemClasses = (isActive: boolean) =>
     cn(
       "group relative grid place-items-center rounded-xl",
-      "ring-1 ring-black/[0.08] bg-gradient-to-b from-white/80 to-gray-50/90 backdrop-blur-xl shadow-sm",
-      "transition-all duration-200 active:scale-[0.93]",
+      "bg-gradient-to-b from-white/90 to-zinc-50/80 backdrop-blur-sm",
+      "transition-all duration-[260ms] [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]",
+      "active:scale-[0.92] active:duration-[120ms]",
       // Touch target: 44×44 on mobile, bigger on larger screens
       "h-11 w-11 xs:h-11 xs:w-11 sm:h-12 sm:w-12",
-      "[@media(hover:hover)]:hover:-translate-y-1 [@media(hover:hover)]:hover:scale-105 [@media(hover:hover)]:hover:shadow-md",
-      isActive && "ring-zinc-900/30 from-zinc-50/90 to-zinc-100/70"
+      "[@media(hover:hover)]:hover:-translate-y-1 [@media(hover:hover)]:hover:scale-[1.08]",
+      isActive
+        ? "shadow-[0_0_0_1px_rgba(20,20,40,0.14),0_2px_6px_rgba(28,25,23,0.08)] bg-gradient-to-b from-zinc-50/95 to-zinc-100/80"
+        : "shadow-[0_0_0_1px_rgba(20,20,40,0.08),0_1px_3px_rgba(28,25,23,0.05)] [@media(hover:hover)]:hover:shadow-[0_0_0_1px_rgba(20,20,40,0.12),0_4px_12px_rgba(28,25,23,0.10)]"
     );
 
   const iconClasses = (isActive: boolean) =>
     cn(
-      "h-4 w-4 sm:h-5 sm:w-5 transition-all duration-200",
-      "[@media(hover:hover)]:group-hover:scale-110",
-      isActive ? "text-zinc-900" : "text-zinc-500 [@media(hover:hover)]:group-hover:text-zinc-900"
+      "h-4 w-4 sm:h-5 sm:w-5 transition-all duration-[260ms] [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]",
+      "[@media(hover:hover)]:group-hover:scale-[1.12]",
+      isActive ? "text-zinc-950" : "text-zinc-400 [@media(hover:hover)]:group-hover:text-zinc-900"
     );
 
   return (
@@ -107,9 +110,14 @@ export function Dock() {
             exit={{ y: 100, x: "-50%", opacity: 0 }}
             transition={{ type: "spring", stiffness: 200, damping: 20 }}
           >
-            <div className="flex items-center gap-1.5 sm:gap-2 rounded-2xl bg-white/80 px-2 py-1.5 sm:px-3 sm:py-2
-                            shadow-[0_4px_24px_rgba(20,20,40,0.10)] ring-1 ring-black/[0.07] backdrop-blur-xl
-                            sm:rounded-3xl sm:px-4 sm:py-2.5">
+            <div className="flex items-center gap-1.5 sm:gap-2 rounded-2xl sm:rounded-[1.25rem]
+                            px-2 py-1.5 sm:px-3 sm:py-2"
+                 style={{
+                   background: "rgba(255,255,255,0.88)",
+                   backdropFilter: "blur(24px)",
+                   WebkitBackdropFilter: "blur(24px)",
+                   boxShadow: "0 0 0 1px rgba(20,20,40,0.07), inset 0 1px 0 rgba(255,255,255,0.90), 0 2px 8px rgba(28,25,23,0.06), 0 8px 32px -8px rgba(28,25,23,0.12)",
+                 }}>
               {/* Logo */}
               <Tooltip>
                 <TooltipTrigger asChild>

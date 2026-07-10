@@ -46,14 +46,15 @@ function ProjectCard({
       viewport={{ once: true, amount: 0.15 }}
     >
       <div
-        className="flex h-full flex-col justify-between gap-4 rounded-2xl
-                   border border-black/[0.08] bg-white p-5
-                   shadow-[0_1px_2px_rgba(24,24,27,0.04),0_10px_30px_-14px_rgba(24,24,27,0.12)]
-                   transition-all duration-300
-                   active:scale-[0.98]
-                   [@media(hover:hover)]:hover:border-black/[0.16]
-                   [@media(hover:hover)]:hover:-translate-y-1
-                   [@media(hover:hover)]:hover:shadow-[0_2px_4px_rgba(24,24,27,0.05),0_18px_40px_-16px_rgba(24,24,27,0.18)]"
+        className="project-card flex h-full flex-col justify-between gap-4 rounded-2xl
+                   border border-black/[0.07] bg-white p-5
+                   transition-all duration-[260ms] [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]
+                   active:scale-[0.985] active:duration-[100ms]
+                   [@media(hover:hover)]:hover:border-black/[0.12]
+                   [@media(hover:hover)]:hover:-translate-y-[3px]"
+        style={{
+          boxShadow: "0 1px 2px rgba(28,25,23,0.04), 0 8px 24px -12px rgba(28,25,23,0.10), 0 24px 48px -24px rgba(28,25,23,0.06)",
+        }}
       >
         <div className="flex flex-col gap-3">
           <div className="flex items-start justify-between">
@@ -107,7 +108,9 @@ function ProjectCard({
             {tags.map((tag) => (
               <span
                 key={tag}
-                className="rounded-full border border-black/[0.08] bg-black/[0.04] px-2.5 py-0.5 text-[11px] font-medium text-zinc-500"
+                className="rounded-full border border-black/[0.07] bg-black/[0.03] px-2.5 py-0.5 text-[11px] font-medium text-zinc-500
+                           [@media(hover:hover)]:hover:border-zinc-400/50 [@media(hover:hover)]:hover:text-zinc-700
+                           transition-colors duration-200 cursor-default select-none"
               >
                 {tag}
               </span>

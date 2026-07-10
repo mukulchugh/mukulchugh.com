@@ -70,8 +70,10 @@ export function ProfileTile() {
           {/* Avatar */}
           <div
             className="relative w-[60px] h-[60px] sm:w-[68px] sm:h-[68px] rounded-2xl overflow-hidden flex-shrink-0
-                       bg-gradient-to-br from-zinc-100 to-zinc-200
-                       ring-1 ring-black/[0.08] shadow-lg shadow-black/[0.06]"
+                       bg-gradient-to-br from-zinc-100 to-zinc-200"
+            style={{
+              boxShadow: "0 0 0 1px rgba(20,20,40,0.08), 0 1px 2px rgba(28,25,23,0.06), 0 6px 20px -8px rgba(28,25,23,0.14)",
+            }}
           >
             <Image
               src={siteConfig.images.profileImage}
@@ -122,7 +124,7 @@ export function ProfileTile() {
           variants={shouldReduceMotion ? undefined : itemVariants}
           className={cn(
             syne.className,
-            "font-black tracking-[-0.04em] leading-[0.92] text-zinc-950"
+            "font-black tracking-[-0.05em] leading-[0.90] text-zinc-950"
           )}
           style={{ fontSize: "clamp(2rem, 8vw, 4.25rem)" }}
         >
@@ -134,7 +136,7 @@ export function ProfileTile() {
         {/* Role descriptor — unified body scale, capped measure */}
         <motion.p
           variants={shouldReduceMotion ? undefined : itemVariants}
-          className="text-[14px] sm:text-[15px] text-zinc-500 leading-relaxed max-w-[42ch]"
+          className="text-[14px] sm:text-[15px] text-zinc-600 leading-[1.7] max-w-[42ch]"
         >
           Founding Engineer at{" "}
           <span className="text-zinc-800 font-medium">Quivly</span>
@@ -161,8 +163,10 @@ export function ProfileTile() {
         >
           <span
             className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full
-                       bg-black/[0.04] border border-black/[0.07]
-                       text-[12px] text-muted-foreground"
+                       bg-black/[0.03] border border-black/[0.06]
+                       text-[12px] text-zinc-500
+                       [@media(hover:hover)]:hover:border-black/[0.12] [@media(hover:hover)]:hover:text-zinc-700
+                       transition-colors duration-200 cursor-default select-none"
           >
             <IconMapPin size={11} className="text-zinc-400 flex-shrink-0" />
             India · SF hours
@@ -170,8 +174,10 @@ export function ProfileTile() {
           {(["Full-Stack", "Mobile", "Product"] as const).map((tag) => (
             <span
               key={tag}
-              className="px-3 py-1 rounded-full bg-black/[0.04] border border-black/[0.07]
-                         text-[12px] text-muted-foreground"
+              className="px-3 py-1 rounded-full bg-black/[0.03] border border-black/[0.06]
+                         text-[12px] text-zinc-500
+                         [@media(hover:hover)]:hover:border-black/[0.12] [@media(hover:hover)]:hover:text-zinc-700
+                         transition-colors duration-200 cursor-default select-none"
             >
               {tag}
             </span>

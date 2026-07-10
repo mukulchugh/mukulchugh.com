@@ -63,7 +63,7 @@ export default function BlogSection({ posts = [] }: { posts?: Post[] }) {
             variants={shouldReduce ? undefined : itemVariants}
             className={cn(
               syne.className,
-              "font-black text-zinc-950 leading-[1.08] tracking-[-0.03em]"
+              "font-black text-zinc-950 leading-[1.05] tracking-[-0.04em] text-balance"
             )}
             style={{ fontSize: "clamp(1.4rem, 3.4vw, 2.1rem)" }}
           >
@@ -76,7 +76,7 @@ export default function BlogSection({ posts = [] }: { posts?: Post[] }) {
           {/* Body — 14px muted, capped measure */}
           <motion.p
             variants={shouldReduce ? undefined : itemVariants}
-            className="text-[14px] text-zinc-500 leading-relaxed max-w-[44ch]"
+            className="text-[14px] text-zinc-600 leading-[1.7] max-w-[44ch] text-pretty"
           >
             I write about engineering, product, and the craft of building
             software that earns its keep.

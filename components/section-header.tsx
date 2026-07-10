@@ -62,7 +62,7 @@ export function SectionHeader({
       <h2
         className={cn(
           syne.className,
-          "font-black text-zinc-950 leading-[1.08] tracking-[-0.03em] break-words min-w-0"
+          "font-black text-zinc-950 leading-[1.05] tracking-[-0.04em] break-words min-w-0 text-balance"
         )}
         style={{ fontSize: "clamp(1.4rem, 3.4vw, 2.1rem)" }}
       >
@@ -79,7 +79,7 @@ export function SectionHeader({
 
       {/* Subtitle — unified body scale, capped measure */}
       {subtitle && (
-        <p className="text-muted-foreground text-[14px] leading-relaxed max-w-[60ch] mt-0.5">
+        <p className="text-zinc-500 text-[14px] leading-[1.7] max-w-[60ch] mt-0.5 text-pretty">
           {subtitle}
         </p>
       )}

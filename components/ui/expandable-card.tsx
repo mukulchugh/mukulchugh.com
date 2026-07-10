@@ -215,13 +215,17 @@ export default function ExpandableCard({
             tabIndex={0}
             aria-label={`${item.title} at ${item.company} — click to expand`}
             transition={springTransition}
-            className="group relative flex cursor-pointer items-center gap-4 rounded-xl
-                       border border-black/[0.07] bg-black/[0.02] p-4 sm:p-5
-                       backdrop-blur-sm transition-colors duration-300 w-full
-                       active:scale-[0.98]
-                       [@media(hover:hover)]:hover:bg-black/[0.05]
-                       [@media(hover:hover)]:hover:border-black/[0.12]
+            className="experience-card group relative flex cursor-pointer items-center gap-4 rounded-xl
+                       border border-black/[0.07] bg-white/70 p-4 sm:p-5
+                       backdrop-blur-sm w-full
+                       transition-all duration-[260ms] [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]
+                       active:scale-[0.985] active:duration-[100ms]
+                       [@media(hover:hover)]:hover:bg-white [@media(hover:hover)]:hover:border-black/[0.11]
+                       [@media(hover:hover)]:hover:-translate-y-[2px]
                        focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900"
+            style={{
+              boxShadow: "0 1px 2px rgba(28,25,23,0.03), 0 4px 12px -6px rgba(28,25,23,0.07)",
+            }}
             whileHover={{ scale: 1.005 }}
             whileTap={{ scale: 0.98 }}
           >

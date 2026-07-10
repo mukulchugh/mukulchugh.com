@@ -57,15 +57,22 @@ export function FeaturedProjectTile({
           background: `linear-gradient(145deg, ${cover.bgFrom} 0%, ${cover.bgTo} 100%)`,
         }}
       >
-        {/* Subtle grid texture */}
+        {/* Subtle grid texture — crisper lines at lower opacity */}
         <div
-          className="absolute inset-0 opacity-[0.035]"
+          className="absolute inset-0 opacity-[0.028]"
           style={{
             backgroundImage:
-              "linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px), " +
-              "linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px)",
-            backgroundSize: "40px 40px",
+              "linear-gradient(rgba(255,255,255,0.8) 1px, transparent 1px), " +
+              "linear-gradient(90deg, rgba(255,255,255,0.8) 1px, transparent 1px)",
+            backgroundSize: "36px 36px",
           }}
+          aria-hidden="true"
+        />
+
+        {/* Top inner highlight on cover panel */}
+        <div
+          className="absolute inset-x-0 top-0 h-px pointer-events-none"
+          style={{ background: "rgba(255,255,255,0.08)" }}
           aria-hidden="true"
         />
 
@@ -174,7 +181,7 @@ export function FeaturedProjectTile({
         </h3>
 
         {/* Description — body scale: 14px leading-relaxed muted */}
-        <p className="text-[14px] text-zinc-500 leading-[1.74] flex-1">
+        <p className="text-[14px] text-zinc-600 leading-[1.72] flex-1 text-pretty">
           {project.description}
         </p>
 

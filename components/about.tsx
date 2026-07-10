@@ -54,7 +54,7 @@ export default function About() {
           <motion.p
             key={index}
             variants={shouldReduce ? undefined : paraVariants}
-            className="text-[14px] sm:text-[15px] text-zinc-500 leading-[1.8] max-w-[64ch]"
+            className="text-[14px] sm:text-[15px] text-zinc-600 leading-[1.75] max-w-[64ch] text-pretty"
           >
             {paragraph}
           </motion.p>

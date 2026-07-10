@@ -66,12 +66,16 @@ export function SocialsTile() {
             rel="noopener noreferrer"
             aria-label={`${name} — ${handle}`}
             title={handle}
-            className="group relative flex min-h-[80px] sm:min-h-[88px] flex-col items-start justify-between
-                       gap-2 sm:gap-3 overflow-hidden rounded-2xl border border-black/[0.08] bg-white
-                       p-3 sm:p-3.5 shadow-sm transition-all duration-200
-                       active:scale-[0.97]
-                       [@media(hover:hover)]:hover:-translate-y-0.5
-                       [@media(hover:hover)]:hover:shadow-[0_10px_30px_-14px_rgba(24,24,27,0.18)]"
+            className="social-card group relative flex min-h-[80px] sm:min-h-[88px] flex-col items-start justify-between
+                       gap-2 sm:gap-3 overflow-hidden rounded-2xl bg-white
+                       p-3 sm:p-3.5
+                       transition-all duration-[260ms] [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]
+                       active:scale-[0.975] active:duration-[100ms]
+                       [@media(hover:hover)]:hover:-translate-y-[3px]"
+            style={{
+              border: "1px solid rgba(20,20,40,0.07)",
+              boxShadow: "0 1px 2px rgba(28,25,23,0.04), 0 4px 12px -6px rgba(28,25,23,0.08)",
+            }}
           >
             {/* brand-tint wash — always partially visible (not hover-only) */}
             <span

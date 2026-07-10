@@ -77,14 +77,14 @@ function BentoTile({
   dark?: boolean;
 }) {
   if (dark) {
-    // Inverted tile — zinc-950 bg, no glass treatment
+    // Inverted tile — near-black graphite bg, no glass treatment
     return (
       <div
         className={cn(
-          "rounded-3xl overflow-hidden",
+          "overflow-hidden",
           className
         )}
-        style={style}
+        style={{ borderRadius: "1.75rem", ...style }}
       >
         {children}
       </div>

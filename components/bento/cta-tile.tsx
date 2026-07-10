@@ -45,21 +45,35 @@ export function CTATile() {
       <section
         ref={ref}
         id="contact"
-        className="h-full min-h-[240px] scroll-mt-28 relative overflow-hidden rounded-3xl"
-        style={{ background: "rgb(9,9,11)" }}
+        className="h-full min-h-[240px] scroll-mt-28 relative overflow-hidden rounded-[1.75rem]"
+        style={{
+          background: "linear-gradient(180deg, #0e0e11 0%, #18181c 100%)",
+          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06), inset 0 -1px 0 rgba(0,0,0,0.30)",
+        }}
       >
-        {/* Subtle noise texture on dark bg */}
+        {/* Noise texture — slightly higher on dark bg for tactile feel */}
         <div
-          className="absolute inset-0 pointer-events-none grain-overlay opacity-[0.035]"
+          className="absolute inset-0 pointer-events-none grain-overlay opacity-[0.055]"
+          style={{ mixBlendMode: "soft-light" }}
           aria-hidden="true"
         />
 
-        {/* Faint radial glow — off-white, top-left — adds depth without color */}
+        {/* Soft radial bloom — top-left, warm white — machined graphite light */}
         <div
-          className="absolute -top-24 -left-24 w-[480px] h-[480px] rounded-full pointer-events-none"
+          className="absolute -top-32 -left-32 w-[560px] h-[560px] rounded-full pointer-events-none"
           style={{
             background:
-              "radial-gradient(circle, rgba(255,255,255,0.045) 0%, transparent 65%)",
+              "radial-gradient(circle at 30% 30%, rgba(255,255,255,0.055) 0%, transparent 62%)",
+          }}
+          aria-hidden="true"
+        />
+
+        {/* Second subtler bloom — bottom-right for dimensionality */}
+        <div
+          className="absolute bottom-0 right-0 w-[320px] h-[320px] rounded-full pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(circle at 70% 80%, rgba(255,255,255,0.018) 0%, transparent 60%)",
           }}
           aria-hidden="true"
         />
@@ -88,7 +102,7 @@ export function CTATile() {
               variants={shouldReduce ? undefined : itemVariants}
               className={cn(
                 syne.className,
-                "font-black tracking-[-0.035em] leading-[0.95] text-white"
+                "font-black tracking-[-0.05em] leading-[0.93] text-white text-balance"
               )}
               style={{ fontSize: "clamp(1.6rem, 4.2vw, 2.6rem)" }}
             >
