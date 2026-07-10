@@ -165,7 +165,7 @@ export function ProfileTile() {
                        text-[12px] text-muted-foreground"
           >
             <IconMapPin size={11} className="text-zinc-400 flex-shrink-0" />
-            {siteConfig.location}
+            India · SF hours
           </span>
           {(["Full-Stack", "Mobile", "Product"] as const).map((tag) => (
             <span
