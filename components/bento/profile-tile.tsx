@@ -177,46 +177,6 @@ export function ProfileTile() {
             </span>
           ))}
         </motion.div>
-
-        {/* Social buttons */}
-        <motion.div
-          variants={shouldReduceMotion ? undefined : itemVariants}
-          className="flex flex-wrap items-center gap-2"
-        >
-          {introSocialLinks.map((link) => {
-            const Icon = iconMap[link.icon];
-            return (
-              <a
-                key={link.name}
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`${link.name} profile`}
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full
-                           bg-black/[0.04] border border-black/[0.07]
-                           text-[12px] font-medium text-muted-foreground
-                           hover:text-foreground hover:bg-black/[0.07] hover:border-black/[0.14]
-                           transition-all duration-200"
-              >
-                {Icon ? <Icon size={13} /> : null}
-                {link.name}
-              </a>
-            );
-          })}
-          <a
-            href={`mailto:${siteConfig.email.display}`}
-            onClick={handleContactClick}
-            aria-label="Send email"
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full
-                       bg-zinc-950 border border-zinc-900
-                       text-[12px] font-semibold text-white
-                       hover:bg-zinc-800
-                       transition-all duration-200"
-          >
-            <IconMail size={13} />
-            Email
-          </a>
-        </motion.div>
       </motion.div>
     </section>
   );

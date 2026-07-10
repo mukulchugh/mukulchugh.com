@@ -2,8 +2,8 @@ import { getPostServer, getPostsServer } from "@/lib/blog";
 import { siteConfig } from "@/lib/data";
 import { syne } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
 import Link from "next/link";
+import { PostCover } from "@/components/blog/post-cover";
 import { IconArrowLeft, IconCalendar, IconClock } from "@tabler/icons-react";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -208,18 +208,7 @@ export default async function PostPage({ params }: PostPageProps) {
         </header>
 
         {/* Cover Image */}
-        {post.coverImage?.url && (
-          <div className="relative aspect-[16/9] rounded-xl overflow-hidden mb-10">
-            <Image
-              src={post.coverImage.url}
-              alt={post.title}
-              fill
-              className="object-cover"
-              priority
-              sizes="(max-width: 768px) 100vw, 896px"
-            />
-          </div>
-        )}
+        <PostCover post={post} priority hero className="mb-10" />
 
         {/* Ad Unit - Above content */}
         <AdUnit adFormat="horizontal" className="mb-10" />

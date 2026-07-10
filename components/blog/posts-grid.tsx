@@ -4,10 +4,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { syne } from "@/lib/fonts";
-import Image from "next/image";
 import Link from "next/link";
 import { motion } from "motion/react";
 import type { Post } from "@/lib/blog";
+import { PostCover } from "@/components/blog/post-cover";
 
 interface PostsGridProps {
   posts: Post[];
@@ -49,20 +49,7 @@ function PostCard({ post, index }: { post: Post; index: number }) {
         className="group flex flex-col gap-4 hover:opacity-75 cursor-pointer transition-opacity"
       >
         {/* Cover Image */}
-        {post.coverImage?.url ? (
-          <div className="relative bg-muted rounded-xl aspect-video overflow-hidden">
-            <Image
-              src={post.coverImage.url}
-              alt={post.title}
-              fill
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
-              sizes="(max-width: 768px) 100vw, 896px"
-              priority={index === 0}
-            />
-          </div>
-        ) : (
-          <div className="bg-muted rounded-xl aspect-video" />
-        )}
+        <PostCover post={post} priority={index === 0} />
 
         {/* Meta Row */}
         <div className="flex flex-wrap items-center gap-4">

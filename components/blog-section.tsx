@@ -1,12 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { IconArrowRight, IconClock, IconTag } from "@tabler/icons-react";
+import { IconArrowRight, IconClock } from "@tabler/icons-react";
 import { motion, useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { syne } from "@/lib/fonts";
 import { useSectionInView } from "@/lib/hooks";
 import type { Post } from "@/lib/blog";
+import { PostCover } from "@/components/blog/post-cover";
 
 // Format date as "Jul 5, 2026"
 function fmtDate(iso: string) {
@@ -22,8 +23,6 @@ interface FeaturedPostCardProps {
 }
 
 function FeaturedPostCard({ post }: FeaturedPostCardProps) {
-  const initial = post.title.charAt(0).toUpperCase();
-
   return (
     <Link
       href={`/blog/${post.slug}`}
@@ -32,39 +31,8 @@ function FeaturedPostCard({ post }: FeaturedPostCardProps) {
                  transition-all duration-300 hover:-translate-y-0.5"
       aria-label={`Read: ${post.title}`}
     >
-      {/* Cover region — editorial dark with oversized initial */}
-      <div
-        className="relative overflow-hidden"
-        style={{
-          minHeight: "120px",
-          background:
-            "linear-gradient(145deg, rgb(12,12,14) 0%, rgb(28,28,32) 100%)",
-        }}
-      >
-        {/* Large initial letter as texture */}
-        <div className="absolute inset-0 flex items-center justify-start pl-5 select-none pointer-events-none">
-          <span
-            className={cn(syne.className, "font-black leading-none tracking-tighter")}
-            style={{ fontSize: "100px", color: "rgba(255,255,255,0.055)" }}
-          >
-            {initial}
-          </span>
-        </div>
-        {/* Tag chip (top-right) */}
-        {post.tags?.[0] && (
-          <span
-            className="absolute top-3 right-3 inline-flex items-center gap-1
-                       px-2 py-0.5 rounded-full
-                       bg-white/[0.1] border border-white/[0.15] backdrop-blur-sm
-                       text-[10px] font-mono uppercase tracking-[0.12em] text-white/70"
-          >
-            <IconTag className="h-2.5 w-2.5" />
-            {post.tags[0].name}
-          </span>
-        )}
-        {/* Bottom fade */}
-        <div className="absolute bottom-0 inset-x-0 h-8 bg-gradient-to-t from-black/15 to-transparent" />
-      </div>
+      {/* Cover region — shared PostCover */}
+      <PostCover post={post} className="rounded-none" />
 
       {/* Post meta & content */}
       <div className="p-4 flex flex-col gap-2">

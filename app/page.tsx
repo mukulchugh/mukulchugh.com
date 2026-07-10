@@ -10,6 +10,7 @@ import {
   FeaturedProjectTile,
   SkillsMarquee,
   BrandBar,
+  SocialsTile,
 } from "@/components/bento";
 
 // ─── Client tiles (need browser hooks) ───────────────────────────────────────
@@ -212,6 +213,14 @@ export default function Home() {
             className="col-span-1 sm:col-span-2 lg:col-span-5"
           >
             <Experience />
+          </BentoTile>
+
+          {/* ── 10b. Socials — a section of its own, brand-colored ───────── */}
+          <BentoTile
+            hover={false}
+            className="col-span-1 sm:col-span-2 lg:col-span-12"
+          >
+            <SocialsTile />
           </BentoTile>
 
           {/* ── 11. CTA tile — DARK INK ANCHOR (Move 5) ─────────────────── */}

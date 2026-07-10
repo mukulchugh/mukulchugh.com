@@ -5,3 +5,4 @@ export { FeaturedProjectTile } from "./featured-project-tile";
 export { LocationTile } from "./location-tile";
 export { SkillsMarquee } from "./skills-marquee";
 export { BrandBar } from "./brand-bar";
+export { SocialsTile } from "./socials-tile";
