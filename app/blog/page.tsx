@@ -12,13 +12,13 @@ export const revalidate = 3600; // Revalidate every hour
 
 export const metadata: Metadata = {
   title: "Blog",
-  description: "Thoughts on software engineering, web development, and building products that matter.",
+  description: "Notes on engineering, product, and the craft of building software that earns its keep.",
   alternates: {
     canonical: "/blog",
   },
   openGraph: {
     title: "Blog | Mukul Chugh",
-    description: "Thoughts on software engineering, web development, and building products that matter.",
+    description: "Notes on engineering, product, and the craft of building software that earns its keep.",
     url: `${siteConfig.siteUrl}/blog`,
     type: "website",
   },
@@ -55,8 +55,7 @@ export default async function BlogPage() {
             </h1>
             {/* Body — 15px muted, capped measure */}
             <p className="text-[14px] sm:text-[15px] text-zinc-500 leading-relaxed max-w-[52ch]">
-              Thoughts on software engineering, web development, and building
-              products that matter.
+              Notes on engineering, product, and the craft of building software that earns its keep.
             </p>
           </div>
         </div>
