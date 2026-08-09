@@ -1,5 +1,6 @@
 "use client";
 
+import { IconChevronDown } from "@tabler/icons-react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import type { PostHeading } from "@/lib/blog";
@@ -182,25 +183,14 @@ function MobileTOC({ headings, activeId, isOpen, setIsOpen }: MobileTOCProps) {
         variant="ghost"
       >
         <span className="ui-label text-muted-foreground">On this page</span>
-        <svg
+        <IconChevronDown
           aria-hidden="true"
           className={cn(
-            "text-muted-foreground transition-transform duration-200",
+            "h-3 w-3 text-muted-foreground transition-transform duration-200",
             isOpen && "rotate-180"
           )}
-          height="12"
-          viewBox="0 0 12 12"
-          width="12"
-        >
-          <path
-            d="M2 4l4 4 4-4"
-            fill="none"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="1.5"
-          />
-        </svg>
+          stroke={1.5}
+        />
       </Button>
 
       {isOpen && (

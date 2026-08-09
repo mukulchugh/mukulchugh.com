@@ -52,7 +52,7 @@ export function CalBookingModal({ isOpen, onClose }: CalBookingModalProps) {
   return (
     <Dialog onOpenChange={(open) => !open && onClose()} open={isOpen}>
       <DialogContent
-        className="max-h-[calc(100dvh-2rem)] max-w-[720px] gap-0 overflow-hidden rounded-3xl p-0 shadow-[0_32px_80px_-12px_rgba(0,0,0,0.22),0_8px_24px_-4px_rgba(0,0,0,0.10)] sm:max-h-[90vh]"
+        className="modal-shadow max-h-[calc(100dvh-2rem)] max-w-[720px] gap-0 overflow-hidden rounded-2xl p-0 sm:max-h-[90vh]"
         showCloseButton={false}
       >
         <DialogHeader className="flex-row items-center justify-between border-b border-border px-6 py-5">

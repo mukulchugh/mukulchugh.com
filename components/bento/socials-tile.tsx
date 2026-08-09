@@ -13,6 +13,7 @@ import type React from "react";
 import { useCallback, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/lib/data";
+import { microSpring } from "@/lib/motion";
 
 /**
  * SocialsTile — a section of its own. The one place the monochrome ink system
@@ -143,7 +144,7 @@ function EmailSocialCard({
                 className="flex items-center justify-center"
                 initial={{ opacity: 0, scale: 0.65 }}
                 key={copied ? "check" : "mail"}
-                transition={{ damping: 24, stiffness: 340, type: "spring" }}
+                transition={microSpring}
               >
                 {copied ? (
                   <IconCheck className="h-[18px] w-[18px]" />

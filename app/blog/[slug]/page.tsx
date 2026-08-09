@@ -16,6 +16,7 @@ import {
   getRelatedPosts,
 } from "@/lib/blog";
 import { siteConfig } from "@/lib/data";
+import { PAGE_TITLE } from "@/lib/typography";
 import { cn } from "@/lib/utils";
 
 export const revalidate = 3600;
@@ -197,7 +198,7 @@ export default async function PostPage({ params }: PostPageProps) {
                 "font-syne",
                 "font-black text-foreground mb-6 leading-[1.08] tracking-tight break-words"
               )}
-              style={{ fontSize: "clamp(1.6rem, 5vw, 3rem)" }}
+              style={{ fontSize: PAGE_TITLE }}
             >
               {post.title}
             </h1>

@@ -26,6 +26,20 @@ export const softSpring: Transition = {
   type: "spring",
 };
 
+/**
+ * Snappy micro-spring for small in-place state swaps (icon/label toggles,
+ * e.g. a mail icon flipping to a checkmark on copy). Deliberately stiffer
+ * than premiumSpring/softSpring — those are for section/tile entrances,
+ * this is for an instant "acknowledge the click" swap. Previously three
+ * near-identical ad-hoc versions of this same micro-swap spring had drifted
+ * to slightly different numbers across cta-tile.tsx and socials-tile.tsx.
+ */
+export const microSpring: Transition = {
+  damping: 24,
+  stiffness: 320,
+  type: "spring",
+};
+
 export const viewportOnce = {
   amount: 0.18,
   margin: "0px 0px -8% 0px",

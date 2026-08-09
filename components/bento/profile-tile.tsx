@@ -13,14 +13,13 @@ import type React from "react";
 import { useRef } from "react";
 import { siteConfig } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
+import { premiumSpring } from "@/lib/motion";
+import { HERO_TITLE } from "@/lib/typography";
 import { cn } from "@/lib/utils";
 
-// Spring config for the name clip-reveal
-const nameLineSpring = {
-  damping: 20,
-  stiffness: 120,
-  type: "spring" as const,
-};
+// Spring config for the name clip-reveal — converged onto the shared
+// premiumSpring token (was a near-duplicate local reimplementation).
+const nameLineSpring = premiumSpring;
 
 // Quick spring for avatar/pill/chips
 const quickSpring = {
@@ -60,12 +59,14 @@ const nameLineVariants = {
   },
 };
 
-// Role label + descriptor: blur-rise after name
+// Role label + descriptor: blur-rise after name — this ad-hoc transition was
+// an exact duplicate of premiumSpring's numbers, so it's converged onto the
+// shared token directly.
 const blurRiseVariants = {
   hidden: { opacity: 0, y: 10 },
   visible: {
     opacity: 1,
-    transition: { damping: 22, stiffness: 120, type: "spring" as const },
+    transition: premiumSpring,
     y: 0,
   },
 };
@@ -164,7 +165,7 @@ export function ProfileTile() {
             "font-syne",
             "font-black tracking-[-0.05em] leading-[0.90] text-foreground"
           )}
-          style={{ fontSize: "clamp(2rem, 8vw, 4.25rem)" }}
+          style={{ fontSize: HERO_TITLE }}
         >
           {/* Line 1: "Mukul" */}
           <div className="overflow-hidden">

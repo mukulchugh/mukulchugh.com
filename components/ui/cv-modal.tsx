@@ -46,7 +46,7 @@ export function CVModal({ isOpen, onClose, cvUrl, name }: CVModalProps) {
   return (
     <Dialog onOpenChange={(open) => !open && onClose()} open={isOpen}>
       <DialogContent
-        className="max-h-[calc(100dvh-2rem)] max-w-4xl gap-0 overflow-hidden rounded-2xl p-0 shadow-[0_8px_48px_rgba(20,20,40,0.14)]"
+        className="modal-shadow max-h-[calc(100dvh-2rem)] max-w-4xl gap-0 overflow-hidden rounded-2xl p-0"
         showCloseButton={false}
       >
         <header className="flex items-center justify-between border-b border-border p-4 sm:p-6">

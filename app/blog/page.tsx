@@ -4,6 +4,7 @@ import Link from "next/link";
 import { PostsGrid } from "@/components/blog/posts-grid";
 import { getAllPosts } from "@/lib/blog";
 import { siteConfig } from "@/lib/data";
+import { PAGE_TITLE } from "@/lib/typography";
 import { cn } from "@/lib/utils";
 
 export const revalidate = 3600; // Revalidate every hour
@@ -49,7 +50,7 @@ export default async function BlogPage() {
                 "font-syne",
                 "tracking-tight font-black leading-[1.08]"
               )}
-              style={{ fontSize: "clamp(1.6rem, 5vw, 3rem)" }}
+              style={{ fontSize: PAGE_TITLE }}
             >
               Latest articles
             </h1>

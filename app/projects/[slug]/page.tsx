@@ -8,7 +8,6 @@ import {
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CoverCanvas } from "@/components/blog/cover-canvas";
 import { CanvasGrain } from "@/components/canvas-grain";
 import { buttonVariants } from "@/components/ui/button";
 import { accentColorForTags, topicFamilyFor } from "@/lib/blog-topic";
@@ -19,6 +18,7 @@ import {
   getVisibleProjects,
   slugifyProjectTitle,
 } from "@/lib/projects";
+import { PAGE_TITLE } from "@/lib/typography";
 import { cn } from "@/lib/utils";
 
 interface ProjectPageProps {
@@ -36,6 +36,15 @@ const PATTERN_LABELS: Partial<Record<string, string>> = {
 
 function withAlpha(rgb: string, alpha: number): string {
   return rgb.replace("rgb(", "rgba(").replace(")", `, ${alpha})`);
+}
+
+// The hero graphic is the project's own name, not a generative pattern —
+// per the owner's direction, project thumbnails/covers should be
+// text-forward. Using just the first word keeps the display type legible
+// at oversized sizes even for longer, multi-word titles.
+function heroWordFor(title: string): string {
+  const [first] = title.trim().split(/\s+/);
+  return first ?? title;
 }
 
 // Splits a description into its lead sentence (pull-quote treatment) and the
@@ -134,6 +143,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   const eyebrow =
     (family && PATTERN_LABELS[family.pattern]) || "Independent project";
   const { lead, rest } = splitLeadSentence(project.description);
+  const heroWord = heroWordFor(project.title);
   const isOpenSource = Boolean(project.github);
   const hasDemo = Boolean(project.demo);
 
@@ -170,7 +180,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             "font-syne",
             "mb-5 break-words font-black leading-[1.08] tracking-tight text-foreground"
           )}
-          style={{ fontSize: "clamp(1.6rem, 5vw, 3rem)" }}
+          style={{ fontSize: PAGE_TITLE }}
         >
           {project.title}
         </h1>
@@ -223,7 +233,33 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             style={{ background: accent }}
           />
           <CanvasGrain />
-          <CoverCanvas tags={project.tags} title={project.title} />
+
+          {/* Text-forward hero mark — the project's own name is the visual,
+              in place of the blog's generative constellation pattern (per
+              the owner's direction: projects use type, not pattern-art).
+              Oversized font-syne wordmark, gradient-tinted with the topic
+              accent, clipped by the banner's overflow-hidden so long titles
+              bleed off the trailing edge instead of shrinking to fit. */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 flex items-center overflow-hidden pl-5 pr-2 sm:pl-8"
+          >
+            <span
+              className={cn(
+                "font-syne",
+                "block whitespace-nowrap font-black leading-[0.85] tracking-[-0.045em]"
+              )}
+              style={{
+                backgroundClip: "text",
+                backgroundImage: `linear-gradient(115deg, ${accent} 0%, ${accentSoft} 60%, rgba(255,255,255,0.12) 100%)`,
+                color: "transparent",
+                fontSize: "clamp(3.25rem, 13vw, 8.5rem)",
+                WebkitBackgroundClip: "text",
+              }}
+            >
+              {heroWord}
+            </span>
+          </div>
 
           {/* Bottom fade for readability — matches PostCover's hero treatment */}
           <div

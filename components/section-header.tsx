@@ -3,6 +3,7 @@
 import type { Icon } from "@tabler/icons-react";
 import { motion, useReducedMotion } from "motion/react";
 import { premiumSpring, softSpring, viewportOnce } from "@/lib/motion";
+import { SECTION_TITLE } from "@/lib/typography";
 import { cn } from "@/lib/utils";
 
 interface SectionHeaderProps {
@@ -57,7 +58,7 @@ export function SectionHeader({
           className={cn(
             "font-syne font-black leading-[1.05] tracking-[-0.04em] text-balance text-foreground break-words min-w-0"
           )}
-          style={{ fontSize: "clamp(1.4rem, 3.4vw, 2.1rem)" }}
+          style={{ fontSize: SECTION_TITLE }}
         >
           {title}
           {highlight && (
@@ -116,7 +117,7 @@ export function SectionHeader({
           "font-syne font-black leading-[1.05] tracking-[-0.04em] text-balance text-foreground break-words min-w-0"
         )}
         initial={{ opacity: 0, y: 14 }}
-        style={{ fontSize: "clamp(1.4rem, 3.4vw, 2.1rem)" }}
+        style={{ fontSize: SECTION_TITLE }}
         transition={{ ...premiumSpring, delay: 0.12 }}
         viewport={viewportOnce}
         whileInView={{ opacity: 1, y: 0 }}

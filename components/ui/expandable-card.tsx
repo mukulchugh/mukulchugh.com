@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { accentColorFor } from "@/lib/blog-topic";
+import { premiumSpring } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
 export interface ExperienceCardItem {
@@ -23,12 +24,12 @@ export interface ExpandableCardProps {
   items: ExperienceCardItem[];
 }
 
-const springTransition = {
-  damping: 30,
-  mass: 1,
-  stiffness: 300,
-  type: "spring" as const,
-};
+// Converged onto the shared premiumSpring token — this local spring was doing
+// the same "tile morphs into a floating panel via layoutId" job as
+// cta-tile.tsx's own layoutId morph (which already uses premiumSpring), just
+// tuned to different (much snappier) numbers. Using the same token here
+// makes the two card-to-modal morphs in the app feel like one system.
+const springTransition = premiumSpring;
 
 export default function ExpandableCard({
   items,
@@ -66,7 +67,7 @@ export default function ExpandableCard({
               <motion.div
                 animate={{ opacity: 1 }}
                 aria-hidden="true"
-                className="fixed inset-3 z-50 rounded-[1.75rem] bg-black/55 backdrop-blur-sm sm:inset-4"
+                className="fixed inset-3 z-50 rounded-[1.25rem] bg-black/55 backdrop-blur-sm sm:inset-4"
                 exit={{ opacity: 0 }}
                 initial={{ opacity: 0 }}
                 key="experience-backdrop"
@@ -76,7 +77,7 @@ export default function ExpandableCard({
 
               <div className="pointer-events-none fixed inset-0 z-50 grid place-items-center overflow-y-auto p-4 sm:p-6">
                 <motion.article
-                  className="pointer-events-auto relative my-4 max-h-[calc(100dvh-2rem)] w-full max-w-2xl overflow-y-auto rounded-2xl border border-border bg-card shadow-[0_24px_80px_-24px_rgba(24,24,27,0.32)]"
+                  className="modal-shadow pointer-events-auto relative my-4 max-h-[calc(100dvh-2rem)] w-full max-w-2xl overflow-y-auto rounded-2xl border border-border bg-card"
                   id={`experience-${current.id}`}
                   key={current.id}
                   layoutId={`experience-card-${current.id}`}

@@ -4,7 +4,6 @@ import {
   IconBrandGithub,
   IconChevronLeft,
   IconChevronRight,
-  IconCode,
   IconExternalLink,
   IconLayoutKanban,
 } from "@tabler/icons-react";
@@ -14,6 +13,7 @@ import { useState } from "react";
 import { accentColorForTags } from "@/lib/blog-topic";
 import { hiddenProjectTitles, projectsData } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
+import { softSpring } from "@/lib/motion";
 import { slugifyProjectTitle } from "@/lib/projects";
 import { SectionHeader } from "./section-header";
 import { Button } from "./ui/button";
@@ -24,6 +24,23 @@ const restProjects = projectsData
   .filter(({ title }) => !hiddenProjectTitles.has(title));
 
 const PAGE_SIZE = 4;
+
+// Small identity mark per card — the project's own initials rather than a
+// generic code icon, keeping the text-forward direction without a full
+// hero-scale treatment (these are compact list cards, not banners).
+function initialsFor(title: string): string {
+  const words = title
+    .trim()
+    .split(/\s+/)
+    .filter((word) => /[a-zA-Z0-9]/.test(word.charAt(0)));
+  if (words.length === 0) {
+    return "";
+  }
+  if (words.length === 1) {
+    return words[0].charAt(0).toUpperCase();
+  }
+  return (words[0].charAt(0) + words[1].charAt(0)).toUpperCase();
+}
 
 function ProjectCard({
   title,
@@ -73,10 +90,15 @@ function ProjectCard({
         <div className="relative flex flex-col gap-3">
           <div className="flex items-start justify-between">
             <div
-              className="w-fit rounded-lg border border-border bg-muted p-2 text-muted-foreground"
+              className="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-muted"
               style={{ boxShadow: `0 0 24px -8px ${accent}` }}
             >
-              <IconCode className="h-4 w-4" />
+              <span
+                className="font-syne text-[13px] font-bold leading-none tracking-tight"
+                style={{ color: accent }}
+              >
+                {initialsFor(title)}
+              </span>
             </div>
             <div className="flex items-center gap-0.5">
               {github && (
@@ -174,7 +196,7 @@ export default function Projects() {
         className="grid grid-cols-1 gap-3 sm:grid-cols-2"
         initial={shouldReduce ? false : { opacity: 0, y: 12 }}
         key={page}
-        transition={{ damping: 24, stiffness: 160, type: "spring" }}
+        transition={softSpring}
       >
         {pageItems.map((project, index) => (
           <ProjectCard

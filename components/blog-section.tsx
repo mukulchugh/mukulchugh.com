@@ -13,9 +13,10 @@ import { Button } from "@/components/ui/button";
 import type { Post } from "@/lib/blog";
 import { useSectionInView } from "@/lib/hooks";
 import { staggerContainer, staggerItem, viewportOnce } from "@/lib/motion";
+import { SECTION_TITLE } from "@/lib/typography";
 import { cn } from "@/lib/utils";
 
-const PAGE_SIZE = 3;
+const PAGE_SIZE = 4;
 
 export default function BlogSection({ posts = [] }: { posts?: Post[] }) {
   const { ref } = useSectionInView("Blog", 0.2);
@@ -38,7 +39,7 @@ export default function BlogSection({ posts = [] }: { posts?: Post[] }) {
             className={cn(
               "font-syne font-black leading-[1.05] tracking-[-0.04em] text-balance text-foreground"
             )}
-            style={{ fontSize: "clamp(1.4rem, 3.4vw, 2.1rem)" }}
+            style={{ fontSize: SECTION_TITLE }}
           >
             Writing &{" "}
             <span className="font-light text-muted-foreground">notes</span>

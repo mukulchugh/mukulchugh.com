@@ -25,7 +25,8 @@ import { MagneticButton } from "@/components/ui/magnetic-button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { siteConfig } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
-import { premiumSpring, softSpring } from "@/lib/motion";
+import { microSpring, premiumSpring, softSpring } from "@/lib/motion";
+import { TILE_TITLE } from "@/lib/typography";
 import { cn } from "@/lib/utils";
 
 const premiumEase = [0.16, 1, 0.3, 1] as const;
@@ -77,7 +78,10 @@ const itemVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
-    transition: { damping: 20, stiffness: 100, type: "spring" as const },
+    // Converged onto the shared premiumSpring token — this was a near-duplicate
+    // ad-hoc entrance spring doing the same job as the rest of the app's
+    // section/tile reveals.
+    transition: premiumSpring,
     y: 0,
   },
 };
@@ -128,7 +132,7 @@ function CopyEmailButton() {
         className="flex items-center"
         initial={{ opacity: 0, scale: 0.7 }}
         key={copied ? "check" : "mail"}
-        transition={{ damping: 24, stiffness: 320, type: "spring" }}
+        transition={microSpring}
       >
         {copied ? (
           <IconCheck className="text-white/70" size={11} />
@@ -141,7 +145,7 @@ function CopyEmailButton() {
         animate={{ opacity: 1, x: 0 }}
         initial={{ opacity: 0, x: -4 }}
         key={copied ? "copied-label" : "email-label"}
-        transition={{ damping: 22, stiffness: 280, type: "spring" }}
+        transition={microSpring}
       >
         {copied ? "Copied" : siteConfig.email.display}
       </motion.span>
@@ -366,10 +370,10 @@ export function CTATile() {
         aria-label={isBooking ? "Book a call" : undefined}
         aria-modal={isBooking ? true : undefined}
         className={cn(
-          "scroll-mt-28 overflow-hidden rounded-[1.75rem]",
+          "scroll-mt-28 overflow-hidden rounded-[1.25rem]",
           isBooking
             ? "fixed z-50 inset-4 sm:inset-8 md:inset-16 lg:inset-24 xl:inset-32"
-            : "relative h-full"
+            : "relative h-full min-h-[420px] sm:min-h-[480px] lg:min-h-[560px]"
         )}
         id="contact"
         layoutId={layoutId}
@@ -493,7 +497,7 @@ export function CTATile() {
                     "font-syne",
                     "font-black tracking-[-0.05em] leading-[0.93] text-white text-balance"
                   )}
-                  style={{ fontSize: "clamp(1.6rem, 4.2vw, 2.6rem)" }}
+                  style={{ fontSize: TILE_TITLE }}
                   variants={shouldReduce ? undefined : itemVariants}
                 >
                   Let&apos;s build

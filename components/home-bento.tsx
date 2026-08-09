@@ -4,7 +4,6 @@ import dynamic from "next/dynamic";
 import {
   FeaturedProjectTile,
   LocationTile,
-  SkillsMarquee,
   SocialsTile,
 } from "@/components/bento";
 import { Reveal } from "@/components/ui/reveal";
@@ -20,14 +19,14 @@ const ProfileTile = dynamic(
 
 const CTATile = dynamic(
   () => import("@/components/bento/cta-tile").then((m) => m.CTATile),
-  { loading: () => <div className="min-h-[240px]" /> }
+  {
+    loading: () => (
+      <div className="min-h-[420px] sm:min-h-[480px] lg:min-h-[560px]" />
+    ),
+  }
 );
 
 const About = dynamic(() => import("@/components/about"), {
-  loading: () => <SectionSkeleton />,
-});
-
-const Capabilities = dynamic(() => import("@/components/capabilities"), {
   loading: () => <SectionSkeleton />,
 });
 
@@ -71,7 +70,7 @@ function BentoTile({
     return (
       <div
         className={cn("overflow-hidden", className)}
-        style={{ borderRadius: "1.75rem", ...style }}
+        style={{ borderRadius: "1.25rem", ...style }}
       >
         {children}
       </div>
@@ -140,21 +139,9 @@ export function HomeBento({ posts }: { posts: Post[] }) {
         </BentoTile>
       </Entry>
 
-      <Entry className="col-span-1 sm:col-span-2 lg:col-span-12" delay={0.06}>
-        <BentoTile className="h-full min-w-0" hover={false}>
-          <SkillsMarquee />
-        </BentoTile>
-      </Entry>
-
       <Entry className="col-span-1 sm:col-span-2 lg:col-span-7 lg:row-span-2">
         <BentoTile className="h-full min-w-0" hover={false}>
           <About />
-        </BentoTile>
-      </Entry>
-
-      <Entry className="col-span-1 sm:col-span-2 lg:col-span-12">
-        <BentoTile className="h-full min-w-0" hover={false}>
-          <Capabilities />
         </BentoTile>
       </Entry>
 

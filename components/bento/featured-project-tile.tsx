@@ -14,6 +14,7 @@ import {
 } from "motion/react";
 import { useRef } from "react";
 import type { projectsData } from "@/lib/data";
+import { TILE_DISPLAY } from "@/lib/typography";
 import { cn } from "@/lib/utils";
 
 type ProjectData = (typeof projectsData)[number];
@@ -127,7 +128,7 @@ export function FeaturedProjectTile({
               )}
               style={{
                 color: cover.titleColor,
-                fontSize: "clamp(20px, 4.5vw, 36px)",
+                fontSize: TILE_DISPLAY,
               }}
             >
               {titleFirst}
@@ -140,7 +141,7 @@ export function FeaturedProjectTile({
                 )}
                 style={{
                   color: cover.subtitleColor,
-                  fontSize: "clamp(18px, 5vw, 40px)",
+                  fontSize: TILE_DISPLAY,
                   overflowWrap: "break-word",
                   wordBreak: "break-word",
                 }}

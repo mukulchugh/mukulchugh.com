@@ -1,5 +1,6 @@
 "use client";
 
+import { IconArrowUpRight } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 
@@ -73,25 +74,17 @@ export function LocationTag({
       </div>
 
       {/* Arrow indicator */}
-      <svg
+      <IconArrowUpRight
+        aria-hidden="true"
         className="h-3 w-3 text-foreground/50 transition-all duration-300"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={2}
+        stroke={2}
         style={{
           opacity: isHovered ? 1 : 0.5,
           transform: isHovered
             ? "translateX(2px) rotate(-45deg)"
             : "translateX(0) rotate(0)",
         }}
-        viewBox="0 0 24 24"
-      >
-        <path
-          d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
+      />
     </Button>
   );
 }
