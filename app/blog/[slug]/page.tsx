@@ -143,7 +143,7 @@ export default async function PostPage({ params }: PostPageProps) {
   const hasTableOfContents = headings.length >= 2;
 
   return (
-    <main className="w-full py-12 sm:py-20 lg:py-28 overflow-x-hidden">
+    <main className="dock-safe-bottom w-full pt-12 sm:pt-20 lg:pt-28 overflow-x-hidden">
       {/* Reading progress bar */}
       <ReadingProgress />
 

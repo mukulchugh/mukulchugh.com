@@ -1,12 +1,19 @@
 import {
   IconApple,
   IconCompass,
+  IconGitBranch,
   IconRobot,
-  IconTerminal2,
+  IconServer2,
 } from "@tabler/icons-react";
 import type { ComponentType } from "react";
 
-export type PatternKind = "circuit" | "dots" | "graph" | "grid" | "path";
+export type PatternKind =
+  | "circuit"
+  | "dots"
+  | "graph"
+  | "grid"
+  | "path"
+  | "tree";
 
 interface TopicFamily {
   icon: ComponentType<{
@@ -35,11 +42,22 @@ export const TOPIC_FAMILIES: TopicFamily[] = [
     tint: "rgba(96,180,255,0.14)",
   },
   {
-    icon: IconTerminal2,
+    // Infrastructure/Performance/DevOps — server + database flavored.
+    icon: IconServer2,
     match:
-      /engineering|infrastructure|open source|developer tools|architecture/i,
+      /infrastructure|performance|devops|postgres|database|scaling|latency|deployment/i,
     pattern: "circuit",
     tint: "rgba(110,230,180,0.13)",
+  },
+  {
+    // Developer Tools/Architecture/Git — tooling flavored, kept visually
+    // distinct from the infra family above (different icon + pattern kind)
+    // even though both used to share one regex.
+    icon: IconGitBranch,
+    match:
+      /developer tools|architecture|\bgit\b|tooling|version control|open source/i,
+    pattern: "tree",
+    tint: "rgba(94,234,212,0.14)",
   },
   {
     icon: IconCompass,
@@ -63,11 +81,13 @@ export function topicFamilyFor(tagNames: readonly string[]) {
 }
 
 // A small curated accent palette — used wherever a card needs a unique-but-tasteful
-// color touch (project cards, experience avatars) beyond the four topic tints above.
+// color touch (project cards, experience avatars) beyond the topic tints above.
+// Order mirrors TOPIC_FAMILIES so accentColorForTags below stays index-aligned.
 const ACCENT_COLORS = [
   "rgb(147,130,255)", // violet — agents/AI
   "rgb(96,180,255)", // blue — mobile/platform
-  "rgb(110,230,180)", // green — engineering/infra
+  "rgb(110,230,180)", // green — infrastructure/performance
+  "rgb(94,234,212)", // teal — developer tools/architecture/git
   "rgb(255,180,110)", // amber — career/product
   "rgb(255,140,170)", // rose
   "rgb(140,220,255)", // cyan

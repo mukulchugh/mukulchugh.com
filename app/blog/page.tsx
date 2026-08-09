@@ -28,7 +28,7 @@ export default async function BlogPage() {
   const posts = getAllPosts();
 
   return (
-    <main className="w-full py-12 sm:py-20">
+    <main className="dock-safe-bottom w-full pt-12 sm:pt-20">
       <div className="container mx-auto flex max-w-6xl flex-col gap-10 px-4 sm:gap-14 sm:px-6">
         {/* Back to Home — touch-target via inline-flex + padding */}
         <Link

@@ -2,7 +2,10 @@
 
 import { IconClock, IconTag } from "@tabler/icons-react";
 import Image from "next/image";
-import { CoverCanvas } from "@/components/blog/cover-canvas";
+import {
+  CoverCanvas,
+  StaticCoverPattern,
+} from "@/components/blog/cover-canvas";
 import type { Post } from "@/lib/blog";
 import { hashTitle, topicFamilyFor } from "@/lib/blog-topic";
 import { cn } from "@/lib/utils";
@@ -14,20 +17,6 @@ const GRADIENTS = [
   "linear-gradient(135deg, rgb(8,8,10) 0%, rgb(30,29,31) 100%)",
   "linear-gradient(160deg, rgb(14,13,14) 0%, rgb(34,32,32) 100%)",
   "linear-gradient(140deg, rgb(10,11,12) 0%, rgb(26,28,32) 100%)",
-] as const;
-
-// Dot/grid pattern overlays as SVG data URIs — subtle, low-opacity texture.
-const PATTERNS = [
-  // dot grid
-  `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Ccircle cx='2' cy='2' r='1' fill='%23ffffff' fill-opacity='0.04'/%3E%3C/svg%3E")`,
-  // fine grid
-  `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cpath d='M24 0H0v24' fill='none' stroke='%23ffffff' stroke-opacity='0.035' stroke-width='0.5'/%3E%3C/svg%3E")`,
-  // diagonal hatch
-  `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Cline x1='0' y1='20' x2='20' y2='0' stroke='%23ffffff' stroke-opacity='0.035' stroke-width='0.5'/%3E%3C/svg%3E")`,
-  // larger dot
-  `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Ccircle cx='2' cy='2' r='1.2' fill='%23ffffff' fill-opacity='0.05'/%3E%3C/svg%3E")`,
-  // crosshatch
-  `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Cline x1='0' y1='0' x2='16' y2='16' stroke='%23ffffff' stroke-opacity='0.03' stroke-width='0.5'/%3E%3Cline x1='16' y1='0' x2='0' y2='16' stroke='%23ffffff' stroke-opacity='0.03' stroke-width='0.5'/%3E%3C/svg%3E")`,
 ] as const;
 
 interface PostCoverProps {
@@ -81,9 +70,11 @@ export function PostCover({
   // Designed editorial cover — deterministic per post.
   const h = hashTitle(post.title);
   const gradient = GRADIENTS[h % GRADIENTS.length];
-  const pattern = PATTERNS[h % PATTERNS.length];
   // Oversized initial font-size: vary between 60–100px for visual rhythm.
   const initialSize = 60 + (h % 5) * 10;
+  // Topic icon stays a small corner mark (not the initial's dominant size)
+  // so the generative pattern underneath is what a viewer notices first.
+  const iconSize = 28 + (h % 4) * 6;
 
   return (
     <div
@@ -113,23 +104,25 @@ export function PostCover({
         <CoverCanvas tags={tagNames} title={post.title} />
       ) : (
         <>
-          {/* Texture pattern overlay */}
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 pointer-events-none"
-            style={{ backgroundImage: pattern, backgroundRepeat: "repeat" }}
-          />
+          {/* Static canvas-drawn topic pattern — one-time draw, no pointer
+              listeners; the perf-sensitive dense homepage tile doesn't
+              pay for the interactive highlight. This is the same generative
+              pattern CoverCanvas draws, so the card reads as "pattern with a
+              small mark on it", not "icon with nothing underneath". */}
+          <StaticCoverPattern tags={tagNames} title={post.title} />
 
-          {/* Topic mark — large icon when the tag maps to a known family, else the title initial */}
+          {/* Topic mark — small corner icon when the tag maps to a known
+              family, else the title initial. Kept modest so the generative
+              pattern above stays the thing a viewer actually notices. */}
           <div
             aria-hidden="true"
-            className="absolute inset-0 flex items-end justify-start pl-5 pb-3 pointer-events-none"
+            className="absolute inset-0 flex items-end justify-start pl-4 pb-3 pointer-events-none"
           >
             {TopicIcon ? (
               <TopicIcon
-                color="rgba(255,255,255,0.09)"
-                size={initialSize}
-                strokeWidth={1.25}
+                color="rgba(255,255,255,0.14)"
+                size={iconSize}
+                strokeWidth={1.5}
               />
             ) : (
               <span

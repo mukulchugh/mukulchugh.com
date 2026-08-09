@@ -2,13 +2,16 @@ import {
   IconArrowLeft,
   IconBrandGithub,
   IconExternalLink,
+  IconLock,
+  IconTag,
 } from "@tabler/icons-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CoverCanvas } from "@/components/blog/cover-canvas";
 import { CanvasGrain } from "@/components/canvas-grain";
-import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
+import { accentColorForTags, topicFamilyFor } from "@/lib/blog-topic";
 import { siteConfig } from "@/lib/data";
 import {
   getAllProjectSlugs,
@@ -20,6 +23,34 @@ import { cn } from "@/lib/utils";
 
 interface ProjectPageProps {
   params: Promise<{ slug: string }>;
+}
+
+// Human-readable label per generative-pattern family — purely presentational,
+// derived from the same tag-matching used by CoverCanvas/PostCover.
+const PATTERN_LABELS: Partial<Record<string, string>> = {
+  circuit: "Engineering & Infrastructure",
+  graph: "AI & Agents",
+  grid: "Mobile & Platform",
+  path: "Product & Career",
+};
+
+function withAlpha(rgb: string, alpha: number): string {
+  return rgb.replace("rgb(", "rgba(").replace(")", `, ${alpha})`);
+}
+
+// Splits a description into its lead sentence (pull-quote treatment) and the
+// remaining sentence(s), if any — a restructuring of the existing copy, not
+// new content. Falls back to the whole string as the lead when there's only
+// one sentence.
+function splitLeadSentence(description: string): {
+  lead: string;
+  rest: string | null;
+} {
+  const match = description.match(/^(.*?[.!?])\s+(.*)$/s);
+  if (!match) {
+    return { lead: description, rest: null };
+  }
+  return { lead: match[1], rest: match[2] };
 }
 
 export function generateStaticParams() {
@@ -62,7 +93,7 @@ function NavCard({
   return (
     <Link
       className={cn(
-        "group flex flex-1 flex-col gap-2 rounded-xl border border-border p-5",
+        "group flex flex-1 flex-col gap-2 rounded-2xl border border-border p-5",
         "min-h-[44px] transition-colors duration-150",
         "[@media(hover:hover)]:hover:border-border [@media(hover:hover)]:hover:bg-muted",
         isPrev ? "items-start" : "items-end text-right"
@@ -97,6 +128,15 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   const prev = index > 0 ? visible[index - 1] : null;
   const next = index < visible.length - 1 ? visible[index + 1] : null;
 
+  const accent = accentColorForTags(project.tags);
+  const accentSoft = withAlpha(accent, 0.4);
+  const family = topicFamilyFor(project.tags);
+  const eyebrow =
+    (family && PATTERN_LABELS[family.pattern]) || "Independent project";
+  const { lead, rest } = splitLeadSentence(project.description);
+  const isOpenSource = Boolean(project.github);
+  const hasDemo = Boolean(project.demo);
+
   return (
     <main className="w-full py-12 sm:py-20 lg:py-28">
       <div className="container mx-auto max-w-3xl px-4 sm:px-6">
@@ -109,33 +149,65 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           Back to Projects
         </Link>
 
-        {project.tags.length > 0 && (
-          <div className="mb-6 flex flex-wrap gap-2">
-            {project.tags.map((t) => (
-              <Badge key={t} variant="secondary">
-                {t}
-              </Badge>
-            ))}
-          </div>
-        )}
+        {/* Eyebrow — topic family + position in the project set, both derived from real data */}
+        <div className="mb-4 flex flex-wrap items-center gap-x-3 gap-y-1">
+          <span className="inline-flex items-center gap-2">
+            <span
+              aria-hidden="true"
+              className="h-1.5 w-1.5 rounded-full"
+              style={{ background: accent }}
+            />
+            <span className="ui-label text-muted-foreground">{eyebrow}</span>
+          </span>
+          <span className="ui-label text-muted-foreground/40">
+            {String(index + 1).padStart(2, "0")} /{" "}
+            {String(visible.length).padStart(2, "0")}
+          </span>
+        </div>
 
         <h1
           className={cn(
             "font-syne",
-            "mb-6 break-words font-black leading-[1.08] tracking-tight text-foreground"
+            "mb-5 break-words font-black leading-[1.08] tracking-tight text-foreground"
           )}
           style={{ fontSize: "clamp(1.6rem, 5vw, 3rem)" }}
         >
           {project.title}
         </h1>
 
-        <div className="relative mb-10 aspect-[16/7] overflow-hidden rounded-2xl">
+        {/* Status meta — directly derivable from github/demo presence, no invented facts */}
+        <div className="mb-10 flex flex-wrap items-center gap-3 sm:gap-6 text-[12px] text-muted-foreground">
+          <div className="flex items-center gap-2">
+            {isOpenSource ? (
+              <IconBrandGithub className="h-3.5 w-3.5" />
+            ) : (
+              <IconLock className="h-3.5 w-3.5" />
+            )}
+            <span>{isOpenSource ? "Open source" : "Closed source"}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <IconExternalLink className="h-3.5 w-3.5" />
+            <span>{hasDemo ? "Live demo available" : "No public demo"}</span>
+          </div>
+        </div>
+
+        <div className="relative mb-12 aspect-[16/7] overflow-hidden rounded-2xl border border-border">
           <div
             className="absolute inset-0"
             style={{
               background: "linear-gradient(150deg, #0a0a0c 0%, #1c1c20 100%)",
             }}
           />
+          {/* Topic tint — same recipe as PostCover's hero, reflects the project's subject */}
+          {family && (
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background: `radial-gradient(120% 90% at 15% 100%, ${family.tint} 0%, transparent 60%)`,
+              }}
+            />
+          )}
           <div
             aria-hidden="true"
             className="absolute -top-24 -left-24 h-[420px] w-[420px] rounded-full"
@@ -144,21 +216,95 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 "radial-gradient(circle at 30% 30%, rgba(255,255,255,0.06) 0%, transparent 62%)",
             }}
           />
+          {/* Per-project accent glow — content-seeded, same convention as the homepage project grid */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -right-16 -bottom-16 h-64 w-64 rounded-full opacity-[0.16] blur-3xl"
+            style={{ background: accent }}
+          />
           <CanvasGrain />
           <CoverCanvas tags={project.tags} title={project.title} />
+
+          {/* Bottom fade for readability — matches PostCover's hero treatment */}
+          <div
+            aria-hidden="true"
+            className="absolute bottom-0 inset-x-0 h-16 pointer-events-none"
+            style={{
+              background:
+                "linear-gradient(to top, rgba(0,0,0,0.25) 0%, transparent 100%)",
+            }}
+          />
+
+          {/* Topic badge — top-right, reuses the same eyebrow label shown above the title */}
+          <span
+            className="absolute top-3 right-3 inline-flex items-center gap-1
+                       px-2 py-0.5 rounded-full
+                       bg-white/[0.1] border border-white/[0.15] backdrop-blur-sm
+                       ui-label text-white/70"
+          >
+            <IconTag aria-hidden="true" className="h-2.5 w-2.5" />
+            {eyebrow}
+          </span>
+
+          {/* Source status — bottom-left, same slot as PostCover's read-time label,
+              filled with the same real github/demo-derived fact used in the meta row below */}
+          <span className="ui-label absolute bottom-3 left-4 inline-flex items-center gap-1 text-white/50">
+            {isOpenSource ? (
+              <IconBrandGithub aria-hidden="true" className="h-2.5 w-2.5" />
+            ) : (
+              <IconLock aria-hidden="true" className="h-2.5 w-2.5" />
+            )}
+            {isOpenSource ? "Open source" : "Closed source"}
+          </span>
         </div>
 
-        <p className="mb-8 max-w-[68ch] text-[16px] leading-[1.8] text-foreground/80">
-          {project.description}
-        </p>
+        {/* Pull-quote — the description's lead sentence, restructured for hierarchy */}
+        <blockquote
+          className="mb-6 max-w-[62ch] border-l-2 pl-5 sm:pl-6"
+          style={{ borderColor: accentSoft }}
+        >
+          <p
+            className={cn(
+              "font-syne",
+              "text-[1.375rem] font-medium leading-[1.35] tracking-tight text-foreground text-pretty sm:text-[1.625rem]"
+            )}
+          >
+            {lead}
+          </p>
+        </blockquote>
+
+        {rest && (
+          <p className="mb-12 max-w-[62ch] text-[16px] leading-[1.8] text-foreground/75 text-pretty">
+            {rest}
+          </p>
+        )}
+
+        {project.tags.length > 0 && (
+          <section className="mb-8 rounded-2xl border border-border p-5 sm:p-6">
+            <h2 className="ui-label mb-5 text-muted-foreground">Stack</h2>
+            <ul className="grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-3">
+              {project.tags.map((tag, i) => (
+                <li className="flex items-center gap-2.5" key={tag}>
+                  <span className="ui-label tabular-nums text-muted-foreground/35">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span className="text-[13px] font-medium text-foreground/85">
+                    {tag}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         {(project.github || project.demo) && (
           <div className="mb-16 flex flex-wrap gap-3">
             {project.github && (
               <a
-                className="inline-flex items-center gap-2 rounded-full border border-border
-                           bg-foreground/[0.03] px-4 py-2 text-[13px] font-medium text-foreground/80
-                           transition-colors [@media(hover:hover)]:hover:bg-foreground/[0.06] [@media(hover:hover)]:hover:text-foreground"
+                className={cn(
+                  buttonVariants({ variant: "outline" }),
+                  "rounded-full"
+                )}
                 href={project.github}
                 rel="noopener noreferrer"
                 target="_blank"
@@ -169,9 +315,10 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             )}
             {project.demo && (
               <a
-                className="inline-flex items-center gap-2 rounded-full border border-border
-                           bg-foreground/[0.03] px-4 py-2 text-[13px] font-medium text-foreground/80
-                           transition-colors [@media(hover:hover)]:hover:bg-foreground/[0.06] [@media(hover:hover)]:hover:text-foreground"
+                className={cn(
+                  buttonVariants({ variant: "secondary" }),
+                  "rounded-full"
+                )}
                 href={project.demo}
                 rel="noopener noreferrer"
                 target="_blank"

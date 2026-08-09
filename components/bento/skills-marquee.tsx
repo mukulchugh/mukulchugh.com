@@ -12,13 +12,13 @@ const MarqueeTrack = memo(function MarqueeTrack() {
 
   return (
     <div className="relative overflow-hidden w-full">
-      {/* Left fade */}
+      {/* Left fade — uses the card token so it blends in both themes */}
       <div
         aria-hidden="true"
         className="absolute left-0 top-0 bottom-0 w-20 z-10 pointer-events-none"
         style={{
           background:
-            "linear-gradient(to right, hsl(40 30% 98%) 0%, transparent 100%)",
+            "linear-gradient(to right, hsl(var(--card)) 0%, transparent 100%)",
         }}
       />
       {/* Right fade */}
@@ -27,7 +27,7 @@ const MarqueeTrack = memo(function MarqueeTrack() {
         className="absolute right-0 top-0 bottom-0 w-20 z-10 pointer-events-none"
         style={{
           background:
-            "linear-gradient(to left, hsl(40 30% 98%) 0%, transparent 100%)",
+            "linear-gradient(to left, hsl(var(--card)) 0%, transparent 100%)",
         }}
       />
 

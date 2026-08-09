@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import {
   FeaturedProjectTile,
   LocationTile,
+  SkillsMarquee,
   SocialsTile,
 } from "@/components/bento";
 import { Reveal } from "@/components/ui/reveal";
@@ -23,6 +24,10 @@ const CTATile = dynamic(
 );
 
 const About = dynamic(() => import("@/components/about"), {
+  loading: () => <SectionSkeleton />,
+});
+
+const Capabilities = dynamic(() => import("@/components/capabilities"), {
   loading: () => <SectionSkeleton />,
 });
 
@@ -110,7 +115,7 @@ export function HomeBento({ posts }: { posts: Post[] }) {
   return (
     <div className="grid min-w-0 grid-cols-1 gap-3 [grid-auto-flow:dense] sm:grid-cols-2 sm:gap-4 lg:grid-cols-12">
       <Entry
-        className="col-span-1 sm:col-span-2 lg:col-span-8 lg:row-span-2"
+        className="col-span-1 sm:col-span-2 lg:col-span-7 lg:row-span-2"
         delay={0.02}
         variant="hero"
       >
@@ -119,14 +124,14 @@ export function HomeBento({ posts }: { posts: Post[] }) {
         </BentoTile>
       </Entry>
 
-      <Entry className="col-span-1 lg:col-span-4" delay={0.08} variant="scale">
+      <Entry className="col-span-1 lg:col-span-5" delay={0.08} variant="scale">
         <BentoTile className="h-full min-w-0">
           <LocationTile />
         </BentoTile>
       </Entry>
 
       <Entry
-        className="col-span-1 sm:col-span-1 lg:col-span-4"
+        className="col-span-1 sm:col-span-1 lg:col-span-5"
         delay={0.12}
         variant="scale"
       >
@@ -135,19 +140,31 @@ export function HomeBento({ posts }: { posts: Post[] }) {
         </BentoTile>
       </Entry>
 
-      <Entry className="col-span-1 sm:col-span-2 lg:col-span-8 lg:row-span-2">
+      <Entry className="col-span-1 sm:col-span-2 lg:col-span-12" delay={0.06}>
+        <BentoTile className="h-full min-w-0" hover={false}>
+          <SkillsMarquee />
+        </BentoTile>
+      </Entry>
+
+      <Entry className="col-span-1 sm:col-span-2 lg:col-span-7 lg:row-span-2">
         <BentoTile className="h-full min-w-0" hover={false}>
           <About />
         </BentoTile>
       </Entry>
 
-      <Entry className="col-span-1 lg:col-span-4" delay={0.04} variant="scale">
+      <Entry className="col-span-1 sm:col-span-2 lg:col-span-12">
+        <BentoTile className="h-full min-w-0" hover={false}>
+          <Capabilities />
+        </BentoTile>
+      </Entry>
+
+      <Entry className="col-span-1 lg:col-span-5" delay={0.04} variant="scale">
         <BentoTile className="h-full min-w-0">
           <FeaturedProjectTile index={0} project={projectsData[0]} />
         </BentoTile>
       </Entry>
 
-      <Entry className="col-span-1 lg:col-span-4" delay={0.08} variant="scale">
+      <Entry className="col-span-1 lg:col-span-5" delay={0.08} variant="scale">
         <BentoTile className="h-full min-w-0">
           <FeaturedProjectTile index={1} project={projectsData[1]} />
         </BentoTile>
