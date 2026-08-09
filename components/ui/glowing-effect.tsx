@@ -1,20 +1,20 @@
 "use client";
 
+import { animate } from "motion/react";
 import { memo, useCallback, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
-import { animate } from "motion/react";
 
 interface GlowingEffectProps {
   blur?: number;
+  borderWidth?: number;
+  className?: string;
+  disabled?: boolean;
+  glow?: boolean;
   inactiveZone?: number;
+  movementDuration?: number;
   proximity?: number;
   spread?: number;
   variant?: "default" | "white";
-  glow?: boolean;
-  className?: string;
-  disabled?: boolean;
-  movementDuration?: number;
-  borderWidth?: number;
 }
 
 const GlowingEffect = memo(
@@ -37,7 +37,9 @@ const GlowingEffect = memo(
 
     const handleMove = useCallback(
       (e?: MouseEvent | { x: number; y: number }) => {
-        if (!containerRef.current) return;
+        if (!containerRef.current) {
+          return;
+        }
 
         if (animationFrameRef.current) {
           cancelAnimationFrame(animationFrameRef.current);
@@ -45,7 +47,9 @@ const GlowingEffect = memo(
 
         animationFrameRef.current = requestAnimationFrame(() => {
           const element = containerRef.current;
-          if (!element) return;
+          if (!element) {
+            return;
+          }
 
           const { left, top, width, height } = element.getBoundingClientRect();
           const mouseX = e?.x ?? lastPosition.current.x;
@@ -75,11 +79,13 @@ const GlowingEffect = memo(
 
           element.style.setProperty("--active", isActive ? "1" : "0");
 
-          if (!isActive) return;
+          if (!isActive) {
+            return;
+          }
 
           const currentAngle =
-            parseFloat(element.style.getPropertyValue("--start")) || 0;
-          let targetAngle =
+            Number.parseFloat(element.style.getPropertyValue("--start")) || 0;
+          const targetAngle =
             (180 * Math.atan2(mouseY - center[1], mouseX - center[0])) /
               Math.PI +
             90;
@@ -100,7 +106,9 @@ const GlowingEffect = memo(
     );
 
     useEffect(() => {
-      if (disabled) return;
+      if (disabled) {
+        return;
+      }
 
       const handleScroll = () => handleMove();
       const handlePointerMove = (e: PointerEvent) => handleMove(e);
@@ -121,10 +129,13 @@ const GlowingEffect = memo(
 
     // Update ::after pseudo-element styles with webkit prefixes
     useEffect(() => {
-      if (disabled || !glowRef.current) return;
+      if (disabled || !glowRef.current) {
+        return;
+      }
 
       const style = document.createElement("style");
-      const maskImage = `linear-gradient(#0000, #0000), conic-gradient(from calc((var(--start, 0) - var(--spread, 20)) * 1deg), #00000000 0deg, #fff, #00000000 calc(var(--spread, 20) * 2deg))`;
+      const maskImage =
+        "linear-gradient(#0000, #0000), conic-gradient(from calc((var(--start, 0) - var(--spread, 20)) * 1deg), #00000000 0deg, #fff, #00000000 calc(var(--spread, 20) * 2deg))";
 
       style.textContent = `
         .glowing-effect-${borderWidth}::after {
@@ -164,13 +175,18 @@ const GlowingEffect = memo(
           )}
         />
         <div
+          className={cn(
+            "pointer-events-none absolute inset-0 rounded-[inherit] opacity-100 transition-opacity",
+            glow && "opacity-100",
+            blur > 0 && "blur-[var(--blur)]",
+            className,
+            disabled && "!hidden"
+          )}
           ref={containerRef}
           style={
             {
-              "--blur": `${blur}px`,
-              "--spread": spread,
-              "--start": "0",
               "--active": "0",
+              "--blur": `${blur}px`,
               "--gradient":
                 variant === "white"
                   ? `repeating-conic-gradient(
@@ -190,22 +206,17 @@ const GlowingEffect = memo(
                   #a78bfa 15%,
                   #6366f1 20%
                 )`,
+              "--spread": spread,
+              "--start": "0",
             } as React.CSSProperties
           }
-          className={cn(
-            "pointer-events-none absolute inset-0 rounded-[inherit] opacity-100 transition-opacity",
-            glow && "opacity-100",
-            blur > 0 && "blur-[var(--blur)]",
-            className,
-            disabled && "!hidden"
-          )}
         >
           <div
-            ref={glowRef}
             className={cn(
               "absolute inset-0 overflow-hidden rounded-[inherit]",
               `glowing-effect-${borderWidth}`
             )}
+            ref={glowRef}
           />
         </div>
       </>

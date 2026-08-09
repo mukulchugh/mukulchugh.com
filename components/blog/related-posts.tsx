@@ -1,9 +1,8 @@
+import { IconCalendar, IconClock } from "@tabler/icons-react";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
-import { syne } from "@/lib/fonts";
 import { PostCover } from "@/components/blog/post-cover";
 import type { Post } from "@/lib/blog";
-import { IconClock, IconCalendar } from "@tabler/icons-react";
+import { cn } from "@/lib/utils";
 
 interface RelatedPostsProps {
   posts: Post[];
@@ -11,35 +10,36 @@ interface RelatedPostsProps {
 
 function RelatedCard({ post }: { post: Post }) {
   const formattedDate = new Date(post.publishedAt).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
     day: "numeric",
+    month: "short",
+    timeZone: "UTC",
+    year: "numeric",
   });
 
   return (
     <Link
-      href={`/blog/${post.slug}`}
       className="group flex flex-col gap-3 cursor-pointer transition-opacity active:opacity-70
                  [@media(hover:hover)]:hover:opacity-75"
+      href={`/blog/${post.slug}`}
     >
       <PostCover post={post} />
       <div className="flex flex-col gap-1.5">
         <h3
           className={cn(
-            syne.className,
-            "text-[15px] font-semibold text-zinc-900 leading-snug line-clamp-2"
+            "font-syne",
+            "text-[15px] font-semibold text-foreground leading-snug line-clamp-2"
           )}
         >
           {post.title}
         </h3>
-        <div className="flex items-center gap-3 text-[11px] text-zinc-400 font-mono">
+        <div className="flex items-center gap-3 text-[11px] text-muted-foreground font-mono">
           <span className="flex items-center gap-1">
-            <IconCalendar className="w-3 h-3" aria-hidden="true" />
+            <IconCalendar aria-hidden="true" className="w-3 h-3" />
             {formattedDate}
           </span>
           <span className="opacity-40">·</span>
           <span className="flex items-center gap-1">
-            <IconClock className="w-3 h-3" aria-hidden="true" />
+            <IconClock aria-hidden="true" className="w-3 h-3" />
             {post.readTimeInMinutes} min
           </span>
         </div>
@@ -49,13 +49,18 @@ function RelatedCard({ post }: { post: Post }) {
 }
 
 export function RelatedPosts({ posts }: RelatedPostsProps) {
-  if (posts.length === 0) return null;
+  if (posts.length === 0) {
+    return null;
+  }
 
   return (
-    <section aria-labelledby="related-posts-heading" className="mt-16 pt-8 border-t border-zinc-100">
+    <section
+      aria-labelledby="related-posts-heading"
+      className="mt-16 pt-8 border-t border-border"
+    >
       <p
+        className="ui-label mb-6 text-muted-foreground"
         id="related-posts-heading"
-        className="text-[10px] font-mono uppercase tracking-widest text-zinc-400 mb-6"
       >
         Related reads
       </p>

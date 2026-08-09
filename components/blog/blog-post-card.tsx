@@ -1,29 +1,29 @@
 "use client";
 
-import Link from "next/link";
-import { motion, useReducedMotion } from "motion/react";
 import { IconArrowRight, IconClock } from "@tabler/icons-react";
-import { cn } from "@/lib/utils";
-import { syne } from "@/lib/fonts";
+import { motion, useReducedMotion } from "motion/react";
+import Link from "next/link";
 import { PostCover } from "@/components/blog/post-cover";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import type { Post } from "@/lib/blog";
+import { cn } from "@/lib/utils";
 
 function fmtDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
     day: "numeric",
+    month: "short",
+    timeZone: "UTC",
+    year: "numeric",
   });
 }
 
 interface BlogPostCardProps {
-  post: Post;
   index?: number;
+  post: Post;
+  priority?: boolean;
   /** "compact" = boxed card for the homepage tile · "list" = large row for /blog */
   variant?: "compact" | "list";
-  priority?: boolean;
 }
 
 /**
@@ -43,39 +43,47 @@ export function BlogPostCard({
   return (
     <motion.article
       initial={shouldReduce ? false : { opacity: 0, y: compact ? 14 : 24 }}
-      whileInView={shouldReduce ? undefined : { opacity: 1, y: 0 }}
       transition={{
-        type: "spring",
-        stiffness: 100,
         damping: 20,
         delay: index * 0.05,
+        stiffness: 100,
+        type: "spring",
       }}
-      viewport={{ once: true, amount: 0.15 }}
+      viewport={{ amount: 0.15, once: true }}
+      whileInView={shouldReduce ? undefined : { opacity: 1, y: 0 }}
     >
       <Link
-        href={`/blog/${post.slug}`}
         aria-label={`Read: ${post.title}`}
         className={cn(
           "group block min-w-0",
           compact
-            ? `overflow-hidden rounded-2xl border border-black/[0.08] bg-black/[0.02]
+            ? `overflow-hidden rounded-2xl border border-border bg-foreground/[0.03]
                transition-all duration-300 active:scale-[0.98]
-               [@media(hover:hover)]:hover:border-black/[0.15]
-               [@media(hover:hover)]:hover:bg-black/[0.04]
+               [@media(hover:hover)]:hover:border-border
+               [@media(hover:hover)]:hover:bg-foreground/[0.05]
                [@media(hover:hover)]:hover:-translate-y-0.5`
-            : `flex flex-col gap-4 transition-opacity active:opacity-75
+            : `grid gap-5 border-t border-border pt-6 transition-opacity
+               md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] md:items-center md:gap-8
+               active:opacity-75
                [@media(hover:hover)]:hover:opacity-80`
         )}
+        href={`/blog/${post.slug}`}
       >
         <PostCover
+          className={compact ? "rounded-none" : "md:aspect-[4/3]"}
+          interactive={!compact}
           post={post}
           priority={priority}
-          className={compact ? "rounded-none" : undefined}
         />
 
-        <div className={cn("flex flex-col", compact ? "gap-2 p-4" : "gap-2")}>
+        <div
+          className={cn(
+            "flex flex-col",
+            compact ? "gap-2 p-4" : "gap-3 md:py-4"
+          )}
+        >
           {/* Meta row */}
-          <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[12px] text-zinc-400">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[12px] text-muted-foreground">
             {!compact && post.tags.length > 0 && (
               <Badge variant="secondary">{post.tags[0].name}</Badge>
             )}
@@ -90,14 +98,16 @@ export function BlogPostCard({
                       .join("")}
                   </AvatarFallback>
                 </Avatar>
-                <span className="text-zinc-700">{post.author.name}</span>
+                <span className="text-foreground/80">{post.author.name}</span>
                 <span className="opacity-40">·</span>
               </span>
             )}
             {compact && (
               <>
                 <IconClock className="h-3 w-3 flex-shrink-0" />
-                <span className="font-mono tabular-nums">{post.readTimeInMinutes} min read</span>
+                <span className="font-mono tabular-nums">
+                  {post.readTimeInMinutes} min read
+                </span>
                 <span className="opacity-40">·</span>
               </>
             )}
@@ -115,11 +125,11 @@ export function BlogPostCard({
           {/* Title */}
           <h3
             className={cn(
-              syne.className,
-              "font-semibold tracking-[-0.025em] text-zinc-950 break-words text-balance",
+              "font-syne",
+              "font-semibold tracking-[-0.025em] text-foreground break-words text-balance",
               compact
                 ? "text-[1rem] leading-snug"
-                : "text-xl font-bold leading-tight sm:text-2xl md:text-3xl"
+                : "text-xl font-bold leading-tight sm:text-2xl"
             )}
           >
             {post.title}
@@ -128,8 +138,10 @@ export function BlogPostCard({
           {/* Brief */}
           <p
             className={cn(
-              "text-zinc-600 leading-[1.7] line-clamp-2 text-pretty",
-              compact ? "text-[13px]" : "text-[14px] sm:text-[15px] max-w-[68ch]"
+              "text-muted-foreground leading-[1.7] line-clamp-2 text-pretty",
+              compact
+                ? "text-[13px]"
+                : "text-[14px] sm:text-[15px] max-w-[68ch]"
             )}
           >
             {post.brief}
@@ -137,9 +149,9 @@ export function BlogPostCard({
 
           {compact && (
             <span
-              className="mt-1 inline-flex items-center gap-1 text-[12px] font-medium text-zinc-400
+              className="mt-1 inline-flex items-center gap-1 text-[12px] font-medium text-muted-foreground
                          transition-colors duration-200
-                         [@media(hover:hover)]:group-hover:text-zinc-800"
+                         [@media(hover:hover)]:group-hover:text-foreground/90"
             >
               Read article
               <IconArrowRight className="h-3 w-3 transition-transform duration-200 [@media(hover:hover)]:group-hover:translate-x-0.5" />

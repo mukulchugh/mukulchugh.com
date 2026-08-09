@@ -7,9 +7,13 @@ function escapeXml(s: string): string {
   return s.replace(
     /[<>&'"]/g,
     (c) =>
-      ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", "'": "&apos;", '"': "&quot;" }[
-        c
-      ] as string)
+      ({
+        "'": "&apos;",
+        '"': "&quot;",
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+      })[c] as string
   );
 }
 

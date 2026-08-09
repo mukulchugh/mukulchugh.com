@@ -1,20 +1,29 @@
 "use client";
 
-import { SectionHeader } from "./section-header";
-import { CollapsibleList } from "./ui/collapsible-list";
-import { TiltCard } from "./ui/tilt-card";
-import { projectsData } from "@/lib/data";
-import { useSectionInView } from "@/lib/hooks";
-import { motion, useReducedMotion } from "motion/react";
 import {
-  IconCode,
   IconBrandGithub,
+  IconChevronLeft,
+  IconChevronRight,
+  IconCode,
   IconExternalLink,
   IconLayoutKanban,
 } from "@tabler/icons-react";
+import { motion, useReducedMotion } from "motion/react";
+import Link from "next/link";
+import { useState } from "react";
+import { accentColorForTags } from "@/lib/blog-topic";
+import { hiddenProjectTitles, projectsData } from "@/lib/data";
+import { useSectionInView } from "@/lib/hooks";
+import { slugifyProjectTitle } from "@/lib/projects";
+import { SectionHeader } from "./section-header";
+import { Button } from "./ui/button";
 
 // Featured projects (index 0-1) shown as dedicated tiles; list the rest here.
-const restProjects = projectsData.slice(2);
+const restProjects = projectsData
+  .slice(2)
+  .filter(({ title }) => !hiddenProjectTitles.has(title));
+
+const PAGE_SIZE = 4;
 
 function ProjectCard({
   title,
@@ -32,61 +41,68 @@ function ProjectCard({
   index: number;
 }) {
   const shouldReduce = useReducedMotion();
+  const accent = accentColorForTags(tags);
 
   return (
     <motion.li
       className="list-none"
-      initial={shouldReduce ? false : { opacity: 0, y: 18, filter: "blur(5px)" }}
-      whileInView={shouldReduce ? undefined : { opacity: 1, y: 0, filter: "blur(0px)" }}
+      initial={shouldReduce ? false : { opacity: 0, y: 18 }}
       transition={{
-        type: "spring",
-        stiffness: 110,
         damping: 20,
         delay: index * 0.06,
+        stiffness: 110,
+        type: "spring",
       }}
-      viewport={{ once: true, amount: 0.15 }}
+      viewport={{ amount: 0.12, once: true }}
+      whileInView={shouldReduce ? undefined : { opacity: 1, y: 0 }}
     >
-      <TiltCard maxDeg={3} lift={5}>
       <div
-        className="project-card flex h-full flex-col justify-between gap-4 rounded-2xl
-                   border border-black/[0.07] bg-white p-5
-                   transition-all duration-[260ms] [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]
-                   active:scale-[0.985] active:duration-[100ms]
-                   [@media(hover:hover)]:hover:border-black/[0.12]"
-        style={{
-          boxShadow: "0 1px 2px rgba(28,25,23,0.04), 0 8px 24px -12px rgba(28,25,23,0.10), 0 24px 48px -24px rgba(28,25,23,0.06)",
-        }}
+        className="project-card relative flex h-full flex-col justify-between gap-4 overflow-hidden rounded-2xl
+                   border border-border bg-card p-5
+                   transition-transform duration-300 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]
+                   active:scale-[0.985] active:duration-100
+                   [@media(hover:hover)]:hover:border-border"
       >
-        <div className="flex flex-col gap-3">
+        {/* Subtle ambient glow, tinted per project — content-seeded, not decorative noise */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full opacity-[0.10] blur-2xl [@media(hover:hover)]:group-hover:opacity-[0.16]"
+          style={{ background: accent }}
+        />
+
+        <div className="relative flex flex-col gap-3">
           <div className="flex items-start justify-between">
-            <div className="w-fit rounded-lg border border-zinc-200 bg-zinc-100 p-2 text-zinc-500">
+            <div
+              className="w-fit rounded-lg border border-border bg-muted p-2 text-muted-foreground"
+              style={{ boxShadow: `0 0 24px -8px ${accent}` }}
+            >
               <IconCode className="h-4 w-4" />
             </div>
             <div className="flex items-center gap-0.5">
               {github && (
                 <a
-                  href={github}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  aria-label={`${title} on GitHub`}
                   className="flex items-center justify-center w-11 h-11 rounded-lg text-muted-foreground
                              transition-colors
-                             [@media(hover:hover)]:hover:bg-black/[0.05] [@media(hover:hover)]:hover:text-foreground
-                             active:bg-black/[0.07]"
-                  aria-label={`${title} on GitHub`}
+                             [@media(hover:hover)]:hover:bg-foreground/[0.06] [@media(hover:hover)]:hover:text-foreground
+                             active:bg-foreground/[0.08]"
+                  href={github}
+                  rel="noopener noreferrer"
+                  target="_blank"
                 >
                   <IconBrandGithub className="h-4 w-4" />
                 </a>
               )}
               {demo && (
                 <a
-                  href={demo}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  aria-label={`${title} demo`}
                   className="flex items-center justify-center w-11 h-11 rounded-lg text-muted-foreground
                              transition-colors
-                             [@media(hover:hover)]:hover:bg-black/[0.05] [@media(hover:hover)]:hover:text-foreground
-                             active:bg-black/[0.07]"
-                  aria-label={`${title} demo`}
+                             [@media(hover:hover)]:hover:bg-foreground/[0.06] [@media(hover:hover)]:hover:text-foreground
+                             active:bg-foreground/[0.08]"
+                  href={demo}
+                  rel="noopener noreferrer"
+                  target="_blank"
                 >
                   <IconExternalLink className="h-4 w-4" />
                 </a>
@@ -95,11 +111,16 @@ function ProjectCard({
           </div>
           <div className="space-y-1.5">
             {/* Tile/card title — 1rem semibold tracking-tight */}
-            <h3 className="text-[1rem] font-semibold tracking-tight text-zinc-950">
-              {title}
+            <h3 className="text-[1rem] font-semibold tracking-tight text-foreground">
+              <Link
+                className="[@media(hover:hover)]:hover:underline [@media(hover:hover)]:hover:underline-offset-2"
+                href={`/projects/${slugifyProjectTitle(title)}`}
+              >
+                {title}
+              </Link>
             </h3>
             {/* Body scale — 14px leading-relaxed muted */}
-            <p className="text-[14px] leading-relaxed text-zinc-500">
+            <p className="text-[14px] leading-relaxed text-muted-foreground">
               {description}
             </p>
           </div>
@@ -108,10 +129,10 @@ function ProjectCard({
           <div className="flex flex-wrap gap-1.5">
             {tags.map((tag) => (
               <span
-                key={tag}
-                className="rounded-full border border-black/[0.07] bg-black/[0.03] px-2.5 py-0.5 text-[11px] font-medium text-zinc-500
-                           [@media(hover:hover)]:hover:border-zinc-400/50 [@media(hover:hover)]:hover:text-zinc-700
+                className="ui-label rounded-full border border-border bg-foreground/[0.04] px-2.5 py-0.5 text-muted-foreground
+                           [@media(hover:hover)]:hover:border-border [@media(hover:hover)]:hover:text-foreground/80
                            transition-colors duration-200 cursor-default select-none"
+                key={tag}
               >
                 {tag}
               </span>
@@ -119,45 +140,82 @@ function ProjectCard({
           </div>
         )}
       </div>
-      </TiltCard>
     </motion.li>
   );
 }
 
 export default function Projects() {
   const { ref } = useSectionInView("Projects", 0.5);
+  const shouldReduce = useReducedMotion();
+  const pageCount = Math.ceil(restProjects.length / PAGE_SIZE);
+  const [page, setPage] = useState(0);
+  const pageItems = restProjects.slice(
+    page * PAGE_SIZE,
+    page * PAGE_SIZE + PAGE_SIZE
+  );
 
   return (
-    <section ref={ref} id="projects" className="scroll-mt-28 w-full p-5 sm:p-6 lg:p-8 min-w-0">
+    <section
+      className="scroll-mt-28 w-full p-5 sm:p-6 lg:p-8 min-w-0"
+      id="projects"
+      ref={ref}
+    >
       <SectionHeader
-        icon={IconLayoutKanban}
-        label="Projects"
-        index="04"
-        title="More things I've"
-        highlight="built"
-        subtitle="A selection of past work, from open-source tools to full-stack apps."
         align="left"
+        highlight="built"
+        icon={IconLayoutKanban}
+        index="04"
+        label="Projects"
+        subtitle="Public work is linked. Selected private product work is described without exposing confidential code or company details."
+        title="More things I've"
       />
-      <CollapsibleList
-        items={[...restProjects]}
-        initial={4}
-        noun="projects"
-        renderList={(visible) => (
-          <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            {visible.map((project, index) => (
-              <ProjectCard
-                key={project.title}
-                title={project.title}
-                description={project.description}
-                tags={project.tags}
-                github={project.github}
-                demo={project.demo}
-                index={index}
-              />
-            ))}
-          </ul>
-        )}
-      />
+      <motion.ul
+        animate={{ opacity: 1, y: 0 }}
+        className="grid grid-cols-1 gap-3 sm:grid-cols-2"
+        initial={shouldReduce ? false : { opacity: 0, y: 12 }}
+        key={page}
+        transition={{ damping: 24, stiffness: 160, type: "spring" }}
+      >
+        {pageItems.map((project, index) => (
+          <ProjectCard
+            demo={project.demo}
+            description={project.description}
+            github={project.github}
+            index={index}
+            key={project.title}
+            tags={project.tags}
+            title={project.title}
+          />
+        ))}
+      </motion.ul>
+
+      {pageCount > 1 && (
+        <div className="mt-6 flex items-center justify-center gap-4">
+          <Button
+            aria-label="Previous page"
+            disabled={page === 0}
+            onClick={() => setPage((p) => Math.max(0, p - 1))}
+            size="sm"
+            type="button"
+            variant="secondary"
+          >
+            <IconChevronLeft className="h-4 w-4" />
+          </Button>
+          <span className="font-mono text-[12px] tabular-nums text-muted-foreground">
+            Page {page + 1} of {pageCount}
+          </span>
+          <Button
+            aria-label="Next page"
+            disabled={page === pageCount - 1}
+            onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
+            size="sm"
+            type="button"
+            variant="secondary"
+          >
+            <IconChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+      )}
     </section>
   );
 }

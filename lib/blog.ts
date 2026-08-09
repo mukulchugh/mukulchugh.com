@@ -5,13 +5,13 @@
 // ============================================
 
 import fs from "fs";
-import path from "path";
 import matter from "gray-matter";
 import { marked, Renderer } from "marked";
+import path from "path";
 import { siteConfig } from "./data";
 import type { Post, PostHeading, PostsResponse } from "./types/index";
 
-export type { Post, PageInfo, PostsResponse, PostHeading } from "./types/index";
+export type { PageInfo, Post, PostHeading, PostsResponse } from "./types/index";
 
 const BLOG_DIR = path.join(process.cwd(), "content", "blog");
 
@@ -21,16 +21,16 @@ function readTimeFromText(text: string): number {
 }
 
 interface Frontmatter {
-  title?: string;
-  slug?: string;
-  brief?: string;
-  publishedAt?: string;
-  tags?: Array<string | { name: string; slug: string }>;
-  coverImage?: string;
   author?: string;
-  seoTitle?: string;
-  seoDescription?: string;
+  brief?: string;
+  coverImage?: string;
   draft?: boolean;
+  publishedAt?: string;
+  seoDescription?: string;
+  seoTitle?: string;
+  slug?: string;
+  tags?: Array<string | { name: string; slug: string }>;
+  title?: string;
 }
 
 /**
@@ -54,26 +54,26 @@ function buildRenderer(headings: PostHeading[]): Renderer {
   const renderer = new Renderer();
   const seen: Record<string, number> = {};
 
-  renderer.heading = function ({
+  renderer.heading = ({
     text,
     depth,
   }: {
     text: string;
     depth: number;
-  }): string {
+  }): string => {
     // Strip any HTML tags that marked might nest inside the heading text
     const plainText = text.replace(/<[^>]+>/g, "");
 
     if (depth === 2 || depth === 3) {
       let id = slugifyHeading(plainText);
       // Deduplicate: append -2, -3, … on collision
-      if (seen[id] !== undefined) {
+      if (seen[id] === undefined) {
+        seen[id] = 1;
+      } else {
         seen[id]++;
         id = `${id}-${seen[id]}`;
-      } else {
-        seen[id] = 1;
       }
-      headings.push({ id, text: plainText, level: depth as 2 | 3 });
+      headings.push({ id, level: depth as 2 | 3, text: plainText });
       return `<h${depth} id="${id}" class="scroll-mt-24">${text}</h${depth}>\n`;
     }
     return `<h${depth}>${text}</h${depth}>\n`;
@@ -87,7 +87,9 @@ function fileToPost(file: string, withContent: boolean): Post | null {
   const { data, content } = matter(raw);
   const fm = data as Frontmatter;
 
-  if (fm.draft) return null;
+  if (fm.draft) {
+    return null;
+  }
 
   const slug = fm.slug || file.replace(/\.mdx?$/, "");
   const tags = (fm.tags || []).map((t) =>
@@ -107,31 +109,37 @@ function fileToPost(file: string, withContent: boolean): Post | null {
   }
 
   return {
-    id: slug,
-    title: fm.title || slug,
-    slug,
-    brief: fm.brief || content.trim().slice(0, 180).replace(/\n+/g, " "),
-    publishedAt: fm.publishedAt || new Date(0).toISOString(),
-    readTimeInMinutes: readTimeFromText(content),
-    coverImage: fm.coverImage ? { url: fm.coverImage } : null,
     author: {
       name: fm.author || siteConfig.name,
       profilePicture: siteConfig.images.profileImage,
     },
-    tags,
-    content: withContent && html !== undefined
-      ? { html, markdown: content }
-      : undefined,
+    brief: fm.brief || content.trim().slice(0, 180).replace(/\n+/g, " "),
+    content:
+      withContent && html !== undefined
+        ? { html, markdown: content }
+        : undefined,
+    coverImage: fm.coverImage ? { url: fm.coverImage } : null,
     headings,
+    id: slug,
+    publishedAt: fm.publishedAt || new Date(0).toISOString(),
+    readTimeInMinutes: readTimeFromText(content),
     seo:
       fm.seoTitle || fm.seoDescription
-        ? { title: fm.seoTitle || fm.title || slug, description: fm.seoDescription || fm.brief || "" }
+        ? {
+            description: fm.seoDescription || fm.brief || "",
+            title: fm.seoTitle || fm.title || slug,
+          }
         : undefined,
+    slug,
+    tags,
+    title: fm.title || slug,
   };
 }
 
 function readAll(withContent = false): Post[] {
-  if (!fs.existsSync(BLOG_DIR)) return [];
+  if (!fs.existsSync(BLOG_DIR)) {
+    return [];
+  }
   return fs
     .readdirSync(BLOG_DIR)
     .filter((f) => /\.mdx?$/.test(f))
@@ -150,11 +158,12 @@ export function getAllPosts(): Post[] {
 
 // Kept API-compatible with the old server helpers so pages need minimal changes.
 export async function getPostsServer(
-  first: number = 100,
-  _after?: string
+  first = 100,
+  after?: string
 ): Promise<PostsResponse> {
+  void after;
   const posts = readAll(false).slice(0, first);
-  return { posts, pageInfo: { endCursor: null, hasNextPage: false } };
+  return { pageInfo: { endCursor: null, hasNextPage: false }, posts };
 }
 
 export async function getPostServer(slug: string): Promise<Post | null> {
@@ -169,13 +178,18 @@ export async function getPostServer(slug: string): Promise<Post | null> {
  * "next" = the post published BEFORE (older).
  * This matches the conventional blog UX: prev = newer, next = older.
  */
-export function getAdjacentPosts(slug: string): { prev: Post | null; next: Post | null } {
+export function getAdjacentPosts(slug: string): {
+  prev: Post | null;
+  next: Post | null;
+} {
   const posts = readAll(false);
   const idx = posts.findIndex((p) => p.slug === slug);
-  if (idx === -1) return { prev: null, next: null };
+  if (idx === -1) {
+    return { next: null, prev: null };
+  }
   return {
-    prev: idx > 0 ? posts[idx - 1] : null,
     next: idx < posts.length - 1 ? posts[idx + 1] : null,
+    prev: idx > 0 ? posts[idx - 1] : null,
   };
 }
 
@@ -188,7 +202,9 @@ export function getAdjacentPosts(slug: string): { prev: Post | null; next: Post 
 export function getRelatedPosts(slug: string, limit = 3): Post[] {
   const posts = readAll(false);
   const current = posts.find((p) => p.slug === slug);
-  if (!current) return posts.filter((p) => p.slug !== slug).slice(0, limit);
+  if (!current) {
+    return posts.filter((p) => p.slug !== slug).slice(0, limit);
+  }
 
   const currentTagSlugs = new Set(current.tags.map((t) => t.slug));
   const others = posts.filter((p) => p.slug !== slug);
@@ -196,7 +212,7 @@ export function getRelatedPosts(slug: string, limit = 3): Post[] {
   // Score by tag overlap
   const scored = others.map((p) => {
     const overlap = p.tags.filter((t) => currentTagSlugs.has(t.slug)).length;
-    return { post: p, overlap };
+    return { overlap, post: p };
   });
 
   // Sort: highest tag overlap first, then by date (already newest-first from readAll)

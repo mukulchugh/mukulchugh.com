@@ -1,7 +1,8 @@
-import Image from "next/image";
+"use client";
+
 import Link from "next/link";
-import { siteConfig, links } from "@/lib/data";
-import { syne } from "@/lib/fonts";
+import { ThemeLogo } from "@/components/theme-logo";
+import { links, siteConfig } from "@/lib/data";
 
 /**
  * BrandBar — the old sticky header, folded into the bento grid as a slim
@@ -10,16 +11,12 @@ import { syne } from "@/lib/fonts";
 export function BrandBar() {
   return (
     <div className="flex items-center justify-between gap-4 px-5 py-3.5 sm:px-6">
-      <Link href="/" className="flex items-center gap-2.5" aria-label="Home">
-        <Image
-          src={siteConfig.images.logoLight}
-          alt={siteConfig.name}
-          width={26}
-          height={26}
-          className="h-6 w-6 object-contain"
-        />
+      <Link aria-label="Home" className="flex items-center gap-2.5" href="/">
+        <ThemeLogo className="h-6 w-6" height={26} width={26} />
         <span
-          className={`${syne.className} text-sm font-bold tracking-tight text-zinc-900`}
+          className={
+            "font-syne text-sm font-bold tracking-tight text-foreground"
+          }
         >
           {siteConfig.name}
         </span>
@@ -30,9 +27,9 @@ export function BrandBar() {
           .filter((l) => l.name !== "Home")
           .map((l) => (
             <Link
-              key={l.name}
+              className="rounded-full px-3 py-1.5 text-[13px] font-medium text-muted-foreground transition-colors hover:bg-foreground/[0.05] hover:text-foreground"
               href={l.hash}
-              className="rounded-full px-3 py-1.5 text-[13px] font-medium text-zinc-500 transition-colors hover:bg-black/[0.04] hover:text-zinc-900"
+              key={l.name}
             >
               {l.name}
             </Link>

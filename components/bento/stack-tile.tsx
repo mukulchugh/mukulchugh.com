@@ -1,5 +1,5 @@
-import { skillsData } from "@/lib/data";
 import { IconSparkles } from "@tabler/icons-react";
+import { skillsData } from "@/lib/data";
 
 // Derive groups in the component — do not edit data.ts
 // Any skill not matched falls into "More" so nothing is dropped.
@@ -39,7 +39,9 @@ function groupSkills(skills: readonly string[]) {
   }).filter((g) => g.skills.length > 0);
 
   const more = [...skills].filter((s) => !matched.has(s));
-  if (more.length > 0) groups.push({ label: "More", skills: more });
+  if (more.length > 0) {
+    groups.push({ label: "More", skills: more });
+  }
   return groups;
 }
 
@@ -50,45 +52,49 @@ export function StackTile() {
     <div className="h-full p-5 flex flex-col gap-3.5 relative overflow-hidden">
       {/* Subtle neutral diffusion in the bottom-right corner */}
       <div
+        aria-hidden="true"
         className="absolute bottom-0 right-0 w-32 h-32 pointer-events-none"
         style={{
           background:
-            "radial-gradient(circle at 100% 100%, rgba(24,24,27,0.04) 0%, transparent 65%)",
+            "radial-gradient(circle at 100% 100%, hsl(var(--foreground) / 0.05) 0%, transparent 65%)",
         }}
-        aria-hidden="true"
       />
 
       {/* Header */}
       <div className="flex items-center gap-2 flex-shrink-0">
-        <div className="p-1.5 rounded-md bg-zinc-100 border border-zinc-200">
-          <IconSparkles className="h-3.5 w-3.5 text-zinc-500" aria-hidden="true" />
+        <div className="p-1.5 rounded-md bg-muted border border-border">
+          <IconSparkles
+            aria-hidden="true"
+            className="h-3.5 w-3.5 text-muted-foreground"
+          />
         </div>
-        <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-[0.14em]">
-          Tools I Use
-        </span>
+        <span className="ui-label text-muted-foreground">Tools I Use</span>
       </div>
 
       {/* Hairline separator */}
-      <div className="h-px bg-black/[0.06] flex-shrink-0" aria-hidden="true" />
+      <div
+        aria-hidden="true"
+        className="h-px bg-foreground/[0.07] flex-shrink-0"
+      />
 
       {/* Skill groups — fills the remaining height with even rhythm */}
       <div className="flex flex-col gap-3 flex-1 min-h-0 overflow-hidden">
         {groups.map(({ label, skills }) => (
-          <div key={label} className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-1.5" key={label}>
             {/* Category label */}
-            <span className="text-[9px] font-mono font-semibold uppercase tracking-[0.18em] text-zinc-400/80 select-none">
+            <span className="ui-label select-none text-muted-foreground/80">
               {label}
             </span>
             {/* Chips */}
             <div className="flex flex-wrap gap-1">
               {skills.map((skill) => (
                 <span
-                  key={skill}
-                  className="px-2 py-0.5 text-[10.5px] font-medium rounded-full
-                             border border-black/[0.09] bg-white text-zinc-600 shadow-sm
-                             hover:border-zinc-400/70 hover:text-zinc-900 hover:-translate-y-px
+                  className="ui-label rounded-full px-2 py-0.5
+                             border border-border bg-card text-muted-foreground shadow-sm
+                             hover:border-border hover:text-foreground hover:-translate-y-px
                              transition-all duration-200 ease-premium
                              cursor-default select-none"
+                  key={skill}
                 >
                   {skill}
                 </span>
@@ -99,11 +105,11 @@ export function StackTile() {
       </div>
 
       {/* Footer — integrated, not floating */}
-      <div className="pt-2.5 border-t border-black/[0.06] flex items-center justify-between flex-shrink-0">
-        <span className="text-[10px] font-mono text-muted-foreground/50 tracking-wide">
+      <div className="pt-2.5 border-t border-border flex items-center justify-between flex-shrink-0">
+        <span className="ui-label text-muted-foreground/50">
           {skillsData.length} technologies
         </span>
-        <div className="h-px w-8 bg-zinc-300/40" />
+        <div className="h-px w-8 bg-foreground/15" />
       </div>
     </div>
   );

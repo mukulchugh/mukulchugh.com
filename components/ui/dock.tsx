@@ -1,39 +1,40 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
-import { useActiveSectionContext } from "@/context/active-section-context";
-import { cn } from "@/lib/utils";
-import { siteConfig } from "@/lib/data";
 import {
-  IconHome,
-  IconUser,
-  IconLayoutKanban,
   IconBook,
   IconBriefcase,
+  IconHome,
+  IconLayoutKanban,
   IconMail,
+  IconUser,
 } from "@tabler/icons-react";
-import { motion, AnimatePresence, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import type React from "react";
+import { useEffect, useState } from "react";
+import { ThemeLogo } from "@/components/theme-logo";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import { useActiveSectionContext } from "@/context/active-section-context";
+import { siteConfig } from "@/lib/data";
+import { cn } from "@/lib/utils";
 
 const navItems = [
-  { name: "Home", hash: "#home", icon: IconHome },
-  { name: "About", hash: "#about", icon: IconUser },
-  { name: "Projects", hash: "#projects", icon: IconLayoutKanban },
-  { name: "Blog", hash: "/blog", icon: IconBook },
-  { name: "Experience", hash: "#experience", icon: IconBriefcase },
-  { name: "Contact", hash: "#contact", icon: IconMail },
+  { hash: "#home", icon: IconHome, name: "Home" },
+  { hash: "#about", icon: IconUser, name: "About" },
+  { hash: "#projects", icon: IconLayoutKanban, name: "Projects" },
+  { hash: "/blog", icon: IconBook, name: "Blog" },
+  { hash: "#experience", icon: IconBriefcase, name: "Experience" },
+  { hash: "#contact", icon: IconMail, name: "Contact" },
 ] as const;
-
 
 export function Dock() {
   const { activeSection, setActiveSection, setTimeOfLastClick } =
@@ -52,7 +53,8 @@ export function Dock() {
 
       // Hide dock when within 150px of the bottom
       const threshold = 150;
-      const isNearBottom = scrollTop + windowHeight >= documentHeight - threshold;
+      const isNearBottom =
+        scrollTop + windowHeight >= documentHeight - threshold;
 
       setIsAtBottom(isNearBottom);
     };
@@ -63,9 +65,12 @@ export function Dock() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleSectionClick = (item: typeof navItems[number]) => {
+  const handleSectionClick = (
+    item: (typeof navItems)[number],
+    event: React.MouseEvent
+  ) => {
     setActiveSection(item.name);
-    setTimeOfLastClick(Date.now());
+    setTimeOfLastClick(event.timeStamp);
 
     if (isHomePage) {
       // On home page, just scroll to the section
@@ -83,67 +88,63 @@ export function Dock() {
   const itemClasses = (isActive: boolean) =>
     cn(
       "group relative grid place-items-center rounded-xl",
-      "bg-gradient-to-b from-white/90 to-zinc-50/80 backdrop-blur-sm",
-      "transition-all duration-[260ms] [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]",
-      "active:scale-[0.92] active:duration-[120ms]",
+      "bg-gradient-to-b from-card to-muted/60",
+      "transition-transform duration-300 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]",
+      "active:scale-[0.92] active:duration-100",
       // Touch target: 44×44 on mobile, bigger on larger screens
       "h-11 w-11 xs:h-11 xs:w-11 sm:h-12 sm:w-12",
       "[@media(hover:hover)]:hover:-translate-y-1 [@media(hover:hover)]:hover:scale-[1.08]",
       isActive
-        ? "shadow-[0_0_0_1px_rgba(20,20,40,0.14),0_2px_6px_rgba(28,25,23,0.08)] bg-gradient-to-b from-zinc-50/95 to-zinc-100/80"
-        : "shadow-[0_0_0_1px_rgba(20,20,40,0.08),0_1px_3px_rgba(28,25,23,0.05)] [@media(hover:hover)]:hover:shadow-[0_0_0_1px_rgba(20,20,40,0.12),0_4px_12px_rgba(28,25,23,0.10)]"
+        ? "shadow-[0_0_0_1px_hsl(var(--foreground)/0.14),0_2px_6px_hsl(var(--foreground)/0.08)] bg-gradient-to-b from-muted to-muted/80"
+        : "shadow-[0_0_0_1px_hsl(var(--foreground)/0.08),0_1px_3px_hsl(var(--foreground)/0.05)] [@media(hover:hover)]:hover:shadow-[0_0_0_1px_hsl(var(--foreground)/0.12),0_4px_12px_hsl(var(--foreground)/0.10)]"
     );
 
   const iconClasses = (isActive: boolean) =>
     cn(
-      "h-4 w-4 sm:h-5 sm:w-5 transition-all duration-[260ms] [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]",
+      "h-4 w-4 sm:h-5 sm:w-5 transition-all duration-300 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]",
       "[@media(hover:hover)]:group-hover:scale-[1.12]",
-      isActive ? "text-zinc-950" : "text-zinc-400 [@media(hover:hover)]:group-hover:text-zinc-900"
+      isActive
+        ? "text-foreground"
+        : "text-muted-foreground [@media(hover:hover)]:group-hover:text-foreground"
     );
 
   return (
-    <TooltipProvider delayDuration={200}>
+    <TooltipProvider delay={200}>
       <AnimatePresence>
         {!isAtBottom && (
           <motion.div
+            animate={{ opacity: 1, x: "-50%", y: 0 }}
             className="fixed bottom-5 sm:bottom-6 left-1/2 z-[999]"
-            initial={{ y: 100, x: "-50%", opacity: 0 }}
-            animate={{ y: 0, x: "-50%", opacity: 1 }}
-            exit={{ y: 100, x: "-50%", opacity: 0 }}
-            transition={{ type: "spring", stiffness: 200, damping: 20 }}
+            exit={{ opacity: 0, x: "-50%", y: 100 }}
+            initial={{ opacity: 0, x: "-50%", y: 100 }}
+            transition={{ damping: 20, stiffness: 200, type: "spring" }}
           >
-            <div className="flex items-center gap-1.5 sm:gap-2 rounded-2xl sm:rounded-[1.25rem]
+            <div
+              className="dock-shell flex items-center gap-1.5 sm:gap-2 rounded-2xl sm:rounded-[1.25rem]
                             px-2 py-1.5 sm:px-3 sm:py-2"
-                 style={{
-                   background: "rgba(255,255,255,0.88)",
-                   backdropFilter: "blur(24px)",
-                   WebkitBackdropFilter: "blur(24px)",
-                   boxShadow: "0 0 0 1px rgba(20,20,40,0.07), inset 0 1px 0 rgba(255,255,255,0.90), 0 2px 8px rgba(28,25,23,0.06), 0 8px 32px -8px rgba(28,25,23,0.12)",
-                 }}>
+            >
               {/* Logo */}
               <Tooltip>
-                <TooltipTrigger asChild>
-                  <Link
-                    href="/"
-                    className={itemClasses(false)}
-                    aria-label="Home"
-                  >
-                    <Image
-                      src={siteConfig.images.logoLight}
-                      alt={siteConfig.name}
-                      width={24}
-                      height={24}
-                      className="h-5 w-5 sm:h-6 sm:w-6 object-contain"
+                <TooltipTrigger
+                  render={
+                    <Link
+                      aria-label="Home"
+                      className={itemClasses(false)}
+                      href="/"
                     />
-                  </Link>
+                  }
+                >
+                  <ThemeLogo
+                    className="h-5 w-5 sm:h-6 sm:w-6"
+                    height={24}
+                    width={24}
+                  />
                 </TooltipTrigger>
-                <TooltipContent side="top">
-                  {siteConfig.name}
-                </TooltipContent>
+                <TooltipContent side="top">{siteConfig.name}</TooltipContent>
               </Tooltip>
 
               {/* Separator */}
-              <Separator orientation="vertical" className="mx-0.5 h-6" />
+              <Separator className="mx-0.5 h-6" orientation="vertical" />
 
               {/* Nav items with stagger on first appear */}
               {navItems.map((item, i) => {
@@ -153,51 +154,69 @@ export function Dock() {
 
                 return (
                   <motion.div
+                    animate={
+                      shouldReduceMotion
+                        ? undefined
+                        : { opacity: 1, scale: 1, y: 0 }
+                    }
+                    initial={
+                      shouldReduceMotion
+                        ? false
+                        : { opacity: 0, scale: 0.88, y: 8 }
+                    }
                     key={item.name}
-                    initial={shouldReduceMotion ? false : { opacity: 0, y: 8, scale: 0.88 }}
-                    animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
                     transition={
                       shouldReduceMotion
                         ? undefined
                         : {
-                            type: "spring",
-                            stiffness: 260,
                             damping: 22,
                             delay: 0.05 + i * 0.04,
+                            stiffness: 260,
+                            type: "spring",
                           }
                     }
                   >
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      {isLink ? (
-                        <Link
-                          href={item.hash}
-                          className={itemClasses(isActive)}
-                          aria-label={item.name}
-                          aria-current={isActive ? "page" : undefined}
-                        >
-                          <Icon className={iconClasses(isActive)} stroke={2} />
-                        </Link>
-                      ) : (
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleSectionClick(item)}
-                          className={cn(itemClasses(isActive), "hover:bg-transparent")}
-                          aria-label={item.name}
-                          aria-pressed={isActive}
-                        >
-                          <Icon className={iconClasses(isActive)} stroke={2} />
-                        </Button>
-                      )}
-                    </TooltipTrigger>
-                    <TooltipContent side="top">
-                      {item.name}
-                    </TooltipContent>
-                  </Tooltip>
+                    <Tooltip>
+                      <TooltipTrigger
+                        render={
+                          isLink ? (
+                            <Link
+                              aria-current={isActive ? "page" : undefined}
+                              aria-label={item.name}
+                              className={itemClasses(isActive)}
+                              href={item.hash}
+                            />
+                          ) : (
+                            <Button
+                              aria-label={item.name}
+                              aria-pressed={isActive}
+                              className={cn(
+                                itemClasses(isActive),
+                                "hover:bg-transparent"
+                              )}
+                              onClick={(event) =>
+                                handleSectionClick(item, event)
+                              }
+                              size="icon"
+                              variant="ghost"
+                            />
+                          )
+                        }
+                      >
+                        <Icon className={iconClasses(isActive)} stroke={2} />
+                      </TooltipTrigger>
+                      <TooltipContent side="top">{item.name}</TooltipContent>
+                    </Tooltip>
                   </motion.div>
                 );
               })}
+
+              <Separator className="mx-0.5 h-6" orientation="vertical" />
+
+              <ThemeToggle
+                className={itemClasses(false)}
+                iconClassName={iconClasses(false)}
+              />
             </div>
           </motion.div>
         )}

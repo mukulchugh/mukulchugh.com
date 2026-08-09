@@ -1,7 +1,7 @@
 "use client";
 
+import { IconClock, IconWorld } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
-import { IconWorld, IconClock } from "@tabler/icons-react";
 
 function useSFTime() {
   const [time, setTime] = useState<string | null>(null);
@@ -10,10 +10,10 @@ function useSFTime() {
     function update() {
       setTime(
         new Date().toLocaleTimeString("en-US", {
-          timeZone: "America/Los_Angeles",
           hour: "2-digit",
-          minute: "2-digit",
           hour12: true,
+          minute: "2-digit",
+          timeZone: "America/Los_Angeles",
         })
       );
     }
@@ -32,43 +32,37 @@ export function LocationTile() {
     <div className="flex h-full min-h-[120px] flex-col justify-center gap-4 p-5 sm:p-6">
       {/* Based in */}
       <div className="flex items-center gap-3">
-        <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl"
-             style={{
-               background: "linear-gradient(145deg, rgba(255,255,255,0.9) 0%, rgba(240,240,244,0.8) 100%)",
-               boxShadow: "0 0 0 1px rgba(20,20,40,0.08), inset 0 1px 0 rgba(255,255,255,0.8), 0 1px 3px rgba(28,25,23,0.06)",
-             }}>
-          <IconWorld className="h-4 w-4 text-zinc-500" aria-hidden="true" />
+        <div className="icon-chip grid h-9 w-9 shrink-0 place-items-center rounded-xl">
+          <IconWorld
+            aria-hidden="true"
+            className="h-4 w-4 text-muted-foreground"
+          />
         </div>
         <div className="min-w-0">
           {/* Mono section label — 10px unified */}
-          <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-zinc-400">
-            Based in
-          </p>
+          <p className="ui-label text-muted-foreground">Based in</p>
           {/* Tile/card title scale — 14px semibold */}
-          <p className="text-[14px] font-semibold text-zinc-900">India</p>
+          <p className="text-[14px] font-semibold text-foreground">India</p>
         </div>
       </div>
 
-      <div className="h-px bg-black/[0.06]" />
+      <div className="h-px bg-foreground/[0.07]" />
 
       {/* Working hours */}
       <div className="flex items-center gap-3">
-        <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl"
-             style={{
-               background: "linear-gradient(145deg, rgba(255,255,255,0.9) 0%, rgba(240,240,244,0.8) 100%)",
-               boxShadow: "0 0 0 1px rgba(20,20,40,0.08), inset 0 1px 0 rgba(255,255,255,0.8), 0 1px 3px rgba(28,25,23,0.06)",
-             }}>
-          <IconClock className="h-4 w-4 text-zinc-500" aria-hidden="true" />
+        <div className="icon-chip grid h-9 w-9 shrink-0 place-items-center rounded-xl">
+          <IconClock
+            aria-hidden="true"
+            className="h-4 w-4 text-muted-foreground"
+          />
         </div>
         <div className="min-w-0">
           {/* Mono section label */}
-          <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-zinc-400">
-            Working
-          </p>
+          <p className="ui-label text-muted-foreground">Working</p>
           {/* Tile/card title scale */}
-          <p className="text-[14px] font-semibold text-zinc-900">
+          <p className="text-[14px] font-semibold text-foreground">
             SF hours
-            <span className="ml-1.5 text-[12px] font-normal text-zinc-400 tabular-nums">
+            <span className="ml-1.5 text-[12px] font-normal text-muted-foreground tabular-nums">
               {time ? `${time} PST` : "PST · UTC−8"}
             </span>
           </p>

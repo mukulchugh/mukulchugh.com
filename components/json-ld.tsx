@@ -1,4 +1,10 @@
-import { siteConfig, skillsData, experiencesData } from "@/lib/data";
+import {
+  experiencesData,
+  hiddenProjectTitles,
+  projectsData,
+  siteConfig,
+  skillsData,
+} from "@/lib/data";
 
 // SEO Keywords for structured data
 const seoKeywords = [
@@ -109,11 +115,8 @@ const seoKeywords = [
 export function JsonLd() {
   const personSchema = {
     "@context": "https://schema.org",
-    "@type": "Person",
     "@id": `${siteConfig.siteUrl}/#person`,
-    name: siteConfig.name,
-    givenName: siteConfig.firstName,
-    familyName: siteConfig.lastName,
+    "@type": "Person",
     alternateName: [
       "Mukul",
       "Chugh",
@@ -124,32 +127,111 @@ export function JsonLd() {
       "Mukul Chugh Developer",
       "Mukul Chugh Engineer",
     ],
-    url: siteConfig.siteUrl,
-    image: {
-      "@type": "ImageObject",
-      url: siteConfig.images.profileImage,
-      caption: siteConfig.name,
-    },
-    jobTitle: siteConfig.title,
+    alumniOf: [
+      // Previous employers from experience data
+      ...experiencesData.slice(1).map((exp) => ({
+        "@type": "Organization",
+        name: exp.company,
+      })),
+      // xurrent (acquired Zenduty)
+      {
+        "@type": "Organization",
+        description:
+          "Enterprise Service Management platform that acquired Zenduty",
+        name: "xurrent",
+      },
+    ],
     description: siteConfig.siteDescription,
     email: siteConfig.email.display,
-    workLocation: {
-      "@type": "Place",
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: "San Francisco",
-        addressRegion: "CA",
-        addressCountry: "US",
+    familyName: siteConfig.lastName,
+    givenName: siteConfig.firstName,
+    hasCredential: [
+      {
+        "@type": "EducationalOccupationalCredential",
+        credentialCategory: "Professional Certificate",
+        name: "Google UX Design Professional Certificate",
+        recognizedBy: {
+          "@type": "Organization",
+          name: "Google",
+        },
       },
-    },
-    sameAs: [
-      siteConfig.social.github,
-      siteConfig.social.linkedin,
-      siteConfig.social.twitter,
-      siteConfig.social.blog,
+      {
+        "@type": "EducationalOccupationalCredential",
+        credentialCategory: "Certificate",
+        name: "Complete Web Development Bootcamp",
+      },
     ],
+    hasOccupation: [
+      {
+        "@type": "Occupation",
+        name: "Product Engineer",
+        occupationLocation: {
+          "@type": "Country",
+          name: "United States",
+        },
+        skills:
+          "React Native, TypeScript, Next.js, Node.js, Python, AWS, Docker",
+      },
+      {
+        "@type": "Occupation",
+        name: "Mobile Engineer",
+        occupationLocation: {
+          "@type": "Country",
+          name: "United States",
+        },
+        skills: "React Native, iOS, Android, Mobile App Development",
+      },
+      {
+        "@type": "Occupation",
+        name: "Full Stack Developer",
+        occupationLocation: {
+          "@type": "Country",
+          name: "United States",
+        },
+        skills: "React, Next.js, Node.js, GraphQL, MongoDB, PostgreSQL",
+      },
+      {
+        "@type": "Occupation",
+        name: "Founding Engineer",
+        occupationLocation: {
+          "@type": "Country",
+          name: "United States",
+        },
+        skills:
+          "MVP Development, System Design, Technical Architecture, Full Stack Development",
+      },
+      {
+        "@type": "Occupation",
+        name: "Staff Engineer",
+        occupationLocation: {
+          "@type": "Country",
+          name: "United States",
+        },
+        skills:
+          "Technical Leadership, System Design, Architecture, Mentoring, Cross-team Collaboration",
+      },
+      {
+        "@type": "Occupation",
+        name: "Tech Lead",
+        occupationLocation: {
+          "@type": "Country",
+          name: "United States",
+        },
+        skills:
+          "Technical Leadership, Code Review, Architecture Decision, Team Management",
+      },
+    ],
+    image: {
+      "@type": "ImageObject",
+      caption: siteConfig.name,
+      url: siteConfig.images.profileImage,
+    },
+    jobTitle: siteConfig.title,
     knowsAbout: [
       ...skillsData,
+      ...projectsData
+        .filter(({ title }) => hiddenProjectTitles.has(title))
+        .flatMap(({ title, tags }) => [title, ...tags]),
       // Domain Expertise
       "Digital Experiences",
       "Digital Marketing",
@@ -284,181 +366,113 @@ export function JsonLd() {
       "Design System",
       "AI Coding Assistant",
     ],
-    hasOccupation: [
-      {
-        "@type": "Occupation",
-        name: "Product Engineer",
-        occupationLocation: {
-          "@type": "Country",
-          name: "United States",
-        },
-        skills: "React Native, TypeScript, Next.js, Node.js, Python, AWS, Docker",
-      },
-      {
-        "@type": "Occupation",
-        name: "Mobile Engineer",
-        occupationLocation: {
-          "@type": "Country",
-          name: "United States",
-        },
-        skills: "React Native, iOS, Android, Mobile App Development",
-      },
-      {
-        "@type": "Occupation",
-        name: "Full Stack Developer",
-        occupationLocation: {
-          "@type": "Country",
-          name: "United States",
-        },
-        skills: "React, Next.js, Node.js, GraphQL, MongoDB, PostgreSQL",
-      },
-      {
-        "@type": "Occupation",
-        name: "Founding Engineer",
-        occupationLocation: {
-          "@type": "Country",
-          name: "United States",
-        },
-        skills: "MVP Development, System Design, Technical Architecture, Full Stack Development",
-      },
-      {
-        "@type": "Occupation",
-        name: "Staff Engineer",
-        occupationLocation: {
-          "@type": "Country",
-          name: "United States",
-        },
-        skills: "Technical Leadership, System Design, Architecture, Mentoring, Cross-team Collaboration",
-      },
-      {
-        "@type": "Occupation",
-        name: "Tech Lead",
-        occupationLocation: {
-          "@type": "Country",
-          name: "United States",
-        },
-        skills: "Technical Leadership, Code Review, Architecture Decision, Team Management",
-      },
+    name: siteConfig.name,
+    sameAs: [
+      siteConfig.social.github,
+      siteConfig.social.linkedin,
+      siteConfig.social.twitter,
+      siteConfig.social.blog,
     ],
+    url: siteConfig.siteUrl,
+    workLocation: {
+      "@type": "Place",
+      address: {
+        "@type": "PostalAddress",
+        addressCountry: "US",
+        addressLocality: "San Francisco",
+        addressRegion: "CA",
+      },
+    },
     worksFor: {
-      "@type": "Organization",
       "@id": `${siteConfig.siteUrl}/#organization`,
+      "@type": "Organization",
       name: experiencesData[0].company, // Current employer
       url: "https://quivly.ai",
     },
-    alumniOf: [
-      // Previous employers from experience data
-      ...experiencesData.slice(1).map((exp) => ({
-        "@type": "Organization",
-        name: exp.company,
-      })),
-      // xurrent (acquired Zenduty)
-      {
-        "@type": "Organization",
-        name: "xurrent",
-        description: "Enterprise Service Management platform that acquired Zenduty",
-      },
-    ],
-    hasCredential: [
-      {
-        "@type": "EducationalOccupationalCredential",
-        name: "Google UX Design Professional Certificate",
-        credentialCategory: "Professional Certificate",
-        recognizedBy: {
-          "@type": "Organization",
-          name: "Google",
-        },
-      },
-      {
-        "@type": "EducationalOccupationalCredential",
-        name: "Complete Web Development Bootcamp",
-        credentialCategory: "Certificate",
-      },
-    ],
   };
 
   const websiteSchema = {
     "@context": "https://schema.org",
-    "@type": "WebSite",
     "@id": `${siteConfig.siteUrl}/#website`,
-    name: `${siteConfig.name} - Portfolio`,
+    "@type": "WebSite",
     alternateName: [
       "Digital Mukul Portfolio",
       "Digital Moshai Portfolio",
       "Mukul Chugh Developer Portfolio",
     ],
-    url: siteConfig.siteUrl,
-    description: siteConfig.siteDescription,
-    keywords: seoKeywords.join(", "),
-    inLanguage: "en-US",
     author: {
       "@id": `${siteConfig.siteUrl}/#person`,
     },
-    publisher: {
-      "@id": `${siteConfig.siteUrl}/#person`,
-    },
+    description: siteConfig.siteDescription,
+    inLanguage: "en-US",
+    keywords: seoKeywords.join(", "),
+    name: `${siteConfig.name} - Portfolio`,
     potentialAction: {
       "@type": "SearchAction",
+      "query-input": "required name=search_term_string",
       target: {
         "@type": "EntryPoint",
         urlTemplate: `${siteConfig.siteUrl}/blog?q={search_term_string}`,
       },
-      "query-input": "required name=search_term_string",
     },
+    publisher: {
+      "@id": `${siteConfig.siteUrl}/#person`,
+    },
+    url: siteConfig.siteUrl,
   };
 
   const profilePageSchema = {
     "@context": "https://schema.org",
-    "@type": "ProfilePage",
     "@id": siteConfig.siteUrl,
-    url: siteConfig.siteUrl,
-    name: `${siteConfig.name} - ${siteConfig.title}`,
+    "@type": "ProfilePage",
+    about: {
+      "@id": `${siteConfig.siteUrl}/#person`,
+    },
     alternateName: "Digital Mukul - Nerd Engineer Portfolio",
     description: siteConfig.siteDescription,
-    keywords: seoKeywords.join(", "),
     inLanguage: "en-US",
     isPartOf: {
       "@id": `${siteConfig.siteUrl}/#website`,
     },
-    about: {
-      "@id": `${siteConfig.siteUrl}/#person`,
-    },
+    keywords: seoKeywords.join(", "),
     mainEntity: {
       "@id": `${siteConfig.siteUrl}/#person`,
     },
+    name: `${siteConfig.name} - ${siteConfig.title}`,
+    url: siteConfig.siteUrl,
   };
 
   // Organization schema for current employer
   const organizationSchema = {
     "@context": "https://schema.org",
-    "@type": "Organization",
     "@id": `${siteConfig.siteUrl}/#organization`,
-    name: experiencesData[0].company,
-    url: "https://quivly.ai",
-    logo: experiencesData[0].icon,
+    "@type": "Organization",
+    description: "AI-powered product platform",
     employee: {
       "@id": `${siteConfig.siteUrl}/#person`,
     },
-    description: "AI-powered product platform",
+    logo: experiencesData[0].icon,
+    name: experiencesData[0].company,
+    url: "https://quivly.ai",
   };
 
   return (
     <>
       <script
-        type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
+        type="application/ld+json"
       />
       <script
-        type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        type="application/ld+json"
       />
       <script
-        type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(profilePageSchema) }}
+        type="application/ld+json"
       />
       <script
-        type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        type="application/ld+json"
       />
     </>
   );

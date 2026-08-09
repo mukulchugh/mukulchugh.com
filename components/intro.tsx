@@ -1,35 +1,32 @@
 "use client";
 
-import Image from "next/image";
-import React, { Suspense, useCallback, useState } from "react";
-import { motion } from "motion/react";
-import Link from "next/link";
 import {
   IconBrandGithub,
-  IconBrandX,
   IconBrandLinkedin,
+  IconBrandX,
   IconFileText,
   IconMessage,
-  type Icon,
 } from "@tabler/icons-react";
-import { useSectionInView } from "@/lib/hooks";
-import { useActiveSectionContext } from "@/context/active-section-context";
-import { siteConfig, introContent, introSocialLinks } from "@/lib/data";
-import { CVModal } from "./ui/cv-modal";
+import clsx from "clsx";
+import { motion } from "motion/react";
+import Image from "next/image";
+import Link from "next/link";
+import React, { Suspense, useCallback, useState } from "react";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Button } from "@/components/ui/button";
-
-import clsx from "clsx";
-import { syne } from "@/lib/fonts";
+import { useActiveSectionContext } from "@/context/active-section-context";
+import { introContent, introSocialLinks, siteConfig } from "@/lib/data";
+import { useSectionInView } from "@/lib/hooks";
+import { CVModal } from "./ui/cv-modal";
 
 const stagger = {
-  initial: { opacity: 0, y: 16 },
   animate: { opacity: 1, y: 0 },
+  initial: { opacity: 0, y: 16 },
 };
 
 const Component = React.memo(() => {
@@ -47,34 +44,38 @@ const Component = React.memo(() => {
 
   return (
     <section
-      ref={ref}
-      id="home"
       className="max-w-2xl mx-auto text-center flex flex-col justify-center scroll-mt-28 px-6 py-12"
+      id="home"
+      ref={ref}
     >
       {/* Avatar */}
       <div className="flex items-center justify-center mb-8">
         <div className="relative">
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ type: "spring", stiffness: 200, damping: 20, duration: 0.4 }}
+            initial={{ opacity: 0, scale: 0.8 }}
+            transition={{
+              damping: 20,
+              duration: 0.4,
+              stiffness: 200,
+              type: "spring",
+            }}
           >
             <div className="relative">
-              <div className="absolute -inset-1 rounded-full bg-gradient-to-b from-zinc-200/40 to-zinc-100/20 blur-md" />
+              <div className="absolute -inset-1 rounded-full bg-gradient-to-b from-foreground/15 to-foreground/5 blur-md" />
               <Image
-                src={siteConfig.images.profileImage}
                 alt={siteConfig.name}
-                width={144}
-                height={144}
-                quality={90}
-                priority={true}
+                className="relative h-36 w-36 rounded-full object-cover border-2 border-border shadow-2xl"
                 fetchPriority="high"
+                height={144}
+                priority={true}
+                quality={90}
                 sizes="144px"
-                className="relative h-36 w-36 rounded-full object-cover border-2 border-black/[0.08] shadow-2xl"
+                src={siteConfig.images.profileImage}
+                width={144}
               />
             </div>
           </motion.div>
-
         </div>
       </div>
 
@@ -83,18 +84,18 @@ const Component = React.memo(() => {
         className="mb-5"
         {...stagger}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: 0.05 }}
+        transition={{ delay: 0.05, duration: 0.4 }}
       >
         <span
           className={clsx(
-            "inline-flex items-center gap-1.5 px-3.5 py-1.5 text-[11px] font-semibold tracking-[0.12em] uppercase rounded-full",
-            "text-zinc-600 bg-zinc-50 border border-zinc-200",
-            syne.className
+            "ui-label inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5",
+            "text-muted-foreground bg-muted border border-border",
+            "font-syne"
           )}
         >
           <span className="relative flex size-1.5">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-zinc-400 opacity-60" />
-            <span className="relative inline-flex size-1.5 rounded-full bg-zinc-500" />
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-muted-foreground opacity-60" />
+            <span className="relative inline-flex size-1.5 rounded-full bg-muted0" />
           </span>
           {siteConfig.tagline}
         </span>
@@ -102,19 +103,22 @@ const Component = React.memo(() => {
 
       {/* Hero heading */}
       <motion.h1
+        animate={{ opacity: 1, y: 0 }}
         className={clsx(
           "mb-8 px-2 font-bold tracking-tight",
           "text-[1.6rem] leading-[1.25] sm:text-[2.25rem] md:text-[2.75rem]",
-          syne.className
+          "font-syne"
         )}
         initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: 0.1 }}
+        transition={{ delay: 0.1, duration: 0.4 }}
       >
         <span className="text-foreground">{introContent.greeting}</span>
         <span className="text-muted-foreground font-medium">, a </span>
         <span className="text-foreground">{introContent.role}</span>
-        <span className="text-muted-foreground font-medium"> specializing in </span>
+        <span className="text-muted-foreground font-medium">
+          {" "}
+          specializing in{" "}
+        </span>
         <span className="text-foreground font-semibold">
           {introContent.specialty}
         </span>
@@ -126,65 +130,67 @@ const Component = React.memo(() => {
 
       {/* CTA row */}
       <motion.div
+        animate={{ opacity: 1, y: 0 }}
         className="flex flex-col sm:flex-row items-center justify-center gap-3 px-4"
         initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: 0.18 }}
+        transition={{ delay: 0.18, duration: 0.4 }}
       >
-        <Button
-          asChild
+        <Link
           className={clsx(
-            syne.className,
-            "rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white font-semibold shadow-[0_4px_20px_-4px_rgba(24,24,27,0.15)] transition-all duration-200"
+            buttonVariants(),
+            "font-syne",
+            "rounded-xl bg-foreground hover:bg-foreground/90 text-white font-semibold shadow-[0_4px_20px_-4px_rgba(24,24,27,0.15)] transition-all duration-200"
           )}
+          href="#contact"
+          onClick={handleClick}
         >
-          <Link href="#contact" onClick={handleClick}>
-            {introContent.ctaText}
-            <IconMessage className="w-4 h-4 ml-1 opacity-80" />
-          </Link>
-        </Button>
+          {introContent.ctaText}
+          <IconMessage className="opacity-80" data-icon="inline-end" />
+        </Link>
 
         <Button
-          variant="secondary"
-          onClick={handleOpenCV}
           className={clsx(
-            syne.className,
-            "rounded-xl border border-black/[0.10] hover:border-black/[0.18] font-semibold"
+            "font-syne",
+            "rounded-xl border border-border hover:border-border font-semibold"
           )}
+          onClick={handleOpenCV}
+          variant="secondary"
         >
           {introContent.resumeButtonText}
           <IconFileText className="w-4 h-4 ml-1 opacity-70" />
         </Button>
 
         {/* Social links */}
-        <TooltipProvider delayDuration={200}>
+        <TooltipProvider delay={200}>
           <div className="flex gap-2">
             {introSocialLinks.map((link) => {
               const iconMap: Record<string, typeof IconBrandLinkedin> = {
-                IconBrandLinkedin,
                 IconBrandGithub,
+                IconBrandLinkedin,
                 IconBrandX,
               };
               const IconComponent = iconMap[link.icon];
 
               return (
                 <Tooltip key={link.name}>
-                  <TooltipTrigger asChild>
-                    <a
-                      className={clsx(
-                        "group grid place-items-center w-11 h-11 rounded-xl cursor-pointer",
-                        "bg-black/[0.04] border border-black/[0.08]",
-                        "text-muted-foreground",
-                        "hover:-translate-y-0.5 hover:text-foreground hover:bg-black/[0.07] hover:border-black/[0.13]",
-                        "transition-all duration-200"
-                      )}
-                      href={link.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`${link.name} Profile`}
-                    >
-                      <IconComponent size={18} />
-                    </a>
+                  <TooltipTrigger
+                    render={
+                      <a
+                        aria-label={`${link.name} Profile`}
+                        className={clsx(
+                          "group grid place-items-center w-11 h-11 rounded-xl cursor-pointer",
+                          "bg-foreground/[0.05] border border-border",
+                          "text-muted-foreground",
+                          "hover:-translate-y-0.5 hover:text-foreground hover:bg-foreground/[0.08] hover:border-border",
+                          "transition-all duration-200"
+                        )}
+                        href={link.href}
+                        rel="noopener noreferrer"
+                        target="_blank"
+                      />
+                    }
+                  >
+                    <IconComponent size={18} />
                   </TooltipTrigger>
                   <TooltipContent side="top">{link.name}</TooltipContent>
                 </Tooltip>
@@ -195,10 +201,10 @@ const Component = React.memo(() => {
       </motion.div>
 
       <CVModal
-        isOpen={isCVModalOpen}
-        onClose={handleCloseCV}
         cvUrl={siteConfig.files.cv}
+        isOpen={isCVModalOpen}
         name={siteConfig.firstName}
+        onClose={handleCloseCV}
       />
     </section>
   );

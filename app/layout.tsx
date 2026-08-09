@@ -1,26 +1,41 @@
 import "./globals.css";
 
+import type { Metadata } from "next";
+import type React from "react";
 import { AnalyticsWrapper } from "@/components/analytics-wrapper";
 import Footer from "@/components/footer";
 import { HeroBackground } from "@/components/hero-background";
 import { JsonLd } from "@/components/json-ld";
+import { ThemeProvider } from "@/components/theme-provider";
 import { Dock } from "@/components/ui/dock";
 import ActiveSectionContextProvider from "@/context/active-section-context";
 import { siteConfig, skillsData } from "@/lib/data";
-import { geist } from "@/lib/fonts";
-import type { Metadata } from "next";
-import React from "react";
+import { geist, syne } from "@/lib/fonts";
 
 export const metadata: Metadata = {
-  title: {
-    default: siteConfig.siteTitle,
-    template: `%s | ${siteConfig.name}`,
+  alternates: {
+    canonical: "/",
   },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: siteConfig.name,
+  },
+  applicationName: siteConfig.name,
+  authors: [{ name: siteConfig.name, url: siteConfig.siteUrl }],
+  category: "Technology",
+  creator: siteConfig.name,
   description: siteConfig.siteDescription,
+  formatDetection: {
+    telephone: false, // Prevent auto-linking phone numbers
+  },
+  icons: {
+    icon: siteConfig.images.favicon,
+  },
   keywords: [
     ...siteConfig.keywords,
     ...skillsData,
-      "Mukul",
+    "Mukul",
     "Chugh",
     // Additional SEO Keywords - Portfolio & Hiring
     "Portfolio",
@@ -82,66 +97,49 @@ export const metadata: Metadata = {
     "Zenduty Core Team",
     "xurrent Zenduty Team",
   ],
-  authors: [{ name: siteConfig.name, url: siteConfig.siteUrl }],
-  creator: siteConfig.name,
-  publisher: siteConfig.name,
   metadataBase: new URL(siteConfig.siteUrl),
-  alternates: {
-    canonical: "/",
-  },
   openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: siteConfig.siteUrl,
-    siteName: siteConfig.name,
-    title: siteConfig.siteTitle,
     description: siteConfig.siteDescription,
     images: [
       {
+        alt: siteConfig.name,
+        height: 630,
         url: siteConfig.images.ogImage,
         width: 1200,
-        height: 630,
-        alt: siteConfig.name,
       },
     ],
+    locale: "en_US",
+    siteName: siteConfig.name,
+    title: siteConfig.siteTitle,
+    type: "website",
+    url: siteConfig.siteUrl,
+  },
+  other: {
+    "msapplication-TileColor": "#000000",
+  },
+  publisher: siteConfig.name,
+  robots: {
+    follow: true,
+    googleBot: {
+      follow: true,
+      index: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+    index: true,
+  },
+  title: {
+    default: siteConfig.siteTitle,
+    template: `%s | ${siteConfig.name}`,
   },
   twitter: {
     card: "summary_large_image",
-    site: "@themukulchugh",
     creator: "@themukulchugh",
-    title: siteConfig.siteTitle,
     description: siteConfig.siteDescription,
     images: [siteConfig.images.ogImage],
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
-  icons: {
-    icon: siteConfig.images.favicon,
-  },
-  verification: {
-    google: siteConfig.analytics.googleAdsenseId,
-  },
-  applicationName: siteConfig.name,
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "black-translucent",
-    title: siteConfig.name,
-  },
-  formatDetection: {
-    telephone: false, // Prevent auto-linking phone numbers
-  },
-  category: "Technology",
-  other: {
-    "msapplication-TileColor": "#000000",
+    site: "@themukulchugh",
+    title: siteConfig.siteTitle,
   },
 };
 
@@ -151,29 +149,42 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="!scroll-smooth">
+    <html
+      className={`${syne.variable} ${geist.variable} !scroll-smooth`}
+      lang="en"
+      suppressHydrationWarning
+    >
       <head>
-        <link rel="preconnect" href="https://ik.imagekit.io" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-        <link rel="dns-prefetch" href="https://analytics.google.com" />
         <link
-          rel="alternate"
-          type="application/rss+xml"
-          title={`${siteConfig.name} Blog RSS Feed`}
+          crossOrigin="anonymous"
+          href="https://ik.imagekit.io"
+          rel="preconnect"
+        />
+        <link href="https://www.googletagmanager.com" rel="dns-prefetch" />
+        <link href="https://analytics.google.com" rel="dns-prefetch" />
+        <link
           href="/blog/rss.xml"
+          rel="alternate"
+          title={`${siteConfig.name} Blog RSS Feed`}
+          type="application/rss+xml"
         />
         <JsonLd />
       </head>
-      <body
-        className={`${geist.className} bg-background text-foreground relative`}
-      >
-        <HeroBackground />
-        <ActiveSectionContextProvider>
-          {children}
-          <Footer />
-          <Dock />
-        </ActiveSectionContextProvider>
-        <AnalyticsWrapper gaId={siteConfig.analytics.googleAnalyticsId} />
+      <body className="font-sans bg-background text-foreground relative">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          disableTransitionOnChange
+          enableSystem
+        >
+          <HeroBackground />
+          <ActiveSectionContextProvider>
+            {children}
+            <Footer />
+            <Dock />
+          </ActiveSectionContextProvider>
+          <AnalyticsWrapper gaId={siteConfig.analytics.googleAnalyticsId} />
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -1,51 +1,33 @@
 "use client";
 
-import type React from "react";
-import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
-import Image from "next/image";
-import { cn } from "@/lib/utils";
-import { syne } from "@/lib/fonts";
 import { IconX } from "@tabler/icons-react";
+import { AnimatePresence, LayoutGroup, motion } from "motion/react";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { accentColorFor } from "@/lib/blog-topic";
+import { cn } from "@/lib/utils";
 
 export interface ExperienceCardItem {
-  id: string;
-  title: string;
   company: string;
-  location: string;
   date: string;
-  icon: string;
   description?: readonly string[];
+  icon: string;
+  id: string;
+  location: string;
+  title: string;
 }
 
 export interface ExpandableCardProps {
-  items: ExperienceCardItem[];
   className?: string;
+  items: ExperienceCardItem[];
 }
 
-const useOutsideClick = (callback: () => void) => {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClick = (event: MouseEvent) => {
-      if (ref.current && !ref.current.contains(event.target as Node)) {
-        callback();
-      }
-    };
-
-    document.addEventListener("click", handleClick);
-    return () => document.removeEventListener("click", handleClick);
-  }, [callback]);
-
-  return ref;
-};
-
-// Smooth spring transition for layout animations
 const springTransition = {
-  type: "spring" as const,
-  stiffness: 300,
   damping: 30,
   mass: 1,
+  stiffness: 300,
+  type: "spring" as const,
 };
 
 export default function ExpandableCard({
@@ -53,235 +35,214 @@ export default function ExpandableCard({
   className,
 }: ExpandableCardProps) {
   const [current, setCurrent] = useState<ExperienceCardItem | null>(null);
-  const ref = useOutsideClick(() => setCurrent(null));
 
-  // Handle escape key
   useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
+    if (!current) {
+      return;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
         setCurrent(null);
       }
     };
-    document.addEventListener("keydown", handleEscape);
-    return () => document.removeEventListener("keydown", handleEscape);
-  }, []);
 
-  // Prevent body scroll when expanded
-  useEffect(() => {
-    if (current) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", closeOnEscape);
+
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", closeOnEscape);
     };
   }, [current]);
 
   return (
-    <div className="relative">
-      {/* Backdrop overlay */}
-      <AnimatePresence>
-        {current && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-            className="fixed inset-0 z-[1000] bg-black/70 backdrop-blur-md"
-            onClick={() => setCurrent(null)}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Expanded card modal */}
-      <AnimatePresence mode="wait">
-        {current && (
-          <div className="fixed inset-0 z-[1001] grid place-items-center p-4 overflow-y-auto">
-            <motion.div
-              ref={ref}
-              layoutId={`card-${current.id}`}
-              transition={springTransition}
-              className="relative w-full max-w-2xl overflow-hidden rounded-2xl border border-black/[0.08] bg-white shadow-[0_8px_48px_rgba(20,20,40,0.14)] my-8"
-            >
-              {/* Close button — touch target 44×44 */}
-              <motion.button
+    <LayoutGroup id="experience-cards">
+      <div className="relative">
+        <AnimatePresence initial={false}>
+          {current && (
+            <>
+              <motion.div
+                animate={{ opacity: 1 }}
+                aria-hidden="true"
+                className="fixed inset-3 z-50 rounded-[1.75rem] bg-black/55 backdrop-blur-sm sm:inset-4"
+                exit={{ opacity: 0 }}
+                initial={{ opacity: 0 }}
+                key="experience-backdrop"
                 onClick={() => setCurrent(null)}
-                aria-label="Close"
-                className="absolute top-3 right-3 z-10 flex items-center justify-center w-11 h-11 rounded-full bg-black/[0.06]
-                           [@media(hover:hover)]:hover:bg-black/[0.10] transition-colors active:bg-black/[0.14]"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ duration: 0.2, delay: 0.1 }}
-              >
-                <IconX className="w-4 h-4 text-foreground/60" />
-              </motion.button>
-
-              <div className="p-6 sm:p-8">
-                {/* Header */}
-                <div className="flex items-start gap-4 mb-6">
-                  <motion.div
-                    layoutId={`icon-${current.id}`}
-                    transition={springTransition}
-                    className="w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-zinc-200 overflow-hidden flex items-center justify-center bg-white flex-shrink-0 shadow-lg shadow-zinc-900/[0.08]"
-                  >
-                    <Image
-                      src={current.icon}
-                      alt={current.company}
-                      width={40}
-                      height={40}
-                      className="object-contain rounded-full"
-                    />
-                  </motion.div>
-
-                  <div className="flex-1 min-w-0">
-                    {/* Meta — 12px */}
-                    <motion.span
-                      layoutId={`date-${current.id}`}
-                      transition={springTransition}
-                      className="text-[12px] text-zinc-400 block mb-1"
-                    >
-                      {current.date}
-                    </motion.span>
-                    {/* Tile/card title scale */}
-                    <motion.h3
-                      layoutId={`title-${current.id}`}
-                      transition={springTransition}
-                      className={cn(
-                        syne.className,
-                        "font-semibold text-xl sm:text-2xl text-foreground"
-                      )}
-                    >
-                      {current.title}
-                    </motion.h3>
-                    {/* Body scale */}
-                    <motion.p
-                      layoutId={`company-${current.id}`}
-                      transition={springTransition}
-                      className="text-[14px] text-zinc-500 mt-1"
-                    >
-                      {current.company} • {current.location}
-                    </motion.p>
-                  </div>
-                </div>
-
-                {/* Description - only visible when expanded */}
-                {current.description && current.description.length > 0 && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 10 }}
-                    transition={{ duration: 0.4, delay: 0.15, ease: "easeOut" }}
-                  >
-                    <h4 className="text-[13px] font-medium text-foreground/80 mb-3">
-                      Key Responsibilities & Achievements
-                    </h4>
-                    <ul className="space-y-3">
-                      {current.description.map((desc, i) => (
-                        <motion.li
-                          key={i}
-                          className="flex items-start text-[14px] text-zinc-500"
-                          initial={{ opacity: 0, x: -10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{
-                            delay: 0.2 + i * 0.05,
-                            duration: 0.3,
-                            ease: "easeOut"
-                          }}
-                        >
-                          <span className="mr-3 mt-1.5 w-1.5 h-1.5 rounded-full bg-zinc-400 flex-shrink-0" />
-                          <span>{desc}</span>
-                        </motion.li>
-                      ))}
-                    </ul>
-                  </motion.div>
-                )}
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-
-      {/* Card list */}
-      <div className={cn("relative flex flex-col gap-3 w-full", className)}>
-        {items.map((item) => (
-          <motion.div
-            key={item.id}
-            layoutId={`card-${item.id}`}
-            onClick={() => setCurrent(item)}
-            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setCurrent(item); }}
-            role="button"
-            tabIndex={0}
-            aria-label={`${item.title} at ${item.company} — click to expand`}
-            transition={springTransition}
-            className="experience-card group relative flex cursor-pointer items-center gap-4 rounded-xl
-                       border border-black/[0.07] bg-white/70 p-4 sm:p-5
-                       backdrop-blur-sm w-full
-                       transition-all duration-[260ms] [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]
-                       active:scale-[0.985] active:duration-[100ms]
-                       [@media(hover:hover)]:hover:bg-white [@media(hover:hover)]:hover:border-black/[0.11]
-                       [@media(hover:hover)]:hover:-translate-y-[2px]
-                       focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900"
-            style={{
-              boxShadow: "0 1px 2px rgba(28,25,23,0.03), 0 4px 12px -6px rgba(28,25,23,0.07)",
-            }}
-            whileHover={{ scale: 1.005 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            {/* Icon */}
-            <motion.div
-              layoutId={`icon-${item.id}`}
-              transition={springTransition}
-              className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border-2 border-zinc-200 overflow-hidden flex items-center justify-center bg-white flex-shrink-0 shadow-md shadow-zinc-900/[0.08]"
-            >
-              <Image
-                src={item.icon}
-                alt={item.company}
-                width={32}
-                height={32}
-                className="object-contain rounded-full"
+                transition={{ duration: 0.2 }}
               />
-            </motion.div>
 
-            {/* Content */}
-            <div className="flex-1 min-w-0">
-              {/* Meta — 12px */}
-              <motion.span
-                layoutId={`date-${item.id}`}
-                transition={springTransition}
-                className="text-[12px] text-zinc-400 block mb-0.5"
-              >
-                {item.date}
-              </motion.span>
-              {/* Tile/card title — 1rem semibold */}
-              <motion.h3
-                layoutId={`title-${item.id}`}
-                transition={springTransition}
-                className={cn(
-                  syne.className,
-                  "font-semibold text-[1rem] sm:text-[1.0625rem] text-foreground truncate"
-                )}
-              >
-                {item.title}
-              </motion.h3>
-              {/* Body — 14px muted */}
-              <motion.p
-                layoutId={`company-${item.id}`}
-                transition={springTransition}
-                className="text-[14px] text-zinc-500 truncate"
-              >
-                {item.company} • {item.location}
-              </motion.p>
-            </div>
+              <div className="pointer-events-none fixed inset-0 z-50 grid place-items-center overflow-y-auto p-4 sm:p-6">
+                <motion.article
+                  className="pointer-events-auto relative my-4 max-h-[calc(100dvh-2rem)] w-full max-w-2xl overflow-y-auto rounded-2xl border border-border bg-card shadow-[0_24px_80px_-24px_rgba(24,24,27,0.32)]"
+                  id={`experience-${current.id}`}
+                  key={current.id}
+                  layoutId={`experience-card-${current.id}`}
+                  transition={springTransition}
+                >
+                  <Button
+                    aria-label="Collapse experience"
+                    className="absolute right-3 top-3 rounded-full bg-foreground/[0.07] hover:bg-foreground/[0.10]"
+                    onClick={() => setCurrent(null)}
+                    render={
+                      <motion.button
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        transition={{ duration: 0.15 }}
+                      />
+                    }
+                    size="icon"
+                    variant="ghost"
+                  >
+                    <IconX className="text-foreground/60" />
+                  </Button>
 
-            {/* Click indicator — always visible at low opacity, amplifies on hover */}
-            <div className="flex-shrink-0 opacity-30 transition-opacity duration-300 [@media(hover:hover)]:group-hover:opacity-60">
-              <span className="text-[11px] text-zinc-500 tracking-wide">Expand</span>
-            </div>
-          </motion.div>
-        ))}
+                  <div className="p-6 sm:p-8">
+                    <div className="mb-6 flex items-start gap-4">
+                      <motion.div
+                        className="flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-border bg-card sm:size-16"
+                        layoutId={`experience-icon-${current.id}`}
+                        style={{
+                          boxShadow: `0 4px 16px -4px rgba(0,0,0,0.18), 0 0 20px -6px ${accentColorFor(current.company)}`,
+                        }}
+                        transition={springTransition}
+                      >
+                        <Image
+                          alt={current.company}
+                          className="rounded-full object-contain"
+                          height={40}
+                          src={current.icon}
+                          width={40}
+                        />
+                      </motion.div>
+
+                      <div className="min-w-0 flex-1">
+                        <motion.span
+                          className="ui-label mb-1 block text-muted-foreground"
+                          layoutId={`experience-date-${current.id}`}
+                          transition={springTransition}
+                        >
+                          {current.date}
+                        </motion.span>
+                        <motion.h3
+                          className={cn(
+                            "font-syne",
+                            "text-xl font-semibold text-foreground sm:text-2xl"
+                          )}
+                          layoutId={`experience-title-${current.id}`}
+                          transition={springTransition}
+                        >
+                          {current.title}
+                        </motion.h3>
+                        <motion.p
+                          className="mt-1 text-sm text-muted-foreground"
+                          layoutId={`experience-company-${current.id}`}
+                          transition={springTransition}
+                        >
+                          {current.company} • {current.location}
+                        </motion.p>
+                      </div>
+                    </div>
+
+                    {current.description?.length ? (
+                      <motion.div
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 8 }}
+                        initial={{ opacity: 0, y: 12 }}
+                        transition={{ delay: 0.1, duration: 0.25 }}
+                      >
+                        <h4 className="ui-label mb-3 text-foreground/70">
+                          Key responsibilities & achievements
+                        </h4>
+                        <ul className="flex flex-col gap-3">
+                          {current.description.map((description) => (
+                            <li
+                              className="flex items-start text-sm text-muted-foreground"
+                              key={description}
+                            >
+                              <span className="mr-3 mt-1.5 size-1.5 shrink-0 rounded-full bg-muted-foreground" />
+                              <span>{description}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </motion.div>
+                    ) : null}
+                  </div>
+                </motion.article>
+              </div>
+            </>
+          )}
+        </AnimatePresence>
+
+        <div className={cn("relative flex w-full flex-col gap-3", className)}>
+          {items.map((item) => (
+            <Button
+              aria-controls={`experience-${item.id}`}
+              aria-expanded={current?.id === item.id}
+              className="experience-card group h-auto w-full cursor-pointer justify-start gap-4 rounded-xl border border-border bg-card/70 p-4 text-left shadow-[0_1px_2px_rgba(28,25,23,0.03),0_4px_12px_-6px_rgba(28,25,23,0.07)] backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-border hover:bg-card sm:p-5"
+              key={item.id}
+              onClick={() => setCurrent(item)}
+              render={
+                <motion.button
+                  layoutId={`experience-card-${item.id}`}
+                  transition={springTransition}
+                  whileHover={{ scale: 1.005 }}
+                  whileTap={{ scale: 0.98 }}
+                />
+              }
+              variant="ghost"
+            >
+              <motion.div
+                className="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-border bg-card shadow-md shadow-foreground/[0.08] sm:size-14"
+                layoutId={`experience-icon-${item.id}`}
+                transition={springTransition}
+              >
+                <Image
+                  alt={item.company}
+                  className="rounded-full object-contain"
+                  height={32}
+                  src={item.icon}
+                  width={32}
+                />
+              </motion.div>
+
+              <div className="min-w-0 flex-1">
+                <motion.span
+                  className="ui-label mb-0.5 block text-muted-foreground"
+                  layoutId={`experience-date-${item.id}`}
+                  transition={springTransition}
+                >
+                  {item.date}
+                </motion.span>
+                <motion.h3
+                  className={cn(
+                    "font-syne",
+                    "truncate text-base font-semibold text-foreground sm:text-[1.0625rem]"
+                  )}
+                  layoutId={`experience-title-${item.id}`}
+                  transition={springTransition}
+                >
+                  {item.title}
+                </motion.h3>
+                <motion.p
+                  className="truncate text-sm text-muted-foreground"
+                  layoutId={`experience-company-${item.id}`}
+                  transition={springTransition}
+                >
+                  {item.company} • {item.location}
+                </motion.p>
+              </div>
+
+              <span className="ui-label shrink-0 text-muted-foreground opacity-40 transition-opacity group-hover:opacity-70">
+                Expand
+              </span>
+            </Button>
+          ))}
+        </div>
       </div>
-    </div>
+    </LayoutGroup>
   );
 }

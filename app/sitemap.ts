@@ -1,30 +1,30 @@
-import { MetadataRoute } from "next";
-import { siteConfig } from "@/lib/data";
+import type { MetadataRoute } from "next";
 import { getAllPosts } from "@/lib/blog";
+import { siteConfig } from "@/lib/data";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = siteConfig.siteUrl;
 
   const staticRoutes: MetadataRoute.Sitemap = [
     {
-      url: baseUrl,
-      lastModified: new Date(),
       changeFrequency: "daily",
+      lastModified: new Date(),
       priority: 1.0,
+      url: baseUrl,
     },
     {
-      url: `${baseUrl}/blog`,
-      lastModified: new Date(),
       changeFrequency: "daily",
+      lastModified: new Date(),
       priority: 0.9,
+      url: `${baseUrl}/blog`,
     },
   ];
 
   const blogRoutes: MetadataRoute.Sitemap = getAllPosts().map((post) => ({
-    url: `${baseUrl}/blog/${post.slug}`,
-    lastModified: new Date(post.publishedAt),
     changeFrequency: "weekly" as const,
+    lastModified: new Date(post.publishedAt),
     priority: 0.8,
+    url: `${baseUrl}/blog/${post.slug}`,
   }));
 
   return [...staticRoutes, ...blogRoutes];

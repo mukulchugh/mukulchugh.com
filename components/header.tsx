@@ -1,13 +1,11 @@
 "use client";
 
-import React from "react";
 import { motion } from "motion/react";
-import { usePathname } from "next/navigation";
-import { siteConfig } from "@/lib/data";
-import Image from "next/image";
-import { syne } from "@/lib/fonts";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { ThemeLogo } from "@/components/theme-logo";
+import { siteConfig } from "@/lib/data";
+import { cn } from "@/lib/utils";
 import { LocationTag } from "./ui/location-tag";
 
 export default function Header() {
@@ -17,25 +15,22 @@ export default function Header() {
   return (
     <header className="w-full flex justify-between items-center py-8 px-4 sm:px-8 max-w-4xl mx-auto">
       <motion.div
-        initial={{ x: -20, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
+        animate={{ opacity: 1, x: 0 }}
+        initial={{ opacity: 0, x: -20 }}
       >
-        <Link href="/" className="flex items-center gap-3">
-          <Image
-            src={siteConfig.images.logoLight}
-            alt={siteConfig.name}
-            quality="80"
-            priority={true}
-            width={32}
-            height={32}
+        <Link className="flex items-center gap-3" href="/">
+          <ThemeLogo
             className="h-8 w-8 object-cover"
+            height={32}
+            priority
+            width={32}
           />
           {isBlogPage ? (
             <div className="flex items-center gap-3">
               <div className="h-5 w-px bg-foreground/20" />
               <span
                 className={cn(
-                  syne.className,
+                  "font-syne",
                   "text-lg font-semibold text-foreground/90"
                 )}
               >
@@ -45,7 +40,7 @@ export default function Header() {
           ) : (
             <span
               className={cn(
-                syne.className,
+                "font-syne",
                 "text-lg font-semibold text-foreground/90"
               )}
             >
@@ -56,8 +51,8 @@ export default function Header() {
       </motion.div>
 
       <motion.div
-        initial={{ x: 20, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
+        animate={{ opacity: 1, x: 0 }}
+        initial={{ opacity: 0, x: 20 }}
       >
         <LocationTag city="San Francisco" country="CA" timezone="PST" />
       </motion.div>

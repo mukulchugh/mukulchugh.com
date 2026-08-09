@@ -1,122 +1,120 @@
 "use client";
 
-import Link from "next/link";
-import { IconArrowRight } from "@tabler/icons-react";
+import {
+  IconArrowRight,
+  IconChevronLeft,
+  IconChevronRight,
+} from "@tabler/icons-react";
 import { motion, useReducedMotion } from "motion/react";
-import { cn } from "@/lib/utils";
-import { syne } from "@/lib/fonts";
-import { useSectionInView } from "@/lib/hooks";
-import type { Post } from "@/lib/blog";
+import Link from "next/link";
+import { useState } from "react";
 import { BlogPostCard } from "@/components/blog/blog-post-card";
+import { Button } from "@/components/ui/button";
+import type { Post } from "@/lib/blog";
+import { useSectionInView } from "@/lib/hooks";
+import { staggerContainer, staggerItem, viewportOnce } from "@/lib/motion";
+import { cn } from "@/lib/utils";
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.08 },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 14, filter: "blur(5px)" },
-  visible: {
-    opacity: 1,
-    y: 0,
-    filter: "blur(0px)",
-    transition: { type: "spring" as const, stiffness: 110, damping: 20 },
-  },
-};
+const PAGE_SIZE = 3;
 
 export default function BlogSection({ posts = [] }: { posts?: Post[] }) {
-  const { ref } = useSectionInView("Blog", 0.3);
-  const featuredPost = posts[0] ?? null;
+  const { ref } = useSectionInView("Blog", 0.2);
   const shouldReduce = useReducedMotion();
+  const pageCount = Math.ceil(posts.length / PAGE_SIZE);
+  const [page, setPage] = useState(0);
+  const pagePosts = posts.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE);
 
   return (
     <section
-      ref={ref}
+      className="relative scroll-mt-28 w-full min-w-0 p-5 sm:p-6 lg:p-8"
       id="blog"
-      className="scroll-mt-28 w-full p-5 sm:p-6 lg:p-7 min-w-0"
+      ref={ref}
     >
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-5 lg:gap-8 items-start min-w-0">
-
-        {/* Left — editorial statement + CTA */}
-        <motion.div
-          variants={shouldReduce ? undefined : containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.15 }}
-          className="flex flex-col gap-4"
-        >
-          {/* Mono label — unified 10px */}
-          <motion.p
-            variants={shouldReduce ? undefined : itemVariants}
-            className="font-mono text-[10px] uppercase tracking-[0.14em] text-zinc-400"
-          >
-            05 — Writing
-          </motion.p>
-
-          {/* Hairline */}
-          <div className="h-px w-10 bg-zinc-900/[0.07]" aria-hidden="true" />
-
-          {/* Section heading — clamp(1.4rem, 3.4vw, 2.1rem) */}
-          <motion.h2
-            variants={shouldReduce ? undefined : itemVariants}
+      <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-end sm:justify-between">
+        <div className="flex min-w-0 flex-col gap-2.5">
+          <p className="ui-label text-muted-foreground">05 — Writing</p>
+          <div aria-hidden="true" className="h-px w-10 bg-foreground/[0.07]" />
+          <h2
             className={cn(
-              syne.className,
-              "font-black text-zinc-950 leading-[1.05] tracking-[-0.04em] text-balance"
+              "font-syne font-black leading-[1.05] tracking-[-0.04em] text-balance text-foreground"
             )}
             style={{ fontSize: "clamp(1.4rem, 3.4vw, 2.1rem)" }}
           >
             Writing &{" "}
-            <span className="text-zinc-400 font-light">
-              notes
-            </span>
-          </motion.h2>
+            <span className="font-light text-muted-foreground">notes</span>
+          </h2>
+          <p className="max-w-[48ch] text-[14px] leading-[1.7] text-pretty text-muted-foreground">
+            Short notes on engineering, product, and shipping — from OpenKVM and
+            Brik to agents and founding-team work.
+          </p>
+        </div>
 
-          {/* Body — 14px muted, capped measure */}
-          <motion.p
-            variants={shouldReduce ? undefined : itemVariants}
-            className="text-[14px] text-zinc-600 leading-[1.7] max-w-[44ch] text-pretty"
-          >
-            I write about engineering, product, and the craft of building
-            software that earns its keep.
-          </motion.p>
-
-          {/* CTA link — touch target ≥44px via padding */}
-          <motion.div variants={shouldReduce ? undefined : itemVariants}>
-            <Link
-              href="/blog"
-              className="group inline-flex items-center gap-1.5 py-2 text-[13px] font-semibold
-                         text-zinc-500 transition-colors duration-200 w-fit
-                         [@media(hover:hover)]:hover:text-zinc-900"
-            >
-              Read the blog
-              <IconArrowRight
-                className="h-3.5 w-3.5 transition-transform duration-200
-                           [@media(hover:hover)]:group-hover:translate-x-0.5"
-              />
-            </Link>
-          </motion.div>
-        </motion.div>
-
-        {/* Right — Featured post card */}
-        {featuredPost ? (
-          <motion.div
-            initial={shouldReduce ? false : { opacity: 0, y: 14 }}
-            whileInView={shouldReduce ? undefined : { opacity: 1, y: 0 }}
-            transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.12 }}
-            viewport={{ once: true, amount: 0.15 }}
-            className="w-full lg:w-[260px] xl:w-[280px] min-w-0"
-          >
-            <BlogPostCard post={featuredPost} variant="compact" />
-          </motion.div>
-        ) : (
-          <div className="w-full lg:w-[260px] xl:w-[280px] rounded-2xl border border-black/[0.07] bg-black/[0.02] h-[220px] flex items-center justify-center min-w-0">
-            <p className="text-[12px] text-muted-foreground/50">No posts yet</p>
-          </div>
-        )}
+        <Link
+          className="group inline-flex w-fit items-center gap-1.5 py-2 text-[13px] font-semibold
+                     text-muted-foreground transition-colors duration-200
+                     [@media(hover:hover)]:hover:text-foreground"
+          href="/blog"
+        >
+          View all on /blog
+          <IconArrowRight
+            className="h-3.5 w-3.5 transition-transform duration-200
+                       [@media(hover:hover)]:group-hover:translate-x-0.5"
+          />
+        </Link>
       </div>
+
+      {posts.length === 0 ? (
+        <div className="flex h-[160px] items-center justify-center rounded-2xl border border-border bg-foreground/[0.03]">
+          <p className="text-[12px] text-muted-foreground/50">No posts yet</p>
+        </div>
+      ) : (
+        <motion.div
+          className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:gap-4"
+          initial={shouldReduce ? false : "hidden"}
+          key={page}
+          variants={shouldReduce ? undefined : staggerContainer}
+          viewport={viewportOnce}
+          whileInView={shouldReduce ? undefined : "visible"}
+        >
+          {pagePosts.map((post, index) => (
+            <motion.div
+              className="min-w-0"
+              key={post.slug}
+              variants={shouldReduce ? undefined : staggerItem}
+            >
+              <BlogPostCard index={index} post={post} variant="compact" />
+            </motion.div>
+          ))}
+        </motion.div>
+      )}
+
+      {pageCount > 1 && (
+        <div className="mt-6 flex items-center justify-center gap-4">
+          <Button
+            aria-label="Previous posts"
+            disabled={page === 0}
+            onClick={() => setPage((p) => Math.max(0, p - 1))}
+            size="sm"
+            type="button"
+            variant="secondary"
+          >
+            <IconChevronLeft className="h-4 w-4" />
+          </Button>
+          <span className="font-mono text-[12px] tabular-nums text-muted-foreground">
+            Page {page + 1} of {pageCount}
+          </span>
+          <Button
+            aria-label="Next posts"
+            disabled={page === pageCount - 1}
+            onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
+            size="sm"
+            type="button"
+            variant="secondary"
+          >
+            <IconChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+      )}
     </section>
   );
 }

@@ -1,24 +1,22 @@
+import { IconArrowLeft, IconCalendar, IconClock } from "@tabler/icons-react";
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { PostCover } from "@/components/blog/post-cover";
+import { PostNav } from "@/components/blog/post-nav";
+import { ReadingProgress } from "@/components/blog/reading-progress";
+import { RelatedPosts } from "@/components/blog/related-posts";
+import { TableOfContents } from "@/components/blog/table-of-contents";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import {
+  getAdjacentPosts,
   getPostServer,
   getPostsServer,
-  getAdjacentPosts,
   getRelatedPosts,
 } from "@/lib/blog";
 import { siteConfig } from "@/lib/data";
-import { syne } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
-import { PostCover } from "@/components/blog/post-cover";
-import { TableOfContents } from "@/components/blog/table-of-contents";
-import { PostNav } from "@/components/blog/post-nav";
-import { RelatedPosts } from "@/components/blog/related-posts";
-import { ReadingProgress } from "@/components/blog/reading-progress";
-import { IconArrowLeft, IconCalendar, IconClock } from "@tabler/icons-react";
-import { notFound } from "next/navigation";
-import type { Metadata } from "next";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { AdUnit } from "@/components/ad-unit";
 
 export const revalidate = 3600;
 
@@ -44,24 +42,24 @@ export async function generateMetadata({
   }
 
   return {
-    title: `${post.seo?.title || post.title} | ${siteConfig.name}`,
-    description: post.seo?.description || post.brief,
     alternates: {
       canonical: `/blog/${slug}`,
     },
+    description: post.seo?.description || post.brief,
     openGraph: {
-      title: post.title,
       description: post.brief,
       images: post.coverImage?.url ? [post.coverImage.url] : [],
-      type: "article",
       publishedTime: post.publishedAt,
+      title: post.title,
+      type: "article",
       url: `${siteConfig.siteUrl}/blog/${slug}`,
     },
+    title: `${post.seo?.title || post.title} | ${siteConfig.name}`,
     twitter: {
       card: "summary_large_image",
-      title: post.title,
       description: post.brief,
       images: post.coverImage?.url ? [post.coverImage.url] : [],
+      title: post.title,
     },
   };
 }
@@ -79,40 +77,41 @@ export default async function PostPage({ params }: PostPageProps) {
   }
 
   const formattedDate = new Date(post.publishedAt).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
     day: "numeric",
+    month: "long",
+    timeZone: "UTC",
+    year: "numeric",
   });
 
   const blogPostingSchema = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    headline: post.title,
-    description: post.brief,
-    image: post.coverImage?.url || siteConfig.images.ogImage,
-    datePublished: post.publishedAt,
-    dateModified: post.publishedAt,
+    articleSection: post.tags[0]?.name || "Technology",
     author: {
       "@type": "Person",
-      name: post.author?.name || siteConfig.name,
       image: post.author?.profilePicture || siteConfig.images.profileImage,
+      name: post.author?.name || siteConfig.name,
+    },
+    dateModified: post.publishedAt,
+    datePublished: post.publishedAt,
+    description: post.brief,
+    headline: post.title,
+    image: post.coverImage?.url || siteConfig.images.ogImage,
+    keywords: post.tags.map((tag) => tag.name).join(", "),
+    mainEntityOfPage: {
+      "@id": `${siteConfig.siteUrl}/blog/${slug}`,
+      "@type": "WebPage",
     },
     publisher: {
       "@type": "Organization",
-      name: siteConfig.name,
       logo: {
         "@type": "ImageObject",
         url: siteConfig.images.profileImage,
       },
+      name: siteConfig.name,
     },
-    url: `${siteConfig.siteUrl}/blog/${slug}`,
-    mainEntityOfPage: {
-      "@type": "WebPage",
-      "@id": `${siteConfig.siteUrl}/blog/${slug}`,
-    },
-    keywords: post.tags.map((tag) => tag.name).join(", "),
-    articleSection: post.tags[0]?.name || "Technology",
     timeRequired: `PT${post.readTimeInMinutes}M`,
+    url: `${siteConfig.siteUrl}/blog/${slug}`,
   };
 
   const breadcrumbSchema = {
@@ -121,26 +120,27 @@ export default async function PostPage({ params }: PostPageProps) {
     itemListElement: [
       {
         "@type": "ListItem",
-        position: 1,
-        name: "Home",
         item: siteConfig.siteUrl,
+        name: "Home",
+        position: 1,
       },
       {
         "@type": "ListItem",
-        position: 2,
-        name: "Blog",
         item: `${siteConfig.siteUrl}/blog`,
+        name: "Blog",
+        position: 2,
       },
       {
         "@type": "ListItem",
-        position: 3,
-        name: post.title,
         item: `${siteConfig.siteUrl}/blog/${slug}`,
+        name: post.title,
+        position: 3,
       },
     ],
   };
 
   const headings = post.headings ?? [];
+  const hasTableOfContents = headings.length >= 2;
 
   return (
     <main className="w-full py-12 sm:py-20 lg:py-28 overflow-x-hidden">
@@ -149,168 +149,173 @@ export default async function PostPage({ params }: PostPageProps) {
 
       {/* Structured Data */}
       <script
-        type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingSchema) }}
+        type="application/ld+json"
       />
       <script
-        type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        type="application/ld+json"
       />
 
       {/* Outer container — constrains horizontal width */}
-      <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
+      <div className="container mx-auto max-w-5xl px-4 sm:px-6">
         {/* Back link */}
         <Link
+          className="inline-flex items-center gap-2 py-2 text-[14px] text-muted-foreground
+                     [@media(hover:hover)]:hover:text-foreground transition-colors mb-10"
           href="/blog"
-          className="inline-flex items-center gap-2 py-2 text-[14px] text-zinc-500
-                     [@media(hover:hover)]:hover:text-zinc-900 transition-colors mb-10"
         >
           <IconArrowLeft className="w-4 h-4" />
           Back to Blog
         </Link>
 
-        {/* Article header — full width (no sidebar yet) */}
-        <header className="max-w-3xl mb-10">
-          {post.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-6">
-              {post.tags.map((tag) => (
-                <Badge key={tag.slug} variant="secondary">
-                  {tag.name}
-                </Badge>
-              ))}
-            </div>
+        <div
+          className={cn(
+            "grid items-start",
+            hasTableOfContents &&
+              "lg:grid-cols-[13rem_minmax(0,48rem)] lg:gap-x-12"
           )}
-
-          <h1
+        >
+          <header
             className={cn(
-              syne.className,
-              "font-black text-zinc-950 mb-6 leading-[1.08] tracking-tight break-words"
+              "mb-10 max-w-3xl",
+              hasTableOfContents && "lg:col-start-2"
             )}
-            style={{ fontSize: "clamp(1.6rem, 5vw, 3rem)" }}
           >
-            {post.title}
-          </h1>
-
-          <div className="flex flex-wrap items-center gap-3 sm:gap-6 text-[12px] text-zinc-400">
-            {post.author && (
-              <div className="flex items-center gap-2">
-                <Avatar className="h-7 w-7">
-                  <AvatarImage src={post.author.profilePicture} />
-                  <AvatarFallback>
-                    {post.author.name
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")}
-                  </AvatarFallback>
-                </Avatar>
-                <span className="text-zinc-700 font-medium">
-                  {post.author.name}
-                </span>
+            {post.tags.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-6">
+                {post.tags.map((tag) => (
+                  <Badge key={tag.slug} variant="secondary">
+                    {tag.name}
+                  </Badge>
+                ))}
               </div>
             )}
-            <div className="flex items-center gap-2">
-              <IconCalendar className="w-3.5 h-3.5" />
-              <time dateTime={post.publishedAt}>{formattedDate}</time>
+
+            <h1
+              className={cn(
+                "font-syne",
+                "font-black text-foreground mb-6 leading-[1.08] tracking-tight break-words"
+              )}
+              style={{ fontSize: "clamp(1.6rem, 5vw, 3rem)" }}
+            >
+              {post.title}
+            </h1>
+
+            <div className="flex flex-wrap items-center gap-3 sm:gap-6 text-[12px] text-muted-foreground">
+              {post.author && (
+                <div className="flex items-center gap-2">
+                  <Avatar className="h-7 w-7">
+                    <AvatarImage src={post.author.profilePicture} />
+                    <AvatarFallback>
+                      {post.author.name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="text-foreground/80 font-medium">
+                    {post.author.name}
+                  </span>
+                </div>
+              )}
+              <div className="flex items-center gap-2">
+                <IconCalendar className="w-3.5 h-3.5" />
+                <time dateTime={post.publishedAt}>{formattedDate}</time>
+              </div>
+              <div className="flex items-center gap-2">
+                <IconClock className="w-3.5 h-3.5" />
+                <span>{post.readTimeInMinutes} min read</span>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <IconClock className="w-3.5 h-3.5" />
-              <span>{post.readTimeInMinutes} min read</span>
-            </div>
+          </header>
+
+          <div
+            className={cn(
+              "mb-12 max-w-3xl",
+              hasTableOfContents && "lg:col-start-2"
+            )}
+          >
+            <PostCover hero interactive post={post} priority />
           </div>
-        </header>
 
-        {/* Cover image — full width */}
-        <div className="max-w-3xl mb-10">
-          <PostCover post={post} priority hero />
-        </div>
-
-        {/* Ad Unit above content */}
-        <div className="max-w-3xl mb-10">
-          <AdUnit adFormat="horizontal" />
-        </div>
-
-        {/* Reading layout: TOC sidebar + article column */}
-        <div className="flex gap-12 items-start">
-          {/* TOC sidebar — sticky, Desktop lg+ only (hidden on smaller screens via CSS) */}
-          {headings.length >= 2 && (
-            <TableOfContents headings={headings} />
+          {hasTableOfContents && (
+            <div className="lg:col-start-1 lg:row-start-3">
+              <TableOfContents headings={headings} />
+            </div>
           )}
 
-          {/* Article column */}
-          <div className="min-w-0 flex-1 max-w-3xl">
-            {/* Mobile TOC disclosure — visible below lg, hidden at lg+ */}
-            {headings.length >= 2 && (
-              <TableOfContents headings={headings} />
+          <div
+            className={cn(
+              "min-w-0 max-w-3xl",
+              hasTableOfContents && "lg:col-start-2 lg:row-start-3"
             )}
-
+          >
             {/* Article body */}
             {post.content?.html && (
               <article
                 className={cn(
                   // Base prose setup
-                  "prose prose-zinc max-w-none",
+                  "prose prose-zinc dark:prose-invert max-w-none",
                   // Body text — 16px, 1.75 line-height
-                  "prose-p:text-[16px] prose-p:leading-[1.8] prose-p:text-zinc-700",
+                  "prose-p:text-[16px] prose-p:leading-[1.8] prose-p:text-foreground/80",
                   // Headings — tight tracking, ink-dark
-                  "prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-zinc-900",
+                  "prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-foreground",
                   "prose-h2:text-[1.375rem] prose-h2:mt-10 prose-h2:mb-4",
                   "prose-h3:text-[1.125rem] prose-h3:mt-8 prose-h3:mb-3",
                   // Scroll margin so TOC jumps land below any fixed header
                   "[&_h2]:scroll-mt-24 [&_h3]:scroll-mt-24",
                   // Links — subtle underline on hover
-                  "prose-a:text-zinc-700 prose-a:no-underline prose-a:font-medium",
-                  "[@media(hover:hover)]:prose-a:hover:underline [@media(hover:hover)]:prose-a:hover:text-zinc-950",
+                  "prose-a:text-foreground/80 prose-a:no-underline prose-a:font-medium",
+                  "[@media(hover:hover)]:prose-a:hover:underline [@media(hover:hover)]:prose-a:hover:text-foreground",
                   // Blockquotes — left ink border, warm bg
-                  "prose-blockquote:border-l-2 prose-blockquote:border-zinc-300",
-                  "prose-blockquote:bg-zinc-50 prose-blockquote:py-1 prose-blockquote:pr-4",
+                  "prose-blockquote:border-l-2 prose-blockquote:border-border",
+                  "prose-blockquote:bg-muted prose-blockquote:py-1 prose-blockquote:pr-4",
                   "prose-blockquote:rounded-r-md prose-blockquote:not-italic",
-                  "prose-blockquote:text-zinc-600",
+                  "prose-blockquote:text-muted-foreground",
                   // Inline code — light chip
-                  "prose-code:bg-zinc-100 prose-code:text-zinc-800",
+                  "prose-code:bg-muted prose-code:text-foreground/90",
                   "prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded",
                   "prose-code:text-[0.85em] prose-code:font-mono",
                   "prose-code:before:content-none prose-code:after:content-none",
                   // Code blocks — dark ink slab
-                  "prose-pre:bg-zinc-950 prose-pre:text-zinc-100",
-                  "prose-pre:rounded-xl prose-pre:border prose-pre:border-zinc-800",
+                  "prose-pre:bg-[#111113] prose-pre:text-zinc-100",
+                  "prose-pre:rounded-xl prose-pre:border prose-pre:border-white/10",
                   "prose-pre:overflow-x-auto prose-pre:max-w-full",
                   "prose-pre:text-[0.85em] prose-pre:leading-relaxed",
                   // Images
                   "prose-img:rounded-xl prose-img:shadow-sm",
                   // Lists
-                  "prose-li:text-[16px] prose-li:text-zinc-700",
-                  "prose-li:marker:text-zinc-400",
+                  "prose-li:text-[16px] prose-li:text-foreground/80",
+                  "prose-li:marker:text-muted-foreground",
                   // Tables
                   "prose-table:text-[14px]",
-                  "prose-th:bg-zinc-50 prose-th:text-zinc-700 prose-th:font-semibold",
-                  "prose-td:text-zinc-600",
-                  "prose-th:border prose-th:border-zinc-200",
-                  "prose-td:border prose-td:border-zinc-100",
+                  "prose-th:bg-muted prose-th:text-foreground/80 prose-th:font-semibold",
+                  "prose-td:text-muted-foreground",
+                  "prose-th:border prose-th:border-border",
+                  "prose-td:border prose-td:border-border",
                   // Strong
-                  "prose-strong:text-zinc-900 prose-strong:font-semibold",
+                  "prose-strong:text-foreground prose-strong:font-semibold",
                   // HR
-                  "prose-hr:border-zinc-100",
+                  "prose-hr:border-border"
                 )}
                 dangerouslySetInnerHTML={{ __html: post.content.html }}
               />
             )}
 
-            {/* Ad Unit below content */}
-            <AdUnit adFormat="auto" className="mt-10" />
-
             {/* Prev / Next */}
-            <PostNav prev={adjacent.prev} next={adjacent.next} />
+            <PostNav next={adjacent.next} prev={adjacent.prev} />
 
             {/* Related reads */}
             <RelatedPosts posts={related} />
 
             {/* Footer */}
-            <footer className="mt-16 pt-8 border-t border-zinc-100">
+            <footer className="mt-16 pt-8 border-t border-border">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <Link
+                  className="inline-flex items-center gap-2 text-sm font-medium text-foreground/80
+                             [@media(hover:hover)]:hover:text-foreground transition-colors"
                   href="/blog"
-                  className="inline-flex items-center gap-2 text-sm font-medium text-zinc-700
-                             [@media(hover:hover)]:hover:text-zinc-950 transition-colors"
                 >
                   <IconArrowLeft className="w-4 h-4" />
                   View all posts
@@ -319,7 +324,11 @@ export default async function PostPage({ params }: PostPageProps) {
                 {post.tags.length > 0 && (
                   <div className="flex flex-wrap gap-2">
                     {post.tags.slice(0, 3).map((tag) => (
-                      <Badge key={tag.slug} variant="outline" className="text-xs">
+                      <Badge
+                        className="text-xs"
+                        key={tag.slug}
+                        variant="outline"
+                      >
                         {tag.name}
                       </Badge>
                     ))}

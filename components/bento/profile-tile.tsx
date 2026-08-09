@@ -1,46 +1,32 @@
 "use client";
 
-import Image from "next/image";
-import React from "react";
-import {
-  IconBrandGithub,
-  IconBrandLinkedin,
-  IconBrandX,
-  IconMail,
-  IconMapPin,
-} from "@tabler/icons-react";
+import { IconMapPin } from "@tabler/icons-react";
 import {
   motion,
   useReducedMotion,
   useScroll,
-  useTransform,
   useSpring,
+  useTransform,
 } from "motion/react";
-import { useSectionInView } from "@/lib/hooks";
-import { useActiveSectionContext } from "@/context/active-section-context";
-import { siteConfig, introSocialLinks } from "@/lib/data";
-import { cn } from "@/lib/utils";
-import { syne } from "@/lib/fonts";
+import Image from "next/image";
+import type React from "react";
 import { useRef } from "react";
-
-const iconMap: Record<string, React.ElementType> = {
-  IconBrandLinkedin,
-  IconBrandGithub,
-  IconBrandX,
-};
+import { siteConfig } from "@/lib/data";
+import { useSectionInView } from "@/lib/hooks";
+import { cn } from "@/lib/utils";
 
 // Spring config for the name clip-reveal
 const nameLineSpring = {
-  type: "spring" as const,
-  stiffness: 120,
   damping: 20,
+  stiffness: 120,
+  type: "spring" as const,
 };
 
 // Quick spring for avatar/pill/chips
 const quickSpring = {
-  type: "spring" as const,
-  stiffness: 140,
   damping: 22,
+  stiffness: 140,
+  type: "spring" as const,
 };
 
 // Container that staggers children
@@ -48,8 +34,8 @@ const containerVariants = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: 0.08,
       delayChildren: 0.05,
+      staggerChildren: 0.08,
     },
   },
 };
@@ -59,35 +45,33 @@ const itemVariants = {
   hidden: { opacity: 0, y: 14 },
   visible: {
     opacity: 1,
-    y: 0,
     transition: quickSpring,
+    y: 0,
   },
 };
 
 // Clip-reveal: text rises up from below the overflow-hidden container
 const nameLineVariants = {
-  hidden: { y: "105%", opacity: 0 },
+  hidden: { opacity: 0, y: "105%" },
   visible: {
-    y: "0%",
     opacity: 1,
     transition: nameLineSpring,
+    y: "0%",
   },
 };
 
 // Role label + descriptor: blur-rise after name
 const blurRiseVariants = {
-  hidden: { opacity: 0, y: 10, filter: "blur(4px)" },
+  hidden: { opacity: 0, y: 10 },
   visible: {
     opacity: 1,
+    transition: { damping: 22, stiffness: 120, type: "spring" as const },
     y: 0,
-    filter: "blur(0px)",
-    transition: { type: "spring" as const, stiffness: 120, damping: 22 },
   },
 };
 
 export function ProfileTile() {
   const { ref } = useSectionInView("Home", 0.5);
-  const { setActiveSection, setTimeOfLastClick } = useActiveSectionContext();
   const shouldReduceMotion = useReducedMotion();
   const tileRef = useRef<HTMLElement>(null);
 
@@ -95,49 +79,41 @@ export function ProfileTile() {
   const { scrollY } = useScroll();
   const rawY = useTransform(scrollY, [0, 400], [0, -14]);
   // Spring-smooth the scroll value; skip on reduced motion
-  const springY = useSpring(rawY, { stiffness: 60, damping: 18 });
-
-  const handleContactClick = React.useCallback(() => {
-    setActiveSection("Contact");
-    setTimeOfLastClick(Date.now());
-  }, [setActiveSection, setTimeOfLastClick]);
+  const springY = useSpring(rawY, { damping: 18, stiffness: 60 });
 
   // Immediate-visible variants (reduced motion path)
-  const reducedItem = { opacity: 1, y: 0, filter: "blur(0px)" };
+  const reducedItem = { opacity: 1, y: 0 };
 
   return (
     <section
+      className="h-full min-h-[360px] p-5 sm:p-6 lg:p-8 flex flex-col gap-5 sm:gap-6 scroll-mt-28"
+      id="home"
       ref={(node) => {
         // Assign both refs
         (ref as React.RefCallback<HTMLElement>)(node);
         (tileRef as React.MutableRefObject<HTMLElement | null>).current = node;
       }}
-      id="home"
-      className="h-full min-h-[360px] p-5 sm:p-6 lg:p-8 flex flex-col gap-5 sm:gap-6 scroll-mt-28"
     >
       {/* Top row: Avatar + Available pill */}
       <motion.div
-        className="flex items-start justify-between gap-4"
-        variants={shouldReduceMotion ? undefined : containerVariants}
-        initial={shouldReduceMotion ? reducedItem : "hidden"}
         animate="visible"
+        className="flex items-start justify-between gap-4"
+        initial={shouldReduceMotion ? reducedItem : "hidden"}
+        variants={shouldReduceMotion ? undefined : containerVariants}
       >
         <motion.div variants={shouldReduceMotion ? undefined : itemVariants}>
           {/* Avatar */}
           <div
-            className="relative w-[60px] h-[60px] sm:w-[68px] sm:h-[68px] rounded-2xl overflow-hidden flex-shrink-0
-                       bg-gradient-to-br from-zinc-100 to-zinc-200"
-            style={{
-              boxShadow: "0 0 0 1px rgba(20,20,40,0.08), 0 1px 2px rgba(28,25,23,0.06), 0 6px 20px -8px rgba(28,25,23,0.14)",
-            }}
+            className="avatar-ring relative w-[60px] h-[60px] sm:w-[68px] sm:h-[68px] rounded-2xl overflow-hidden flex-shrink-0
+                       bg-gradient-to-br from-muted to-muted"
           >
             <Image
-              src={siteConfig.images.profileImage}
               alt={siteConfig.name}
-              width={68}
+              className="w-full h-full object-cover"
               height={68}
               priority
-              className="w-full h-full object-cover"
+              src={siteConfig.images.profileImage}
+              width={68}
             />
           </div>
         </motion.div>
@@ -147,7 +123,8 @@ export function ProfileTile() {
           <span
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full
                        bg-emerald-50 border border-emerald-200
-                       text-[11px] font-semibold text-emerald-600 uppercase tracking-[0.1em]
+                       dark:bg-emerald-500/10 dark:border-emerald-400/25
+                       ui-label text-emerald-600 dark:text-emerald-400
                        whitespace-nowrap"
           >
             <span className="relative flex size-1.5">
@@ -167,31 +144,35 @@ export function ProfileTile() {
       >
         {/* Monospace role marker */}
         <motion.p
-          className="font-mono text-[10px] uppercase tracking-[0.14em] text-zinc-400"
-          initial={shouldReduceMotion ? false : blurRiseVariants.hidden}
           animate={shouldReduceMotion ? false : blurRiseVariants.visible}
+          className="ui-label text-muted-foreground"
+          initial={shouldReduceMotion ? false : blurRiseVariants.hidden}
           // Small delay so it follows after name starts
-          transition={shouldReduceMotion ? undefined : { ...blurRiseVariants.visible.transition, delay: 0.05 }}
+          transition={
+            shouldReduceMotion
+              ? undefined
+              : { ...blurRiseVariants.visible.transition, delay: 0.05 }
+          }
         >
           01 — Product Engineer
         </motion.p>
 
         {/* Oversized name headline — clip reveal line by line */}
         <div
+          aria-label="Mukul Chugh"
           className={cn(
-            syne.className,
-            "font-black tracking-[-0.05em] leading-[0.90] text-zinc-950"
+            "font-syne",
+            "font-black tracking-[-0.05em] leading-[0.90] text-foreground"
           )}
           style={{ fontSize: "clamp(2rem, 8vw, 4.25rem)" }}
-          aria-label="Mukul Chugh"
         >
           {/* Line 1: "Mukul" */}
           <div className="overflow-hidden">
             <motion.span
-              className="block"
-              variants={shouldReduceMotion ? undefined : nameLineVariants}
-              initial={shouldReduceMotion ? false : "hidden"}
               animate="visible"
+              className="block"
+              initial={shouldReduceMotion ? false : "hidden"}
+              variants={shouldReduceMotion ? undefined : nameLineVariants}
             >
               Mukul
             </motion.span>
@@ -199,15 +180,15 @@ export function ProfileTile() {
           {/* Line 2: "Chugh" — slightly delayed */}
           <div className="overflow-hidden">
             <motion.span
-              className="block text-zinc-400 font-light"
-              variants={shouldReduceMotion ? undefined : nameLineVariants}
-              initial={shouldReduceMotion ? false : "hidden"}
               animate="visible"
+              className="block text-muted-foreground font-light"
+              initial={shouldReduceMotion ? false : "hidden"}
               transition={
                 shouldReduceMotion
                   ? undefined
-                  : { ...nameLineSpring, delay: 0.10 }
+                  : { ...nameLineSpring, delay: 0.1 }
               }
+              variants={shouldReduceMotion ? undefined : nameLineVariants}
             >
               Chugh
             </motion.span>
@@ -216,9 +197,9 @@ export function ProfileTile() {
 
         {/* Role descriptor — blur-rise after name */}
         <motion.p
-          className="text-[14px] sm:text-[15px] text-zinc-600 leading-[1.7] max-w-[42ch]"
-          initial={shouldReduceMotion ? false : blurRiseVariants.hidden}
           animate={shouldReduceMotion ? false : blurRiseVariants.visible}
+          className="text-[14px] sm:text-[15px] text-muted-foreground leading-[1.7] max-w-[42ch]"
+          initial={shouldReduceMotion ? false : blurRiseVariants.hidden}
           transition={
             shouldReduceMotion
               ? undefined
@@ -226,7 +207,7 @@ export function ProfileTile() {
           }
         >
           Founding Engineer at{" "}
-          <span className="text-zinc-800 font-medium">Quivly</span>
+          <span className="text-foreground/90 font-medium">Quivly</span>
           {" — "}
           building end-to-end across mobile, full-stack, and AI.
         </motion.p>
@@ -234,49 +215,52 @@ export function ProfileTile() {
 
       {/* Hairline divider */}
       <motion.div
-        className="h-px bg-zinc-900/[0.06] w-full"
-        aria-hidden="true"
-        initial={shouldReduceMotion ? false : { scaleX: 0, originX: 0 }}
         animate={shouldReduceMotion ? false : { scaleX: 1 }}
+        aria-hidden="true"
+        className="h-px bg-foreground/[0.06] w-full"
+        initial={shouldReduceMotion ? false : { originX: 0, scaleX: 0 }}
+        style={{ transformOrigin: "left" }}
         transition={
           shouldReduceMotion
             ? undefined
-            : { type: "spring", stiffness: 90, damping: 20, delay: 0.32 }
+            : { damping: 20, delay: 0.32, stiffness: 90, type: "spring" }
         }
-        style={{ transformOrigin: "left" }}
       />
 
       {/* Chips row — pushed to bottom */}
       <motion.div
-        className="flex flex-col gap-3 mt-auto"
-        variants={shouldReduceMotion ? undefined : containerVariants}
-        initial={shouldReduceMotion ? false : "hidden"}
         animate="visible"
+        className="flex flex-col gap-3 mt-auto"
+        initial={shouldReduceMotion ? false : "hidden"}
         // Start after name fully in
         transition={{ delayChildren: 0.36, staggerChildren: 0.07 }}
+        variants={shouldReduceMotion ? undefined : containerVariants}
       >
         {/* Location + tag chips */}
         <motion.div
-          variants={shouldReduceMotion ? undefined : itemVariants}
           className="flex flex-wrap gap-2"
+          variants={shouldReduceMotion ? undefined : itemVariants}
         >
           <span
             className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full
-                       bg-black/[0.03] border border-black/[0.06]
-                       text-[12px] text-zinc-500
-                       [@media(hover:hover)]:hover:border-black/[0.12] [@media(hover:hover)]:hover:text-zinc-700
+                       bg-foreground/[0.04] border border-border
+                       text-[12px] text-muted-foreground
+                       [@media(hover:hover)]:hover:border-border [@media(hover:hover)]:hover:text-foreground/80
                        transition-colors duration-200 cursor-default select-none"
           >
-            <IconMapPin size={11} className="text-zinc-400 flex-shrink-0" />
+            <IconMapPin
+              className="text-muted-foreground flex-shrink-0"
+              size={11}
+            />
             India · SF hours
           </span>
           {(["Full-Stack", "Mobile", "Product"] as const).map((tag) => (
             <span
-              key={tag}
-              className="px-3 py-1 rounded-full bg-black/[0.03] border border-black/[0.06]
-                         text-[12px] text-zinc-500
-                         [@media(hover:hover)]:hover:border-black/[0.12] [@media(hover:hover)]:hover:text-zinc-700
+              className="px-3 py-1 rounded-full bg-foreground/[0.04] border border-border
+                         text-[12px] text-muted-foreground
+                         [@media(hover:hover)]:hover:border-border [@media(hover:hover)]:hover:text-foreground/80
                          transition-colors duration-200 cursor-default select-none"
+              key={tag}
             >
               {tag}
             </span>

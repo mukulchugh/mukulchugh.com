@@ -1,20 +1,11 @@
 "use client";
 
+import { IconClock, IconTag } from "@tabler/icons-react";
 import Image from "next/image";
-import { IconTag, IconClock } from "@tabler/icons-react";
-import { cn } from "@/lib/utils";
-import { syne } from "@/lib/fonts";
+import { CoverCanvas } from "@/components/blog/cover-canvas";
 import type { Post } from "@/lib/blog";
-
-// Deterministic per-post visual variation derived from the title.
-// Returns a value 0–N-1 so each post looks distinct but cohesive.
-function hashTitle(title: string): number {
-  let h = 0;
-  for (let i = 0; i < title.length; i++) {
-    h = (h * 31 + title.charCodeAt(i)) >>> 0;
-  }
-  return h;
-}
+import { hashTitle, topicFamilyFor } from "@/lib/blog-topic";
+import { cn } from "@/lib/utils";
 
 // Monochrome ink gradients — warm to cold, slightly different angles per post.
 const GRADIENTS = [
@@ -40,16 +31,27 @@ const PATTERNS = [
 ] as const;
 
 interface PostCoverProps {
-  post: Post;
-  priority?: boolean;
   className?: string;
   /** Hero mode: taller, prominent; default is card thumbnail ratio */
   hero?: boolean;
+  /** Canvas-drawn generative pattern + pointer highlight. Off on the dense homepage tile for perf; on for /blog and the post hero. */
+  interactive?: boolean;
+  post: Post;
+  priority?: boolean;
 }
 
-export function PostCover({ post, priority = false, className, hero = false }: PostCoverProps) {
+export function PostCover({
+  post,
+  priority = false,
+  className,
+  hero = false,
+  interactive = false,
+}: PostCoverProps) {
+  const tagNames = post.tags.map((t) => t.name);
   const initial = post.title.charAt(0).toUpperCase();
   const tag = post.tags?.[0]?.name;
+  const family = topicFamilyFor(tagNames);
+  const TopicIcon = family?.icon;
 
   if (post.coverImage?.url) {
     return (
@@ -61,12 +63,16 @@ export function PostCover({ post, priority = false, className, hero = false }: P
         )}
       >
         <Image
-          src={post.coverImage.url}
           alt={post.title}
-          fill
           className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-          sizes={hero ? "(max-width: 768px) 100vw, 896px" : "(max-width: 768px) 100vw, 560px"}
+          fill
           priority={priority}
+          sizes={
+            hero
+              ? "(max-width: 768px) 100vw, 896px"
+              : "(max-width: 768px) 100vw, 560px"
+          }
+          src={post.coverImage.url}
         />
       </div>
     );
@@ -81,36 +87,76 @@ export function PostCover({ post, priority = false, className, hero = false }: P
 
   return (
     <div
+      aria-hidden="false"
       className={cn(
         "relative overflow-hidden rounded-xl select-none",
         hero ? "aspect-[16/7]" : "aspect-video",
         className
       )}
       style={{ background: gradient }}
-      aria-hidden="false"
     >
-      {/* Texture pattern overlay */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{ backgroundImage: pattern, backgroundRepeat: "repeat" }}
-        aria-hidden="true"
-      />
+      {/* Topic tint — reflects the post's subject, not just its title hash */}
+      {family && (
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: `radial-gradient(120% 90% at 15% 100%, ${family.tint} 0%, transparent 60%)`,
+          }}
+        />
+      )}
 
-      {/* Oversized initial as texture */}
-      <div className="absolute inset-0 flex items-end justify-start pl-5 pb-3 pointer-events-none" aria-hidden="true">
-        <span
-          className={cn(syne.className, "font-black leading-none tracking-tighter")}
-          style={{ fontSize: `${initialSize}px`, color: "rgba(255,255,255,0.055)" }}
-        >
-          {initial}
-        </span>
-      </div>
+      {interactive ? (
+        // Generative canvas — seeded by this post's own title, so the
+        // pattern is unique to it and stable across visits; a cheap
+        // pointer-following highlight only while actually hovered.
+        <CoverCanvas tags={tagNames} title={post.title} />
+      ) : (
+        <>
+          {/* Texture pattern overlay */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 pointer-events-none"
+            style={{ backgroundImage: pattern, backgroundRepeat: "repeat" }}
+          />
+
+          {/* Topic mark — large icon when the tag maps to a known family, else the title initial */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 flex items-end justify-start pl-5 pb-3 pointer-events-none"
+          >
+            {TopicIcon ? (
+              <TopicIcon
+                color="rgba(255,255,255,0.09)"
+                size={initialSize}
+                strokeWidth={1.25}
+              />
+            ) : (
+              <span
+                className={cn(
+                  "font-syne",
+                  "font-black leading-none tracking-tighter"
+                )}
+                style={{
+                  color: "rgba(255,255,255,0.055)",
+                  fontSize: `${initialSize}px`,
+                }}
+              >
+                {initial}
+              </span>
+            )}
+          </div>
+        </>
+      )}
 
       {/* Bottom fade for readability */}
       <div
-        className="absolute bottom-0 inset-x-0 h-16 pointer-events-none"
-        style={{ background: "linear-gradient(to top, rgba(0,0,0,0.25) 0%, transparent 100%)" }}
         aria-hidden="true"
+        className="absolute bottom-0 inset-x-0 h-16 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(to top, rgba(0,0,0,0.25) 0%, transparent 100%)",
+        }}
       />
 
       {/* Tag chip — top-right */}
@@ -119,19 +165,16 @@ export function PostCover({ post, priority = false, className, hero = false }: P
           className="absolute top-3 right-3 inline-flex items-center gap-1
                      px-2 py-0.5 rounded-full
                      bg-white/[0.1] border border-white/[0.15] backdrop-blur-sm
-                     text-[10px] font-mono uppercase tracking-[0.12em] text-white/70"
+                     ui-label text-white/70"
         >
-          <IconTag className="h-2.5 w-2.5" aria-hidden="true" />
+          <IconTag aria-hidden="true" className="h-2.5 w-2.5" />
           {tag}
         </span>
       )}
 
       {/* Read time — bottom-left */}
-      <span
-        className="absolute bottom-3 left-4 inline-flex items-center gap-1
-                   text-[10px] font-mono text-white/50 tracking-wide"
-      >
-        <IconClock className="h-2.5 w-2.5" aria-hidden="true" />
+      <span className="ui-label absolute bottom-3 left-4 inline-flex items-center gap-1 text-white/50">
+        <IconClock aria-hidden="true" className="h-2.5 w-2.5" />
         {post.readTimeInMinutes} min read
       </span>
     </div>

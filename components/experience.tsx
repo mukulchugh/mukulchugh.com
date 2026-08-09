@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useMemo } from "react";
-import { SectionHeader } from "./section-header";
-import ExpandableCard from "./ui/expandable-card";
-import { CollapsibleList } from "./ui/collapsible-list";
+import { IconBriefcase } from "@tabler/icons-react";
+import { useMemo } from "react";
 import { experiencesData } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
-import { IconBriefcase } from "@tabler/icons-react";
+import { SectionHeader } from "./section-header";
+import { CollapsibleList } from "./ui/collapsible-list";
+import ExpandableCard from "./ui/expandable-card";
 
 export default function Experience() {
   const { ref } = useSectionInView("Experience");
@@ -14,35 +14,35 @@ export default function Experience() {
   const cardItems = useMemo(
     () =>
       experiencesData.map((exp, index) => ({
-        id: `exp-${index}`,
-        title: exp.title,
         company: exp.company,
-        location: exp.location,
         date: exp.date,
-        icon: exp.icon,
         description: exp.description,
+        icon: exp.icon,
+        id: `exp-${index}`,
+        location: exp.location,
+        title: exp.title,
       })),
     []
   );
 
   return (
     <section
+      className="scroll-mt-28 p-5 sm:p-6 lg:p-8 w-full min-w-0"
       id="experience"
       ref={ref}
-      className="scroll-mt-28 p-5 sm:p-6 lg:p-8 w-full min-w-0"
     >
       <SectionHeader
-        icon={IconBriefcase}
-        label="Experience"
-        index="05"
-        title="Where I've"
-        highlight="worked"
-        subtitle="From student ambassador to founding engineer — the short version."
         align="left"
+        highlight="worked"
+        icon={IconBriefcase}
+        index="05"
+        label="Experience"
+        subtitle="From student ambassador to founding engineer — the short version."
+        title="Where I've"
       />
       <CollapsibleList
-        items={cardItems}
         initial={4}
+        items={cardItems}
         noun="roles"
         renderList={(visible) => <ExpandableCard items={visible} />}
       />

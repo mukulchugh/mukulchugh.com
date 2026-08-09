@@ -1,25 +1,27 @@
 "use client";
 
-import React, { useRef, memo } from "react";
 import {
   motion,
   useMotionValue,
-  useTransform,
-  useSpring,
   useReducedMotion,
+  useSpring,
+  useTransform,
 } from "motion/react";
+import type React from "react";
+import { memo, useRef } from "react";
+import { Button } from "@/components/ui/button";
 
 interface MagneticButtonProps {
+  "aria-label"?: string;
+  as?: "a" | "button";
   children: React.ReactNode;
   className?: string;
   href?: string;
   onClick?: () => void;
+  rel?: string;
   /** How many px the button pulls toward the cursor. Default 10. */
   strength?: number;
-  as?: "a" | "button";
   target?: string;
-  rel?: string;
-  "aria-label"?: string;
 }
 
 export const MagneticButton = memo(function MagneticButton({
@@ -41,15 +43,25 @@ export const MagneticButton = memo(function MagneticButton({
   const rawY = useMotionValue(0);
 
   // Spring-physics smoothing
-  const x = useSpring(rawX, { stiffness: 180, damping: 22, mass: 0.6 });
-  const y = useSpring(rawY, { stiffness: 180, damping: 22, mass: 0.6 });
+  const x = useSpring(rawX, { damping: 22, mass: 0.6, stiffness: 180 });
+  const y = useSpring(rawY, { damping: 22, mass: 0.6, stiffness: 180 });
 
   // Cap displacement at `strength` px
-  const tx = useTransform(x, [-strength * 5, strength * 5], [-strength, strength]);
-  const ty = useTransform(y, [-strength * 5, strength * 5], [-strength, strength]);
+  const tx = useTransform(
+    x,
+    [-strength * 5, strength * 5],
+    [-strength, strength]
+  );
+  const ty = useTransform(
+    y,
+    [-strength * 5, strength * 5],
+    [-strength, strength]
+  );
 
   function handleMouseMove(e: React.MouseEvent<HTMLElement>) {
-    if (shouldReduce || !ref.current) return;
+    if (shouldReduce || !ref.current) {
+      return;
+    }
     const rect = ref.current.getBoundingClientRect();
     const cx = rect.left + rect.width / 2;
     const cy = rect.top + rect.height / 2;
@@ -64,34 +76,35 @@ export const MagneticButton = memo(function MagneticButton({
 
   return (
     <div
-      ref={ref}
       className="inline-block"
-      onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
+      onMouseMove={handleMouseMove}
+      ref={ref}
     >
       <motion.div
-        style={shouldReduce ? undefined : { x: tx, y: ty }}
         className="inline-block"
+        style={shouldReduce ? undefined : { x: tx, y: ty }}
       >
         {Tag === "a" ? (
           <a
-            href={href}
-            target={target}
-            rel={rel}
-            onClick={onClick}
             aria-label={ariaLabel}
             className={className}
+            href={href}
+            onClick={onClick}
+            rel={rel}
+            target={target}
           >
             {children}
           </a>
         ) : (
-          <button
-            onClick={onClick}
+          <Button
             aria-label={ariaLabel}
             className={className}
+            onClick={onClick}
+            variant="ghost"
           >
             {children}
-          </button>
+          </Button>
         )}
       </motion.div>
     </div>

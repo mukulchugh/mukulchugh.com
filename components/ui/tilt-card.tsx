@@ -11,27 +11,28 @@
  * - Animates only transform — no layout props
  */
 
-import React, { useRef, useCallback, useState, useEffect } from "react";
 import {
   motion,
   useMotionValue,
+  useReducedMotion,
   useSpring,
   useTransform,
-  useReducedMotion,
 } from "motion/react";
+import type React from "react";
+import { useCallback, useRef, useSyncExternalStore } from "react";
 
 interface TiltCardProps {
   children: React.ReactNode;
   className?: string;
-  style?: React.CSSProperties;
-  /** Max tilt angle in degrees (default 3.5) */
-  maxDeg?: number;
-  /** Spring stiffness (default 200) */
-  stiffness?: number;
   /** Spring damping (default 26) */
   damping?: number;
   /** Lift on hover in px (default 4) */
   lift?: number;
+  /** Max tilt angle in degrees (default 3.5) */
+  maxDeg?: number;
+  /** Spring stiffness (default 200) */
+  stiffness?: number;
+  style?: React.CSSProperties;
 }
 
 export function TiltCard({
@@ -47,13 +48,15 @@ export function TiltCard({
   const ref = useRef<HTMLDivElement>(null);
 
   // Detect pointer device once (matchMedia; stable, no rAF/mousemove)
-  const [isPointer, setIsPointer] = useState(false);
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
-    setIsPointer(mq.matches);
-    // No cleanup needed — one-shot read
-  }, []);
+  const isPointer = useSyncExternalStore(
+    (onChange) => {
+      const query = window.matchMedia("(hover: hover) and (pointer: fine)");
+      query.addEventListener("change", onChange);
+      return () => query.removeEventListener("change", onChange);
+    },
+    () => window.matchMedia("(hover: hover) and (pointer: fine)").matches,
+    () => false
+  );
 
   // Normalised pointer position [-1, 1] — MotionValues never go through React state
   const rawX = useMotionValue(0);
@@ -61,9 +64,9 @@ export function TiltCard({
   const rawLift = useMotionValue(0);
 
   // Spring-smooth
-  const springX = useSpring(rawX, { stiffness, damping });
-  const springY = useSpring(rawY, { stiffness, damping });
-  const springLift = useSpring(rawLift, { stiffness, damping });
+  const springX = useSpring(rawX, { damping, stiffness });
+  const springY = useSpring(rawY, { damping, stiffness });
+  const springLift = useSpring(rawLift, { damping, stiffness });
 
   // Map to rotation and lift transforms
   const rotateY = useTransform(springX, [-1, 1], [-maxDeg, maxDeg]);
@@ -72,7 +75,9 @@ export function TiltCard({
 
   const handleMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
-      if (!ref.current) return;
+      if (!ref.current) {
+        return;
+      }
       const rect = ref.current.getBoundingClientRect();
       rawX.set(((e.clientX - rect.left) / rect.width) * 2 - 1);
       rawY.set(((e.clientY - rect.top) / rect.height) * 2 - 1);
@@ -98,17 +103,17 @@ export function TiltCard({
 
   return (
     <motion.div
-      ref={ref}
       className={className}
+      onMouseLeave={handleMouseLeave}
+      onMouseMove={handleMouseMove}
+      ref={ref}
       style={{
         ...style,
         rotateX,
         rotateY,
-        y: translateY,
         transformStyle: "preserve-3d",
+        y: translateY,
       }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
     >
       {children}
     </motion.div>

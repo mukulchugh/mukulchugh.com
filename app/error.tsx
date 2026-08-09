@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
 import Link from "next/link";
-import { syne } from "@/lib/fonts";
+import { useEffect } from "react";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 
 export default function Error({
   error,
@@ -23,7 +22,7 @@ export default function Error({
       <div className="text-center max-w-2xl mx-auto">
         <h1
           className={cn(
-            syne.className,
+            "font-syne",
             "text-6xl md:text-8xl font-bold text-foreground mb-4"
           )}
         >
@@ -31,14 +30,15 @@ export default function Error({
         </h1>
         <h2
           className={cn(
-            syne.className,
+            "font-syne",
             "text-2xl md:text-3xl font-semibold text-foreground mb-6"
           )}
         >
           Something went wrong
         </h2>
         <p className="text-muted-foreground text-lg mb-8">
-          We encountered an unexpected error. Please try again or contact support if the problem persists.
+          We encountered an unexpected error. Please try again or contact
+          support if the problem persists.
         </p>
         {error.digest && (
           <p className="text-sm text-muted-foreground mb-8">
@@ -46,12 +46,18 @@ export default function Error({
           </p>
         )}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button onClick={reset} className="rounded-full">
+          <Button className="rounded-full" onClick={reset}>
             Try Again
           </Button>
-          <Button variant="outline" asChild className="rounded-full">
-            <Link href="/">Go Home</Link>
-          </Button>
+          <Link
+            className={cn(
+              buttonVariants({ variant: "outline" }),
+              "rounded-full"
+            )}
+            href="/"
+          >
+            Go Home
+          </Link>
         </div>
       </div>
     </div>
