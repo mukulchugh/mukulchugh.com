@@ -22,8 +22,8 @@ export default function NotFound() {
           Page Not Found
         </h2>
         <p className="text-muted-foreground text-lg mb-8">
-          Sorry, we couldn&apos;t find the page you&apos;re looking for. It
-          might have been moved or deleted.
+          That page doesn&apos;t exist, or it moved and I forgot to update the
+          link.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link

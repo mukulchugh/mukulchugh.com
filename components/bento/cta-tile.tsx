@@ -165,7 +165,7 @@ function CalEmbed() {
       calLink="mukulchugh/15min"
       config={{ layout: "month_view", theme: "dark" }}
       namespace="15min"
-      style={{ height: "100%", minHeight: 560, width: "100%" }}
+      style={{ height: 560, width: "100%" }}
     />
   );
 }
@@ -403,8 +403,8 @@ export function CTATile() {
 
               <motion.div
                 animate={shouldReduce ? { opacity: 1 } : calEmbedAnimate}
-                className="min-h-0 flex-1 overflow-y-auto rounded-none border border-white/[0.08]
-                           bg-[#0a0a0c]/80"
+                className="overflow-hidden rounded-none border border-white/[0.08]
+                           bg-[#0a0a0c]"
                 initial={shouldReduce ? { opacity: 0 } : calEmbedInitial}
               >
                 <CalEmbed />

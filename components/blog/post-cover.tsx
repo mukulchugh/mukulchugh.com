@@ -121,10 +121,10 @@ export function PostCover({
           <p
             className={cn(
               "font-syne",
-              "font-semibold leading-snug tracking-tight text-white/80 text-pretty line-clamp-2"
+              "font-semibold leading-snug tracking-tight text-white text-pretty line-clamp-2"
             )}
             style={{
-              fontSize: "clamp(0.9375rem, 2.4vw, 1.25rem)",
+              fontSize: "clamp(1.125rem, 2.9vw, 1.5rem)",
               maxWidth: "82%",
             }}
           >
@@ -158,8 +158,8 @@ export function PostCover({
         <span
           className="absolute top-3 right-3 inline-flex items-center gap-1
                      px-2 py-0.5 rounded-none
-                     bg-white/[0.1] border border-white/[0.15] backdrop-blur-sm
-                     ui-label text-white/70"
+                     bg-white/[0.14] border border-white/[0.22] backdrop-blur-sm
+                     ui-label text-white/90"
         >
           <IconTag aria-hidden="true" className="h-2.5 w-2.5" />
           {tag}
@@ -167,7 +167,7 @@ export function PostCover({
       )}
 
       {/* Read time — bottom-left */}
-      <span className="ui-label absolute bottom-3 left-4 inline-flex items-center gap-1 text-white/50">
+      <span className="ui-label absolute bottom-3 left-4 inline-flex items-center gap-1 text-white/75">
         <IconClock aria-hidden="true" className="h-2.5 w-2.5" />
         {post.readTimeInMinutes} min read
       </span>

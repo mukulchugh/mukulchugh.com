@@ -16,7 +16,7 @@ import { staggerContainer, staggerItem, viewportOnce } from "@/lib/motion";
 import { SECTION_TITLE } from "@/lib/typography";
 import { cn } from "@/lib/utils";
 
-const PAGE_SIZE = 4;
+const PAGE_SIZE = 6;
 
 export default function BlogSection({ posts = [] }: { posts?: Post[] }) {
   const { ref } = useSectionInView("Blog", 0.2);
@@ -70,7 +70,7 @@ export default function BlogSection({ posts = [] }: { posts?: Post[] }) {
         </div>
       ) : (
         <motion.div
-          className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:gap-4"
+          className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 sm:gap-4"
           initial={shouldReduce ? false : "hidden"}
           key={page}
           variants={shouldReduce ? undefined : staggerContainer}

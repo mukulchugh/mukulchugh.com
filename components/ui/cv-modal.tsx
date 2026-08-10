@@ -109,7 +109,7 @@ export function CVModal({ isOpen, onClose, cvUrl, name }: CVModalProps) {
           </div>
         </header>
 
-        <div className="relative min-h-0 max-h-[60vh] w-full flex-1 bg-gray-50 sm:max-h-[70vh]">
+        <div className="relative h-[60vh] max-h-[600px] min-h-[420px] w-full flex-1 bg-gray-50 sm:h-[70vh]">
           <iframe
             className="size-full"
             src={`${cvUrl}#toolbar=0&navpanes=0`}

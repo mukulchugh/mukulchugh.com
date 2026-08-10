@@ -310,7 +310,7 @@ export const projectsData = [
   {
     demo: "",
     description:
-      "Private infrastructure behind Quivly’s agent-powered workflows, designed to turn customer and product context into useful operational work for teams.",
+      "Private infrastructure behind Quivly’s agent-powered workflows: it turns customer and product context into operational work for teams.",
     github: "",
     tags: ["Private product work", "AI Agents", "Backend", "TypeScript"],
     title: "Quivly agents",

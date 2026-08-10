@@ -40,4 +40,4 @@ export const SECTION_TITLE = "clamp(1.4rem, 3.4vw, 2.1rem)";
 
 export const TILE_TITLE = "clamp(1.6rem, 4.2vw, 2.6rem)";
 
-export const TILE_DISPLAY = "clamp(20px, 4.5vw, 36px)";
+export const TILE_DISPLAY = "clamp(16px, 3vw, 24px)";

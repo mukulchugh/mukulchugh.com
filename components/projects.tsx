@@ -18,12 +18,12 @@ import { slugifyProjectTitle } from "@/lib/projects";
 import { SectionHeader } from "./section-header";
 import { Button } from "./ui/button";
 
-// Featured projects (index 0-1) shown as dedicated tiles; list the rest here.
+// Featured projects (index 0-3) shown as dedicated tiles; list the rest here.
 const restProjects = projectsData
-  .slice(2)
+  .slice(4)
   .filter(({ title }) => !hiddenProjectTitles.has(title));
 
-const PAGE_SIZE = 4;
+const PAGE_SIZE = 6;
 
 // Small identity mark per card — the project's own initials rather than a
 // generic code icon, keeping the text-forward direction without a full
@@ -132,8 +132,10 @@ function ProjectCard({
             </div>
           </div>
           <div className="space-y-1.5">
-            {/* Tile/card title — 1rem semibold tracking-tight */}
-            <h3 className="text-[1rem] font-semibold tracking-tight text-foreground">
+            {/* Tile/card title — 1rem semibold tracking-tight. font-syne to match
+                every other card title in the app (blog-post-card, featured-project-tile,
+                related-posts) — this one had drifted onto the plain sans face. */}
+            <h3 className="font-syne text-[1rem] font-semibold tracking-tight text-foreground">
               <Link
                 className="[@media(hover:hover)]:hover:underline [@media(hover:hover)]:hover:underline-offset-2"
                 href={`/projects/${slugifyProjectTitle(title)}`}
@@ -193,7 +195,7 @@ export default function Projects() {
       />
       <motion.ul
         animate={{ opacity: 1, y: 0 }}
-        className="grid grid-cols-1 gap-3 sm:grid-cols-2"
+        className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"
         initial={shouldReduce ? false : { opacity: 0, y: 12 }}
         key={page}
         transition={softSpring}

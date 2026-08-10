@@ -37,8 +37,8 @@ export default function Error({
           Something went wrong
         </h2>
         <p className="text-muted-foreground text-lg mb-8">
-          We encountered an unexpected error. Please try again or contact
-          support if the problem persists.
+          Something broke on my end. Try again, or email me if it keeps
+          happening.
         </p>
         {error.digest && (
           <p className="text-sm text-muted-foreground mb-8">

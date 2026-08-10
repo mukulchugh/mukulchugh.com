@@ -2,7 +2,7 @@ import { siteConfig } from "@/lib/data";
 
 export const metadata = {
   description:
-    "Articles and thoughts on software engineering, web development, and technology.",
+    "Notes on engineering, product, and the craft of building software that earns its keep.",
   title: `Blog | ${siteConfig.name}`,
 };
 

@@ -12,7 +12,8 @@ import {
   useSpring,
   useTransform,
 } from "motion/react";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import { ProjectPeekModal } from "@/components/bento/project-peek-modal";
 import type { projectsData } from "@/lib/data";
 import { TILE_DISPLAY } from "@/lib/typography";
 import { cn } from "@/lib/utils";
@@ -41,6 +42,26 @@ const COVERS = [
     subtitleColor: "rgba(255,255,255,0.22)",
     titleColor: "rgba(255,255,255,0.92)",
   },
+  {
+    // Ferry — cool slate
+    bgFrom: "rgb(14,15,17)",
+    bgTo: "rgb(30,32,36)",
+    categoryLabel: "macOS · watchOS",
+    labelBg: "bg-white/[0.08] border-white/[0.14]",
+    labelColor: "text-white/55",
+    subtitleColor: "rgba(255,255,255,0.22)",
+    titleColor: "rgba(255,255,255,0.92)",
+  },
+  {
+    // Quivly Skills — warm graphite
+    bgFrom: "rgb(16,14,12)",
+    bgTo: "rgb(34,30,28)",
+    categoryLabel: "AI Agents · Open Source",
+    labelBg: "bg-white/[0.08] border-white/[0.14]",
+    labelColor: "text-white/55",
+    subtitleColor: "rgba(255,255,255,0.22)",
+    titleColor: "rgba(255,255,255,0.92)",
+  },
 ] as const;
 
 interface FeaturedProjectTileProps {
@@ -55,11 +76,7 @@ export function FeaturedProjectTile({
   const cover = COVERS[index % COVERS.length];
   const shouldReduceMotion = useReducedMotion();
   const tileRef = useRef<HTMLDivElement>(null);
-
-  // Split title into main word and rest for hierarchy
-  const titleWords = project.title.trim().split(/\s+/);
-  const titleFirst = titleWords[0];
-  const titleRest = titleWords.slice(1).join(" ");
+  const [peekOpen, setPeekOpen] = useState(false);
 
   // Scroll-linked parallax for the oversized wordmark
   // Tracks the tile element itself so each card gets its own scroll context
@@ -76,13 +93,9 @@ export function FeaturedProjectTile({
   // Cover scale on hover (no useMotionValue — use Tailwind group-hover via CSS)
   // We drive this via CSS transition to avoid JS motion on hover for cover art
 
-  // Primary link: prefer demo, then github
-  const primaryHref = project.demo || project.github || "#";
-  const hasPrimaryLink = Boolean(project.demo || project.github);
-
   return (
     <div
-      className="h-full flex flex-col min-h-[280px] relative overflow-hidden group"
+      className="h-full flex flex-col min-h-[200px] relative overflow-hidden group"
       ref={tileRef}
     >
       {/* ── Editorial Cover Panel ───────────────────────── */}
@@ -90,7 +103,7 @@ export function FeaturedProjectTile({
         className="relative flex-shrink-0 overflow-hidden rounded-t-none"
         style={{
           background: `linear-gradient(145deg, ${cover.bgFrom} 0%, ${cover.bgTo} 100%)`,
-          minHeight: "152px",
+          minHeight: "168px",
         }}
       >
         {/* Subtle grid texture — crisper lines at lower opacity */}
@@ -121,34 +134,22 @@ export function FeaturedProjectTile({
                      transition-transform duration-500 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]"
         >
           <motion.div style={shouldReduceMotion ? undefined : { y: springY }}>
+            {/* Single line, single weight — every tile's title reads at the
+                same visual size regardless of word count (a two-word title
+                split into bold+light lines looked uneven next to the
+                single-word tiles in the compact 2x2 grid). */}
             <span
               className={cn(
                 "font-syne",
-                "block whitespace-nowrap font-black tracking-[-0.04em] leading-[0.95]"
+                "block truncate font-black tracking-[-0.04em] leading-[0.95]"
               )}
               style={{
                 color: cover.titleColor,
                 fontSize: TILE_DISPLAY,
               }}
             >
-              {titleFirst}
+              {project.title}
             </span>
-            {titleRest && (
-              <span
-                className={cn(
-                  "font-syne",
-                  "block font-light tracking-[-0.02em] leading-[1.1] break-words min-w-0"
-                )}
-                style={{
-                  color: cover.subtitleColor,
-                  fontSize: TILE_DISPLAY,
-                  overflowWrap: "break-word",
-                  wordBreak: "break-word",
-                }}
-              >
-                {titleRest}
-              </span>
-            )}
           </motion.div>
         </div>
 
@@ -200,45 +201,44 @@ export function FeaturedProjectTile({
 
         {/* ── "View project" hover reveal ─────────────────────────────────
             Fades + slides up from the bottom edge on hover (desktop only).
-            The entire cover becomes a link to the primary URL — no nested anchors
-            because the icon links above call e.stopPropagation().
+            The entire cover is a button that opens the "peek" preview modal
+            (not a direct external link anymore — that behavior now lives as
+            a secondary action inside the peek). The icon links above still
+            call e.stopPropagation() so they keep opening externally without
+            also triggering the peek.
             Touch devices: always visible at low opacity as a static affordance.
             Reduced motion: static, no translate. */}
-        {hasPrimaryLink && (
-          <a
-            aria-label={`View ${project.title} project`}
-            className="absolute inset-0 z-10 flex items-end justify-start p-4"
-            href={primaryHref}
-            rel="noopener noreferrer"
-            tabIndex={0}
-            target="_blank"
-            // No onClick needed — icon buttons above stop propagation
+        <button
+          aria-haspopup="dialog"
+          aria-label={`Preview ${project.title} project`}
+          className="absolute inset-0 z-10 flex cursor-pointer items-end justify-start p-4"
+          onClick={() => setPeekOpen(true)}
+          type="button"
+        >
+          {/* Pill affordance */}
+          <span
+            className={cn(
+              "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-none",
+              "bg-white/[0.12] border border-white/[0.18] backdrop-blur-sm",
+              "text-[11px] font-semibold text-white/80 tracking-tight",
+              // Touch devices: show at low opacity always (not hover-only)
+              "opacity-[0.55]",
+              // Desktop hover: fade+slide reveal
+              shouldReduceMotion
+                ? ""
+                : [
+                    // Start below, translate up on hover
+                    "translate-y-2",
+                    "[@media(hover:hover)]:group-hover:translate-y-0",
+                    "[@media(hover:hover)]:group-hover:opacity-100",
+                    "transition-[opacity,transform] duration-300 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]",
+                  ].join(" ")
+            )}
           >
-            {/* Pill affordance */}
-            <span
-              className={cn(
-                "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-none",
-                "bg-white/[0.12] border border-white/[0.18] backdrop-blur-sm",
-                "text-[11px] font-semibold text-white/80 tracking-tight",
-                // Touch devices: show at low opacity always (not hover-only)
-                "opacity-[0.55]",
-                // Desktop hover: fade+slide reveal
-                shouldReduceMotion
-                  ? ""
-                  : [
-                      // Start below, translate up on hover
-                      "translate-y-2",
-                      "[@media(hover:hover)]:group-hover:translate-y-0",
-                      "[@media(hover:hover)]:group-hover:opacity-100",
-                      "transition-[opacity,transform] duration-300 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]",
-                    ].join(" ")
-              )}
-            >
-              View project
-              <IconArrowUpRight size={11} />
-            </span>
-          </a>
-        )}
+            View project
+            <IconArrowUpRight size={11} />
+          </span>
+        </button>
 
         {/* Bottom edge fade */}
         <div
@@ -260,14 +260,14 @@ export function FeaturedProjectTile({
         <h3
           className={cn(
             "font-syne",
-            "text-[1rem] sm:text-[1.0625rem] font-bold text-foreground leading-tight tracking-tight"
+            "text-[13px] sm:text-[14px] font-bold text-foreground leading-tight tracking-tight"
           )}
         >
           {project.title}
         </h3>
 
-        {/* Description — body scale: 14px leading-relaxed muted */}
-        <p className="text-[14px] text-muted-foreground leading-[1.72] flex-1 text-pretty">
+        {/* Description — truncated to 2 lines, compact sidebar context */}
+        <p className="text-[12.5px] text-muted-foreground leading-[1.6] flex-1 text-pretty line-clamp-2">
           {project.description}
         </p>
 
@@ -288,6 +288,13 @@ export function FeaturedProjectTile({
           </div>
         )}
       </div>
+
+      <ProjectPeekModal
+        cover={cover}
+        onOpenChange={setPeekOpen}
+        open={peekOpen}
+        project={project}
+      />
     </div>
   );
 }

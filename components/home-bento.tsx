@@ -145,16 +145,24 @@ export function HomeBento({ posts }: { posts: Post[] }) {
         </BentoTile>
       </Entry>
 
-      <Entry className="col-span-1 lg:col-span-5" delay={0.04} variant="scale">
-        <BentoTile className="h-full min-w-0">
-          <FeaturedProjectTile index={0} project={projectsData[0]} />
-        </BentoTile>
-      </Entry>
-
-      <Entry className="col-span-1 lg:col-span-5" delay={0.08} variant="scale">
-        <BentoTile className="h-full min-w-0">
-          <FeaturedProjectTile index={1} project={projectsData[1]} />
-        </BentoTile>
+      {/* Featured projects — top 4, in a 2x2 grid sized as ONE bento entry
+          (col-span-5 row-span-2, matching Location/Socials' sidebar sizing)
+          so it sits beside About as a single unit. This deliberately avoids
+          letting 4 separate auto-flowing items dense-pack into the gap —
+          that's what split OpenKVM/Brik across two different scroll
+          positions before (see the earlier fix in this file's history). */}
+      <Entry
+        className="col-span-1 lg:col-span-5 lg:row-span-2"
+        delay={0.04}
+        variant="scale"
+      >
+        <div className="grid h-full grid-cols-2 gap-3">
+          {projectsData.slice(0, 4).map((project, index) => (
+            <BentoTile className="min-w-0" key={project.title}>
+              <FeaturedProjectTile index={index} project={project} />
+            </BentoTile>
+          ))}
+        </div>
       </Entry>
 
       <Entry className="col-span-1 sm:col-span-2 lg:col-span-12">

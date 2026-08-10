@@ -170,13 +170,8 @@ export default function RootLayout({
         />
         <JsonLd />
       </head>
-      <body className="font-sans bg-background text-foreground relative">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          disableTransitionOnChange
-          enableSystem
-        >
+      <body className="font-sans bg-background text-foreground relative transition-colors duration-300 ease-out">
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <HeroBackground />
           <ActiveSectionContextProvider>
             {children}

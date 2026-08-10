@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ThemeLogo } from "@/components/theme-logo";
 import {
   footerContent,
   footerSocialLinks,
@@ -12,9 +13,11 @@ export default function Footer() {
       <div className="mx-auto max-w-4xl px-4 sm:px-6">
         <Link
           aria-label="go home"
-          className="mx-auto block size-fit"
+          className="mx-auto flex size-fit items-center justify-center"
           href="/"
-        />
+        >
+          <ThemeLogo height={28} width={28} />
+        </Link>
 
         {/* Nav links — touch targets via min-h + py */}
         <nav aria-label="Footer navigation">
