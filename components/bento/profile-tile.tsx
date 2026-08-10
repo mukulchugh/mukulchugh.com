@@ -105,7 +105,7 @@ export function ProfileTile() {
         <motion.div variants={shouldReduceMotion ? undefined : itemVariants}>
           {/* Avatar */}
           <div
-            className="avatar-ring relative w-[60px] h-[60px] sm:w-[68px] sm:h-[68px] rounded-2xl overflow-hidden flex-shrink-0
+            className="avatar-ring relative w-[60px] h-[60px] sm:w-[68px] sm:h-[68px] rounded-none overflow-hidden flex-shrink-0
                        bg-gradient-to-br from-muted to-muted"
           >
             <Image
@@ -122,17 +122,17 @@ export function ProfileTile() {
         <motion.div variants={shouldReduceMotion ? undefined : itemVariants}>
           {/* Available pill */}
           <span
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-none
                        bg-emerald-50 border border-emerald-200
                        dark:bg-emerald-500/10 dark:border-emerald-400/25
                        ui-label text-emerald-600 dark:text-emerald-400
                        whitespace-nowrap"
           >
             <span className="relative flex size-1.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-60" />
-              <span className="relative inline-flex size-1.5 rounded-full bg-emerald-500" />
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-none bg-emerald-500 opacity-60" />
+              <span className="relative inline-flex size-1.5 rounded-none bg-emerald-500" />
             </span>
-            Available
+            Let&apos;s chat
           </span>
         </motion.div>
       </motion.div>
@@ -155,7 +155,7 @@ export function ProfileTile() {
               : { ...blurRiseVariants.visible.transition, delay: 0.05 }
           }
         >
-          01 — Product Engineer
+          01 · Product Engineer
         </motion.p>
 
         {/* Oversized name headline — clip reveal line by line */}
@@ -209,7 +209,7 @@ export function ProfileTile() {
         >
           Founding Engineer at{" "}
           <span className="text-foreground/90 font-medium">Quivly</span>
-          {" — "}
+          {", "}
           building end-to-end across mobile, full-stack, and AI.
         </motion.p>
       </motion.div>
@@ -243,7 +243,7 @@ export function ProfileTile() {
           variants={shouldReduceMotion ? undefined : itemVariants}
         >
           <span
-            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-none
                        bg-foreground/[0.04] border border-border
                        text-[12px] text-muted-foreground
                        [@media(hover:hover)]:hover:border-border [@media(hover:hover)]:hover:text-foreground/80
@@ -257,7 +257,7 @@ export function ProfileTile() {
           </span>
           {(["Full-Stack", "Mobile", "Product"] as const).map((tag) => (
             <span
-              className="px-3 py-1 rounded-full bg-foreground/[0.04] border border-border
+              className="px-3 py-1 rounded-none bg-foreground/[0.04] border border-border
                          text-[12px] text-muted-foreground
                          [@media(hover:hover)]:hover:border-border [@media(hover:hover)]:hover:text-foreground/80
                          transition-colors duration-200 cursor-default select-none"

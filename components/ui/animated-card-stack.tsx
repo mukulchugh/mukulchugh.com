@@ -33,7 +33,7 @@ const enterAnimation = {
 function CardContent({ post }: { post: Post }) {
   return (
     <div className="flex h-full w-full flex-col gap-3">
-      <div className="-outline-offset-1 flex h-[160px] w-full items-center justify-center overflow-hidden rounded-xl outline outline-black/10 dark:outline-white/10">
+      <div className="-outline-offset-1 flex h-[160px] w-full items-center justify-center overflow-hidden rounded-none outline outline-black/10 dark:outline-white/10">
         {post.coverImage?.url ? (
           <Image
             alt={post.title}
@@ -57,7 +57,7 @@ function CardContent({ post }: { post: Post }) {
           {post.tags?.[0] && (
             <>
               <span>•</span>
-              <span className="px-2 py-0.5 rounded-full bg-muted text-xs">
+              <span className="px-2 py-0.5 rounded-none bg-muted text-xs">
                 {post.tags[0].name}
               </span>
             </>
@@ -100,7 +100,7 @@ function AnimatedCard({
   return (
     <motion.div
       animate={{ scale, y }}
-      className="absolute flex h-[320px] w-[280px] items-center justify-center overflow-hidden rounded-t-xl border-x border-t border-border bg-card p-1.5 shadow-lg will-change-transform sm:w-[320px]"
+      className="absolute flex h-[320px] w-[280px] items-center justify-center overflow-hidden rounded-t-none border-x border-t border-border bg-card p-1.5 shadow-lg will-change-transform sm:w-[320px]"
       exit={exitAnim}
       initial={initialAnim}
       key={card.id}

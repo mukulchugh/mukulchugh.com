@@ -32,9 +32,9 @@ const COVERS = [
     titleColor: "rgba(255,255,255,0.92)",
   },
   {
-    // Brik — slightly warmer graphite
-    bgFrom: "rgb(18,17,15)",
-    bgTo: "rgb(38,36,32)",
+    // Brik — slightly lighter graphite
+    bgFrom: "rgb(17,17,17)",
+    bgTo: "rgb(37,37,37)",
     categoryLabel: "React Native · SDK",
     labelBg: "bg-white/[0.08] border-white/[0.14]",
     labelColor: "text-white/55",
@@ -87,7 +87,7 @@ export function FeaturedProjectTile({
     >
       {/* ── Editorial Cover Panel ───────────────────────── */}
       <div
-        className="relative flex-shrink-0 overflow-hidden rounded-t-3xl"
+        className="relative flex-shrink-0 overflow-hidden rounded-t-none"
         style={{
           background: `linear-gradient(145deg, ${cover.bgFrom} 0%, ${cover.bgTo} 100%)`,
           minHeight: "152px",
@@ -156,7 +156,7 @@ export function FeaturedProjectTile({
         <div className="absolute top-4 left-5">
           <span
             className={cn(
-              "ui-label inline-flex items-center rounded-full border px-2.5 py-0.5",
+              "ui-label inline-flex items-center rounded-none border px-2.5 py-0.5",
               cover.labelBg,
               cover.labelColor
             )}
@@ -171,7 +171,7 @@ export function FeaturedProjectTile({
           {project.github ? (
             <a
               aria-label={`${project.title} on GitHub`}
-              className="flex items-center justify-center w-11 h-11 rounded-xl text-white/50
+              className="flex items-center justify-center w-11 h-11 rounded-none text-white/50
                          [@media(hover:hover)]:hover:text-white/90 [@media(hover:hover)]:hover:bg-white/[0.1]
                          transition-colors duration-150 active:bg-white/[0.08]"
               href={project.github}
@@ -185,7 +185,7 @@ export function FeaturedProjectTile({
           {project.demo ? (
             <a
               aria-label={`${project.title} demo`}
-              className="flex items-center justify-center w-11 h-11 rounded-xl text-white/50
+              className="flex items-center justify-center w-11 h-11 rounded-none text-white/50
                          [@media(hover:hover)]:hover:text-white/90 [@media(hover:hover)]:hover:bg-white/[0.1]
                          transition-colors duration-150 active:bg-white/[0.08]"
               href={project.demo}
@@ -217,7 +217,7 @@ export function FeaturedProjectTile({
             {/* Pill affordance */}
             <span
               className={cn(
-                "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full",
+                "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-none",
                 "bg-white/[0.12] border border-white/[0.18] backdrop-blur-sm",
                 "text-[11px] font-semibold text-white/80 tracking-tight",
                 // Touch devices: show at low opacity always (not hover-only)
@@ -230,7 +230,7 @@ export function FeaturedProjectTile({
                       "translate-y-2",
                       "[@media(hover:hover)]:group-hover:translate-y-0",
                       "[@media(hover:hover)]:group-hover:opacity-100",
-                      "transition-all duration-300 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]",
+                      "transition-[opacity,transform] duration-300 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]",
                     ].join(" ")
               )}
             >
@@ -276,10 +276,10 @@ export function FeaturedProjectTile({
           <div className="flex flex-wrap gap-1.5 mt-auto">
             {project.tags.map((tag) => (
               <span
-                className="ui-label rounded-full px-2.5 py-0.5
+                className="ui-label rounded-none px-2.5 py-0.5
                            border border-border bg-foreground/[0.04] text-muted-foreground
                            [@media(hover:hover)]:hover:border-border [@media(hover:hover)]:hover:text-foreground/80
-                           transition-all duration-150 cursor-default select-none"
+                           transition-[color,border-color] duration-150 cursor-default select-none"
                 key={tag}
               >
                 {tag}

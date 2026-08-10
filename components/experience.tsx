@@ -37,7 +37,7 @@ export default function Experience() {
         icon={IconBriefcase}
         index="05"
         label="Experience"
-        subtitle="From student ambassador to founding engineer — the short version."
+        subtitle="From student ambassador to founding engineer, the short version."
         title="Where I've"
       />
       <CollapsibleList

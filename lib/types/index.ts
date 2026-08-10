@@ -21,7 +21,6 @@ export interface Post {
   };
   brief: string;
   content?: {
-    html: string;
     markdown: string;
   };
   coverImage: {

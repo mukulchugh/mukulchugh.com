@@ -103,11 +103,11 @@ function EmailSocialCard({
        */}
       <div className="relative h-full">
         <Button
-          aria-label={copied ? "Email copied" : `Copy email — ${handle}`}
+          aria-label={copied ? "Email copied" : `Copy email: ${handle}`}
           className="social-card group relative flex min-h-[80px] sm:min-h-[88px] h-full w-full flex-col items-start justify-between
-                     gap-2 sm:gap-3 overflow-hidden rounded-2xl bg-card
+                     gap-2 sm:gap-3 overflow-hidden rounded-none bg-card
                      p-3 sm:p-3.5 text-left
-                     transition-all duration-300 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]
+                     transition-transform duration-300 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]
                      active:scale-[0.975] active:duration-100 cursor-pointer"
           onClick={handleClick}
           type="button"
@@ -135,7 +135,7 @@ function EmailSocialCard({
           <span className="relative flex w-full items-start justify-between">
             {/* Icon — swaps to check on copy */}
             <span
-              className="grid h-9 w-9 place-items-center rounded-xl flex-shrink-0"
+              className="grid h-9 w-9 place-items-center rounded-none flex-shrink-0"
               style={{ background: `${color}14`, color }}
             >
               <motion.span
@@ -168,7 +168,7 @@ function EmailSocialCard({
                 </span>
               ) : (
                 <IconArrowUpRight
-                  className="h-4 w-4 text-muted-foreground/50 transition-all duration-200
+                  className="h-4 w-4 text-muted-foreground/50 transition-[color,transform] duration-200
                              [@media(hover:hover)]:group-hover:-translate-y-0.5
                              [@media(hover:hover)]:group-hover:translate-x-0.5
                              [@media(hover:hover)]:group-hover:text-muted-foreground"
@@ -187,7 +187,7 @@ function EmailSocialCard({
         <a
           aria-label={`Open mail app to email ${handle}`}
           className="sr-only focus:not-sr-only focus:absolute focus:bottom-1 focus:right-1
-                     focus:z-10 focus:rounded-lg focus:bg-card focus:px-2 focus:py-1
+                     focus:z-10 focus:rounded-none focus:bg-card focus:px-2 focus:py-1
                      focus:text-[11px] focus:font-mono focus:text-muted-foreground focus:outline focus:outline-1
                      focus:outline-border"
           href={href}
@@ -221,11 +221,11 @@ export function SocialsTile() {
           ) : (
             <div className="h-full" key={name}>
               <a
-                aria-label={`${name} — ${handle}`}
+                aria-label={`${name} · ${handle}`}
                 className="social-card group relative flex min-h-[80px] sm:min-h-[88px] h-full flex-col items-start justify-between
-                           gap-2 sm:gap-3 overflow-hidden rounded-2xl bg-card
+                           gap-2 sm:gap-3 overflow-hidden rounded-none bg-card
                            p-3 sm:p-3.5
-                           transition-all duration-300 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]
+                           transition-transform duration-300 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]
                            active:scale-[0.975] active:duration-100"
                 href={href}
                 rel="noopener noreferrer"
@@ -247,13 +247,13 @@ export function SocialsTile() {
                 />
                 <span className="relative flex w-full items-start justify-between">
                   <span
-                    className="grid h-9 w-9 place-items-center rounded-xl"
+                    className="grid h-9 w-9 place-items-center rounded-none"
                     style={{ background: `${color}14`, color }}
                   >
                     <Icon className="h-[18px] w-[18px]" />
                   </span>
                   <IconArrowUpRight
-                    className="h-4 w-4 text-muted-foreground/50 transition-all duration-200
+                    className="h-4 w-4 text-muted-foreground/50 transition-[color,transform] duration-200
                                [@media(hover:hover)]:group-hover:-translate-y-0.5
                                [@media(hover:hover)]:group-hover:translate-x-0.5
                                [@media(hover:hover)]:group-hover:text-muted-foreground"

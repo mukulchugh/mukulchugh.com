@@ -2,10 +2,6 @@
 
 import { IconClock, IconTag } from "@tabler/icons-react";
 import Image from "next/image";
-import {
-  CoverCanvas,
-  StaticCoverPattern,
-} from "@/components/blog/cover-canvas";
 import type { Post } from "@/lib/blog";
 import { hashTitle, topicFamilyFor } from "@/lib/blog-topic";
 import { cn } from "@/lib/utils";
@@ -24,7 +20,7 @@ interface PostCoverProps {
   className?: string;
   /** Hero mode: taller, prominent; default is card thumbnail ratio */
   hero?: boolean;
-  /** Canvas-drawn generative pattern + pointer highlight. Off on the dense homepage tile for perf; on for /blog and the post hero. */
+  /** Quiet hover brightness lift. Off on the dense homepage tile (stays fully static); on for /blog and the post hero. */
   interactive?: boolean;
   post: Post;
   priority?: boolean;
@@ -41,13 +37,12 @@ export function PostCover({
   const tag = post.tags?.[0]?.name;
   const family = topicFamilyFor(tagNames);
   const TopicIcon = family.icon;
-  const [accentR, accentG, accentB] = family.accent;
 
   if (post.coverImage?.url) {
     return (
       <div
         className={cn(
-          "relative overflow-hidden rounded-xl",
+          "relative overflow-hidden rounded-none",
           hero ? "aspect-[16/7]" : "aspect-video",
           className
         )}
@@ -71,25 +66,21 @@ export function PostCover({
   // Designed editorial cover — deterministic per post.
   const h = hashTitle(post.title);
   const gradient = GRADIENTS[h % GRADIENTS.length];
-  // Oversized watermark icon — the dominant graphic mark on the card, sized
-  // with confidence rather than tucked away as a timid corner accent.
-  // Hero gets more room to breathe; a little per-post jitter keeps a run of
-  // same-family cards from looking machine-stamped identical.
-  const iconSize = (hero ? 132 : 84) + (h % 5) * 6;
 
   return (
     <div
       aria-hidden="false"
       className={cn(
-        "relative overflow-hidden rounded-xl select-none",
+        "group relative overflow-hidden rounded-none select-none",
         hero ? "aspect-[16/7]" : "aspect-video",
         className
       )}
       style={{ background: gradient }}
     >
-      {/* Topic glow — a real corner bloom in the family hue, the same
-          register as the accent glow on project cards, so the cover reads
-          as colored and intentional rather than a flat near-black slab. */}
+      {/* Topic glow — a soft corner bloom in the family hue. This is the
+          entire nod to per-topic color identity now that the generative
+          constellation pattern and oversized icon watermark are gone —
+          color-coding wasn't the complaint, decorative pattern-art was. */}
       <div
         aria-hidden="true"
         className="absolute inset-0 pointer-events-none"
@@ -98,31 +89,59 @@ export function PostCover({
         }}
       />
 
-      {/* Oversized topic watermark — bleeds slightly off the bottom-right
-          edge, the card's dominant graphic element. */}
+      {interactive && (
+        // Quiet hover response — a faint overall brightness lift, nothing
+        // drawn. Replaces the old canvas pointer-follow highlight; `group`
+        // lives on this same root so it works whether or not an ancestor
+        // link also declares one.
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 pointer-events-none opacity-0
+                     transition-opacity duration-300
+                     [@media(hover:hover)]:group-hover:opacity-100"
+          style={{
+            background:
+              "radial-gradient(120% 100% at 25% 25%, rgba(255,255,255,0.05) 0%, transparent 70%)",
+          }}
+        />
+      )}
+
+      {/* Title mark — the post's own title, set modestly rather than
+          oversized or bleeding off an edge; the quiet-typographic
+          direction that worked for project covers, scaled down for a
+          denser blog card. Card contexts (list/compact/related) always
+          show this — it functions like an auto-generated thumbnail label.
+          Hero mode skips it: the post's H1 sits right above this banner
+          with the same title, same tag, and same read time already, so
+          repeating it here would just triple the same three facts instead
+          of adding anything — the banner stays atmosphere + color identity
+          only. */}
+      {!hero && (
+        <div className="absolute inset-0 flex items-center px-5 pb-6 sm:px-6">
+          <p
+            className={cn(
+              "font-syne",
+              "font-semibold leading-snug tracking-tight text-white/80 text-pretty line-clamp-2"
+            )}
+            style={{
+              fontSize: "clamp(0.9375rem, 2.4vw, 1.25rem)",
+              maxWidth: "82%",
+            }}
+          >
+            {post.title}
+          </p>
+        </div>
+      )}
+
+      {/* Quiet topic detail — small, low-opacity icon; a detail, not the
+          card's dominant graphic. */}
       <TopicIcon
         aria-hidden="true"
-        className="absolute pointer-events-none"
-        color={`rgba(${accentR},${accentG},${accentB},0.22)`}
-        size={iconSize}
-        strokeWidth={1.25}
-        style={{
-          bottom: `-${iconSize * 0.22}px`,
-          right: `-${iconSize * 0.16}px`,
-        }}
+        className="absolute top-3 left-3 pointer-events-none opacity-[0.3]"
+        color="white"
+        size={hero ? 16 : 13}
+        strokeWidth={1.6}
       />
-
-      {interactive ? (
-        // Generative constellation — seeded by this post's own title, so
-        // the layout is unique to it and stable across visits; a cheap
-        // pointer-following highlight only while actually hovered.
-        <CoverCanvas tags={tagNames} title={post.title} />
-      ) : (
-        // Static one-time draw — no pointer listeners, no rAF loop — the
-        // perf-sensitive dense homepage tile doesn't pay for the
-        // interactive highlight.
-        <StaticCoverPattern tags={tagNames} title={post.title} />
-      )}
 
       {/* Bottom fade for readability */}
       <div
@@ -138,7 +157,7 @@ export function PostCover({
       {tag && (
         <span
           className="absolute top-3 right-3 inline-flex items-center gap-1
-                     px-2 py-0.5 rounded-full
+                     px-2 py-0.5 rounded-none
                      bg-white/[0.1] border border-white/[0.15] backdrop-blur-sm
                      ui-label text-white/70"
         >

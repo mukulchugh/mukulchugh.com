@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: 40 30% 98%;
+    --background: 0 0% 100%;
     --foreground: 240 10% 12%;
 
     /* Cards & surfaces — pure white */
@@ -35,41 +35,41 @@
     --border: 240 10% 90%;
     --input: 240 10% 90%;
     --ring: 240 10% 12%;
-    --radius: 0.625rem;
+    --radius: 0px;
     --surface: 0 0% 100%;
-    --surface-elevated: 40 30% 98%;
+    --surface-elevated: 0 0% 100%;
     --dock-bg: 0 0% 100% / 0.96;
-    --hero-base: #faf9f7;
-    --hero-veil: rgba(245, 243, 240, 0.4);
+    --hero-base: #ffffff;
+    --hero-veil: rgba(255, 255, 255, 0.4);
     color-scheme: light;
   }
 
   .dark {
     --background: 240 6% 7%;
-    --foreground: 40 20% 96%;
+    --foreground: 0 0% 96%;
 
     --card: 240 5% 10%;
-    --card-foreground: 40 20% 96%;
+    --card-foreground: 0 0% 96%;
     --popover: 240 5% 10%;
-    --popover-foreground: 40 20% 96%;
+    --popover-foreground: 0 0% 96%;
 
-    --primary: 40 20% 96%;
+    --primary: 0 0% 96%;
     --primary-foreground: 240 6% 8%;
 
     --secondary: 240 4% 14%;
-    --secondary-foreground: 40 15% 92%;
+    --secondary-foreground: 0 0% 92%;
 
     --muted: 240 4% 14%;
     --muted-foreground: 240 5% 62%;
 
-    --accent: 40 20% 96%;
+    --accent: 0 0% 96%;
     --accent-foreground: 240 6% 8%;
 
     --destructive: 0 62% 45%;
     --destructive-foreground: 0 0% 98%;
     --border: 240 4% 18%;
     --input: 240 4% 18%;
-    --ring: 40 15% 80%;
+    --ring: 0 0% 80%;
     --surface: 240 5% 10%;
     --surface-elevated: 240 5% 12%;
     --dock-bg: 240 5% 10% / 0.94;
@@ -120,7 +120,7 @@
   :focus-visible {
     outline: 1.5px solid hsl(var(--ring) / 0.55);
     outline-offset: 3px;
-    border-radius: 4px;
+    border-radius: 0;
   }
 
   /* Selection color — tasteful neutral */
@@ -139,7 +139,7 @@
   }
   ::-webkit-scrollbar-thumb {
     background: hsl(var(--foreground) / 0.14);
-    border-radius: 2px;
+    border-radius: 0;
   }
   ::-webkit-scrollbar-thumb:hover {
     background: hsl(var(--foreground) / 0.26);
@@ -150,6 +150,44 @@
   .ui-label {
     @apply font-mono text-[10px] font-medium uppercase tracking-[0.18em] leading-4;
   }
+}
+
+/* ── Blog article code blocks (Streamdown + Shiki) ──────────────────
+   Streamdown renders fenced code as its own chrome (header, floating
+   copy/download buttons, body) instead of a bare <pre>, using the site's
+   theme tokens (bg-sidebar/bg-background) by default — which follow the
+   light/dark toggle. Code blocks here are deliberately *always* a dark ink
+   slab, matching the pre-Streamdown design, regardless of site theme, so
+   they're pinned to fixed dark colors via Streamdown's data-attribute
+   hooks rather than the theme-following prose-pre:* modifiers. */
+.prose [data-streamdown="code-block"] {
+  background-color: #111113;
+  border-color: rgb(255 255 255 / 0.1);
+}
+
+.prose [data-streamdown="code-block-header"] {
+  color: rgb(161 161 170); /* zinc-400 */
+}
+
+.prose [data-streamdown="code-block-actions"] {
+  background-color: rgb(255 255 255 / 0.06);
+  border-color: rgb(255 255 255 / 0.1);
+}
+
+.prose [data-streamdown="code-block-copy-button"],
+.prose [data-streamdown="code-block-download-button"] {
+  color: rgb(161 161 170); /* zinc-400 */
+}
+
+.prose [data-streamdown="code-block-copy-button"]:hover,
+.prose [data-streamdown="code-block-download-button"]:hover {
+  color: rgb(244 244 245); /* zinc-100 */
+}
+
+.prose [data-streamdown="code-block-body"] {
+  color: rgb(244 244 245); /* zinc-100 */
+  background-color: #111113;
+  border-color: rgb(255 255 255 / 0.1); /* zinc-100 */
 }
 
 /* ── Aurora backdrop keyframes ──────────────────────── */
@@ -202,11 +240,11 @@
 .aurora-blob {
   position: absolute;
   pointer-events: none;
-  border-radius: 50%;
+  border-radius: 0;
   will-change: transform;
 }
 
-/* Blob 1 — warm silver, top-left, large anchor */
+/* Blob 1 — neutral silver, top-left, large anchor */
 .aurora-blob-1 {
   top: -20%;
   left: -15%;
@@ -256,7 +294,7 @@
   );
 }
 
-/* Blob 3 — warm peach, bottom-center */
+/* Blob 3 — neutral grey, bottom-center */
 .aurora-blob-3 {
   bottom: 2%;
   left: 18%;
@@ -264,8 +302,8 @@
   height: 72vh;
   background: radial-gradient(
     ellipse at center,
-    rgba(251, 191, 164, 0.12) 0%,
-    rgba(251, 191, 164, 0.04) 45%,
+    rgba(24, 24, 24, 0.12) 0%,
+    rgba(24, 24, 24, 0.04) 45%,
     transparent 70%
   );
   filter: blur(44px);
@@ -275,13 +313,13 @@
 .dark .aurora-blob-3 {
   background: radial-gradient(
     ellipse at center,
-    rgba(251, 191, 164, 0.07) 0%,
-    rgba(251, 191, 164, 0.02) 45%,
+    rgba(255, 255, 255, 0.07) 0%,
+    rgba(255, 255, 255, 0.02) 45%,
     transparent 70%
   );
 }
 
-/* Blob 4 — warm neutral, bottom-right */
+/* Blob 4 — neutral grey, bottom-right */
 .aurora-blob-4 {
   right: -10%;
   bottom: 0%;
@@ -345,9 +383,9 @@
 /* crisp top inner highlight — stays */
         inset 0 1px 0 rgba(255, 255, 255, 0.92),
         inset 0 -1px 0 rgba(20, 20, 40, 0.04),
-        /* tighter contact shadow on lift */ 0 1px 3px rgba(28, 25, 23, 0.05),
-        /* deeper mid ambient */ 0 12px 32px -10px rgba(28, 25, 23, 0.14),
-        /* wider diffuse lift */ 0 32px 64px -24px rgba(28, 25, 23, 0.1);
+        /* tighter contact shadow on lift */ 0 1px 3px rgba(24, 24, 24, 0.05),
+        /* deeper mid ambient */ 0 12px 32px -10px rgba(24, 24, 24, 0.14),
+        /* wider diffuse lift */ 0 32px 64px -24px rgba(24, 24, 24, 0.1);
       transform: translateY(-2px);
     }
 
@@ -371,14 +409,14 @@
 /* ── Glass-tile token — LIGHT frosted glass ──────────── */
 /*
   Premium glass recipe (light mode):
-    fill:          warm white gradient — top 2% lighter so it reads as a lit surface
+    fill:          neutral white gradient — top 2% lighter so it reads as a lit surface
     blur:          backdrop-blur-[20px]
-    border:        true hairline 1px warm-neutral at 7% opacity
+    border:        true hairline 1px neutral at 7% opacity
     top highlight: crisp inset top line + whisper inner-bottom for edge realness
     outer shadow:  three-layer system — contact shadow + soft ambient + wide diffuse
-                   all tinted warm-neutral not pure black
-    radius:        1.25rem — tighter, more precise feel (large-tile tier;
-                   nested cards inside step down to 1rem/0.75rem)
+                   all tinted neutral grey, not pure black
+    radius:        0 — sharp edges, no rounding (large-tile tier;
+                   nested cards inside match at 0 as well)
 */
 .glass-tile {
   /* Opaque-enough fill — no backdrop-filter (blur-over-WebGL was the scroll jank) */
@@ -388,13 +426,13 @@
     rgba(255, 255, 255, 0.94) 100%
   );
   border: 1px solid rgba(20, 20, 40, 0.07);
-  border-radius: 1.25rem;
+  border-radius: 0;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.9),
     inset 0 -1px 0 rgba(20, 20, 40, 0.03),
-    0 1px 2px rgba(28, 25, 23, 0.04),
-    0 8px 24px -12px rgba(28, 25, 23, 0.1),
-    0 24px 48px -24px rgba(28, 25, 23, 0.08);
+    0 1px 2px rgba(24, 24, 24, 0.04),
+    0 8px 24px -12px rgba(24, 24, 24, 0.1),
+    0 24px 48px -24px rgba(24, 24, 24, 0.08);
 }
 
 .dark .glass-tile {
@@ -434,8 +472,8 @@
 @media (hover: hover) {
   .experience-card:hover {
     box-shadow:
-      0 1px 3px rgba(28, 25, 23, 0.05),
-      0 10px 28px -8px rgba(28, 25, 23, 0.13) !important;
+      0 1px 3px rgba(24, 24, 24, 0.05),
+      0 10px 28px -8px rgba(24, 24, 24, 0.13) !important;
   }
 
   .dark .experience-card:hover {
@@ -451,9 +489,9 @@
 @media (hover: hover) {
   .project-card:hover {
     box-shadow:
-      0 1px 3px rgba(28, 25, 23, 0.05),
-      0 14px 36px -10px rgba(28, 25, 23, 0.16),
-      0 36px 64px -24px rgba(28, 25, 23, 0.1) !important;
+      0 1px 3px rgba(24, 24, 24, 0.05),
+      0 14px 36px -10px rgba(24, 24, 24, 0.16),
+      0 36px 64px -24px rgba(24, 24, 24, 0.1) !important;
   }
 
   .dark .project-card:hover {
@@ -473,8 +511,8 @@
   .social-card:hover {
     box-shadow:
       0 0 0 1px rgba(20, 20, 40, 0.1),
-      0 1px 3px rgba(28, 25, 23, 0.05),
-      0 10px 28px -10px rgba(28, 25, 23, 0.16) !important;
+      0 1px 3px rgba(24, 24, 24, 0.05),
+      0 10px 28px -10px rgba(24, 24, 24, 0.16) !important;
   }
 
   .dark .social-card:hover {
@@ -512,8 +550,8 @@
   box-shadow:
     0 0 0 1px rgba(20, 20, 40, 0.07),
     inset 0 1px 0 rgba(255, 255, 255, 0.9),
-    0 2px 8px rgba(28, 25, 23, 0.06),
-    0 8px 32px -8px rgba(28, 25, 23, 0.12);
+    0 2px 8px rgba(24, 24, 24, 0.06),
+    0 8px 32px -8px rgba(24, 24, 24, 0.12);
 }
 
 .dark .dock-shell {
@@ -534,7 +572,7 @@
   box-shadow:
     0 0 0 1px rgba(20, 20, 40, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.8),
-    0 1px 3px rgba(28, 25, 23, 0.06);
+    0 1px 3px rgba(24, 24, 24, 0.06);
 }
 
 .dark .icon-chip {
@@ -552,8 +590,8 @@
 .social-card {
   border: 1px solid rgba(20, 20, 40, 0.07) !important;
   box-shadow:
-    0 1px 2px rgba(28, 25, 23, 0.04),
-    0 4px 12px -6px rgba(28, 25, 23, 0.08);
+    0 1px 2px rgba(24, 24, 24, 0.04),
+    0 4px 12px -6px rgba(24, 24, 24, 0.08);
 }
 
 .dark .social-card {
@@ -565,9 +603,9 @@
 
 .project-card {
   box-shadow:
-    0 1px 2px rgba(28, 25, 23, 0.04),
-    0 8px 24px -12px rgba(28, 25, 23, 0.1),
-    0 24px 48px -24px rgba(28, 25, 23, 0.06);
+    0 1px 2px rgba(24, 24, 24, 0.04),
+    0 8px 24px -12px rgba(24, 24, 24, 0.1),
+    0 24px 48px -24px rgba(24, 24, 24, 0.06);
 }
 
 .dark .project-card {
@@ -581,9 +619,9 @@
    CVModal, CalBookingModal and the ExpandableCard (experience) modal are
    the same conceptual surface — an elevated panel floating above a
    backdrop — but had each drifted to a different one-off shadow (some
-   single-layer, one tinted pure-black instead of the warm-neutral used
+   single-layer, one tinted pure-black instead of the neutral-grey used
    everywhere else). Converged here to one two-layer recipe in the same
-   warm-neutral register as .glass-tile / .project-card.
+   neutral-grey register as .glass-tile / .project-card.
 */
 .modal-shadow {
   box-shadow:
@@ -600,8 +638,8 @@
 .avatar-ring {
   box-shadow:
     0 0 0 1px rgba(20, 20, 40, 0.08),
-    0 1px 2px rgba(28, 25, 23, 0.06),
-    0 6px 20px -8px rgba(28, 25, 23, 0.14);
+    0 1px 2px rgba(24, 24, 24, 0.06),
+    0 6px 20px -8px rgba(24, 24, 24, 0.14);
 }
 
 .dark .avatar-ring {

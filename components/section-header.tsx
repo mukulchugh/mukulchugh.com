@@ -15,7 +15,7 @@ interface SectionHeaderProps {
   icon: Icon;
   /** @deprecated — accent is now unified; this prop is ignored */
   iconColor?: string;
-  /** Monospace index marker e.g. "02" — rendered as "02 — Label" */
+  /** Monospace index marker e.g. "02" — rendered as "02 · Label" */
   index?: string;
   label: string;
   subtitle?: string;
@@ -44,7 +44,7 @@ export function SectionHeader({
         )}
       >
         <p className="ui-label text-muted-foreground">
-          {index ? `${index} — ` : ""}
+          {index ? `${index} · ` : ""}
           {label}
         </p>
         <div
@@ -95,7 +95,7 @@ export function SectionHeader({
         viewport={viewportOnce}
         whileInView={{ opacity: 1, y: 0 }}
       >
-        {index ? `${index} — ` : ""}
+        {index ? `${index} · ` : ""}
         {label}
       </motion.p>
 

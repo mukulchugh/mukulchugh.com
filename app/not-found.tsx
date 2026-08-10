@@ -27,13 +27,13 @@ export default function NotFound() {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
-            className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors"
+            className="inline-flex items-center justify-center px-6 py-3 rounded-none bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors"
             href="/"
           >
             Go Home
           </Link>
           <Link
-            className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-border text-foreground font-medium hover:bg-secondary transition-colors"
+            className="inline-flex items-center justify-center px-6 py-3 rounded-none border border-border text-foreground font-medium hover:bg-secondary transition-colors"
             href="/blog"
           >
             Browse Blog

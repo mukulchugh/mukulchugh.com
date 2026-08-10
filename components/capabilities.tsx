@@ -86,7 +86,7 @@ function CardHeading({
   return (
     <div className="flex flex-col gap-3">
       <div
-        className="w-fit rounded-lg border border-border bg-muted p-2 text-muted-foreground"
+        className="w-fit rounded-none border border-border bg-muted p-2 text-muted-foreground"
         style={{ boxShadow: `0 0 24px -8px ${accent}` }}
       >
         <TablerIcon className="h-4 w-4" />
@@ -239,7 +239,7 @@ export default function Capabilities() {
                 accent={AGENT_ACCENT}
                 description="Founding engineer at Quivly.ai, building AI-powered products end to end. Shipped an AI-based QC and moderation engine at Swiggy, plus a public Agent Skills library and the MCP tooling that connects Quivly's systems."
                 icon={IconRobot}
-                title="AI, built in — not bolted on"
+                title="Built-in AI, not bolted on"
               />
             </CardHeader>
             <CardContent className="relative h-28 pt-4">
@@ -273,7 +273,7 @@ export default function Capabilities() {
           <CapabilityCard accent={INFRA_ACCENT} className="p-6">
             <CanvasGrain opacity={0.05} />
             <p className="relative z-10 mx-auto my-2 max-w-md text-balance text-center text-[19px] sm:text-[21px] font-syne font-bold tracking-[-0.01em] text-foreground">
-              One person, the whole stack — agents, apps, and the infrastructure
+              One person, the whole stack: agents, apps, and the infrastructure
               between them.
             </p>
             <div className="relative z-10 mt-6 flex items-center justify-center gap-8 overflow-hidden sm:gap-14">
@@ -293,7 +293,7 @@ export default function Capabilities() {
                     />
                   )}
                   <div
-                    className="flex h-12 w-12 items-center justify-center rounded-full border border-border bg-muted text-muted-foreground"
+                    className="flex h-12 w-12 items-center justify-center rounded-none border border-border bg-muted text-muted-foreground"
                     style={{ boxShadow: `0 0 24px -8px ${accent}` }}
                   >
                     <TablerIcon className="h-5 w-5" />

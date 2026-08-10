@@ -33,7 +33,7 @@ export default function BlogSection({ posts = [] }: { posts?: Post[] }) {
     >
       <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-end sm:justify-between">
         <div className="flex min-w-0 flex-col gap-2.5">
-          <p className="ui-label text-muted-foreground">05 — Writing</p>
+          <p className="ui-label text-muted-foreground">05 · Writing</p>
           <div aria-hidden="true" className="h-px w-10 bg-foreground/[0.07]" />
           <h2
             className={cn(
@@ -45,7 +45,7 @@ export default function BlogSection({ posts = [] }: { posts?: Post[] }) {
             <span className="font-light text-muted-foreground">notes</span>
           </h2>
           <p className="max-w-[48ch] text-[14px] leading-[1.7] text-pretty text-muted-foreground">
-            Short notes on engineering, product, and shipping — from OpenKVM and
+            Short notes on engineering, product, and shipping, from OpenKVM and
             Brik to agents and founding-team work.
           </p>
         </div>
@@ -65,7 +65,7 @@ export default function BlogSection({ posts = [] }: { posts?: Post[] }) {
       </div>
 
       {posts.length === 0 ? (
-        <div className="flex h-[160px] items-center justify-center rounded-2xl border border-border bg-foreground/[0.03]">
+        <div className="flex h-[160px] items-center justify-center rounded-none border border-border bg-foreground/[0.03]">
           <p className="text-[12px] text-muted-foreground/50">No posts yet</p>
         </div>
       ) : (

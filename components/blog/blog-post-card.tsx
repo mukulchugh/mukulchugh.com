@@ -7,6 +7,7 @@ import { PostCover } from "@/components/blog/post-cover";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import type { Post } from "@/lib/blog";
+import { accentColorForTags } from "@/lib/blog-topic";
 import { cn } from "@/lib/utils";
 
 function fmtDate(iso: string) {
@@ -57,8 +58,8 @@ export function BlogPostCard({
         className={cn(
           "group block min-w-0",
           compact
-            ? `overflow-hidden rounded-2xl border border-border bg-foreground/[0.03]
-               transition-all duration-300 active:scale-[0.98]
+            ? `overflow-hidden rounded-none border border-border bg-foreground/[0.03]
+               transition-[border-color,background-color,transform] duration-300 active:scale-[0.98]
                [@media(hover:hover)]:hover:border-border
                [@media(hover:hover)]:hover:bg-foreground/[0.05]
                [@media(hover:hover)]:hover:-translate-y-0.5`
@@ -85,7 +86,12 @@ export function BlogPostCard({
           {/* Meta row */}
           <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[12px] text-muted-foreground">
             {!compact && post.tags.length > 0 && (
-              <Badge variant="secondary">{post.tags[0].name}</Badge>
+              <Badge
+                accentColor={accentColorForTags([post.tags[0].name])}
+                variant="secondary"
+              >
+                {post.tags[0].name}
+              </Badge>
             )}
             {!compact && post.author && (
               <span className="flex items-center gap-2">

@@ -38,7 +38,7 @@ export default function Footer() {
           {footerSocialLinks.map((link) => (
             <Link
               aria-label={link.ariaLabel}
-              className="flex items-center justify-center w-11 h-11 rounded-xl
+              className="flex items-center justify-center w-11 h-11 rounded-none
                          text-muted-foreground [@media(hover:hover)]:hover:text-foreground
                          [@media(hover:hover)]:hover:bg-foreground/[0.05]
                          transition-colors duration-150 active:bg-foreground/[0.07]"

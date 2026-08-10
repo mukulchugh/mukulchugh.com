@@ -70,7 +70,7 @@ function BentoTile({
     return (
       <div
         className={cn("overflow-hidden", className)}
-        style={{ borderRadius: "1.25rem", ...style }}
+        style={{ borderRadius: 0, ...style }}
       >
         {children}
       </div>

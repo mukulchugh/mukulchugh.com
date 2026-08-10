@@ -46,13 +46,13 @@ export default function Error({
           </p>
         )}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button className="rounded-full" onClick={reset}>
+          <Button className="rounded-none" onClick={reset}>
             Try Again
           </Button>
           <Link
             className={cn(
               buttonVariants({ variant: "outline" }),
-              "rounded-full"
+              "rounded-none"
             )}
             href="/"
           >

@@ -7,7 +7,7 @@ tags: ["AI Agents", "MCP", "Developer Tools"]
 author: "Mukul Chugh"
 ---
 
-Every product team ends up with a pile of tools and dashboards — and then asks an agent a simple question with no clean path in except screenshots pasted into chat.
+Every product team ends up with a pile of tools and dashboards, and then asks an agent a simple question with no clean path in except screenshots pasted into chat.
 
 I've been building around a simpler shape: one **read-only MCP gateway** in front of the team's tools. One place to authenticate. One policy surface. One place to answer "what did the agent look at?"
 

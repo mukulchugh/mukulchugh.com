@@ -75,7 +75,7 @@ export function SkillsMarquee() {
   return (
     <div className="h-full flex flex-col justify-center gap-3 py-5 px-0 relative">
       {/* Section marker */}
-      <p className="ui-label px-6 text-muted-foreground">02 — Stack</p>
+      <p className="ui-label px-6 text-muted-foreground">02 · Stack</p>
       <MarqueeTrack />
     </div>
   );

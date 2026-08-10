@@ -1,7 +1,7 @@
 ---
 title: "What Swiggy-scale mobile actually taught me"
 slug: "mobile-lessons-from-swiggy-scale"
-brief: "Before startup life, I shipped mobile at Swiggy. Scale changes which bugs matter — and how little your happy path predicts production."
+brief: "Before startup life, I shipped mobile at Swiggy. Scale changes which bugs matter, and how little your happy path predicts production."
 publishedAt: "2025-06-02"
 tags: ["Mobile", "React Native", "Engineering"]
 author: "Mukul Chugh"
@@ -15,6 +15,6 @@ Your happy path is a rounding error. Empty states, double-taps, and degraded mod
 
 Abstractions layers earn rent or they die. At scale, every unnecessary layer becomes divergent iOS/Android behavior.
 
-A mobile release isn't a deploy — it lives on people's phones. Flags, staged rollouts, and crash analytics aren't "platform work." They're part of shipping.
+A mobile release isn't a deploy: it lives on people's phones. Flags, staged rollouts, and crash analytics aren't "platform work." They're part of shipping.
 
 Startups don't have that traffic. They still have production. Treat the last 5% as the product, not cleanup after the demo.

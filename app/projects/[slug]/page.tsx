@@ -102,7 +102,7 @@ function NavCard({
   return (
     <Link
       className={cn(
-        "group flex flex-1 flex-col gap-2 rounded-2xl border border-border p-5",
+        "group flex flex-1 flex-col gap-2 rounded-none border border-border p-5",
         "min-h-[44px] transition-colors duration-150",
         "[@media(hover:hover)]:hover:border-border [@media(hover:hover)]:hover:bg-muted",
         isPrev ? "items-start" : "items-end text-right"
@@ -164,7 +164,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           <span className="inline-flex items-center gap-2">
             <span
               aria-hidden="true"
-              className="h-1.5 w-1.5 rounded-full"
+              className="h-1.5 w-1.5 rounded-none"
               style={{ background: accent }}
             />
             <span className="ui-label text-muted-foreground">{eyebrow}</span>
@@ -201,7 +201,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </div>
         </div>
 
-        <div className="relative mb-12 aspect-[16/7] overflow-hidden rounded-2xl border border-border">
+        <div className="relative mb-12 aspect-[16/7] overflow-hidden rounded-none border border-border">
           <div
             className="absolute inset-0"
             style={{
@@ -220,7 +220,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           )}
           <div
             aria-hidden="true"
-            className="absolute -top-24 -left-24 h-[420px] w-[420px] rounded-full"
+            className="absolute -top-24 -left-24 h-[420px] w-[420px] rounded-none"
             style={{
               background:
                 "radial-gradient(circle at 30% 30%, rgba(255,255,255,0.06) 0%, transparent 62%)",
@@ -229,7 +229,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           {/* Per-project accent glow — content-seeded, same convention as the homepage project grid */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute -right-16 -bottom-16 h-64 w-64 rounded-full opacity-[0.16] blur-3xl"
+            className="pointer-events-none absolute -right-16 -bottom-16 h-64 w-64 rounded-none opacity-[0.16] blur-3xl"
             style={{ background: accent }}
           />
           <CanvasGrain />
@@ -274,7 +274,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           {/* Topic badge — top-right, reuses the same eyebrow label shown above the title */}
           <span
             className="absolute top-3 right-3 inline-flex items-center gap-1
-                       px-2 py-0.5 rounded-full
+                       px-2 py-0.5 rounded-none
                        bg-white/[0.1] border border-white/[0.15] backdrop-blur-sm
                        ui-label text-white/70"
           >
@@ -316,7 +316,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         )}
 
         {project.tags.length > 0 && (
-          <section className="mb-8 rounded-2xl border border-border p-5 sm:p-6">
+          <section className="mb-8 rounded-none border border-border p-5 sm:p-6">
             <h2 className="ui-label mb-5 text-muted-foreground">Stack</h2>
             <ul className="grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-3">
               {project.tags.map((tag, i) => (
@@ -339,7 +339,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               <a
                 className={cn(
                   buttonVariants({ variant: "outline" }),
-                  "rounded-full"
+                  "rounded-none"
                 )}
                 href={project.github}
                 rel="noopener noreferrer"
@@ -353,7 +353,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               <a
                 className={cn(
                   buttonVariants({ variant: "secondary" }),
-                  "rounded-full"
+                  "rounded-none"
                 )}
                 href={project.demo}
                 rel="noopener noreferrer"

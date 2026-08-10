@@ -62,10 +62,10 @@ const Component = React.memo(() => {
             }}
           >
             <div className="relative">
-              <div className="absolute -inset-1 rounded-full bg-gradient-to-b from-foreground/15 to-foreground/5 blur-md" />
+              <div className="absolute -inset-1 rounded-none bg-gradient-to-b from-foreground/15 to-foreground/5 blur-md" />
               <Image
                 alt={siteConfig.name}
-                className="relative h-36 w-36 rounded-full object-cover border-2 border-border shadow-2xl"
+                className="relative h-36 w-36 rounded-none object-cover border-2 border-border shadow-2xl"
                 fetchPriority="high"
                 height={144}
                 priority={true}
@@ -88,14 +88,14 @@ const Component = React.memo(() => {
       >
         <span
           className={clsx(
-            "ui-label inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5",
+            "ui-label inline-flex items-center gap-1.5 rounded-none px-3.5 py-1.5",
             "text-muted-foreground bg-muted border border-border",
             "font-syne"
           )}
         >
           <span className="relative flex size-1.5">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-muted-foreground opacity-60" />
-            <span className="relative inline-flex size-1.5 rounded-full bg-muted0" />
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-none bg-muted-foreground opacity-60" />
+            <span className="relative inline-flex size-1.5 rounded-none bg-muted0" />
           </span>
           {siteConfig.tagline}
         </span>
@@ -139,7 +139,7 @@ const Component = React.memo(() => {
           className={clsx(
             buttonVariants(),
             "font-syne",
-            "rounded-xl bg-foreground hover:bg-foreground/90 text-white font-semibold shadow-[0_4px_20px_-4px_rgba(24,24,27,0.15)] transition-all duration-200"
+            "rounded-none bg-foreground hover:bg-foreground/90 text-white font-semibold shadow-[0_4px_20px_-4px_rgba(24,24,27,0.15)] transition-[background-color,transform] duration-200"
           )}
           href="#contact"
           onClick={handleClick}
@@ -151,7 +151,7 @@ const Component = React.memo(() => {
         <Button
           className={clsx(
             "font-syne",
-            "rounded-xl border border-border hover:border-border font-semibold"
+            "rounded-none border border-border hover:border-border font-semibold"
           )}
           onClick={handleOpenCV}
           variant="secondary"
@@ -178,11 +178,11 @@ const Component = React.memo(() => {
                       <a
                         aria-label={`${link.name} Profile`}
                         className={clsx(
-                          "group grid place-items-center w-11 h-11 rounded-xl cursor-pointer",
+                          "group grid place-items-center w-11 h-11 rounded-none cursor-pointer",
                           "bg-foreground/[0.05] border border-border",
                           "text-muted-foreground",
                           "hover:-translate-y-0.5 hover:text-foreground hover:bg-foreground/[0.08] hover:border-border",
-                          "transition-all duration-200"
+                          "transition-[color,background-color,border-color,transform] duration-200"
                         )}
                         href={link.href}
                         rel="noopener noreferrer"

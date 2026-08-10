@@ -4,6 +4,12 @@ module.exports = {
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    // Streamdown ships pre-built Tailwind class strings in its published
+    // dist output (not our own source), so the JIT scanner needs these
+    // paths explicitly or its utility classes (code-block chrome, token
+    // colors, etc.) never get generated. See streamdown.ai/docs/styling.
+    "./node_modules/streamdown/dist/*.js",
+    "./node_modules/@streamdown/code/dist/*.js",
   ],
   darkMode: ["class"],
   plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
@@ -16,8 +22,8 @@ module.exports = {
       },
       borderRadius: {
         lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        md: "var(--radius)",
+        sm: "var(--radius)",
       },
       colors: {
         accent: {

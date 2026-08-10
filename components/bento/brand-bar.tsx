@@ -27,7 +27,7 @@ export function BrandBar() {
           .filter((l) => l.name !== "Home")
           .map((l) => (
             <Link
-              className="rounded-full px-3 py-1.5 text-[13px] font-medium text-muted-foreground transition-colors hover:bg-foreground/[0.05] hover:text-foreground"
+              className="rounded-none px-3 py-1.5 text-[13px] font-medium text-muted-foreground transition-colors hover:bg-foreground/[0.05] hover:text-foreground"
               href={l.hash}
               key={l.name}
             >

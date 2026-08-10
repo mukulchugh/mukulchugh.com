@@ -98,13 +98,21 @@ function fileToPost(file: string, withContent: boolean): Post | null {
       : t
   );
 
-  let html: string | undefined;
   let headings: PostHeading[] | undefined;
 
   if (withContent) {
+    // Rendering itself now happens client-side via Streamdown
+    // (components/blog/article-body.tsx), which parses the raw markdown
+    // directly and does not generate heading ids/slugs on its own. We still
+    // run the markdown through the same marked Renderer here — discarding
+    // the HTML output — purely to extract an ordered h2/h3 heading list
+    // (id + text) using slugifyHeading. ArticleBody consumes this array
+    // positionally (nth h2/h3 it renders gets headings[n]'s id), which
+    // keeps the TOC's anchors and the rendered heading ids in lockstep
+    // without duplicating the slug/dedup algorithm on the client.
     const collectedHeadings: PostHeading[] = [];
     const renderer = buildRenderer(collectedHeadings);
-    html = marked.parse(content, { async: false, renderer }) as string;
+    marked.parse(content, { async: false, renderer });
     headings = collectedHeadings;
   }
 
@@ -114,10 +122,7 @@ function fileToPost(file: string, withContent: boolean): Post | null {
       profilePicture: siteConfig.images.profileImage,
     },
     brief: fm.brief || content.trim().slice(0, 180).replace(/\n+/g, " "),
-    content:
-      withContent && html !== undefined
-        ? { html, markdown: content }
-        : undefined,
+    content: withContent ? { markdown: content } : undefined,
     coverImage: fm.coverImage ? { url: fm.coverImage } : null,
     headings,
     id: slug,

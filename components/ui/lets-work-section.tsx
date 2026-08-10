@@ -14,7 +14,7 @@ const Cal = dynamic(
   {
     loading: () => (
       <div className="flex items-center justify-center min-h-[700px]">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-foreground" />
+        <div className="animate-spin rounded-none h-8 w-8 border-b-2 border-foreground" />
       </div>
     ),
     ssr: false,
@@ -62,7 +62,7 @@ export function LetsWorkTogether() {
         {/* Success state - Perfect, Let's talk with Cal.com embed */}
         {showSuccess && (
           <div
-            className="w-full flex flex-col items-center justify-start gap-8 transition-all duration-700"
+            className="w-full flex flex-col items-center justify-start gap-8 transition-[opacity,transform] duration-700"
             style={{
               opacity: showSuccess ? 1 : 0,
               transform: showSuccess
@@ -74,7 +74,7 @@ export function LetsWorkTogether() {
             {/* Heading */}
             <div className="flex flex-col items-center gap-2">
               <span
-                className="ui-label text-muted-foreground transition-all duration-500"
+                className="ui-label text-muted-foreground transition-[opacity,transform] duration-500"
                 style={{
                   opacity: showSuccess ? 1 : 0,
                   transform: showSuccess ? "translateY(0)" : "translateY(10px)",
@@ -86,7 +86,7 @@ export function LetsWorkTogether() {
               <h3
                 className={clsx(
                   "font-syne",
-                  "text-3xl font-light tracking-tight text-foreground transition-all duration-500 sm:text-4xl"
+                  "text-3xl font-light tracking-tight text-foreground transition-[opacity,transform] duration-500 sm:text-4xl"
                 )}
                 style={{
                   opacity: showSuccess ? 1 : 0,
@@ -119,7 +119,7 @@ export function LetsWorkTogether() {
         {!showSuccess && (
           <>
             <div
-              className="flex items-center gap-3 transition-all duration-500"
+              className="flex items-center gap-3 transition-[opacity,transform] duration-500"
               style={{
                 opacity: isClicked ? 0 : 1,
                 pointerEvents: isClicked ? "none" : "auto",
@@ -127,8 +127,8 @@ export function LetsWorkTogether() {
               }}
             >
               <span className="relative flex size-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-none bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex size-2 rounded-none bg-emerald-500" />
               </span>
               <span className="ui-label text-muted-foreground">
                 Available for projects
@@ -149,7 +149,7 @@ export function LetsWorkTogether() {
                 <h2
                   className={clsx(
                     "font-syne",
-                    "relative text-center text-5xl font-light tracking-tight text-foreground sm:text-6xl md:text-7xl lg:text-8xl transition-all duration-700 ease-out"
+                    "relative text-center text-5xl font-light tracking-tight text-foreground sm:text-6xl md:text-7xl lg:text-8xl transition-[opacity,transform] duration-700 ease-out"
                   )}
                   style={{
                     opacity: isClicked ? 0 : 1,
@@ -189,7 +189,7 @@ export function LetsWorkTogether() {
                 {/* Circle button with arrow */}
                 <div className="relative mt-4 flex size-16 items-center justify-center sm:size-20">
                   <div
-                    className={`pointer-events-none absolute inset-0 rounded-full border transition-all ease-out ${
+                    className={`pointer-events-none absolute inset-0 rounded-none border transition-[opacity,transform,border-color,background-color] ease-out ${
                       isHovered && !isClicked
                         ? "border-foreground bg-foreground"
                         : "border-foreground/30 bg-transparent"
@@ -205,7 +205,7 @@ export function LetsWorkTogether() {
                     }}
                   />
                   <IconArrowUpRight
-                    className={`size-6 transition-all ease-out sm:size-7 ${
+                    className={`size-6 transition-[color,opacity,transform] ease-out sm:size-7 ${
                       isHovered && !isClicked
                         ? "text-background"
                         : "text-foreground"
@@ -234,7 +234,7 @@ export function LetsWorkTogether() {
                   key={side}
                 >
                   <div
-                    className="h-px w-8 bg-foreground/30 transition-all duration-500 sm:w-12"
+                    className="h-px w-8 bg-foreground/30 transition-[opacity,transform] duration-500 sm:w-12"
                     style={{
                       opacity: isClicked ? 0 : isHovered ? 1 : 0.5,
                       transform: isClicked
@@ -250,7 +250,7 @@ export function LetsWorkTogether() {
 
             {/* Description text */}
             <div
-              className="mt-8 flex flex-col items-center gap-4 text-center transition-all duration-500 delay-100"
+              className="mt-8 flex flex-col items-center gap-4 text-center transition-[opacity,transform] duration-500 delay-100"
               style={{
                 opacity: isClicked ? 0 : 1,
                 pointerEvents: isClicked ? "none" : "auto",

@@ -46,12 +46,12 @@ export function CVModal({ isOpen, onClose, cvUrl, name }: CVModalProps) {
   return (
     <Dialog onOpenChange={(open) => !open && onClose()} open={isOpen}>
       <DialogContent
-        className="modal-shadow max-h-[calc(100dvh-2rem)] max-w-4xl gap-0 overflow-hidden rounded-2xl p-0"
+        className="modal-shadow flex max-h-[calc(100dvh-2rem)] flex-col gap-0 overflow-hidden rounded-none p-0 sm:max-w-[min(56rem,calc(100%-4rem))]"
         showCloseButton={false}
       >
         <header className="flex items-center justify-between border-b border-border p-4 sm:p-6">
           <div className="flex items-center gap-3">
-            <div className="rounded-xl bg-foreground/[0.06] p-2 ring-1 ring-border">
+            <div className="rounded-none bg-foreground/[0.06] p-2 ring-1 ring-border">
               <IconFileText className="size-5 text-foreground/60" />
             </div>
             <div>
@@ -80,7 +80,7 @@ export function CVModal({ isOpen, onClose, cvUrl, name }: CVModalProps) {
                     size: "sm",
                     variant: action.download ? "default" : "secondary",
                   }),
-                  "rounded-xl",
+                  "rounded-none",
                   action.desktopOnly ? "hidden sm:inline-flex" : "inline-flex"
                 )}
                 download={action.download || undefined}
@@ -98,7 +98,7 @@ export function CVModal({ isOpen, onClose, cvUrl, name }: CVModalProps) {
               render={
                 <Button
                   aria-label="Close resume"
-                  className="rounded-xl bg-foreground/[0.06] hover:bg-foreground/[0.10]"
+                  className="rounded-none bg-foreground/[0.06] hover:bg-foreground/[0.10]"
                   size="icon"
                   variant="ghost"
                 />
@@ -109,7 +109,7 @@ export function CVModal({ isOpen, onClose, cvUrl, name }: CVModalProps) {
           </div>
         </header>
 
-        <div className="relative h-[60vh] w-full bg-gray-50 sm:h-[70vh]">
+        <div className="relative min-h-0 max-h-[60vh] w-full flex-1 bg-gray-50 sm:max-h-[70vh]">
           <iframe
             className="size-full"
             src={`${cvUrl}#toolbar=0&navpanes=0`}
@@ -129,7 +129,7 @@ export function CVModal({ isOpen, onClose, cvUrl, name }: CVModalProps) {
                       size: "sm",
                       variant: action.download ? "default" : "secondary",
                     }),
-                    "rounded-xl"
+                    "rounded-none"
                   )}
                   download={action.download || undefined}
                   href={cvUrl}

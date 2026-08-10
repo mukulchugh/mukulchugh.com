@@ -2,6 +2,7 @@ import { IconArrowLeft, IconCalendar, IconClock } from "@tabler/icons-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ArticleBody } from "@/components/blog/article-body";
 import { PostCover } from "@/components/blog/post-cover";
 import { PostNav } from "@/components/blog/post-nav";
 import { ReadingProgress } from "@/components/blog/reading-progress";
@@ -15,6 +16,7 @@ import {
   getPostsServer,
   getRelatedPosts,
 } from "@/lib/blog";
+import { accentColorForTags } from "@/lib/blog-topic";
 import { siteConfig } from "@/lib/data";
 import { PAGE_TITLE } from "@/lib/typography";
 import { cn } from "@/lib/utils";
@@ -144,7 +146,12 @@ export default async function PostPage({ params }: PostPageProps) {
   const hasTableOfContents = headings.length >= 2;
 
   return (
-    <main className="dock-safe-bottom w-full pt-12 sm:pt-20 lg:pt-28 overflow-x-hidden">
+    // No overflow-x-hidden here: body already clips horizontal overflow
+    // (app/globals.css), and adding it on this ancestor makes overflow-y
+    // compute to `auto` (CSS overflow spec), turning <main> into a scroll
+    // container that sits between the TOC's sticky aside and the real
+    // scrolling viewport — silently breaking position: sticky.
+    <main className="dock-safe-bottom w-full pt-12 sm:pt-20 lg:pt-28">
       {/* Reading progress bar */}
       <ReadingProgress />
 
@@ -173,20 +180,26 @@ export default async function PostPage({ params }: PostPageProps) {
         <div
           className={cn(
             "grid items-start",
+            // TOC sits on the right as a reference rail; article reads
+            // left-to-right starting in the wider column.
             hasTableOfContents &&
-              "lg:grid-cols-[13rem_minmax(0,48rem)] lg:gap-x-12"
+              "lg:grid-cols-[minmax(0,48rem)_13rem] lg:gap-x-12"
           )}
         >
           <header
             className={cn(
               "mb-10 max-w-3xl",
-              hasTableOfContents && "lg:col-start-2"
+              hasTableOfContents && "lg:col-start-1"
             )}
           >
             {post.tags.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-6">
                 {post.tags.map((tag) => (
-                  <Badge key={tag.slug} variant="secondary">
+                  <Badge
+                    accentColor={accentColorForTags([tag.name])}
+                    key={tag.slug}
+                    variant="secondary"
+                  >
                     {tag.name}
                   </Badge>
                 ))}
@@ -234,14 +247,19 @@ export default async function PostPage({ params }: PostPageProps) {
           <div
             className={cn(
               "mb-12 max-w-3xl",
-              hasTableOfContents && "lg:col-start-2"
+              hasTableOfContents && "lg:col-start-1"
             )}
           >
             <PostCover hero interactive post={post} priority />
           </div>
 
           {hasTableOfContents && (
-            <div className="lg:col-start-1 lg:row-start-3">
+            // lg:self-stretch fills the full row-3 track height (the
+            // article's height) so the sticky aside inside it has room to
+            // travel with the scroll instead of scrolling away with the
+            // page — align-items:start on the grid only sizes items to
+            // their own content by default.
+            <div className="lg:col-start-2 lg:row-start-3 lg:self-stretch">
               <TableOfContents headings={headings} />
             </div>
           )}
@@ -249,11 +267,15 @@ export default async function PostPage({ params }: PostPageProps) {
           <div
             className={cn(
               "min-w-0 max-w-3xl",
-              hasTableOfContents && "lg:col-start-2 lg:row-start-3"
+              hasTableOfContents &&
+                "lg:col-start-1 lg:row-start-3 lg:self-stretch"
             )}
           >
-            {/* Article body */}
-            {post.content?.html && (
+            {/* Article body — rendered from raw markdown via Streamdown
+                (components/blog/article-body.tsx), which renders real React
+                elements (not a raw HTML string) and provides built-in Shiki
+                syntax highlighting for code blocks. */}
+            {post.content?.markdown && (
               <article
                 className={cn(
                   // Base prose setup
@@ -269,23 +291,24 @@ export default async function PostPage({ params }: PostPageProps) {
                   // Links — subtle underline on hover
                   "prose-a:text-foreground/80 prose-a:no-underline prose-a:font-medium",
                   "[@media(hover:hover)]:prose-a:hover:underline [@media(hover:hover)]:prose-a:hover:text-foreground",
-                  // Blockquotes — left ink border, warm bg
+                  // Blockquotes — left ink border, neutral bg
                   "prose-blockquote:border-l-2 prose-blockquote:border-border",
                   "prose-blockquote:bg-muted prose-blockquote:py-1 prose-blockquote:pr-4",
-                  "prose-blockquote:rounded-r-md prose-blockquote:not-italic",
+                  "prose-blockquote:rounded-r-none prose-blockquote:not-italic",
                   "prose-blockquote:text-muted-foreground",
                   // Inline code — light chip
                   "prose-code:bg-muted prose-code:text-foreground/90",
-                  "prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded",
+                  "prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-none",
                   "prose-code:text-[0.85em] prose-code:font-mono",
                   "prose-code:before:content-none prose-code:after:content-none",
-                  // Code blocks — dark ink slab
-                  "prose-pre:bg-[#111113] prose-pre:text-zinc-100",
-                  "prose-pre:rounded-xl prose-pre:border prose-pre:border-white/10",
-                  "prose-pre:overflow-x-auto prose-pre:max-w-full",
-                  "prose-pre:text-[0.85em] prose-pre:leading-relaxed",
+                  // Code blocks — dark ink slab. Streamdown wraps fenced
+                  // code in its own chrome (language label, copy button)
+                  // rather than a bare <pre>, so it's restyled via the
+                  // [data-streamdown] hooks in globals.css instead of
+                  // prose-pre:* modifiers.
+                  "[&_[data-streamdown='code-block']]:text-[0.85em] [&_[data-streamdown='code-block']]:leading-relaxed",
                   // Images
-                  "prose-img:rounded-xl prose-img:shadow-sm",
+                  "prose-img:rounded-none prose-img:shadow-sm",
                   // Lists
                   "prose-li:text-[16px] prose-li:text-foreground/80",
                   "prose-li:marker:text-muted-foreground",
@@ -300,8 +323,12 @@ export default async function PostPage({ params }: PostPageProps) {
                   // HR
                   "prose-hr:border-border"
                 )}
-                dangerouslySetInnerHTML={{ __html: post.content.html }}
-              />
+              >
+                <ArticleBody
+                  headings={headings}
+                  markdown={post.content.markdown}
+                />
+              </article>
             )}
 
             {/* Prev / Next */}
@@ -326,9 +353,10 @@ export default async function PostPage({ params }: PostPageProps) {
                   <div className="flex flex-wrap gap-2">
                     {post.tags.slice(0, 3).map((tag) => (
                       <Badge
+                        accentColor={accentColorForTags([tag.name])}
                         className="text-xs"
                         key={tag.slug}
-                        variant="outline"
+                        variant="secondary"
                       >
                         {tag.name}
                       </Badge>

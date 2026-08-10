@@ -91,18 +91,18 @@ function useTOCObserver(
   }, [headings, setActiveId, observerRef]);
 }
 
+function prefersReducedMotion() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
 function scrollToHeading(id: string) {
   const el = document.getElementById(id);
   if (!el) {
     return;
   }
 
-  // Respect prefers-reduced-motion
-  const prefersReduced = window.matchMedia(
-    "(prefers-reduced-motion: reduce)"
-  ).matches;
   el.scrollIntoView({
-    behavior: prefersReduced ? "instant" : "smooth",
+    behavior: prefersReducedMotion() ? "instant" : "smooth",
     block: "start",
   });
 }
@@ -121,15 +121,17 @@ function TOCList({ headings, activeId, onClickItem }: TOCListProps) {
           const isActive = heading.id === activeId;
           return (
             <li className={cn(heading.level === 3 && "pl-3")} key={heading.id}>
+              {/* Active state mirrors the dock's own chip treatment (bg-muted
+                  + a hairline foreground ring) instead of a left border, so
+                  the TOC reads as part of the same nav vocabulary. */}
               <Button
                 aria-current={isActive ? "location" : undefined}
                 className={cn(
-                  "h-auto w-full justify-start rounded-sm py-1 pl-3 text-left font-mono text-[12px] leading-snug",
-                  "transition-colors duration-150",
-                  "border-l-2",
+                  "h-auto w-full justify-start whitespace-normal break-words rounded-none px-2.5 py-1.5 text-left font-mono text-[12px] leading-snug",
+                  "transition-colors duration-200",
                   isActive
-                    ? "border-foreground text-foreground font-medium"
-                    : "border-transparent text-muted-foreground [@media(hover:hover)]:hover:text-foreground/80"
+                    ? "bg-muted text-foreground font-medium shadow-[0_0_0_1px_hsl(var(--foreground)/0.1)]"
+                    : "text-muted-foreground [@media(hover:hover)]:hover:bg-muted/60 [@media(hover:hover)]:hover:text-foreground"
                 )}
                 onClick={() => onClickItem(heading.id)}
                 variant="ghost"
@@ -151,11 +153,13 @@ interface DesktopTOCProps {
 
 function DesktopTOC({ headings, activeId }: DesktopTOCProps) {
   return (
+    // dock-shell gives this the same glass-panel surface (layered border +
+    // shadow ring) as the floating nav dock, so the two read as one system.
     <aside
       aria-label="Article navigation"
-      className="hidden lg:block sticky top-24 self-start w-52 shrink-0"
+      className="dock-shell hidden lg:block sticky top-24 self-start w-52 shrink-0 rounded-none p-3"
     >
-      <p className="ui-label mb-3 text-muted-foreground">On this page</p>
+      <p className="ui-label mb-3 px-2.5 text-muted-foreground">On this page</p>
       <TOCList
         activeId={activeId}
         headings={headings}
@@ -173,12 +177,30 @@ interface MobileTOCProps {
 }
 
 function MobileTOC({ headings, activeId, isOpen, setIsOpen }: MobileTOCProps) {
+  const contentRef = useRef<HTMLDivElement | null>(null);
+
+  // When the disclosure opens, the revealed list can land right behind the
+  // fixed bottom dock (it isn't part of the page's trailing content, so
+  // dock-safe-bottom's padding doesn't reach it). Nudge it into view,
+  // respecting the dock's own clearance via scroll-margin-bottom below.
+  useEffect(() => {
+    if (isOpen) {
+      contentRef.current?.scrollIntoView({
+        behavior: prefersReducedMotion() ? "instant" : "smooth",
+        block: "nearest",
+      });
+    }
+  }, [isOpen]);
+
   return (
-    <div className="lg:hidden mb-8 border border-border rounded-lg overflow-hidden">
+    // dock-shell (same glass surface as the floating nav dock) replaces the
+    // old flat bordered box, so mobile/desktop TOC and the dock share one
+    // visual language.
+    <div className="dock-shell lg:hidden mb-8 rounded-none overflow-hidden">
       <Button
         aria-controls="mobile-toc-content"
         aria-expanded={isOpen}
-        className="h-auto w-full justify-between rounded-none px-4 py-3 text-left"
+        className="h-auto min-h-[44px] w-full justify-between rounded-none px-4 py-3 text-left"
         onClick={() => setIsOpen(!isOpen)}
         variant="ghost"
       >
@@ -195,8 +217,9 @@ function MobileTOC({ headings, activeId, isOpen, setIsOpen }: MobileTOCProps) {
 
       {isOpen && (
         <div
-          className="px-4 pb-4 border-t border-border"
+          className="px-4 pb-4 border-t border-border/60 [scroll-margin-bottom:var(--dock-clearance)]"
           id="mobile-toc-content"
+          ref={contentRef}
         >
           <div className="pt-3">
             <TOCList

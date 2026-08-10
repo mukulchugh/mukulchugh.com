@@ -63,9 +63,9 @@ export function CollapsibleList<T>({
         <div className="mt-4 flex justify-center">
           <Button
             aria-expanded={open}
-            className="group inline-flex items-center gap-1.5 rounded-full
+            className="group inline-flex items-center gap-1.5 rounded-none
                        bg-card px-4 py-2 text-[13px] font-medium text-muted-foreground
-                       transition-all duration-200 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]
+                       transition-[color,transform] duration-200 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]
                        [@media(hover:hover)]:hover:text-foreground [@media(hover:hover)]:hover:-translate-y-[1px]
                        active:scale-[0.97]
                        focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-muted-foreground"
@@ -74,7 +74,7 @@ export function CollapsibleList<T>({
             style={{
               border: "1px solid rgba(20,20,40,0.08)",
               boxShadow:
-                "0 1px 2px rgba(28,25,23,0.04), 0 3px 8px -4px rgba(28,25,23,0.08)",
+                "0 1px 2px rgba(24,24,24,0.04), 0 3px 8px -4px rgba(24,24,24,0.08)",
             }}
             type="button"
             variant="secondary"

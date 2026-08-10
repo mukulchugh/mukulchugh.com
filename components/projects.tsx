@@ -74,7 +74,7 @@ function ProjectCard({
       whileInView={shouldReduce ? undefined : { opacity: 1, y: 0 }}
     >
       <div
-        className="project-card relative flex h-full flex-col justify-between gap-4 overflow-hidden rounded-2xl
+        className="project-card relative flex h-full flex-col justify-between gap-4 overflow-hidden rounded-none
                    border border-border bg-card p-5
                    transition-transform duration-300 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]
                    active:scale-[0.985] active:duration-100
@@ -83,14 +83,14 @@ function ProjectCard({
         {/* Subtle ambient glow, tinted per project — content-seeded, not decorative noise */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full opacity-[0.10] blur-2xl [@media(hover:hover)]:group-hover:opacity-[0.16]"
+          className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-none opacity-[0.10] blur-2xl [@media(hover:hover)]:group-hover:opacity-[0.16]"
           style={{ background: accent }}
         />
 
         <div className="relative flex flex-col gap-3">
           <div className="flex items-start justify-between">
             <div
-              className="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-muted"
+              className="flex h-8 w-8 items-center justify-center rounded-none border border-border bg-muted"
               style={{ boxShadow: `0 0 24px -8px ${accent}` }}
             >
               <span
@@ -104,7 +104,7 @@ function ProjectCard({
               {github && (
                 <a
                   aria-label={`${title} on GitHub`}
-                  className="flex items-center justify-center w-11 h-11 rounded-lg text-muted-foreground
+                  className="flex items-center justify-center w-11 h-11 rounded-none text-muted-foreground
                              transition-colors
                              [@media(hover:hover)]:hover:bg-foreground/[0.06] [@media(hover:hover)]:hover:text-foreground
                              active:bg-foreground/[0.08]"
@@ -118,7 +118,7 @@ function ProjectCard({
               {demo && (
                 <a
                   aria-label={`${title} demo`}
-                  className="flex items-center justify-center w-11 h-11 rounded-lg text-muted-foreground
+                  className="flex items-center justify-center w-11 h-11 rounded-none text-muted-foreground
                              transition-colors
                              [@media(hover:hover)]:hover:bg-foreground/[0.06] [@media(hover:hover)]:hover:text-foreground
                              active:bg-foreground/[0.08]"
@@ -151,7 +151,7 @@ function ProjectCard({
           <div className="flex flex-wrap gap-1.5">
             {tags.map((tag) => (
               <span
-                className="ui-label rounded-full border border-border bg-foreground/[0.04] px-2.5 py-0.5 text-muted-foreground
+                className="ui-label rounded-none border border-border bg-foreground/[0.04] px-2.5 py-0.5 text-muted-foreground
                            [@media(hover:hover)]:hover:border-border [@media(hover:hover)]:hover:text-foreground/80
                            transition-colors duration-200 cursor-default select-none"
                 key={tag}

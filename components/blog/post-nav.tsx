@@ -18,7 +18,7 @@ function NavCard({
   return (
     <Link
       className={cn(
-        "group flex flex-col gap-2 border border-border rounded-xl p-5",
+        "group flex flex-col gap-2 border border-border rounded-none p-5",
         "min-h-[44px] transition-colors duration-150",
         "[@media(hover:hover)]:hover:border-border [@media(hover:hover)]:hover:bg-muted",
         isPrev ? "items-start" : "items-end text-right",

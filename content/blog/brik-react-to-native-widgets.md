@@ -7,10 +7,10 @@ tags: ["React Native", "iOS", "Open Source"]
 author: "Mukul Chugh"
 ---
 
-Every React Native team hits the same wall: you want a widget, a Live Activity, or something in the Dynamic Island — and suddenly you're maintaining SwiftUI in a separate extension target.
+Every React Native team hits the same wall: you want a widget, a Live Activity, or something in the Dynamic Island, and suddenly you're maintaining SwiftUI in a separate extension target.
 
 [Brik](https://github.com/mukulchugh/brik) is my attempt to keep that work in JSX. You describe the widget once; it compiles to SwiftUI on iOS and Jetpack Compose on Android.
 
-Widgets aren't normal RN views. They run in a tight process on the OS's schedule, often when your app isn't even open. There's no JS runtime in there. So Brik doesn't "render" at runtime — it produces native view code ahead of time.
+Widgets aren't normal RN views. They run in a tight process on the OS's schedule, often when your app isn't even open. There's no JS runtime in there. So Brik doesn't "render" at runtime: it produces native view code ahead of time.
 
 That tradeoff is the whole product: stay in one language for the common cases, drop to native only when you must.

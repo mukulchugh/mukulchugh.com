@@ -2,7 +2,6 @@
 
 import {
   IconArrowLeft,
-  IconArrowUpRight,
   IconCalendar,
   IconCheck,
   IconFileText,
@@ -21,6 +20,7 @@ import type React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CanvasGrain } from "@/components/canvas-grain";
 import { Button } from "@/components/ui/button";
+import { CVModal } from "@/components/ui/cv-modal";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { siteConfig } from "@/lib/data";
@@ -28,14 +28,6 @@ import { useSectionInView } from "@/lib/hooks";
 import { microSpring, premiumSpring, softSpring } from "@/lib/motion";
 import { TILE_TITLE } from "@/lib/typography";
 import { cn } from "@/lib/utils";
-
-const premiumEase = [0.16, 1, 0.3, 1] as const;
-
-/**
- * Backdrop fade — opacity only, ~0.2s. Kept local (not in lib/motion.ts) so
- * this file doesn't touch a shared token another agent may be editing.
- */
-const backdropTransition = { duration: 0.2, ease: premiumEase } as const;
 
 const contentExit = { opacity: 0, transition: { duration: 0.15 } } as const;
 
@@ -112,7 +104,7 @@ function CopyEmailButton() {
   return (
     <Button
       aria-label={copied ? "Email copied to clipboard" : "Copy email address"}
-      className="inline-flex items-center gap-1.5 px-3 py-1.5 min-h-[36px] rounded-full
+      className="inline-flex items-center gap-1.5 px-3 py-1.5 min-h-[36px] rounded-none
                  bg-white/[0.06] border border-white/[0.1]
                  text-[12px] font-mono text-white/40
                  [@media(hover:hover)]:hover:bg-white/[0.12] [@media(hover:hover)]:hover:border-white/[0.2]
@@ -189,7 +181,7 @@ function TileChrome() {
 
       <div
         aria-hidden="true"
-        className="absolute -top-32 -left-32 w-[560px] h-[560px] rounded-full pointer-events-none"
+        className="absolute -top-32 -left-32 w-[560px] h-[560px] rounded-none pointer-events-none"
         style={{
           background:
             "radial-gradient(circle at 30% 30%, rgba(255,255,255,0.055) 0%, transparent 62%)",
@@ -198,7 +190,7 @@ function TileChrome() {
 
       <div
         aria-hidden="true"
-        className="absolute bottom-0 right-0 w-[320px] h-[320px] rounded-full pointer-events-none"
+        className="absolute bottom-0 right-0 w-[320px] h-[320px] rounded-none pointer-events-none"
         style={{
           background:
             "radial-gradient(circle at 70% 80%, rgba(255,255,255,0.018) 0%, transparent 60%)",
@@ -216,6 +208,7 @@ export function CTATile() {
   const shouldRestoreFocusRef = useRef(false);
   const shouldReduce = useReducedMotion();
   const [mode, setMode] = useState<"intro" | "booking">("intro");
+  const [isCVModalOpen, setIsCVModalOpen] = useState(false);
   const isBooking = mode === "booking";
 
   const rawX = useMotionValue(50);
@@ -240,10 +233,10 @@ export function CTATile() {
   );
 
   const openBooking = useCallback(() => {
-    // Scroll the still-in-place grid tile into view first, then let it morph
-    // into the fixed overlay — the overlay no longer depends on scroll
-    // position, but this preserves the original "bring contact into view"
-    // behavior for the moment right before it lifts out.
+    // Scroll the tile into view first — it stays exactly where it is in the
+    // grid and grows in place, so bringing it fully on-screen before the
+    // content swap keeps the new (taller) booking state from opening partly
+    // off-viewport.
     sectionRef.current?.scrollIntoView({
       behavior: shouldReduce ? "auto" : "smooth",
       block: "start",
@@ -256,8 +249,10 @@ export function CTATile() {
     setMode("intro");
   }, []);
 
-  // Escape-to-close + background scroll lock + focus containment while the
-  // panel floats above the page as a real fixed-position dialog.
+  // Escape-to-go-back is a nice-to-have carried over from before — it's not
+  // guarding a modal anymore (no focus trap, no scroll lock, no
+  // click-outside-to-close: this is a normal in-page section, not a lifted
+  // overlay), just a keyboard shortcut back to the intro state.
   useEffect(() => {
     if (!isBooking) {
       return;
@@ -269,41 +264,16 @@ export function CTATile() {
       }
     };
 
-    // Belt-and-suspenders focus trap: Tab/Shift+Tab cycling within a
-    // cross-origin iframe (the Cal.com embed) happens inside that iframe's
-    // own document — this page's JS can't intercept those keydowns. What we
-    // *can* observe is focus landing back on the host page once it walks
-    // off either end of the iframe's internal tab order. `focusin` catches
-    // that (and any other way focus might otherwise escape the panel) and
-    // pulls it back to the panel's first focusable element.
-    const handleFocusIn = (event: FocusEvent) => {
-      const panel = sectionRef.current;
-      if (!panel || panel.contains(event.target as Node)) {
-        return;
-      }
-      const focusable = panel.querySelectorAll<HTMLElement>(
-        'a[href], button:not([disabled]), iframe, [tabindex]:not([tabindex="-1"])'
-      );
-      (focusable[0] ?? panel).focus();
-    };
-
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
     document.addEventListener("keydown", handleKeyDown);
-    document.addEventListener("focusin", handleFocusIn);
-
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-      document.removeEventListener("focusin", handleFocusIn);
-      document.body.style.overflow = previousOverflow;
-    };
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isBooking, closeBooking]);
 
-  // Move focus into the panel the moment it opens (the "Back" affordance is
-  // the natural first stop), and return it to the "Get in touch" trigger
-  // when the panel closes — the trigger re-mounts fresh on close (it's
-  // inside the AnimatePresence-swapped intro content), so we look it up via
-  // the wrapper ref rather than holding a stale element reference.
+  // Move focus to the "Back" button when booking content mounts (the
+  // natural first stop for keyboard users), and return it to the "Get in
+  // touch" trigger when we're back on the intro state — the trigger
+  // re-mounts fresh on return (it's inside the AnimatePresence-swapped
+  // intro content), so we look it up via the wrapper ref rather than
+  // holding a stale element reference.
   useEffect(() => {
     if (isBooking) {
       backButtonRef.current?.focus();
@@ -340,51 +310,27 @@ export function CTATile() {
     opacity.set(0);
   }, [opacity]);
 
-  const layoutId = shouldReduce ? undefined : "cta-tile";
-  const morphTransition = shouldReduce ? { duration: 0 } : premiumSpring;
-
   return (
     <>
-      {/* Backdrop is the only thing that truly mounts/unmounts here, so its
-          exit animation can never get tangled with the tile's own layoutId
-          FLIP (a two-node shared-layoutId crossfade was tried first and
-          reliably got stuck mid-exit, leaving Escape/click-outside inert —
-          see git history). The tile itself stays mounted the whole time and
-          just morphs its own box via layoutId + premiumSpring. */}
-      <AnimatePresence>
-        {isBooking && (
-          <motion.div
-            animate={{ opacity: 1 }}
-            aria-hidden="true"
-            className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm"
-            exit={{ opacity: 0 }}
-            initial={{ opacity: 0 }}
-            key="cta-backdrop"
-            onClick={closeBooking}
-            transition={shouldReduce ? { duration: 0 } : backdropTransition}
-          />
-        )}
-      </AnimatePresence>
-
-      <motion.section
-        aria-label={isBooking ? "Book a call" : undefined}
-        aria-modal={isBooking ? true : undefined}
+      {/* In-place, grid-resident tile — no fixed/portal overlay, no backdrop.
+          Booking mode grows the tile's own min-height (plain CSS transition,
+          same spirit as main's pre-redesign contact section) instead of
+          lifting it out of the bento grid's document flow. The rest of the
+          page — other tiles, scroll position — stays exactly where it is. */}
+      <section
         className={cn(
-          "scroll-mt-28 overflow-hidden rounded-[1.25rem]",
+          "scroll-mt-28 relative h-full overflow-hidden rounded-none",
+          "transition-[min-height] duration-500 ease-out",
           isBooking
-            ? "fixed z-50 inset-4 sm:inset-8 md:inset-16 lg:inset-24 xl:inset-32"
-            : "relative h-full min-h-[420px] sm:min-h-[480px] lg:min-h-[560px]"
+            ? "min-h-[620px] sm:min-h-[680px] lg:min-h-[760px]"
+            : "min-h-[420px] sm:min-h-[480px] lg:min-h-[560px]"
         )}
         id="contact"
-        layoutId={layoutId}
         onMouseEnter={shouldReduce ? undefined : handleMouseEnter}
         onMouseLeave={shouldReduce ? undefined : handleMouseLeave}
         onMouseMove={shouldReduce ? undefined : handleMouseMove}
         ref={setRefs}
-        role={isBooking ? "dialog" : undefined}
         style={tileSurfaceStyle}
-        tabIndex={isBooking ? -1 : undefined}
-        transition={morphTransition}
       >
         <TileChrome />
 
@@ -426,7 +372,7 @@ export function CTATile() {
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <p className="ui-label text-white/30">06 — Contact</p>
+                  <p className="ui-label text-white/30">06 · Contact</p>
                   <h2
                     className={cn(
                       "font-syne",
@@ -442,7 +388,7 @@ export function CTATile() {
 
                 <Button
                   aria-label="Back to contact options"
-                  className="shrink-0 rounded-full border border-white/[0.12] bg-white/[0.06]
+                  className="shrink-0 rounded-none border border-white/[0.12] bg-white/[0.06]
                              px-3.5 text-[12px] font-medium text-white/70
                              hover:bg-white/[0.1] hover:text-white"
                   onClick={closeBooking}
@@ -457,7 +403,7 @@ export function CTATile() {
 
               <motion.div
                 animate={shouldReduce ? { opacity: 1 } : calEmbedAnimate}
-                className="min-h-0 flex-1 overflow-hidden rounded-2xl border border-white/[0.08]
+                className="min-h-0 flex-1 overflow-y-auto rounded-none border border-white/[0.08]
                            bg-[#0a0a0c]/80"
                 initial={shouldReduce ? { opacity: 0 } : calEmbedInitial}
               >
@@ -489,7 +435,7 @@ export function CTATile() {
                   className="ui-label text-white/30"
                   variants={shouldReduce ? undefined : itemVariants}
                 >
-                  06 — Contact
+                  06 · Contact
                 </motion.p>
 
                 <motion.h2
@@ -502,7 +448,15 @@ export function CTATile() {
                 >
                   Let&apos;s build
                   <br />
-                  <span className="text-white/40 font-light">something</span>
+                  {/* Same font-size as the black-weight lines above/below
+                      (TILE_TITLE applies uniformly) — the de-emphasis comes
+                      from color + weight, not a smaller size. font-light
+                      (300) next to font-black (900) at identical size read
+                      as visibly smaller than its siblings (thin strokes vs.
+                      heavy ones), so this uses font-normal instead: still
+                      clearly lighter than the surrounding black weight, but
+                      without the "shrunk" illusion. */}
+                  <span className="text-white/40 font-normal">something</span>
                   <br />
                   <span className="text-white">together.</span>
                 </motion.h2>
@@ -539,7 +493,7 @@ export function CTATile() {
                   <MagneticButton
                     aria-label="Book a call"
                     as="button"
-                    className="inline-flex items-center gap-2 px-6 py-3 min-h-[44px] rounded-full
+                    className="inline-flex items-center gap-2 px-6 py-3 min-h-[44px] rounded-none
                                bg-white text-zinc-950
                                text-[13px] font-bold tracking-tight
                                shadow-[0_4px_28px_-4px_rgba(255,255,255,0.18)]
@@ -556,8 +510,8 @@ export function CTATile() {
 
                 <MagneticButton
                   aria-label="View resume"
-                  as="a"
-                  className="inline-flex items-center gap-2 px-6 py-3 min-h-[44px] rounded-full
+                  as="button"
+                  className="inline-flex items-center gap-2 px-6 py-3 min-h-[44px] rounded-none
                              bg-white/[0.07] border border-white/[0.14]
                              text-[13px] font-semibold text-white/80
                              [@media(hover:hover)]:hover:bg-white/[0.12]
@@ -565,20 +519,24 @@ export function CTATile() {
                              [@media(hover:hover)]:hover:text-white
                              transition-all duration-200
                              active:scale-[0.97]"
-                  href={siteConfig.files.cv}
-                  rel="noopener noreferrer"
+                  onClick={() => setIsCVModalOpen(true)}
                   strength={shouldReduce ? 0 : 10}
-                  target="_blank"
                 >
                   <IconFileText size={15} />
                   View Resume
-                  <IconArrowUpRight className="opacity-60" size={13} />
                 </MagneticButton>
               </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
-      </motion.section>
+      </section>
+
+      <CVModal
+        cvUrl={siteConfig.files.cv}
+        isOpen={isCVModalOpen}
+        name={siteConfig.firstName}
+        onClose={() => setIsCVModalOpen(false)}
+      />
     </>
   );
 }

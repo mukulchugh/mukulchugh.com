@@ -67,7 +67,7 @@ export default function ExpandableCard({
               <motion.div
                 animate={{ opacity: 1 }}
                 aria-hidden="true"
-                className="fixed inset-3 z-50 rounded-[1.25rem] bg-black/55 backdrop-blur-sm sm:inset-4"
+                className="fixed inset-3 z-50 rounded-none bg-black/55 backdrop-blur-sm sm:inset-4"
                 exit={{ opacity: 0 }}
                 initial={{ opacity: 0 }}
                 key="experience-backdrop"
@@ -77,7 +77,7 @@ export default function ExpandableCard({
 
               <div className="pointer-events-none fixed inset-0 z-50 grid place-items-center overflow-y-auto p-4 sm:p-6">
                 <motion.article
-                  className="modal-shadow pointer-events-auto relative my-4 max-h-[calc(100dvh-2rem)] w-full max-w-2xl overflow-y-auto rounded-2xl border border-border bg-card"
+                  className="modal-shadow pointer-events-auto relative my-4 max-h-[calc(100dvh-2rem)] w-full max-w-2xl overflow-y-auto rounded-none border border-border bg-card"
                   id={`experience-${current.id}`}
                   key={current.id}
                   layoutId={`experience-card-${current.id}`}
@@ -85,7 +85,7 @@ export default function ExpandableCard({
                 >
                   <Button
                     aria-label="Collapse experience"
-                    className="absolute right-3 top-3 rounded-full bg-foreground/[0.07] hover:bg-foreground/[0.10]"
+                    className="absolute right-3 top-3 rounded-none bg-foreground/[0.07] hover:bg-foreground/[0.10]"
                     onClick={() => setCurrent(null)}
                     render={
                       <motion.button
@@ -104,7 +104,7 @@ export default function ExpandableCard({
                   <div className="p-6 sm:p-8">
                     <div className="mb-6 flex items-start gap-4">
                       <motion.div
-                        className="flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-border bg-card sm:size-16"
+                        className="flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-none border-2 border-border bg-card sm:size-16"
                         layoutId={`experience-icon-${current.id}`}
                         style={{
                           boxShadow: `0 4px 16px -4px rgba(0,0,0,0.18), 0 0 20px -6px ${accentColorFor(current.company)}`,
@@ -113,7 +113,7 @@ export default function ExpandableCard({
                       >
                         <Image
                           alt={current.company}
-                          className="rounded-full object-contain"
+                          className="rounded-none object-contain"
                           height={40}
                           src={current.icon}
                           width={40}
@@ -164,7 +164,7 @@ export default function ExpandableCard({
                               className="flex items-start text-sm text-muted-foreground"
                               key={description}
                             >
-                              <span className="mr-3 mt-1.5 size-1.5 shrink-0 rounded-full bg-muted-foreground" />
+                              <span className="mr-3 mt-1.5 size-1.5 shrink-0 rounded-none bg-muted-foreground" />
                               <span>{description}</span>
                             </li>
                           ))}
@@ -183,7 +183,7 @@ export default function ExpandableCard({
             <Button
               aria-controls={`experience-${item.id}`}
               aria-expanded={current?.id === item.id}
-              className="experience-card group h-auto w-full cursor-pointer justify-start gap-4 rounded-xl border border-border bg-card/70 p-4 text-left shadow-[0_1px_2px_rgba(28,25,23,0.03),0_4px_12px_-6px_rgba(28,25,23,0.07)] backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-border hover:bg-card sm:p-5"
+              className="experience-card group h-auto w-full cursor-pointer justify-start gap-4 rounded-none border border-border bg-card/70 p-4 text-left shadow-[0_1px_2px_rgba(24,24,24,0.03),0_4px_12px_-6px_rgba(24,24,24,0.07)] backdrop-blur-sm transition-[transform,border-color,background-color] duration-300 hover:-translate-y-0.5 hover:border-border hover:bg-card sm:p-5"
               key={item.id}
               onClick={() => setCurrent(item)}
               render={
@@ -197,13 +197,13 @@ export default function ExpandableCard({
               variant="ghost"
             >
               <motion.div
-                className="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-border bg-card shadow-md shadow-foreground/[0.08] sm:size-14"
+                className="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-none border-2 border-border bg-card shadow-md shadow-foreground/[0.08] sm:size-14"
                 layoutId={`experience-icon-${item.id}`}
                 transition={springTransition}
               >
                 <Image
                   alt={item.company}
-                  className="rounded-full object-contain"
+                  className="rounded-none object-contain"
                   height={32}
                   src={item.icon}
                   width={32}

@@ -83,8 +83,8 @@ export const siteConfig = {
 export const aboutContent = {
   heading: "About me",
   paragraphs: [
-    "Hey, I'm Mukul — an engineer who gradually absorbed product and design until the job title stopped making sense.",
-    "Mobile and full-stack development are my core, but I've spent years working close enough to product and design that the lines blur. I write code, shape features, and push pixels when needed — usually all in the same week.",
+    "Hey, I'm Mukul, an engineer who gradually absorbed product and design until the job title stopped making sense.",
+    "Mobile and full-stack development are my core, but I've spent years working close enough to product and design that the lines blur. I write code, shape features, and push pixels when needed, usually all in the same week.",
     "Right now I'm a Founding Engineer at Quivly.ai in San Francisco, building AI-powered products from scratch alongside the CTO. Before that, I was at Swiggy building mobile products at scale, and at Zenduty where I shipped across mobile, web, and internal tooling until the company was acquired.",
     "I've also co-founded a startup (HeroApp) and done enough freelance work to know what I don't want. What I do want: hard problems, small fast teams, and software that earns its keep by being genuinely useful.",
     "Building something interesting? I'd like to hear about it.",
@@ -100,13 +100,13 @@ export const introContent = {
   resumeButtonText: "View Resume",
   role: "product engineer",
   specialty: "Mobile & Full-Stack Development",
-  tagline: "I build products end to end — mobile, web, and everything between.",
+  tagline: "I build products end to end: mobile, web, and everything between.",
 } as const;
 
 // Contact Section Content
 export const contactContent = {
   description:
-    "Drop me an email or find me on social — I'm always up for talking about interesting problems.",
+    "Drop me an email or find me on social. I'm always up for talking about interesting problems.",
   heading: "Contact me",
 } as const;
 
@@ -149,7 +149,7 @@ export const experiencesData = [
     description: [
       "First engineering hire; building the Quivly platform end-to-end from day one.",
       "Work directly with the CTO on architecture decisions, product direction, and full-stack implementation.",
-      "Develop across the full stack — frontend, backend, and AI/ML integrations.",
+      "Develop across the full stack: frontend, backend, and AI/ML integrations.",
       "Shape product design and engineering culture as a core founding team member.",
     ],
     icon: "https://ik.imagekit.io/kooxhdceru/portfolio/quivly.webp",
@@ -175,7 +175,7 @@ export const experiencesData = [
     company: "Zenduty (Acquired)",
     date: "June 2022 - May 2025",
     description: [
-      "Part of the core team that scaled the platform until acquisition — contributed across mobile, web, and internal tooling.",
+      "Part of the core team that scaled the platform until acquisition, contributing across mobile, web, and internal tooling.",
       "Re-architected the React Native mobile app from ground up, building an in-house UI library and shipping multiple releases to Google Play and App Store.",
       "Enhanced incident monitoring tools, reducing response times by 25% and minimizing downtime by 20%.",
       "Built REST API services, internal automation tools, and SDKs.",
@@ -254,7 +254,7 @@ export const projectsData = [
   {
     demo: "https://github.com/mukulchugh/OpenKVM/releases/latest",
     description:
-      "An open-source macOS menu bar app that shares one keyboard and mouse between two Macs over the local network. Captures HID input on one Mac and replays it on another via TCP/UDP with Bonjour discovery — a hotkey-driven alternative to Universal Control that works across different Apple IDs.",
+      "An open-source macOS menu bar app that shares one keyboard and mouse between two Macs over the local network. Captures HID input on one Mac and replays it on another via TCP/UDP with Bonjour discovery, a hotkey-driven alternative to Universal Control that works across different Apple IDs.",
     github: "https://github.com/mukulchugh/OpenKVM",
     tags: ["Swift", "macOS", "IOKit", "Bonjour", "Networking"],
     title: "OpenKVM",
@@ -262,7 +262,7 @@ export const projectsData = [
   {
     demo: "https://www.npmjs.com/package/@brik/react-native",
     description:
-      "A framework to build native iOS and Android widgets, Live Activities, and Dynamic Island from a single React codebase. Compiles JSX/TSX to SwiftUI (WidgetKit) and Jetpack Compose (Glance) — no Swift or Kotlin required.",
+      "A framework to build native iOS and Android widgets, Live Activities, and Dynamic Island from a single React codebase. Compiles JSX/TSX to SwiftUI (WidgetKit) and Jetpack Compose (Glance); no Swift or Kotlin required.",
     github: "https://github.com/mukulchugh/brik",
     tags: ["React Native", "TypeScript", "SwiftUI", "Jetpack Compose", "Expo"],
     title: "Brik",
@@ -270,7 +270,7 @@ export const projectsData = [
   {
     demo: "",
     description:
-      "An open-source experiment that turns an Apple Watch into a system-wide Mac microphone — capture on the Watch, stream to the Mac, and present as a real audio input for calls and voice notes.",
+      "An open-source experiment that turns an Apple Watch into a system-wide Mac microphone: capture on the Watch, stream to the Mac, and present as a real audio input for calls and voice notes.",
     github: "https://github.com/mukulchugh/ferry",
     tags: ["Swift", "macOS", "watchOS", "Audio", "Core Audio"],
     title: "Ferry",
@@ -278,7 +278,7 @@ export const projectsData = [
   {
     demo: "",
     description:
-      "A curated, production-ready collection of Agent Skills for customer engineering, post-sales, and customer-success workflows — from health reviews and churn signals to QBR preparation.",
+      "A curated, production-ready collection of Agent Skills for customer engineering, post-sales, and customer-success workflows, from health reviews and churn signals to QBR preparation.",
     github: "https://github.com/quivly/skills",
     tags: ["AI Agents", "Agent Skills", "Customer Success", "Open Source"],
     title: "Quivly Skills",
@@ -368,7 +368,7 @@ export const projectsData = [
   {
     demo: "",
     description:
-      "A Grafana plugin for root cause analysis — flags anomalies and service disruptions, then surfaces the relevant telemetry so engineers can trace and resolve incidents faster.",
+      "A Grafana plugin for root cause analysis that flags anomalies and service disruptions, then surfaces the relevant telemetry so engineers can trace and resolve incidents faster.",
     github: "",
     tags: ["React", "Grafana", "TypeScript", "Golang"],
     title: "RCA Tool - Grafana Plugin",
@@ -392,7 +392,7 @@ export const projectsData = [
   {
     demo: "https://expo.dev/@mukulchugh/zepeats",
     description:
-      "A food delivery app built with React Native, Firebase, and Stripe — clean ordering flow, real-time updates, and payment processing end-to-end.",
+      "A food delivery app built with React Native, Firebase, and Stripe: clean ordering flow, real-time updates, and payment processing end-to-end.",
     github: "https://github.com/mukulchugh/ZepEats",
     tags: ["React Native", "Firebase", "Google Cloud", "Stripe"],
     title: "ZepEats",
@@ -400,7 +400,7 @@ export const projectsData = [
   {
     demo: "https://cryptomedia.netlify.app",
     description:
-      "A cryptocurrency tracker in React — pulls live data from CoinGecko, lets users build a personal watchlist backed by Firebase auth and Firestore.",
+      "A cryptocurrency tracker in React that pulls live data from CoinGecko, lets users build a personal watchlist backed by Firebase auth and Firestore.",
     github: "https://github.com/mukulchugh/CryptoMedia",
     tags: ["React", "ChartJS", "MUI", "Firebase", "CoinGecko API"],
     title: "Cryptomedia - Cryptocurrency Tracker",
@@ -408,7 +408,7 @@ export const projectsData = [
   {
     demo: "https://www.figma.com/file/16zU20FINHLiu1k4Irw9bl/Mockup--Design---Mereko?node-id=44%3A56",
     description:
-      "A concept app designed during the Google UX Design course — covers UX research, usability testing, and a high-fidelity Figma prototype.",
+      "A concept app designed during the Google UX Design course, covering UX research, usability testing, and a high-fidelity Figma prototype.",
     github: "",
     tags: [
       "Figma",
@@ -422,7 +422,7 @@ export const projectsData = [
   {
     demo: "https://notion-kanboard-mukul.netlify.app",
     description:
-      "A Notion-style Kanban board built with React and React Beautiful DND — drag-and-drop cards across columns.",
+      "A Notion-style Kanban board built with React and React Beautiful DND, with drag-and-drop cards across columns.",
     github: "https://github.com/mukulchugh/kanboard-notion-kanban-react",
     tags: ["React", "React Beautiful DND", "TailwindCSS"],
     title: "Kanboard - Kanban Board",

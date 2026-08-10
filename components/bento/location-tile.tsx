@@ -32,7 +32,7 @@ export function LocationTile() {
     <div className="flex h-full min-h-[120px] flex-col justify-center gap-4 p-5 sm:p-6">
       {/* Based in */}
       <div className="flex items-center gap-3">
-        <div className="icon-chip grid h-9 w-9 shrink-0 place-items-center rounded-xl">
+        <div className="icon-chip grid h-9 w-9 shrink-0 place-items-center rounded-none">
           <IconWorld
             aria-hidden="true"
             className="h-4 w-4 text-muted-foreground"
@@ -50,7 +50,7 @@ export function LocationTile() {
 
       {/* Working hours */}
       <div className="flex items-center gap-3">
-        <div className="icon-chip grid h-9 w-9 shrink-0 place-items-center rounded-xl">
+        <div className="icon-chip grid h-9 w-9 shrink-0 place-items-center rounded-none">
           <IconClock
             aria-hidden="true"
             className="h-4 w-4 text-muted-foreground"

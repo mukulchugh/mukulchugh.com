@@ -62,7 +62,7 @@ export function StackTile() {
 
       {/* Header */}
       <div className="flex items-center gap-2 flex-shrink-0">
-        <div className="p-1.5 rounded-md bg-muted border border-border">
+        <div className="p-1.5 rounded-none bg-muted border border-border">
           <IconSparkles
             aria-hidden="true"
             className="h-3.5 w-3.5 text-muted-foreground"
@@ -89,10 +89,10 @@ export function StackTile() {
             <div className="flex flex-wrap gap-1">
               {skills.map((skill) => (
                 <span
-                  className="ui-label rounded-full px-2 py-0.5
+                  className="ui-label rounded-none px-2 py-0.5
                              border border-border bg-card text-muted-foreground shadow-sm
                              hover:border-border hover:text-foreground hover:-translate-y-px
-                             transition-all duration-200 ease-premium
+                             transition-[color,border-color,transform] duration-200 ease-premium
                              cursor-default select-none"
                   key={skill}
                 >

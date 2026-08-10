@@ -67,6 +67,7 @@ const nextConfig = {
     ],
   },
   poweredByHeader: false,
+  reactCompiler: true,
 
   async redirects() {
     return [
@@ -104,6 +105,9 @@ const nextConfig = {
       },
     ];
   },
+  // Streamdown's code-highlighting plugin pulls in shiki, which ships ESM
+  // that Next's default external-package handling can't resolve in RSC.
+  transpilePackages: ["shiki"],
 };
 
 module.exports = nextConfig;
