@@ -1,46 +1,51 @@
 "use client";
 
-import React, { useMemo } from "react";
-import { SectionHeader } from "./section-header";
-import ExpandableCard from "./ui/expandable-card";
+import { IconBriefcase } from "@tabler/icons-react";
+import { useMemo } from "react";
 import { experiencesData } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
-import { IconBriefcase } from "@tabler/icons-react";
+import { SectionHeader } from "./section-header";
+import { CollapsibleList } from "./ui/collapsible-list";
+import ExpandableCard from "./ui/expandable-card";
 
 export default function Experience() {
   const { ref } = useSectionInView("Experience");
 
-  // Transform experiencesData to match the ExpandableCard interface
   const cardItems = useMemo(
     () =>
       experiencesData.map((exp, index) => ({
-        id: `exp-${index}`,
-        title: exp.title,
         company: exp.company,
-        location: exp.location,
         date: exp.date,
-        icon: exp.icon,
         description: exp.description,
+        icon: exp.icon,
+        id: `exp-${index}`,
+        location: exp.location,
+        title: exp.title,
       })),
     []
   );
 
   return (
     <section
+      className="scroll-mt-28 p-5 sm:p-6 lg:p-8 w-full min-w-0"
       id="experience"
       ref={ref}
-      className="scroll-mt-28 mb-28 sm:mb-40 px-4 max-w-4xl mx-auto w-full"
     >
       <SectionHeader
+        align="left"
+        highlight="worked"
         icon={IconBriefcase}
+        index="05"
         label="Experience"
-        title="My professional"
-        highlight="journey"
-        subtitle="A timeline of my career, from where I started to where I am today."
-        iconColor="#5a922c"
-        highlightGradient="from-[#5a922c] via-[#4c7894] to-[#dd7bbb]"
+        subtitle="From student ambassador to founding engineer, the short version."
+        title="Where I've"
       />
-      <ExpandableCard items={cardItems} />
+      <CollapsibleList
+        initial={4}
+        items={cardItems}
+        noun="roles"
+        renderList={(visible) => <ExpandableCard items={visible} />}
+      />
     </section>
   );
 }

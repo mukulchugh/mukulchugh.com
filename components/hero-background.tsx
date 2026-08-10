@@ -1,38 +1,23 @@
+// HeroBackground — CSS aurora + canvas-authored grain.
+// WebGL dithering was continuous GPU work under every frosted tile and caused scroll jank;
+// the grain here is a canvas draw that runs exactly once on mount, then sits as a static
+// tiled background image — same cost profile as a CSS pattern, richer than one.
 "use client";
 
-import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
-
-// Dynamic import to avoid SSR issues with Three.js
-// Defer loading until after initial paint for better LCP
-const InteractiveNebulaShader = dynamic(
-  () => import("@/components/ui/liquid-shader").then((mod) => mod.InteractiveNebulaShader),
-  { ssr: false, loading: () => <div className="absolute inset-0 bg-black" /> }
-);
+import { CanvasGrain } from "@/components/canvas-grain";
 
 export function HeroBackground() {
-  const [shouldLoad, setShouldLoad] = useState(false);
-
-  useEffect(() => {
-    // Defer loading until after LCP (use requestIdleCallback or setTimeout)
-    const timer = setTimeout(() => {
-      setShouldLoad(true);
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, []);
-
   return (
-    <div className="absolute inset-x-0 top-0 h-screen -z-10 overflow-hidden">
-      {shouldLoad ? <InteractiveNebulaShader /> : <div className="absolute inset-0 bg-black" />}
-      {/* Overlay with blur */}
-      <div className="absolute inset-0 w-full h-full pointer-events-none backdrop-blur-[2px] bg-black/15" />
-      {/* Top gradient overlay for header area */}
-      <div className="absolute inset-x-0 top-0 h-40 pointer-events-none bg-gradient-to-b from-black/60 via-black/30 to-transparent" />
-      {/* Bottom fade to blend with content */}
-      <div className="absolute inset-x-0 bottom-0 h-48 pointer-events-none bg-[linear-gradient(to_top,rgba(0,0,0,1)_0%,rgba(0,0,0,0.6)_40%,transparent_100%)]" />
-      {/* Subtle vignette effect on edges */}
-      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.3)_100%)]" />
+    <div
+      aria-hidden="true"
+      className="fixed inset-0 -z-10 overflow-hidden pointer-events-none bg-[var(--hero-base)] transition-colors duration-300"
+    >
+      <div className="aurora-blob aurora-blob-1" />
+      <div className="aurora-blob aurora-blob-2" />
+      <div className="aurora-blob aurora-blob-3" />
+      <div className="aurora-blob aurora-blob-4" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_85%_65%_at_50%_0%,transparent_0%,var(--hero-veil)_100%)]" />
+      <CanvasGrain />
     </div>
   );
 }

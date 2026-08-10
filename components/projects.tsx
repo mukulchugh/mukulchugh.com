@@ -1,163 +1,245 @@
 "use client";
 
-import { SectionHeader } from "./section-header";
-import { projectsData } from "@/lib/data";
-import { useSectionInView } from "@/lib/hooks";
-import { GlowingEffect } from "@/components/ui/glowing-effect";
-import { cn } from "@/lib/utils";
 import {
-  IconBox,
-  IconSettings,
-  IconCode,
-  IconSparkles,
-  IconLock,
   IconBrandGithub,
+  IconChevronLeft,
+  IconChevronRight,
   IconExternalLink,
   IconLayoutKanban,
 } from "@tabler/icons-react";
+import { motion, useReducedMotion } from "motion/react";
+import Link from "next/link";
+import { useState } from "react";
+import { accentColorForTags } from "@/lib/blog-topic";
+import { hiddenProjectTitles, projectsData } from "@/lib/data";
+import { useSectionInView } from "@/lib/hooks";
+import { softSpring } from "@/lib/motion";
+import { slugifyProjectTitle } from "@/lib/projects";
+import { SectionHeader } from "./section-header";
+import { Button } from "./ui/button";
 
-interface GridItemProps {
-  area: string;
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-  tags: readonly string[];
-  github: string;
-  demo: string;
+// Featured projects (index 0-3) shown as dedicated tiles; list the rest here.
+const restProjects = projectsData
+  .slice(4)
+  .filter(({ title }) => !hiddenProjectTitles.has(title));
+
+const PAGE_SIZE = 6;
+
+// Small identity mark per card — the project's own initials rather than a
+// generic code icon, keeping the text-forward direction without a full
+// hero-scale treatment (these are compact list cards, not banners).
+function initialsFor(title: string): string {
+  const words = title
+    .trim()
+    .split(/\s+/)
+    .filter((word) => /[a-zA-Z0-9]/.test(word.charAt(0)));
+  if (words.length === 0) {
+    return "";
+  }
+  if (words.length === 1) {
+    return words[0].charAt(0).toUpperCase();
+  }
+  return (words[0].charAt(0) + words[1].charAt(0)).toUpperCase();
 }
 
-const GridItem = ({
-  area,
-  icon,
+function ProjectCard({
   title,
   description,
   tags,
   github,
   demo,
-}: GridItemProps) => {
-  return (
-    <li className={cn("min-h-[14rem] list-none", area)}>
-      <div className="relative h-full rounded-2xl border border-border/50 p-2">
-        <GlowingEffect
-          spread={40}
-          glow={true}
-          disabled={false}
-          proximity={64}
-          inactiveZone={0.01}
-          borderWidth={3}
-        />
-        <div className="relative flex h-full flex-col justify-between gap-6 overflow-hidden rounded-xl border border-border/50 bg-background p-6">
-          {/* Top Section */}
-          <div className="flex flex-1 flex-col gap-4">
-            {/* Header with icon and links */}
-            <div className="flex items-start justify-between">
-              <div className="w-fit rounded-lg border border-border/50 bg-muted p-2.5">
-                {icon}
-              </div>
-              <div className="flex items-center gap-1">
-                {github && (
-                  <a
-                    href={github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                    aria-label="View on GitHub"
-                  >
-                    <IconBrandGithub className="h-4 w-4" />
-                  </a>
-                )}
-                {demo && (
-                  <a
-                    href={demo}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                    aria-label="View Demo"
-                  >
-                    <IconExternalLink className="h-4 w-4" />
-                  </a>
-                )}
-              </div>
-            </div>
+  index,
+}: {
+  title: string;
+  description: string;
+  tags: readonly string[];
+  github: string;
+  demo: string;
+  index: number;
+}) {
+  const shouldReduce = useReducedMotion();
+  const accent = accentColorForTags(tags);
 
-            {/* Content */}
-            <div className="space-y-2">
-              <h3 className="text-lg font-semibold tracking-tight text-foreground md:text-xl">
-                {title}
-              </h3>
-              <p className="text-sm leading-relaxed text-muted-foreground">
-                {description}
-              </p>
+  return (
+    <motion.li
+      className="list-none"
+      initial={shouldReduce ? false : { opacity: 0, y: 18 }}
+      transition={{
+        damping: 20,
+        delay: index * 0.06,
+        stiffness: 110,
+        type: "spring",
+      }}
+      viewport={{ amount: 0.12, once: true }}
+      whileInView={shouldReduce ? undefined : { opacity: 1, y: 0 }}
+    >
+      <div
+        className="project-card relative flex h-full flex-col justify-between gap-4 overflow-hidden rounded-none
+                   border border-border bg-card p-5
+                   transition-transform duration-300 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]
+                   active:scale-[0.985] active:duration-100
+                   [@media(hover:hover)]:hover:border-border"
+      >
+        {/* Subtle ambient glow, tinted per project — content-seeded, not decorative noise */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-none opacity-[0.10] blur-2xl [@media(hover:hover)]:group-hover:opacity-[0.16]"
+          style={{ background: accent }}
+        />
+
+        <div className="relative flex flex-col gap-3">
+          <div className="flex items-start justify-between">
+            <div
+              className="flex h-8 w-8 items-center justify-center rounded-none border border-border bg-muted"
+              style={{ boxShadow: `0 0 24px -8px ${accent}` }}
+            >
+              <span
+                className="font-syne text-[13px] font-bold leading-none tracking-tight"
+                style={{ color: accent }}
+              >
+                {initialsFor(title)}
+              </span>
+            </div>
+            <div className="flex items-center gap-0.5">
+              {github && (
+                <a
+                  aria-label={`${title} on GitHub`}
+                  className="flex items-center justify-center w-11 h-11 rounded-none text-muted-foreground
+                             transition-colors
+                             [@media(hover:hover)]:hover:bg-foreground/[0.06] [@media(hover:hover)]:hover:text-foreground
+                             active:bg-foreground/[0.08]"
+                  href={github}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <IconBrandGithub className="h-4 w-4" />
+                </a>
+              )}
+              {demo && (
+                <a
+                  aria-label={`${title} demo`}
+                  className="flex items-center justify-center w-11 h-11 rounded-none text-muted-foreground
+                             transition-colors
+                             [@media(hover:hover)]:hover:bg-foreground/[0.06] [@media(hover:hover)]:hover:text-foreground
+                             active:bg-foreground/[0.08]"
+                  href={demo}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <IconExternalLink className="h-4 w-4" />
+                </a>
+              )}
             </div>
           </div>
-
-          {/* Tags */}
-          {tags && tags.length > 0 && (
-            <div className="flex flex-wrap gap-1.5">
-              {tags.map((tag, index) => (
-                <span
-                  key={index}
-                  className="rounded-full bg-muted px-2.5 py-0.5 text-xs text-muted-foreground"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
+          <div className="space-y-1.5">
+            {/* Tile/card title — 1rem semibold tracking-tight. font-syne to match
+                every other card title in the app (blog-post-card, featured-project-tile,
+                related-posts) — this one had drifted onto the plain sans face. */}
+            <h3 className="font-syne text-[1rem] font-semibold tracking-tight text-foreground">
+              <Link
+                className="[@media(hover:hover)]:hover:underline [@media(hover:hover)]:hover:underline-offset-2"
+                href={`/projects/${slugifyProjectTitle(title)}`}
+              >
+                {title}
+              </Link>
+            </h3>
+            {/* Body scale — 14px leading-relaxed muted */}
+            <p className="text-[14px] leading-relaxed text-muted-foreground">
+              {description}
+            </p>
+          </div>
         </div>
+        {tags && tags.length > 0 && (
+          <div className="flex flex-wrap gap-1.5">
+            {tags.map((tag) => (
+              <span
+                className="ui-label rounded-none border border-border bg-foreground/[0.04] px-2.5 py-0.5 text-muted-foreground
+                           [@media(hover:hover)]:hover:border-border [@media(hover:hover)]:hover:text-foreground/80
+                           transition-colors duration-200 cursor-default select-none"
+                key={tag}
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
-    </li>
+    </motion.li>
   );
-};
-
-const projectIcons = [
-  <IconBox key="1" className="h-4 w-4 text-foreground" />,
-  <IconSettings key="2" className="h-4 w-4 text-foreground" />,
-  <IconCode key="3" className="h-4 w-4 text-foreground" />,
-  <IconSparkles key="4" className="h-4 w-4 text-foreground" />,
-  <IconLock key="5" className="h-4 w-4 text-foreground" />,
-  <IconBox key="6" className="h-4 w-4 text-foreground" />,
-  <IconCode key="7" className="h-4 w-4 text-foreground" />,
-];
-
-const gridAreas = [
-  "md:[grid-area:1/1/2/7]",
-  "md:[grid-area:1/7/2/13]",
-  "md:[grid-area:2/1/3/7]",
-  "md:[grid-area:2/7/3/13]",
-  "md:[grid-area:3/1/4/7]",
-  "md:[grid-area:3/7/4/13]",
-  "md:[grid-area:4/1/5/13]",
-];
+}
 
 export default function Projects() {
   const { ref } = useSectionInView("Projects", 0.5);
+  const shouldReduce = useReducedMotion();
+  const pageCount = Math.ceil(restProjects.length / PAGE_SIZE);
+  const [page, setPage] = useState(0);
+  const pageItems = restProjects.slice(
+    page * PAGE_SIZE,
+    page * PAGE_SIZE + PAGE_SIZE
+  );
 
   return (
-    <section ref={ref} id="projects" className="mb-28 scroll-mt-28 px-4">
+    <section
+      className="scroll-mt-28 w-full p-5 sm:p-6 lg:p-8 min-w-0"
+      id="projects"
+      ref={ref}
+    >
       <SectionHeader
-        icon={IconLayoutKanban}
-        label="Projects"
-        title="Things I've"
+        align="left"
         highlight="built"
-        subtitle="A selection of projects I've worked on, from open source tools to full-stack applications."
-        iconColor="#d79f1e"
-        highlightGradient="from-[#d79f1e] via-[#dd7bbb] to-[#5a922c]"
+        icon={IconLayoutKanban}
+        index="04"
+        label="Projects"
+        subtitle="Public work is linked. Selected private product work is described without exposing confidential code or company details."
+        title="More things I've"
       />
-      <ul className="mx-auto grid max-w-4xl grid-cols-1 gap-4 md:grid-cols-12">
-        {projectsData.map((project, index) => (
-          <GridItem
-            key={project.title}
-            area={gridAreas[index] || ""}
-            icon={projectIcons[index] || projectIcons[0]}
-            title={project.title}
-            description={project.description}
-            tags={project.tags}
-            github={project.github}
+      <motion.ul
+        animate={{ opacity: 1, y: 0 }}
+        className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"
+        initial={shouldReduce ? false : { opacity: 0, y: 12 }}
+        key={page}
+        transition={softSpring}
+      >
+        {pageItems.map((project, index) => (
+          <ProjectCard
             demo={project.demo}
+            description={project.description}
+            github={project.github}
+            index={index}
+            key={project.title}
+            tags={project.tags}
+            title={project.title}
           />
         ))}
-      </ul>
+      </motion.ul>
+
+      {pageCount > 1 && (
+        <div className="mt-6 flex items-center justify-center gap-4">
+          <Button
+            aria-label="Previous page"
+            disabled={page === 0}
+            onClick={() => setPage((p) => Math.max(0, p - 1))}
+            size="sm"
+            type="button"
+            variant="secondary"
+          >
+            <IconChevronLeft className="h-4 w-4" />
+          </Button>
+          <span className="font-mono text-[12px] tabular-nums text-muted-foreground">
+            Page {page + 1} of {pageCount}
+          </span>
+          <Button
+            aria-label="Next page"
+            disabled={page === pageCount - 1}
+            onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
+            size="sm"
+            type="button"
+            variant="secondary"
+          >
+            <IconChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+      )}
     </section>
   );
 }

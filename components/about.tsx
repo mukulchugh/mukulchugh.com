@@ -1,40 +1,48 @@
 "use client";
 
-import React from "react";
-import { SectionHeader } from "./section-header";
-import { motion } from "motion/react";
-import { useSectionInView } from "@/lib/hooks";
-import { aboutContent } from "@/lib/data";
 import { IconUser } from "@tabler/icons-react";
+import { motion, useReducedMotion } from "motion/react";
+import { aboutContent } from "@/lib/data";
+import { useSectionInView } from "@/lib/hooks";
+import { staggerContainer, staggerItem, viewportOnce } from "@/lib/motion";
+import { SectionHeader } from "./section-header";
 
 export default function About() {
   const { ref } = useSectionInView("About");
+  const shouldReduce = useReducedMotion();
 
   return (
-    <motion.section
-      ref={ref}
-      className="mb-28 max-w-4xl mx-auto leading-8 sm:mb-40 scroll-mt-28 px-4 pt-20 sm:pt-28"
-      initial={{ opacity: 0, y: 100 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.175 }}
+    <section
+      className="scroll-mt-28 p-5 sm:p-6 lg:p-8 w-full min-w-0"
       id="about"
+      ref={ref}
     >
       <SectionHeader
+        align="left"
+        highlight="generalist"
         icon={IconUser}
+        index="03"
         label="About"
-        title="A bit about"
-        highlight="me"
-        subtitle="Get to know who I am and what drives me as a developer."
-        iconColor="#4c7894"
-        highlightGradient="from-[#4c7894] via-[#5a922c] to-[#d79f1e]"
+        subtitle={undefined}
+        title="Engineer turned"
       />
-      <div className="text-center">
-        {aboutContent.paragraphs.map((paragraph, index) => (
-          <p key={index} className={index > 0 ? "mt-4" : ""}>
+      <motion.div
+        className="space-y-4"
+        initial={shouldReduce ? false : "hidden"}
+        variants={shouldReduce ? undefined : staggerContainer}
+        viewport={viewportOnce}
+        whileInView={shouldReduce ? undefined : "visible"}
+      >
+        {aboutContent.paragraphs.map((paragraph) => (
+          <motion.p
+            className="text-[14px] sm:text-[15px] text-muted-foreground leading-[1.75] max-w-[64ch] text-pretty"
+            key={paragraph.slice(0, 24)}
+            variants={shouldReduce ? undefined : staggerItem}
+          >
             {paragraph}
-          </p>
+          </motion.p>
         ))}
-      </div>
-    </motion.section>
+      </motion.div>
+    </section>
   );
 }

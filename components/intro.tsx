@@ -1,31 +1,33 @@
 "use client";
 
-import Image from "next/image";
-import React, { Suspense, useCallback, useState } from "react";
-import { motion } from "motion/react";
-import Link from "next/link";
 import {
   IconBrandGithub,
-  IconBrandX,
   IconBrandLinkedin,
+  IconBrandX,
   IconFileText,
   IconMessage,
-  type Icon,
 } from "@tabler/icons-react";
-import { useSectionInView } from "@/lib/hooks";
-import { useActiveSectionContext } from "@/context/active-section-context";
-import { siteConfig, introContent, introSocialLinks } from "@/lib/data";
-import { CVModal } from "./ui/cv-modal";
+import clsx from "clsx";
+import { motion } from "motion/react";
+import Image from "next/image";
+import Link from "next/link";
+import React, { Suspense, useCallback, useState } from "react";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Button } from "@/components/ui/button";
+import { useActiveSectionContext } from "@/context/active-section-context";
+import { introContent, introSocialLinks, siteConfig } from "@/lib/data";
+import { useSectionInView } from "@/lib/hooks";
+import { CVModal } from "./ui/cv-modal";
 
-import clsx from "clsx";
-import { syne } from "@/lib/fonts";
+const stagger = {
+  animate: { opacity: 1, y: 0 },
+  initial: { opacity: 0, y: 16 },
+};
 
 const Component = React.memo(() => {
   const { ref } = useSectionInView("Home", 0.5);
@@ -37,152 +39,158 @@ const Component = React.memo(() => {
     setTimeOfLastClick(Date.now());
   }, [setActiveSection, setTimeOfLastClick]);
 
-  const handleOpenCV = useCallback(() => {
-    setIsCVModalOpen(true);
-  }, []);
+  const handleOpenCV = useCallback(() => setIsCVModalOpen(true), []);
+  const handleCloseCV = useCallback(() => setIsCVModalOpen(false), []);
 
-  const handleCloseCV = useCallback(() => {
-    setIsCVModalOpen(false);
-  }, []);
   return (
     <section
-      ref={ref}
+      className="max-w-2xl mx-auto text-center flex flex-col justify-center scroll-mt-28 px-6 py-12"
       id="home"
-      className="min-h-[calc(100vh-10rem)] sm:min-h-[calc(100vh-12rem)] max-w-4xl mx-auto text-center flex flex-col justify-center scroll-mt-[100rem] px-4 -mt-8"
+      ref={ref}
     >
-      <div className="flex items-center justify-center">
+      {/* Avatar */}
+      <div className="flex items-center justify-center mb-8">
         <div className="relative">
           <motion.div
-            initial={{ opacity: 0, scale: 0 }}
             animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, scale: 0.8 }}
             transition={{
-              type: "tween",
-              duration: 0.2,
-            }}
-          >
-            <Image
-              src={siteConfig.images.profileImage}
-              alt={siteConfig.name}
-              width={160}
-              height={160}
-              quality={90}
-              priority={true}
-              fetchPriority="high"
-              sizes="(max-width: 768px) 160px, 160px"
-              className="h-40 w-40 rounded-full object-cover border-[0.35rem] border-white shadow-xl"
-            />
-          </motion.div>
-
-          <motion.span
-            className="absolute bottom-0 right-0 text-4xl"
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{
+              damping: 20,
+              duration: 0.4,
+              stiffness: 200,
               type: "spring",
-              stiffness: 125,
-              delay: 0.1,
-              duration: 0.7,
             }}
           >
-            {introContent.emoji}
-          </motion.span>
+            <div className="relative">
+              <div className="absolute -inset-1 rounded-none bg-gradient-to-b from-foreground/15 to-foreground/5 blur-md" />
+              <Image
+                alt={siteConfig.name}
+                className="relative h-36 w-36 rounded-none object-cover border-2 border-border shadow-2xl"
+                fetchPriority="high"
+                height={144}
+                priority={true}
+                quality={90}
+                sizes="144px"
+                src={siteConfig.images.profileImage}
+                width={144}
+              />
+            </div>
+          </motion.div>
         </div>
       </div>
 
+      {/* Tagline pill */}
       <motion.div
-        className="mt-6 mb-4"
-        initial={{ opacity: 0, y: 50 }}
+        className="mb-5"
+        {...stagger}
         animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.05, duration: 0.4 }}
       >
         <span
           className={clsx(
-            "inline-block px-4 py-2 text-sm font-medium tracking-wide lowercase rounded-full text-white/90",
-            "bg-white/5 backdrop-blur-md border border-white/10",
-            "shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),0_4px_16px_rgba(0,0,0,0.1)]",
-            syne.className
+            "ui-label inline-flex items-center gap-1.5 rounded-none px-3.5 py-1.5",
+            "text-muted-foreground bg-muted border border-border",
+            "font-syne"
           )}
         >
+          <span className="relative flex size-1.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-none bg-muted-foreground opacity-60" />
+            <span className="relative inline-flex size-1.5 rounded-none bg-muted0" />
+          </span>
           {siteConfig.tagline}
         </span>
       </motion.div>
 
+      {/* Hero heading */}
       <motion.h1
+        animate={{ opacity: 1, y: 0 }}
         className={clsx(
-          "mb-10 mt-4 px-4 font-medium !leading-[1.5] text-xl md:text-3xl",
-          syne.className
+          "mb-8 px-2 font-bold tracking-tight",
+          "text-[1.6rem] leading-[1.25] sm:text-[2.25rem] md:text-[2.75rem]",
+          "font-syne"
         )}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.3 }}
+        initial={{ opacity: 0, y: 12 }}
+        transition={{ delay: 0.1, duration: 0.4 }}
       >
-        <span className="font-bold">{introContent.greeting}</span>, a{" "}
-        <span className="font-bold">{introContent.role}</span> specializing in{" "}
-        <span className="font-bold">{introContent.specialty}</span>. I&apos;m
-        passionate about{" "}
-        <span className="italic">
+        <span className="text-foreground">{introContent.greeting}</span>
+        <span className="text-muted-foreground font-medium">, a </span>
+        <span className="text-foreground">{introContent.role}</span>
+        <span className="text-muted-foreground font-medium">
+          {" "}
+          specializing in{" "}
+        </span>
+        <span className="text-foreground font-semibold">
+          {introContent.specialty}
+        </span>
+        <span className="text-muted-foreground font-medium">. Focused on </span>
+        <span className="italic text-foreground/80 font-medium">
           {introContent.passion}
         </span>
       </motion.h1>
 
+      {/* CTA row */}
       <motion.div
-        className="flex flex-col sm:flex-row items-center justify-center gap-3 px-4 text-lg font-medium"
-        initial={{ opacity: 0, y: 100 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{
-          delay: 0.1,
-        }}
+        className="flex flex-col sm:flex-row items-center justify-center gap-3 px-4"
+        initial={{ opacity: 0, y: 16 }}
+        transition={{ delay: 0.18, duration: 0.4 }}
       >
-        <Button
-          asChild
+        <Link
           className={clsx(
-            syne.className,
-            "rounded-2xl bg-indigo-600 text-white hover:bg-indigo-500"
+            buttonVariants(),
+            "font-syne",
+            "rounded-none bg-foreground hover:bg-foreground/90 text-white font-semibold shadow-[0_4px_20px_-4px_rgba(24,24,27,0.15)] transition-[background-color,transform] duration-200"
           )}
+          href="#contact"
+          onClick={handleClick}
         >
-          <Link href="#contact" onClick={handleClick}>
-            {introContent.ctaText}
-            <IconMessage className="w-4 h-4 opacity-80" />
-          </Link>
-        </Button>
+          {introContent.ctaText}
+          <IconMessage className="opacity-80" data-icon="inline-end" />
+        </Link>
 
         <Button
-          variant="secondary"
+          className={clsx(
+            "font-syne",
+            "rounded-none border border-border hover:border-border font-semibold"
+          )}
           onClick={handleOpenCV}
-          className={clsx(syne.className, "rounded-2xl")}
+          variant="secondary"
         >
           {introContent.resumeButtonText}
-          <IconFileText className="w-4 h-4 opacity-70" />
+          <IconFileText className="w-4 h-4 ml-1 opacity-70" />
         </Button>
 
-        <TooltipProvider delayDuration={200}>
+        {/* Social links */}
+        <TooltipProvider delay={200}>
           <div className="flex gap-2">
             {introSocialLinks.map((link) => {
               const iconMap: Record<string, typeof IconBrandLinkedin> = {
-                IconBrandLinkedin,
                 IconBrandGithub,
+                IconBrandLinkedin,
                 IconBrandX,
               };
               const IconComponent = iconMap[link.icon];
 
               return (
                 <Tooltip key={link.name}>
-                  <TooltipTrigger asChild>
-                    <a
-                      className={clsx(
-                        "group relative grid place-items-center w-12 h-12 rounded-xl cursor-pointer",
-                        "bg-gradient-to-b from-neutral-800/60 to-neutral-900/70 backdrop-blur-xl",
-                        "ring-1 ring-white/10 shadow-lg",
-                        "text-white/70 text-lg",
-                        "hover:-translate-y-1 hover:scale-110 hover:text-white/90 hover:ring-white/20",
-                        "active:scale-100 transition-all duration-200"
-                      )}
-                      href={link.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`${link.name} Profile`}
-                    >
-                      <IconComponent size={20} />
-                    </a>
+                  <TooltipTrigger
+                    render={
+                      <a
+                        aria-label={`${link.name} Profile`}
+                        className={clsx(
+                          "group grid place-items-center w-11 h-11 rounded-none cursor-pointer",
+                          "bg-foreground/[0.05] border border-border",
+                          "text-muted-foreground",
+                          "hover:-translate-y-0.5 hover:text-foreground hover:bg-foreground/[0.08] hover:border-border",
+                          "transition-[color,background-color,border-color,transform] duration-200"
+                        )}
+                        href={link.href}
+                        rel="noopener noreferrer"
+                        target="_blank"
+                      />
+                    }
+                  >
+                    <IconComponent size={18} />
                   </TooltipTrigger>
                   <TooltipContent side="top">{link.name}</TooltipContent>
                 </Tooltip>
@@ -193,10 +201,10 @@ const Component = React.memo(() => {
       </motion.div>
 
       <CVModal
-        isOpen={isCVModalOpen}
-        onClose={handleCloseCV}
         cvUrl={siteConfig.files.cv}
+        isOpen={isCVModalOpen}
         name={siteConfig.firstName}
+        onClose={handleCloseCV}
       />
     </section>
   );
@@ -204,12 +212,10 @@ const Component = React.memo(() => {
 
 Component.displayName = "IntroComponent";
 
-const Intro = () => {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <Component />
-    </Suspense>
-  );
-};
+const Intro = () => (
+  <Suspense fallback={<div className="min-h-screen" />}>
+    <Component />
+  </Suspense>
+);
 
 export default Intro;

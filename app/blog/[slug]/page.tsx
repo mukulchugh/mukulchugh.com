@@ -1,23 +1,32 @@
-import { getPostServer, getPostsServer } from "@/lib/hashnode";
-import { siteConfig } from "@/lib/data";
-import { syne } from "@/lib/fonts";
-import { cn } from "@/lib/utils";
-import Image from "next/image";
-import Link from "next/link";
 import { IconArrowLeft, IconCalendar, IconClock } from "@tabler/icons-react";
-import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { ArticleBody } from "@/components/blog/article-body";
+import { PostCover } from "@/components/blog/post-cover";
+import { PostNav } from "@/components/blog/post-nav";
+import { ReadingProgress } from "@/components/blog/reading-progress";
+import { RelatedPosts } from "@/components/blog/related-posts";
+import { TableOfContents } from "@/components/blog/table-of-contents";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { AdUnit } from "@/components/ad-unit";
+import {
+  getAdjacentPosts,
+  getPostServer,
+  getPostsServer,
+  getRelatedPosts,
+} from "@/lib/blog";
+import { accentColorForTags } from "@/lib/blog-topic";
+import { siteConfig } from "@/lib/data";
+import { PAGE_TITLE } from "@/lib/typography";
+import { cn } from "@/lib/utils";
 
-export const revalidate = 3600; // Revalidate every hour
+export const revalidate = 3600;
 
 interface PostPageProps {
   params: Promise<{ slug: string }>;
 }
 
-// Generate static paths for popular posts
 export async function generateStaticParams() {
   const { posts } = await getPostsServer(20);
   return posts.map((post) => ({
@@ -25,7 +34,6 @@ export async function generateStaticParams() {
   }));
 }
 
-// Generate metadata for SEO
 export async function generateMetadata({
   params,
 }: PostPageProps): Promise<Metadata> {
@@ -33,254 +41,333 @@ export async function generateMetadata({
   const post = await getPostServer(slug);
 
   if (!post) {
-    return {
-      title: "Post Not Found",
-    };
+    return { title: "Post Not Found" };
   }
 
   return {
-    title: `${post.seo?.title || post.title} | ${siteConfig.name}`,
-    description: post.seo?.description || post.brief,
     alternates: {
       canonical: `/blog/${slug}`,
     },
+    description: post.seo?.description || post.brief,
     openGraph: {
-      title: post.title,
       description: post.brief,
       images: post.coverImage?.url ? [post.coverImage.url] : [],
-      type: "article",
       publishedTime: post.publishedAt,
+      title: post.title,
+      type: "article",
       url: `${siteConfig.siteUrl}/blog/${slug}`,
     },
+    title: `${post.seo?.title || post.title} | ${siteConfig.name}`,
     twitter: {
       card: "summary_large_image",
-      title: post.title,
       description: post.brief,
       images: post.coverImage?.url ? [post.coverImage.url] : [],
+      title: post.title,
     },
   };
 }
 
 export default async function PostPage({ params }: PostPageProps) {
   const { slug } = await params;
-  const post = await getPostServer(slug);
+  const [post, adjacent, related] = await Promise.all([
+    getPostServer(slug),
+    Promise.resolve(getAdjacentPosts(slug)),
+    Promise.resolve(getRelatedPosts(slug, 3)),
+  ]);
 
   if (!post) {
     notFound();
   }
 
   const formattedDate = new Date(post.publishedAt).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
     day: "numeric",
+    month: "long",
+    timeZone: "UTC",
+    year: "numeric",
   });
 
-  // BlogPosting structured data for SEO
   const blogPostingSchema = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    headline: post.title,
-    description: post.brief,
-    image: post.coverImage?.url || siteConfig.images.ogImage,
-    datePublished: post.publishedAt,
-    dateModified: post.publishedAt,
+    articleSection: post.tags[0]?.name || "Technology",
     author: {
       "@type": "Person",
-      name: post.author?.name || siteConfig.name,
       image: post.author?.profilePicture || siteConfig.images.profileImage,
+      name: post.author?.name || siteConfig.name,
+    },
+    dateModified: post.publishedAt,
+    datePublished: post.publishedAt,
+    description: post.brief,
+    headline: post.title,
+    image: post.coverImage?.url || siteConfig.images.ogImage,
+    keywords: post.tags.map((tag) => tag.name).join(", "),
+    mainEntityOfPage: {
+      "@id": `${siteConfig.siteUrl}/blog/${slug}`,
+      "@type": "WebPage",
     },
     publisher: {
       "@type": "Organization",
-      name: siteConfig.name,
       logo: {
         "@type": "ImageObject",
         url: siteConfig.images.profileImage,
       },
+      name: siteConfig.name,
     },
-    url: `${siteConfig.siteUrl}/blog/${slug}`,
-    mainEntityOfPage: {
-      "@type": "WebPage",
-      "@id": `${siteConfig.siteUrl}/blog/${slug}`,
-    },
-    keywords: post.tags.map((tag) => tag.name).join(", "),
-    articleSection: post.tags[0]?.name || "Technology",
     timeRequired: `PT${post.readTimeInMinutes}M`,
+    url: `${siteConfig.siteUrl}/blog/${slug}`,
   };
 
-  // Breadcrumb structured data
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
       {
         "@type": "ListItem",
-        position: 1,
-        name: "Home",
         item: siteConfig.siteUrl,
+        name: "Home",
+        position: 1,
       },
       {
         "@type": "ListItem",
-        position: 2,
-        name: "Blog",
         item: `${siteConfig.siteUrl}/blog`,
+        name: "Blog",
+        position: 2,
       },
       {
         "@type": "ListItem",
-        position: 3,
-        name: post.title,
         item: `${siteConfig.siteUrl}/blog/${slug}`,
+        name: post.title,
+        position: 3,
       },
     ],
   };
 
+  const headings = post.headings ?? [];
+  const hasTableOfContents = headings.length >= 2;
+
   return (
-    <main className="w-full py-20 lg:py-32">
+    // No overflow-x-hidden here: body already clips horizontal overflow
+    // (app/globals.css), and adding it on this ancestor makes overflow-y
+    // compute to `auto` (CSS overflow spec), turning <main> into a scroll
+    // container that sits between the TOC's sticky aside and the real
+    // scrolling viewport — silently breaking position: sticky.
+    <main className="dock-safe-bottom w-full pt-12 sm:pt-20 lg:pt-28">
+      {/* Reading progress bar */}
+      <ReadingProgress />
+
       {/* Structured Data */}
       <script
-        type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingSchema) }}
+        type="application/ld+json"
       />
       <script
-        type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        type="application/ld+json"
       />
 
-      <article className="container mx-auto px-4 max-w-4xl">
-        {/* Back to Blog */}
+      {/* Outer container — constrains horizontal width */}
+      <div className="container mx-auto max-w-5xl px-4 sm:px-6">
+        {/* Back link */}
         <Link
+          className="inline-flex items-center gap-2 py-2 text-[14px] text-muted-foreground
+                     [@media(hover:hover)]:hover:text-foreground transition-colors mb-10"
           href="/blog"
-          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
         >
           <IconArrowLeft className="w-4 h-4" />
           Back to Blog
         </Link>
 
-        {/* Header */}
-        <header className="mb-10">
-          {/* Tags */}
-          {post.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-6">
-              {post.tags.map((tag) => (
-                <Badge key={tag.slug} variant="secondary">
-                  {tag.name}
-                </Badge>
-              ))}
+        <div
+          className={cn(
+            "grid items-start",
+            // TOC sits on the right as a reference rail; article reads
+            // left-to-right starting in the wider column.
+            hasTableOfContents &&
+              "lg:grid-cols-[minmax(0,48rem)_13rem] lg:gap-x-12"
+          )}
+        >
+          <header
+            className={cn(
+              "mb-10 max-w-3xl",
+              hasTableOfContents && "lg:col-start-1"
+            )}
+          >
+            {post.tags.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-6">
+                {post.tags.map((tag) => (
+                  <Badge
+                    accentColor={accentColorForTags([tag.name])}
+                    key={tag.slug}
+                    variant="secondary"
+                  >
+                    {tag.name}
+                  </Badge>
+                ))}
+              </div>
+            )}
+
+            <h1
+              className={cn(
+                "font-syne",
+                "font-black text-foreground mb-6 leading-[1.08] tracking-tight break-words"
+              )}
+              style={{ fontSize: PAGE_TITLE }}
+            >
+              {post.title}
+            </h1>
+
+            <div className="flex flex-wrap items-center gap-3 sm:gap-6 text-[12px] text-muted-foreground">
+              {post.author && (
+                <div className="flex items-center gap-2">
+                  <Avatar className="h-7 w-7">
+                    <AvatarImage src={post.author.profilePicture} />
+                    <AvatarFallback>
+                      {post.author.name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="text-foreground/80 font-medium">
+                    {post.author.name}
+                  </span>
+                </div>
+              )}
+              <div className="flex items-center gap-2">
+                <IconCalendar className="w-3.5 h-3.5" />
+                <time dateTime={post.publishedAt}>{formattedDate}</time>
+              </div>
+              <div className="flex items-center gap-2">
+                <IconClock className="w-3.5 h-3.5" />
+                <span>{post.readTimeInMinutes} min read</span>
+              </div>
+            </div>
+          </header>
+
+          <div
+            className={cn(
+              "mb-12 max-w-3xl",
+              hasTableOfContents && "lg:col-start-1"
+            )}
+          >
+            <PostCover hero interactive post={post} priority />
+          </div>
+
+          {hasTableOfContents && (
+            // lg:self-stretch fills the full row-3 track height (the
+            // article's height) so the sticky aside inside it has room to
+            // travel with the scroll instead of scrolling away with the
+            // page — align-items:start on the grid only sizes items to
+            // their own content by default.
+            <div className="lg:col-start-2 lg:row-start-3 lg:self-stretch">
+              <TableOfContents headings={headings} />
             </div>
           )}
 
-          {/* Title */}
-          <h1
-            className={cn(
-              syne.className,
-              "text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight tracking-tight"
-            )}
-          >
-            {post.title}
-          </h1>
-
-          {/* Meta */}
-          <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground">
-            {post.author && (
-              <div className="flex items-center gap-2">
-                <Avatar className="h-8 w-8">
-                  <AvatarImage src={post.author.profilePicture} />
-                  <AvatarFallback>
-                    {post.author.name
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")}
-                  </AvatarFallback>
-                </Avatar>
-                <span className="text-foreground font-medium">
-                  {post.author.name}
-                </span>
-              </div>
-            )}
-            <div className="flex items-center gap-2">
-              <IconCalendar className="w-4 h-4" />
-              <time dateTime={post.publishedAt}>{formattedDate}</time>
-            </div>
-            <div className="flex items-center gap-2">
-              <IconClock className="w-4 h-4" />
-              <span>{post.readTimeInMinutes} min read</span>
-            </div>
-          </div>
-        </header>
-
-        {/* Cover Image */}
-        {post.coverImage?.url && (
-          <div className="relative aspect-[16/9] rounded-xl overflow-hidden mb-10">
-            <Image
-              src={post.coverImage.url}
-              alt={post.title}
-              fill
-              className="object-cover"
-              priority
-              sizes="(max-width: 768px) 100vw, 896px"
-            />
-          </div>
-        )}
-
-        {/* Ad Unit - Above content */}
-        <AdUnit adFormat="horizontal" className="mb-10" />
-
-        {/* Content - Using Tailwind Typography for out-of-the-box styling */}
-        {post.content?.html && (
           <div
             className={cn(
-              "prose prose-lg max-w-none",
-              // Dark mode
-              "dark:prose-invert",
-              // Headings
-              "prose-headings:font-semibold prose-headings:tracking-tight",
-              // Links
-              "prose-a:text-primary prose-a:no-underline hover:prose-a:underline",
-              // Images
-              "prose-img:rounded-xl prose-img:shadow-md",
-              // Code blocks
-              "prose-pre:bg-[#1e1e1e] prose-pre:border prose-pre:border-border",
-              // Inline code
-              "prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none",
-              // Blockquotes
-              "prose-blockquote:border-l-primary prose-blockquote:bg-muted/30 prose-blockquote:py-1 prose-blockquote:pr-4 prose-blockquote:rounded-r-lg",
-              // Tables
-              "prose-table:border prose-table:border-border prose-th:bg-muted prose-td:border prose-td:border-border prose-th:border prose-th:border-border",
-              // Lists
-              "prose-li:marker:text-muted-foreground"
+              "min-w-0 max-w-3xl",
+              hasTableOfContents &&
+                "lg:col-start-1 lg:row-start-3 lg:self-stretch"
             )}
-            dangerouslySetInnerHTML={{ __html: post.content.html }}
-          />
-        )}
+          >
+            {/* Article body — rendered from raw markdown via Streamdown
+                (components/blog/article-body.tsx), which renders real React
+                elements (not a raw HTML string) and provides built-in Shiki
+                syntax highlighting for code blocks. */}
+            {post.content?.markdown && (
+              <article
+                className={cn(
+                  // Base prose setup
+                  "prose prose-zinc dark:prose-invert max-w-none",
+                  // Body text — 16px, 1.75 line-height
+                  "prose-p:text-[16px] prose-p:leading-[1.8] prose-p:text-foreground/80",
+                  // Headings — tight tracking, ink-dark
+                  "prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-foreground",
+                  "prose-h2:text-[1.375rem] prose-h2:mt-10 prose-h2:mb-4",
+                  "prose-h3:text-[1.125rem] prose-h3:mt-8 prose-h3:mb-3",
+                  // Scroll margin so TOC jumps land below any fixed header
+                  "[&_h2]:scroll-mt-24 [&_h3]:scroll-mt-24",
+                  // Links — subtle underline on hover
+                  "prose-a:text-foreground/80 prose-a:no-underline prose-a:font-medium",
+                  "[@media(hover:hover)]:prose-a:hover:underline [@media(hover:hover)]:prose-a:hover:text-foreground",
+                  // Blockquotes — left ink border, neutral bg
+                  "prose-blockquote:border-l-2 prose-blockquote:border-border",
+                  "prose-blockquote:bg-muted prose-blockquote:py-1 prose-blockquote:pr-4",
+                  "prose-blockquote:rounded-r-none prose-blockquote:not-italic",
+                  "prose-blockquote:text-muted-foreground",
+                  // Inline code — light chip
+                  "prose-code:bg-muted prose-code:text-foreground/90",
+                  "prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-none",
+                  "prose-code:text-[0.85em] prose-code:font-mono",
+                  "prose-code:before:content-none prose-code:after:content-none",
+                  // Code blocks — dark ink slab. Streamdown wraps fenced
+                  // code in its own chrome (language label, copy button)
+                  // rather than a bare <pre>, so it's restyled via the
+                  // [data-streamdown] hooks in globals.css instead of
+                  // prose-pre:* modifiers.
+                  "[&_[data-streamdown='code-block']]:text-[0.85em] [&_[data-streamdown='code-block']]:leading-relaxed",
+                  // Images
+                  "prose-img:rounded-none prose-img:shadow-sm",
+                  // Lists
+                  "prose-li:text-[16px] prose-li:text-foreground/80",
+                  "prose-li:marker:text-muted-foreground",
+                  // Tables
+                  "prose-table:text-[14px]",
+                  "prose-th:bg-muted prose-th:text-foreground/80 prose-th:font-semibold",
+                  "prose-td:text-muted-foreground",
+                  "prose-th:border prose-th:border-border",
+                  "prose-td:border prose-td:border-border",
+                  // Strong
+                  "prose-strong:text-foreground prose-strong:font-semibold",
+                  // HR
+                  "prose-hr:border-border"
+                )}
+              >
+                <ArticleBody
+                  headings={headings}
+                  markdown={post.content.markdown}
+                />
+              </article>
+            )}
 
-        {/* Ad Unit - Below content */}
-        <AdUnit adFormat="auto" className="mt-10" />
+            {/* Prev / Next */}
+            <PostNav next={adjacent.next} prev={adjacent.prev} />
 
-        {/* Footer */}
-        <footer className="mt-16 pt-8 border-t border-border">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <Link
-              href="/blog"
-              className="inline-flex items-center gap-2 text-sm font-medium text-foreground hover:text-muted-foreground transition-colors"
-            >
-              <IconArrowLeft className="w-4 h-4" />
-              View all posts
-            </Link>
+            {/* Related reads */}
+            <RelatedPosts posts={related} />
 
-            {/* Tags */}
-            <div className="flex items-center gap-4">
-              {post.tags.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {post.tags.slice(0, 3).map((tag) => (
-                    <Badge key={tag.slug} variant="outline" className="text-xs">
-                      {tag.name}
-                    </Badge>
-                  ))}
-                </div>
-              )}
-            </div>
+            {/* Footer */}
+            <footer className="mt-16 pt-8 border-t border-border">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <Link
+                  className="inline-flex items-center gap-2 text-sm font-medium text-foreground/80
+                             [@media(hover:hover)]:hover:text-foreground transition-colors"
+                  href="/blog"
+                >
+                  <IconArrowLeft className="w-4 h-4" />
+                  View all posts
+                </Link>
+
+                {post.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {post.tags.slice(0, 3).map((tag) => (
+                      <Badge
+                        accentColor={accentColorForTags([tag.name])}
+                        className="text-xs"
+                        key={tag.slug}
+                        variant="secondary"
+                      >
+                        {tag.name}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </footer>
           </div>
-        </footer>
-      </article>
+        </div>
+      </div>
     </main>
   );
 }

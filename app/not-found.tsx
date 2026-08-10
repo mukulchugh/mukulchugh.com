@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { syne } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
 
 export default function NotFound() {
@@ -8,7 +7,7 @@ export default function NotFound() {
       <div className="text-center max-w-2xl mx-auto">
         <h1
           className={cn(
-            syne.className,
+            "font-syne",
             "text-6xl md:text-8xl font-bold text-foreground mb-4"
           )}
         >
@@ -16,25 +15,26 @@ export default function NotFound() {
         </h1>
         <h2
           className={cn(
-            syne.className,
+            "font-syne",
             "text-2xl md:text-3xl font-semibold text-foreground mb-6"
           )}
         >
           Page Not Found
         </h2>
         <p className="text-muted-foreground text-lg mb-8">
-          Sorry, we couldn&apos;t find the page you&apos;re looking for. It might have been moved or deleted.
+          That page doesn&apos;t exist, or it moved and I forgot to update the
+          link.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
+            className="inline-flex items-center justify-center px-6 py-3 rounded-none bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors"
             href="/"
-            className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors"
           >
             Go Home
           </Link>
           <Link
+            className="inline-flex items-center justify-center px-6 py-3 rounded-none border border-border text-foreground font-medium hover:bg-secondary transition-colors"
             href="/blog"
-            className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-border text-foreground font-medium hover:bg-secondary transition-colors"
           >
             Browse Blog
           </Link>

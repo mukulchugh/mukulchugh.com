@@ -1,67 +1,69 @@
 import { IconArrowLeft } from "@tabler/icons-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { PostsGrid } from "@/components/blog/posts-grid";
-import { cn } from "@/lib/utils";
-import { getPostsServer } from "@/lib/hashnode";
-import { syne } from "@/lib/fonts";
+import { getAllPosts } from "@/lib/blog";
 import { siteConfig } from "@/lib/data";
-import { AdUnit } from "@/components/ad-unit";
-import type { Metadata } from "next";
+import { PAGE_TITLE } from "@/lib/typography";
+import { cn } from "@/lib/utils";
 
 export const revalidate = 3600; // Revalidate every hour
 
 export const metadata: Metadata = {
-  title: "Blog",
-  description: "Thoughts on software engineering, web development, and building products that matter.",
   alternates: {
     canonical: "/blog",
   },
+  description:
+    "Notes on engineering, product, and the craft of building software that earns its keep.",
   openGraph: {
+    description:
+      "Notes on engineering, product, and the craft of building software that earns its keep.",
     title: "Blog | Mukul Chugh",
-    description: "Thoughts on software engineering, web development, and building products that matter.",
-    url: `${siteConfig.siteUrl}/blog`,
     type: "website",
+    url: `${siteConfig.siteUrl}/blog`,
   },
+  title: "Blog",
 };
 
 export default async function BlogPage() {
-  const initialData = await getPostsServer(12);
+  const posts = getAllPosts();
 
   return (
-    <main className="w-full py-20">
-      <div className="container mx-auto px-4 max-w-4xl flex flex-col gap-14">
-        {/* Back to Home */}
+    <main className="dock-safe-bottom w-full pt-12 sm:pt-20">
+      <div className="container mx-auto flex max-w-6xl flex-col gap-10 px-4 sm:gap-14 sm:px-6">
+        {/* Back to Home — touch-target via inline-flex + padding */}
         <Link
+          className="inline-flex items-center gap-2 py-2 text-[14px] text-muted-foreground
+                     [@media(hover:hover)]:hover:text-foreground transition-colors w-fit"
           href="/"
-          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors w-fit"
         >
           <IconArrowLeft className="w-4 h-4" />
           Back to Home
         </Link>
 
         {/* Header */}
-        <div className="flex w-full flex-col sm:flex-row sm:justify-between sm:items-center gap-8">
-          <div className="flex flex-col gap-4">
+        <div className="flex w-full flex-col sm:flex-row sm:justify-between sm:items-center gap-6">
+          <div className="flex flex-col gap-3">
+            {/* Blog page title — section heading scale */}
             <h1
               className={cn(
-                syne.className,
-                "text-3xl md:text-5xl tracking-tighter max-w-xl font-regular"
+                "font-syne",
+                "tracking-tight font-black leading-[1.08]"
               )}
+              style={{ fontSize: PAGE_TITLE }}
             >
               Latest articles
             </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl">
-              Thoughts on software engineering, web development, and building
-              products that matter.
+            {/* Body — 15px muted, capped measure */}
+            <p className="text-[14px] sm:text-[15px] text-muted-foreground leading-relaxed max-w-[52ch]">
+              Notes on engineering, product, and the craft of building software
+              that earns its keep.
             </p>
           </div>
         </div>
 
-        {/* Ad Unit */}
-        <AdUnit adFormat="horizontal" className="my-4" />
-
         {/* Posts Grid */}
-        <PostsGrid initialData={initialData} />
+        <PostsGrid posts={posts} />
       </div>
     </main>
   );

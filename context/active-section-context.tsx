@@ -1,7 +1,8 @@
 "use client";
 
+import type React from "react";
+import { createContext, useContext, useState } from "react";
 import type { SectionName } from "@/lib/types";
-import React, { useState, createContext, useContext } from "react";
 
 type ActiveSectionContextProviderProps = {
   children: React.ReactNode;
@@ -28,8 +29,8 @@ export default function ActiveSectionContextProvider({
       value={{
         activeSection,
         setActiveSection,
-        timeOfLastClick,
         setTimeOfLastClick,
+        timeOfLastClick,
       }}
     >
       {children}

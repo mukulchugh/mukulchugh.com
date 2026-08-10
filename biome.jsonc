@@ -1,0 +1,88 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "extends": [
+    "ultracite/biome/core",
+    "ultracite/biome/react",
+    "ultracite/biome/next"
+  ],
+  "files": {
+    "includes": [
+      "!node_modules",
+      "!.next",
+      "!public",
+      "!bun.lock",
+      "!tsconfig.tsbuildinfo"
+    ]
+  },
+  "css": {
+    "parser": {
+      "cssModules": true,
+      "allowWrongLineComments": true
+    },
+    "linter": {
+      "enabled": false
+    }
+  },
+  "linter": {
+    "rules": {
+      "nursery": {
+        "useSortedClasses": "off"
+      },
+      "style": {
+        "noMagicNumbers": "off",
+        "useFilenamingConvention": "off",
+        "noNestedTernary": "off",
+        "noDescendingSpecificity": "off",
+        "useBlockStatements": "off",
+        "noNonNullAssertion": "off",
+        "useDestructuring": "off",
+        "noIncrementDecrement": "off",
+        "useConsistentTypeDefinitions": "off",
+        "useNodejsImportProtocol": "off"
+      },
+      "complexity": {
+        "noExcessiveCognitiveComplexity": "off",
+        "noForEach": "off",
+        "useLiteralKeys": "off",
+        "noVoid": "off"
+      },
+      "performance": {
+        "noBarrelFile": "off",
+        "noNamespaceImport": "off",
+        "noJsxPropsBind": "off",
+        "noAccumulatingSpread": "off",
+        "useTopLevelRegex": "off"
+      },
+      "suspicious": {
+        "noExplicitAny": "off",
+        "noArrayIndexKey": "off",
+        "noUnknownAtRules": "off",
+        "noLeakedRender": "off",
+        "noShadow": "off",
+        "noShadowRestrictedNames": "off",
+        "useAwait": "off",
+        "noUnnecessaryConditions": "off",
+        "noDocumentCookie": "off",
+        "noAlert": "off",
+        "useIterableCallbackReturn": "off",
+        "noBitwiseOperators": "off",
+        "noReactForwardRef": "off"
+      },
+      "correctness": {
+        "useExhaustiveDependencies": "off"
+      },
+      "security": {
+        "noDangerouslySetInnerHtml": "off"
+      },
+      "a11y": {
+        "noSvgWithoutTitle": "off",
+        "useAriaPropsSupportedByRole": "off",
+        "noStaticElementInteractions": "off",
+        "noNoninteractiveElementInteractions": "off",
+        "useKeyWithClickEvents": "off",
+        "useMediaCaption": "off",
+        "noLabelWithoutControl": "off"
+      }
+    }
+  }
+}

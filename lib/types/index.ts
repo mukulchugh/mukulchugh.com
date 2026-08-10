@@ -2,38 +2,44 @@
 // CENTRALIZED TYPE DEFINITIONS
 // ============================================
 
-import { links } from "../data";
+import type { links } from "../data";
 
 // Navigation & Section Types
 export type SectionName = (typeof links)[number]["name"];
 
 // Blog / Hashnode Types
-export interface Post {
+export interface PostHeading {
   id: string;
-  title: string;
-  slug: string;
-  brief: string;
-  content?: {
-    html: string;
-    markdown: string;
-  };
-  publishedAt: string;
-  readTimeInMinutes: number;
-  coverImage: {
-    url: string;
-  } | null;
+  level: 2 | 3;
+  text: string;
+}
+
+export interface Post {
   author?: {
     name: string;
     profilePicture: string;
   };
-  tags: Array<{
-    name: string;
-    slug: string;
-  }>;
+  brief: string;
+  content?: {
+    markdown: string;
+  };
+  coverImage: {
+    url: string;
+  } | null;
+  headings?: PostHeading[];
+  id: string;
+  publishedAt: string;
+  readTimeInMinutes: number;
   seo?: {
     title: string;
     description: string;
   };
+  slug: string;
+  tags: Array<{
+    name: string;
+    slug: string;
+  }>;
+  title: string;
 }
 
 export interface PageInfo {
@@ -42,27 +48,27 @@ export interface PageInfo {
 }
 
 export interface PostsResponse {
-  posts: Post[];
   pageInfo: PageInfo;
+  posts: Post[];
 }
 
 // Experience Types
 export interface Experience {
-  title: string;
-  description?: string[];
   company: string;
   date: string;
-  location: string;
+  description?: string[];
   icon: string;
+  location: string;
+  title: string;
 }
 
 // Project Types
 export interface Project {
-  title: string;
   description: string;
-  tags: string[];
   imageUrl: string;
   link?: string;
+  tags: string[];
+  title: string;
 }
 
 // Skill Types
@@ -80,20 +86,20 @@ export interface SkillSet {
 
 // UI Component Types
 export interface CardItem {
-  icon: string;
-  title: string;
-  subtitle: string;
   date: string;
-  location: string;
   description?: string[];
+  icon: string;
+  location: string;
+  subtitle: string;
+  title: string;
 }
 
 // Context Types
 export interface ActiveSectionContextType {
   activeSection: SectionName;
   setActiveSection: React.Dispatch<React.SetStateAction<SectionName>>;
-  timeOfLastClick: number;
   setTimeOfLastClick: React.Dispatch<React.SetStateAction<number>>;
+  timeOfLastClick: number;
 }
 
 // Props Types (commonly used)

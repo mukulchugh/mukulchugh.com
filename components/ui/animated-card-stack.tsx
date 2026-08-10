@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { IconArrowRight, IconClock } from "@tabler/icons-react";
+import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
-import { IconArrowRight, IconClock } from "@tabler/icons-react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import type { Post } from "@/lib/hashnode";
+import type { Post } from "@/lib/blog";
 
 interface Card {
   id: number;
@@ -20,31 +20,33 @@ const positionStyles = [
 ];
 
 const exitAnimation = {
-  y: 340,
   scale: 1,
+  y: 340,
   zIndex: 10,
 };
 
 const enterAnimation = {
-  y: -16,
   scale: 0.9,
+  y: -16,
 };
 
 function CardContent({ post }: { post: Post }) {
   return (
     <div className="flex h-full w-full flex-col gap-3">
-      <div className="-outline-offset-1 flex h-[160px] w-full items-center justify-center overflow-hidden rounded-xl outline outline-black/10 dark:outline-white/10">
+      <div className="-outline-offset-1 flex h-[160px] w-full items-center justify-center overflow-hidden rounded-none outline outline-black/10 dark:outline-white/10">
         {post.coverImage?.url ? (
           <Image
-            src={post.coverImage.url}
             alt={post.title}
-            width={400}
-            height={160}
             className="h-full w-full select-none object-cover"
+            height={160}
+            src={post.coverImage.url}
+            width={400}
           />
         ) : (
-          <div className="h-full w-full bg-gradient-to-br from-[#dd7bbb] via-[#d79f1e] to-[#5a922c] flex items-center justify-center">
-            <span className="text-white text-lg font-bold text-center px-4 line-clamp-2">{post.title}</span>
+          <div className="h-full w-full bg-gradient-to-br from-zinc-800 via-zinc-700 to-zinc-900 flex items-center justify-center">
+            <span className="text-white text-lg font-bold text-center px-4 line-clamp-2">
+              {post.title}
+            </span>
           </div>
         )}
       </div>
@@ -55,16 +57,22 @@ function CardContent({ post }: { post: Post }) {
           {post.tags?.[0] && (
             <>
               <span>•</span>
-              <span className="px-2 py-0.5 rounded-full bg-muted text-xs">{post.tags[0].name}</span>
+              <span className="px-2 py-0.5 rounded-none bg-muted text-xs">
+                {post.tags[0].name}
+              </span>
             </>
           )}
         </div>
-        <span className="font-medium text-foreground line-clamp-2 text-sm">{post.title}</span>
-        <span className="text-xs text-muted-foreground line-clamp-2">{post.brief}</span>
+        <span className="font-medium text-foreground line-clamp-2 text-sm">
+          {post.title}
+        </span>
+        <span className="text-xs text-muted-foreground line-clamp-2">
+          {post.brief}
+        </span>
         <Link
-          href={`/blog/${post.slug}`}
-          className="mt-1 flex w-fit items-center gap-1 text-xs font-medium text-foreground hover:text-[#dd7bbb] transition-colors"
           aria-label={`Read article: ${post.title}`}
+          className="mt-1 flex w-fit items-center gap-1 text-xs font-medium text-foreground/70 hover:text-foreground transition-colors"
+          href={`/blog/${post.slug}`}
         >
           Read article
           <IconArrowRight className="h-3 w-3" />
@@ -91,22 +99,22 @@ function AnimatedCard({
 
   return (
     <motion.div
-      key={card.id}
-      initial={initialAnim}
-      animate={{ y, scale }}
+      animate={{ scale, y }}
+      className="absolute flex h-[320px] w-[280px] items-center justify-center overflow-hidden rounded-t-none border-x border-t border-border bg-card p-1.5 shadow-lg will-change-transform sm:w-[320px]"
       exit={exitAnim}
-      transition={{
-        type: "spring",
-        duration: 1,
-        bounce: 0,
-      }}
+      initial={initialAnim}
+      key={card.id}
       style={{
-        zIndex,
+        bottom: 0,
         left: "50%",
         x: "-50%",
-        bottom: 0,
+        zIndex,
       }}
-      className="absolute flex h-[320px] w-[280px] items-center justify-center overflow-hidden rounded-t-xl border-x border-t border-border bg-card p-1.5 shadow-lg will-change-transform sm:w-[320px]"
+      transition={{
+        bounce: 0,
+        duration: 1,
+        type: "spring",
+      }}
     >
       <CardContent post={card.post} />
     </motion.div>
@@ -129,7 +137,9 @@ export default function AnimatedCardStack({ posts }: AnimatedCardStackProps) {
   const [currentPostIndex, setCurrentPostIndex] = useState(2);
 
   const handleAnimate = () => {
-    if (posts.length < 3) return;
+    if (posts.length < 3) {
+      return;
+    }
 
     setIsAnimating(true);
 
@@ -155,17 +165,22 @@ export default function AnimatedCardStack({ posts }: AnimatedCardStackProps) {
       <div className="relative h-[380px] w-full overflow-hidden">
         <AnimatePresence initial={false}>
           {cards.slice(0, 3).map((card, index) => (
-            <AnimatedCard key={card.id} card={card} index={index} isAnimating={isAnimating} />
+            <AnimatedCard
+              card={card}
+              index={index}
+              isAnimating={isAnimating}
+              key={card.id}
+            />
           ))}
         </AnimatePresence>
       </div>
 
       <div className="relative z-10 -mt-px flex w-full items-center justify-center border-t border-border py-4">
         <Button
-          variant="outline"
-          size="sm"
-          onClick={handleAnimate}
           className="gap-1"
+          onClick={handleAnimate}
+          size="sm"
+          variant="outline"
         >
           Next Post
           <IconArrowRight className="h-4 w-4" />

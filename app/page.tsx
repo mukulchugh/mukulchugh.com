@@ -1,64 +1,14 @@
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
-import dynamic from "next/dynamic";
-
-// Dynamic imports with Next.js for better chunk splitting
-// Priority: Intro loads first (above fold), others load as user scrolls
-const Intro = dynamic(() => import("@/components/intro"), {
-  loading: () => <SectionSkeleton minHeight="100vh" />,
-});
-
-const About = dynamic(() => import("@/components/about"), {
-  loading: () => <SectionSkeleton />,
-});
-
-const Projects = dynamic(() => import("@/components/projects"), {
-  loading: () => <SectionSkeleton />,
-});
-
-const BlogSection = dynamic(() => import("@/components/blog-section"), {
-  loading: () => <SectionSkeleton />,
-});
-
-const Experience = dynamic(() => import("@/components/experience"), {
-  loading: () => <SectionSkeleton />,
-});
-
-const LetsWorkTogether = dynamic(
-  () => import("@/components/ui/lets-work-section").then((mod) => mod.LetsWorkTogether),
-  { loading: () => <SectionSkeleton minHeight="200px" /> }
-);
-
-const minHeightClasses: Record<string, string> = {
-  "100vh": "min-h-screen",
-  "400px": "min-h-[400px]",
-  "200px": "min-h-[200px]",
-};
-
-function SectionSkeleton({ minHeight = "400px" }: { minHeight?: string }) {
-  return (
-    <section className={`w-full max-w-4xl mb-20 scroll-mt-28 ${minHeightClasses[minHeight] || "min-h-[400px]"}`}>
-      <div className="animate-pulse space-y-4">
-        <div className="h-8 bg-gray-800 rounded w-1/3" />
-        <div className="h-4 bg-gray-800 rounded w-2/3" />
-        <div className="h-4 bg-gray-800 rounded w-1/2" />
-      </div>
-    </section>
-  );
-}
+import { HomeBento } from "@/components/home-bento";
+import { getAllPosts } from "@/lib/blog";
 
 export default function Home() {
+  const posts = getAllPosts();
+
   return (
-    <main className="flex flex-col items-center px-4">
-      {/* Dynamic imports handle their own loading states */}
-      <Intro />
-      <About />
-      <Projects />
-      <BlogSection />
-      <Experience />
-      <LetsWorkTogether />
-      <SpeedInsights />
-      <Analytics />
+    <main className="dock-safe-bottom overflow-x-hidden px-3 pt-2 sm:px-5 lg:px-6">
+      <div className="mx-auto w-full min-w-0 max-w-[1400px]">
+        <HomeBento posts={posts} />
+      </div>
     </main>
   );
 }

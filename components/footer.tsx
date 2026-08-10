@@ -1,52 +1,78 @@
+import {
+  IconBook,
+  IconBrandGithub,
+  IconBrandLinkedin,
+  IconBrandX,
+} from "@tabler/icons-react";
 import Link from "next/link";
-import { siteConfig, footerContent, links, footerSocialLinks } from "@/lib/data";
+import { ThemeLogo } from "@/components/theme-logo";
+import {
+  footerContent,
+  footerSocialLinks,
+  links,
+  siteConfig,
+} from "@/lib/data";
+
+const FOOTER_ICONS: Record<string, typeof IconBrandX> = {
+  Blog: IconBook,
+  GitHub: IconBrandGithub,
+  LinkedIn: IconBrandLinkedin,
+  Twitter: IconBrandX,
+};
 
 export default function Footer() {
   return (
-    <footer className="py-16 pb-28 min-h-[400px]">
-      <div className="mx-auto max-w-4xl px-6">
+    <footer className="py-10 sm:py-16 pb-24 sm:pb-28 min-h-fit sm:min-h-[360px]">
+      <div className="mx-auto max-w-4xl px-4 sm:px-6">
         <Link
-          href="/"
           aria-label="go home"
-          className="mx-auto block size-fit"
-        />
+          className="mx-auto flex size-fit items-center justify-center"
+          href="/"
+        >
+          <ThemeLogo height={28} width={28} />
+        </Link>
 
-        <div className="my-8 flex flex-wrap justify-center gap-6">
-          {links.map((link, index) => (
-            <Link
-              key={index}
-              href={link.hash}
-              className="text-muted-foreground hover:text-primary block duration-150"
-            >
-              <span>{link.name}</span>
-            </Link>
-          ))}
-        </div>
-
-        <div className="my-8 flex flex-wrap justify-center gap-6 text-sm">
-          {footerSocialLinks.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={link.ariaLabel}
-              className="text-muted-foreground hover:text-primary block"
-            >
-              <svg
-                className="size-6"
-                xmlns="http://www.w3.org/2000/svg"
-                width="1em"
-                height="1em"
-                viewBox="0 0 24 24"
+        {/* Nav links — touch targets via min-h + py */}
+        <nav aria-label="Footer navigation">
+          <div className="my-8 flex flex-wrap justify-center gap-2">
+            {links.map((link, index) => (
+              <Link
+                className="inline-flex items-center px-3 py-2.5 min-h-[44px] text-[14px]
+                           text-muted-foreground [@media(hover:hover)]:hover:text-foreground
+                           transition-colors duration-150"
+                href={link.hash}
+                key={index}
               >
-                <path fill="currentColor" d={link.path} />
-              </svg>
-            </Link>
-          ))}
+                {link.name}
+              </Link>
+            ))}
+          </div>
+        </nav>
+
+        {/* Social links — 44×44 touch targets */}
+        <div className="my-6 flex flex-wrap justify-center gap-3">
+          {footerSocialLinks.map((link) => {
+            const Icon = FOOTER_ICONS[link.name];
+            return (
+              <Link
+                aria-label={link.ariaLabel}
+                className="flex items-center justify-center w-11 h-11 rounded-none
+                           text-muted-foreground [@media(hover:hover)]:hover:text-foreground
+                           [@media(hover:hover)]:hover:bg-foreground/[0.05]
+                           transition-colors duration-150 active:bg-foreground/[0.07]"
+                href={link.href}
+                key={link.name}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                <Icon aria-hidden="true" className="size-5" />
+              </Link>
+            );
+          })}
         </div>
 
-        <span className="text-muted-foreground block text-center text-sm">
+        {/* Copyright — meta 12px */}
+        <span className="text-muted-foreground block text-center text-[12px]">
           &copy; {new Date().getFullYear()} {siteConfig.name}.{" "}
           {footerContent.copyright}
         </span>
