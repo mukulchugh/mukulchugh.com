@@ -1,3 +1,9 @@
+import {
+  IconBook,
+  IconBrandGithub,
+  IconBrandLinkedin,
+  IconBrandX,
+} from "@tabler/icons-react";
 import Link from "next/link";
 import { ThemeLogo } from "@/components/theme-logo";
 import {
@@ -6,6 +12,13 @@ import {
   links,
   siteConfig,
 } from "@/lib/data";
+
+const FOOTER_ICONS: Record<string, typeof IconBrandX> = {
+  Blog: IconBook,
+  GitHub: IconBrandGithub,
+  LinkedIn: IconBrandLinkedin,
+  Twitter: IconBrandX,
+};
 
 export default function Footer() {
   return (
@@ -38,30 +51,24 @@ export default function Footer() {
 
         {/* Social links — 44×44 touch targets */}
         <div className="my-6 flex flex-wrap justify-center gap-3">
-          {footerSocialLinks.map((link) => (
-            <Link
-              aria-label={link.ariaLabel}
-              className="flex items-center justify-center w-11 h-11 rounded-none
-                         text-muted-foreground [@media(hover:hover)]:hover:text-foreground
-                         [@media(hover:hover)]:hover:bg-foreground/[0.05]
-                         transition-colors duration-150 active:bg-foreground/[0.07]"
-              href={link.href}
-              key={link.name}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              <svg
-                aria-hidden="true"
-                className="size-5"
-                height="1em"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
+          {footerSocialLinks.map((link) => {
+            const Icon = FOOTER_ICONS[link.name];
+            return (
+              <Link
+                aria-label={link.ariaLabel}
+                className="flex items-center justify-center w-11 h-11 rounded-none
+                           text-muted-foreground [@media(hover:hover)]:hover:text-foreground
+                           [@media(hover:hover)]:hover:bg-foreground/[0.05]
+                           transition-colors duration-150 active:bg-foreground/[0.07]"
+                href={link.href}
+                key={link.name}
+                rel="noopener noreferrer"
+                target="_blank"
               >
-                <path d={link.path} fill="currentColor" />
-              </svg>
-            </Link>
-          ))}
+                <Icon aria-hidden="true" className="size-5" />
+              </Link>
+            );
+          })}
         </div>
 
         {/* Copyright — meta 12px */}
