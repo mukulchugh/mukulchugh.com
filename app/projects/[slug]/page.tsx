@@ -1,66 +1,146 @@
 import {
   IconArrowLeft,
+  IconArrowUpRight,
+  IconBrandFirebase,
   IconBrandGithub,
+  IconBrandGolang,
+  IconBrandGraphql,
+  IconBrandNextjs,
+  IconBrandOpenSource,
+  IconBrandReact,
+  IconBrandStripe,
+  IconBrandSwift,
+  IconBrandTailwind,
+  IconBrandTypescript,
+  IconChartLine,
+  IconCloud,
+  IconCode,
+  IconCpu,
+  IconDatabase,
+  IconDeviceDesktop,
+  IconDeviceMobile,
+  IconDeviceWatch,
   IconExternalLink,
+  IconHeart,
   IconLock,
-  IconTag,
+  IconMicrophone,
+  IconNetwork,
+  IconPalette,
+  IconServer,
+  IconStack2,
+  IconUsers,
 } from "@tabler/icons-react";
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CanvasGrain } from "@/components/canvas-grain";
+import { BrandBar } from "@/components/bento/brand-bar";
+import { CTATile } from "@/components/bento/cta-tile";
 import { buttonVariants } from "@/components/ui/button";
-import { accentColorForTags, topicFamilyFor } from "@/lib/blog-topic";
 import { siteConfig } from "@/lib/data";
 import {
   getAllProjectSlugs,
   getProjectBySlug,
   getVisibleProjects,
+  projectLinkLabel,
   slugifyProjectTitle,
 } from "@/lib/projects";
-import { PAGE_TITLE } from "@/lib/typography";
 import { cn } from "@/lib/utils";
+import {
+  HealthPrinciple,
+  ProjectVisuals,
+  projectReferenceAssets,
+  SkillsWorkflow,
+} from "./project-visuals";
 
 interface ProjectPageProps {
   params: Promise<{ slug: string }>;
 }
 
-// Human-readable label per generative-pattern family — purely presentational,
-// derived from the same tag-matching used by CoverCanvas/PostCover.
-const PATTERN_LABELS: Partial<Record<string, string>> = {
-  circuit: "Engineering & Infrastructure",
-  graph: "AI & Agents",
-  grid: "Mobile & Platform",
-  path: "Product & Career",
+// Editorial headings describe the existing public record, not outcomes or metrics.
+const overviewTitles: Record<string, string> = {
+  altr: "A product direction in progress.",
+  brik: "One codebase. Native surfaces.",
+  "cryptomedia-cryptocurrency-tracker": "Markets and your watchlist.",
+  ferry: "Your Watch. Your Mac microphone.",
+  heroapp: "From idea to a working app.",
+  "moshi-health": "Reflection over time.",
+  "moshi-personal-agent-fleet": "A personal workspace for thinking and doing.",
+  openkvm: "One keyboard. Two Macs.",
+  pulse: "One gateway across the team’s tools.",
+  "quivly-agents": "From context to operational work.",
+  "quivly-design-language": "A shared language for product.",
+  "quivly-platform": "Product surfaces and the systems behind them.",
+  "quivly-skills": "Skills for the work after the sale.",
+  "rca-tool-grafana-plugin": "Helping engineers find the why.",
+  tethr: "Agents propose. People decide.",
+  "zendash-global-admin-dashboard": "One dashboard. Many teams.",
+  zepeats: "From browsing to delivery.",
 };
 
-function withAlpha(rgb: string, alpha: number): string {
-  return rgb.replace("rgb(", "rgba(").replace(")", `, ${alpha})`);
-}
+const focusPanels: Record<string, { title: string; body: string }> = {
+  "cryptomedia-cryptocurrency-tracker": {
+    body: "Live market data from CoinGecko. A personal watchlist backed by Firebase.",
+    title: "Explore the project.",
+  },
+  "moshi-personal-agent-fleet": {
+    body: "Memory. Research. Reflection. A private workspace built for my own use.",
+    title: "A more thoughtful you.",
+  },
+  tethr: {
+    body: "Agents propose attributable changes. People retain the final decision.",
+    title: "Propose. Review. Release.",
+  },
+};
 
-// The hero graphic is the project's own name, not a generative pattern —
-// per the owner's direction, project thumbnails/covers should be
-// text-forward. Using just the first word keeps the display type legible
-// at oversized sizes even for longer, multi-word titles.
-function heroWordFor(title: string): string {
-  const [first] = title.trim().split(/\s+/);
-  return first ?? title;
-}
-
-// Splits a description into its lead sentence (pull-quote treatment) and the
-// remaining sentence(s), if any — a restructuring of the existing copy, not
-// new content. Falls back to the whole string as the lead when there's only
-// one sentence.
-function splitLeadSentence(description: string): {
-  lead: string;
-  rest: string | null;
-} {
-  const match = description.match(/^(.*?[.!?])\s+(.*)$/s);
-  if (!match) {
-    return { lead: description, rest: null };
-  }
-  return { lead: match[1], rest: match[2] };
-}
+const technologyIcons: Record<string, typeof IconCode> = {
+  "Agent Skills": IconStack2,
+  "AI Agents": IconCpu,
+  Apollo: IconNetwork,
+  "Apple Watch": IconDeviceWatch,
+  Audio: IconMicrophone,
+  Backend: IconServer,
+  Bonjour: IconNetwork,
+  ChartJS: IconChartLine,
+  "CoinGecko API": IconChartLine,
+  Collaboration: IconUsers,
+  "Core Audio": IconMicrophone,
+  "Customer Success": IconUsers,
+  "Design Systems": IconPalette,
+  Expo: IconDeviceMobile,
+  Firebase: IconBrandFirebase,
+  "Full Stack": IconStack2,
+  Golang: IconBrandGolang,
+  "Google Cloud": IconCloud,
+  Grafana: IconChartLine,
+  GraphQL: IconBrandGraphql,
+  HealthKit: IconHeart,
+  "Human-in-the-loop": IconUsers,
+  "Jetpack Compose": IconDeviceMobile,
+  "Long-term Memory": IconDatabase,
+  MCP: IconNetwork,
+  Mobile: IconDeviceMobile,
+  "Multi-Agent Systems": IconNetwork,
+  macOS: IconDeviceDesktop,
+  Networking: IconNetwork,
+  NextJS: IconBrandNextjs,
+  "Open Source": IconBrandOpenSource,
+  "Private health product": IconLock,
+  "Private infrastructure": IconServer,
+  "Private product work": IconLock,
+  "Private project": IconLock,
+  "Private venture": IconLock,
+  "Product Design": IconPalette,
+  React: IconBrandReact,
+  "React Native": IconBrandReact,
+  Stripe: IconBrandStripe,
+  Swift: IconBrandSwift,
+  SwiftUI: IconDeviceMobile,
+  TailwindCSS: IconBrandTailwind,
+  TypeScript: IconBrandTypescript,
+  VPS: IconServer,
+  watchOS: IconDeviceWatch,
+};
 
 export function generateStaticParams() {
   return getAllProjectSlugs().map((slug) => ({ slug }));
@@ -71,11 +151,7 @@ export async function generateMetadata({
 }: ProjectPageProps): Promise<Metadata> {
   const { slug } = await params;
   const project = getProjectBySlug(slug);
-
-  if (!project) {
-    return { title: "Project Not Found" };
-  }
-
+  if (!project) return { title: "Project Not Found" };
   return {
     alternates: { canonical: `/projects/${slug}` },
     description: project.description,
@@ -85,312 +161,380 @@ export async function generateMetadata({
       type: "website",
       url: `${siteConfig.siteUrl}/projects/${slug}`,
     },
-    title: `${project.title} | ${siteConfig.name}`,
+    title: project.title,
   };
-}
-
-function NavCard({
-  title,
-  slug,
-  direction,
-}: {
-  direction: "prev" | "next";
-  slug: string;
-  title: string;
-}) {
-  const isPrev = direction === "prev";
-  return (
-    <Link
-      className={cn(
-        "group flex flex-1 flex-col gap-2 rounded-none border border-border p-5",
-        "min-h-[44px] transition-colors duration-150",
-        "[@media(hover:hover)]:hover:border-border [@media(hover:hover)]:hover:bg-muted",
-        isPrev ? "items-start" : "items-end text-right"
-      )}
-      href={`/projects/${slug}`}
-    >
-      <span className="ui-label text-muted-foreground">
-        {isPrev ? "← Previous" : "Next →"}
-      </span>
-      <span
-        className={cn(
-          "font-syne",
-          "text-[15px] font-semibold text-foreground leading-snug line-clamp-2"
-        )}
-      >
-        {title}
-      </span>
-    </Link>
-  );
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
   const { slug } = await params;
   const project = getProjectBySlug(slug);
-
-  if (!project) {
-    notFound();
-  }
-
+  if (!project) notFound();
   const visible = getVisibleProjects();
-  const index = visible.findIndex((p) => p.title === project.title);
-  const prev = index > 0 ? visible[index - 1] : null;
-  const next = index < visible.length - 1 ? visible[index + 1] : null;
-
-  const accent = accentColorForTags(project.tags);
-  const accentSoft = withAlpha(accent, 0.4);
-  const family = topicFamilyFor(project.tags);
-  const eyebrow =
-    (family && PATTERN_LABELS[family.pattern]) || "Independent project";
-  const { lead, rest } = splitLeadSentence(project.description);
-  const heroWord = heroWordFor(project.title);
-  const isOpenSource = Boolean(project.github);
-  const hasDemo = Boolean(project.demo);
+  const index = visible.findIndex((entry) => entry.title === project.title);
+  const previous = index > 0 ? visible[index - 1] : null;
+  const next = visible[(index + 1) % visible.length];
+  const nextSlug = slugifyProjectTitle(next.title);
+  const longTitle = project.title.length > 20;
+  const hasLinks = Boolean(project.github || project.demo);
+  const focus = focusPanels[slug];
+  const skills = slug === "quivly-skills";
+  const health = slug === "moshi-health";
 
   return (
-    <main className="w-full py-12 sm:py-20 lg:py-28">
-      <div className="container mx-auto max-w-3xl px-4 sm:px-6">
-        <Link
-          className="mb-10 inline-flex items-center gap-2 py-2 text-[14px] text-muted-foreground
-                     transition-colors [@media(hover:hover)]:hover:text-foreground"
-          href="/#projects"
-        >
-          <IconArrowLeft className="h-4 w-4" />
-          Back to Projects
-        </Link>
-
-        {/* Eyebrow — topic family + position in the project set, both derived from real data */}
-        <div className="mb-4 flex flex-wrap items-center gap-x-3 gap-y-1">
-          <span className="inline-flex items-center gap-2">
-            <span
-              aria-hidden="true"
-              className="h-1.5 w-1.5 rounded-none"
-              style={{ background: accent }}
-            />
-            <span className="ui-label text-muted-foreground">{eyebrow}</span>
-          </span>
-          <span className="ui-label text-muted-foreground/40">
-            {String(index + 1).padStart(2, "0")} /{" "}
-            {String(visible.length).padStart(2, "0")}
-          </span>
-        </div>
-
-        <h1
+    <main className="bento-page">
+      <BrandBar />
+      <div className="flex flex-col gap-3">
+        <div
           className={cn(
-            "font-syne",
-            "mb-5 break-words font-black leading-[1.08] tracking-tight text-foreground"
+            "grid gap-3",
+            slug === "altr" ? "md:grid-cols-[.85fr_1.15fr]" : "md:grid-cols-2"
           )}
-          style={{ fontSize: PAGE_TITLE }}
         >
-          {project.title}
-        </h1>
-
-        {/* Status meta — directly derivable from github/demo presence, no invented facts */}
-        <div className="mb-10 flex flex-wrap items-center gap-3 sm:gap-6 text-[12px] text-muted-foreground">
-          <div className="flex items-center gap-2">
-            {isOpenSource ? (
-              <IconBrandGithub className="h-3.5 w-3.5" />
-            ) : (
-              <IconLock className="h-3.5 w-3.5" />
-            )}
-            <span>{isOpenSource ? "Open source" : "Closed source"}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <IconExternalLink className="h-3.5 w-3.5" />
-            <span>{hasDemo ? "Live demo available" : "No public demo"}</span>
-          </div>
-        </div>
-
-        <div className="relative mb-12 aspect-[16/7] overflow-hidden rounded-none border border-border">
-          <div
-            className="absolute inset-0"
-            style={{
-              background: "linear-gradient(150deg, #0a0a0c 0%, #1c1c20 100%)",
-            }}
-          />
-          {/* Topic tint — same recipe as PostCover's hero, reflects the project's subject */}
-          {family && (
-            <div
-              aria-hidden="true"
-              className="absolute inset-0 pointer-events-none"
-              style={{
-                background: `radial-gradient(120% 90% at 15% 100%, ${family.tint} 0%, transparent 60%)`,
-              }}
-            />
-          )}
-          <div
-            aria-hidden="true"
-            className="absolute -top-24 -left-24 h-[420px] w-[420px] rounded-none"
-            style={{
-              background:
-                "radial-gradient(circle at 30% 30%, rgba(255,255,255,0.06) 0%, transparent 62%)",
-            }}
-          />
-          {/* Per-project accent glow — content-seeded, same convention as the homepage project grid */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -right-16 -bottom-16 h-64 w-64 rounded-none opacity-[0.16] blur-3xl"
-            style={{ background: accent }}
-          />
-          <CanvasGrain />
-
-          {/* Text-forward hero mark — the project's own name is the visual,
-              in place of the blog's generative constellation pattern (per
-              the owner's direction: projects use type, not pattern-art).
-              Oversized font-syne wordmark, gradient-tinted with the topic
-              accent, clipped by the banner's overflow-hidden so long titles
-              bleed off the trailing edge instead of shrinking to fit. */}
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 flex items-center overflow-hidden pl-5 pr-2 sm:pl-8"
-          >
-            <span
+          <section className="bento-surface flex flex-col p-5 sm:p-6 md:p-[1.7cqw]">
+            <div className="flex items-center justify-between gap-3">
+              <span className="bento-label">01 / Project</span>
+              <Link
+                className="inline-flex min-h-11 items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
+                href="/#projects"
+              >
+                <IconArrowLeft aria-hidden="true" size={14} /> All projects
+              </Link>
+            </div>
+            <h1
               className={cn(
-                "font-syne",
-                "block whitespace-nowrap font-black leading-[0.85] tracking-[-0.045em]"
+                "my-5 break-words font-extrabold leading-[1.02] tracking-[-.04em] md:my-[2.3cqw]",
+                longTitle
+                  ? "text-[clamp(30px,4.5cqw,64px)]"
+                  : "text-[clamp(30px,5.4cqw,74px)]"
               )}
-              style={{
-                backgroundClip: "text",
-                backgroundImage: `linear-gradient(115deg, ${accent} 0%, ${accentSoft} 60%, rgba(255,255,255,0.12) 100%)`,
-                color: "transparent",
-                fontSize: "clamp(3.25rem, 13vw, 8.5rem)",
-                WebkitBackgroundClip: "text",
-              }}
             >
-              {heroWord}
-            </span>
-          </div>
-
-          {/* Bottom fade for readability — matches PostCover's hero treatment */}
-          <div
-            aria-hidden="true"
-            className="absolute bottom-0 inset-x-0 h-16 pointer-events-none"
-            style={{
-              background:
-                "linear-gradient(to top, rgba(0,0,0,0.25) 0%, transparent 100%)",
-            }}
-          />
-
-          {/* Topic badge — top-right, reuses the same eyebrow label shown above the title */}
-          <span
-            className="absolute top-3 right-3 inline-flex items-center gap-1
-                       px-2 py-0.5 rounded-none
-                       bg-white/[0.1] border border-white/[0.15] backdrop-blur-sm
-                       ui-label text-white/70"
-          >
-            <IconTag aria-hidden="true" className="h-2.5 w-2.5" />
-            {eyebrow}
-          </span>
-
-          {/* Source status — bottom-left, same slot as PostCover's read-time label,
-              filled with the same real github/demo-derived fact used in the meta row below */}
-          <span className="ui-label absolute bottom-3 left-4 inline-flex items-center gap-1 text-white/50">
-            {isOpenSource ? (
-              <IconBrandGithub aria-hidden="true" className="h-2.5 w-2.5" />
-            ) : (
-              <IconLock aria-hidden="true" className="h-2.5 w-2.5" />
-            )}
-            {isOpenSource ? "Open source" : "Closed source"}
-          </span>
+              {project.title}
+            </h1>
+            <p className="max-w-[48ch] text-[clamp(15px,1.7cqw,24px)] leading-[1.4] text-foreground/80">
+              {project.description}
+            </p>
+            <div className="mt-auto flex flex-wrap items-center gap-3 pt-6 md:pt-[3cqw]">
+              {project.github && (
+                <a
+                  className={cn(
+                    buttonVariants(),
+                    "bg-[#caff32] text-[#111] hover:bg-[#b9ef20]"
+                  )}
+                  href={project.github}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <IconBrandGithub aria-hidden="true" size={18} /> View source{" "}
+                  <IconArrowUpRight aria-hidden="true" size={16} />
+                </a>
+              )}
+              {project.demo && (
+                <a
+                  className={buttonVariants({ variant: "outline" })}
+                  href={project.demo}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  {projectLinkLabel(project.demo)}{" "}
+                  <IconExternalLink aria-hidden="true" size={16} />
+                </a>
+              )}
+              {!hasLinks && (
+                <span className="border border-border px-3 py-2 font-mono text-[11px] uppercase tracking-wide text-muted-foreground">
+                  No public links listed
+                </span>
+              )}
+            </div>
+          </section>
+          <figure className="bento-surface relative min-h-[280px] overflow-hidden bg-[#111] md:min-h-[39cqw]">
+            <Image
+              alt=""
+              className="object-contain"
+              fill
+              preload
+              sizes="(max-width: 767px) 96vw, 48vw"
+              src={projectReferenceAssets[slug]}
+            />
+            <figcaption className="absolute left-4 top-4 rounded-sm bg-black/70 px-2 py-1 font-mono text-[10px] uppercase tracking-wider text-white">
+              02 / Illustrative concept
+            </figcaption>
+          </figure>
         </div>
 
-        {/* Pull-quote — the description's lead sentence, restructured for hierarchy */}
-        <blockquote
-          className="mb-6 max-w-[62ch] border-l-2 pl-5 sm:pl-6"
-          style={{ borderColor: accentSoft }}
+        <div
+          className={cn(
+            "grid gap-3",
+            focus || skills
+              ? "md:grid-cols-[1.1fr_.7fr_1fr]"
+              : health
+                ? "md:grid-cols-[1.6fr_1fr]"
+                : "md:grid-cols-[1.1fr_1fr]"
+          )}
         >
-          <p
+          <section
             className={cn(
-              "font-syne",
-              "text-[1.375rem] font-medium leading-[1.35] tracking-tight text-foreground text-pretty sm:text-[1.625rem]"
+              "bento-surface relative overflow-hidden p-5 sm:p-6 md:p-[1.7cqw]",
+              health &&
+                "min-h-[440px] !bg-[#101112] text-white md:min-h-[43cqw]"
             )}
           >
-            {lead}
-          </p>
-        </blockquote>
-
-        {rest && (
-          <p className="mb-12 max-w-[62ch] text-[16px] leading-[1.8] text-foreground/75 text-pretty">
-            {rest}
-          </p>
-        )}
-
-        {project.tags.length > 0 && (
-          <section className="mb-8 rounded-none border border-border p-5 sm:p-6">
-            <h2 className="ui-label mb-5 text-muted-foreground">Stack</h2>
-            <ul className="grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-3">
-              {project.tags.map((tag, i) => (
-                <li className="flex items-center gap-2.5" key={tag}>
-                  <span className="ui-label tabular-nums text-muted-foreground/35">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span className="text-[13px] font-medium text-foreground/85">
-                    {tag}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
-
-        {(project.github || project.demo) && (
-          <div className="mb-16 flex flex-wrap gap-3">
-            {project.github && (
-              <a
-                className={cn(
-                  buttonVariants({ variant: "outline" }),
-                  "rounded-none"
-                )}
-                href={project.github}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                <IconBrandGithub className="h-4 w-4" />
-                View source
-              </a>
+            {health && (
+              <>
+                <Image
+                  alt=""
+                  className="object-cover object-right"
+                  fill
+                  sizes="(max-width: 767px) 95vw, 60vw"
+                  src="/design/projects/moshi-health-detail-1.png"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-transparent" />
+              </>
             )}
-            {project.demo && (
-              <a
+            <span
+              className={cn("bento-label relative", health && "!text-white/65")}
+            >
+              03 / Overview
+            </span>
+            <h2
+              className={cn(
+                "relative mb-5 mt-6 max-w-[18ch] break-words text-[clamp(26px,3.3cqw,46px)] font-extrabold leading-[1.02] tracking-[-.04em]",
+                health && "max-w-[85%] md:max-w-[60%]"
+              )}
+            >
+              {health
+                ? "A personal view of your health over time."
+                : overviewTitles[slug]}
+            </h2>
+            <p
+              className={cn(
+                "relative max-w-[56ch] text-[clamp(15px,1.5cqw,21px)] leading-[1.5] text-foreground/75",
+                health && "max-w-[85%] !text-white/80 md:max-w-[52%]"
+              )}
+            >
+              {project.description}
+            </p>
+            {health && (
+              <p className="relative mt-6 font-mono text-[9px] uppercase tracking-wider text-white/60">
+                Illustrative concept
+              </p>
+            )}
+          </section>
+          <div className="flex min-w-0 flex-col gap-3">
+            <section className="bento-surface flex-1 p-5 sm:p-6 md:p-[1.7cqw]">
+              <h2 className="bento-label">04 / Technologies & context</h2>
+              <ul
                 className={cn(
-                  buttonVariants({ variant: "secondary" }),
-                  "rounded-none"
+                  "mt-5 grid gap-2",
+                  focus || skills || health ? "grid-cols-1" : "grid-cols-2"
                 )}
-                href={project.demo}
-                rel="noopener noreferrer"
-                target="_blank"
               >
-                <IconExternalLink className="h-4 w-4" />
-                View demo
-              </a>
+                {project.tags.map((tag) => {
+                  const Icon = technologyIcons[tag] ?? IconCode;
+                  return (
+                    <li
+                      className="flex min-h-14 min-w-0 items-center gap-3 border-b border-border/60 py-2 text-[clamp(13px,1.2cqw,17px)] font-medium [overflow-wrap:anywhere] last:border-0"
+                      key={tag}
+                    >
+                      <span className="flex size-9 shrink-0 items-center justify-center rounded bg-muted">
+                        <Icon aria-hidden="true" className="size-5" />
+                      </span>
+                      {tag}
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+            {health && <HealthPrinciple />}
+          </div>
+          {skills && <SkillsWorkflow />}
+          {focus && (
+            <div className="flex min-w-0 flex-col gap-3">
+              <section
+                className={cn(
+                  "bento-surface relative flex flex-1 flex-col justify-between gap-6 overflow-hidden p-5 md:p-[1.7cqw]",
+                  slug !== "tethr" && "!bg-[#caff32] text-[#111]"
+                )}
+              >
+                {slug === "moshi-personal-agent-fleet" && (
+                  <div className="pointer-events-none absolute bottom-0 right-0 h-[58%] w-[55%]">
+                    <Image
+                      alt=""
+                      className="object-cover object-right"
+                      fill
+                      sizes="(max-width: 767px) 52vw, 18vw"
+                      src="/design/projects/quivly-skills-v2.png"
+                    />
+                  </div>
+                )}
+                <span className="relative font-mono text-[10px] uppercase tracking-wide opacity-65">
+                  {slug === "moshi-personal-agent-fleet" ? "Approach" : "Focus"}
+                </span>
+                <h2
+                  className={cn(
+                    "relative text-[clamp(26px,3.3cqw,46px)] font-extrabold leading-[1.02] tracking-[-.04em]",
+                    slug === "moshi-personal-agent-fleet" && "max-w-[8ch]"
+                  )}
+                >
+                  {focus.title}
+                </h2>
+                <p
+                  className={cn(
+                    "relative text-sm leading-relaxed opacity-80",
+                    slug === "moshi-personal-agent-fleet" &&
+                      "max-w-[10ch] font-mono text-xs uppercase leading-relaxed"
+                  )}
+                >
+                  {slug === "moshi-personal-agent-fleet"
+                    ? "Memory. Research. Reflection."
+                    : focus.body}
+                </p>
+                {slug === "tethr" && (
+                  <Image
+                    alt=""
+                    className="-mx-5 -mb-5 aspect-[2/1] w-[calc(100%+2.5rem)] max-w-none object-cover object-bottom md:-mx-[1.7cqw] md:-mb-[1.7cqw] md:w-[calc(100%+3.4cqw)]"
+                    height={1024}
+                    sizes="(max-width: 767px) 95vw, 32vw"
+                    src="/design/projects/tethr-focus-recovery.png"
+                    width={1536}
+                  />
+                )}
+                {project.demo && (
+                  <a
+                    className="inline-flex min-h-11 items-center justify-between gap-3 text-sm underline underline-offset-4"
+                    href={project.demo}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    {projectLinkLabel(project.demo)}
+                    <IconArrowUpRight aria-hidden="true" size={18} />
+                  </a>
+                )}
+                {project.github && (
+                  <a
+                    className="inline-flex min-h-11 items-center justify-between gap-3 text-sm underline underline-offset-4"
+                    href={project.github}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    View source
+                    <IconArrowUpRight aria-hidden="true" size={18} />
+                  </a>
+                )}
+              </section>
+              {slug === "moshi-personal-agent-fleet" && (
+                <section className="bento-surface p-5 md:p-[1.7cqw]">
+                  <h2 className="bento-label">Project note</h2>
+                  <p className="mt-5 max-w-[22ch] text-base leading-relaxed text-foreground/80">
+                    A private workspace built for my own use.
+                  </p>
+                </section>
+              )}
+            </div>
+          )}
+        </div>
+
+        <ProjectVisuals slug={slug} />
+
+        <nav
+          aria-label="Project navigation"
+          className="grid gap-3 md:grid-cols-[2fr_1fr]"
+        >
+          <Link
+            className="bento-surface group grid overflow-hidden transition-colors hover:bg-muted sm:grid-cols-[.55fr_1fr]"
+            href={`/projects/${nextSlug}`}
+          >
+            <div className="relative hidden min-h-[190px] overflow-hidden sm:block">
+              <Image
+                alt=""
+                className="object-cover transition-transform duration-300 group-hover:scale-105 motion-reduce:transform-none"
+                fill
+                sizes="30vw"
+                src={projectReferenceAssets[nextSlug]}
+              />
+            </div>
+            <div className="flex min-w-0 flex-col justify-center p-5 md:p-[2cqw]">
+              <span className="bento-label">07 / Next project</span>
+              <span className="mt-4 flex items-start justify-between gap-4">
+                <span className="min-w-0 break-words text-[clamp(24px,2.6cqw,36px)] font-extrabold leading-[1.1] tracking-tight">
+                  {next.title}
+                </span>
+                <IconArrowUpRight
+                  aria-hidden="true"
+                  className="shrink-0"
+                  size={24}
+                />
+              </span>
+            </div>
+          </Link>
+          <div className="bento-surface flex flex-col justify-between gap-5 p-5 md:p-[2cqw]">
+            <span className="bento-label">
+              08 / {hasLinks ? "Project links" : "Keep exploring"}
+            </span>
+            {hasLinks && (
+              <div className="grid gap-2">
+                {project.github && (
+                  <a
+                    className="flex min-h-12 items-center gap-3 rounded border border-border/60 px-3 py-2 text-sm hover:bg-muted"
+                    href={project.github}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <IconBrandGithub
+                      aria-hidden="true"
+                      className="size-5 shrink-0"
+                    />
+                    <span className="flex-1">Source code</span>
+                    <IconArrowUpRight
+                      aria-hidden="true"
+                      className="size-4 shrink-0"
+                    />
+                  </a>
+                )}
+                {project.demo && (
+                  <a
+                    className="flex min-h-12 items-center gap-3 rounded border border-border/60 px-3 py-2 text-sm hover:bg-muted"
+                    href={project.demo}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <IconExternalLink
+                      aria-hidden="true"
+                      className="size-5 shrink-0"
+                    />
+                    <span className="flex-1">
+                      {projectLinkLabel(project.demo)}
+                    </span>
+                    <IconArrowUpRight
+                      aria-hidden="true"
+                      className="size-4 shrink-0"
+                    />
+                  </a>
+                )}
+              </div>
+            )}
+            <Link
+              className="inline-flex min-h-11 items-center justify-between gap-3 text-sm underline underline-offset-4"
+              href="/#projects"
+            >
+              Explore all projects{" "}
+              <IconArrowUpRight aria-hidden="true" size={18} />
+            </Link>
+            {previous && (
+              <Link
+                className="inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+                href={`/projects/${slugifyProjectTitle(previous.title)}`}
+              >
+                <IconArrowLeft
+                  aria-hidden="true"
+                  className="shrink-0"
+                  size={16}
+                />{" "}
+                Previous: {previous.title}
+              </Link>
             )}
           </div>
-        )}
-
-        {(prev || next) && (
-          <nav
-            aria-label="Project navigation"
-            className="flex flex-col gap-3 border-t border-border pt-8 sm:flex-row"
-          >
-            {prev ? (
-              <NavCard
-                direction="prev"
-                slug={slugifyProjectTitle(prev.title)}
-                title={prev.title}
-              />
-            ) : (
-              <div aria-hidden="true" className="hidden flex-1 sm:block" />
-            )}
-            {next ? (
-              <NavCard
-                direction="next"
-                slug={slugifyProjectTitle(next.title)}
-                title={next.title}
-              />
-            ) : (
-              <div aria-hidden="true" className="hidden flex-1 sm:block" />
-            )}
-          </nav>
-        )}
+        </nav>
+        <CTATile />
       </div>
     </main>
   );
