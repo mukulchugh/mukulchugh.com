@@ -1,0 +1,586 @@
+[
+  {
+    "file": "public/design/agent-loop-home-reference.png",
+    "bytes": 2042565,
+    "sha256": "7a5823652dbece4dbd034cd808a496cd9b759decf1551d82320eb668f0a2e160",
+    "packSource": "assets/agent-loop-home-reference.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/articles/agent-stuck-detection-tool-loops-reference.png",
+    "bytes": 1661945,
+    "sha256": "32bf4cdeddb898048bb414238d86d0621516576fcace14dfed201f13494b96cd",
+    "packSource": "assets/articles/agent-stuck-detection-tool-loops-reference.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/articles/agent-suggested-actions-as-tools-reference.png",
+    "bytes": 1583267,
+    "sha256": "7e494ff51763afa61d1458035722ada68902b95814b2a82e3e66557796dd9b1b",
+    "packSource": "assets/articles/agent-suggested-actions-as-tools-reference.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/articles/agent-working-memory-injection-hygiene-reference.png",
+    "bytes": 1946653,
+    "sha256": "a58b4d9ce7e87e4c4179022920834c43d745fa477c4d5ac72a30af000d9ed04d",
+    "packSource": "assets/articles/agent-working-memory-injection-hygiene-reference.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/articles/brik-react-to-native-widgets-reference.png",
+    "bytes": 1475635,
+    "sha256": "dff472c94762e4f5a9a8eb33cf7c9ae6771f7e74ffb2a08dc8ab3ea3ac1a8ac3",
+    "packSource": "assets/articles/brik-react-to-native-widgets-reference.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/articles/checkpointing-agent-edits-without-touching-git-index-reference.png",
+    "bytes": 1702340,
+    "sha256": "10c0e9d0dd149a6172cd2289a3b9b2d58e49e7f47d1c44febe560a501a4a33cd",
+    "packSource": "assets/articles/checkpointing-agent-edits-without-touching-git-index-reference.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/articles/ferry-apple-watch-mac-mic-reference.png",
+    "bytes": 1480032,
+    "sha256": "b17e34e5641de3a001ab056816e08ab9290a7501f0cc07f552f5c8c222a35cd9",
+    "packSource": "assets/articles/ferry-apple-watch-mac-mic-reference.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/articles/human-in-the-loop-agent-plans-reference.png",
+    "bytes": 1555118,
+    "sha256": "df998f91df61ebdc7d97e944ab0a575bc585c489a2bdf84fcbafe346503857b9",
+    "packSource": "assets/articles/human-in-the-loop-agent-plans-reference.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/articles/mcp-gateway-for-team-tools-reference.png",
+    "bytes": 1665719,
+    "sha256": "e0c2d52c4dce2696e9f7cfd6b1d69c12bae1c5ea13cb9a4b200b8aaa81ad3858",
+    "packSource": "assets/articles/mcp-gateway-for-team-tools-reference.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/articles/mobile-lessons-from-swiggy-scale-detail-recovery.png",
+    "bytes": 1542717,
+    "sha256": "9f02ce27df44ea30ef8a6ba49c2a945666db01eb4a2c1def5a477376b046cfb9",
+    "packSource": "assets/articles/mobile-lessons-from-swiggy-scale-detail-recovery.png",
+    "relationship": "byte-identical",
+    "promptRecord": "Built-in image_gen provenance\nReference image: design-pack/pages/articles/mobile-lessons-from-swiggy-scale.png\nCanonical content read: content/blog/mobile-lessons-from-swiggy-scale.md\nNative dimensions: 1536x1024\nIntent: neutral illustrative phone concepts supporting the canonical article's empty/offline/degraded-state discussion, not real Swiggy UI or product evidence.\nExact prompt:\nUse case: stylized-concept\nAsset type: standalone supporting illustration for an editorial article about mobile engineering edge cases, native 1536x1024 landscape.\nInput image 1 is a full approved article page reference. Generate ONLY the supporting illustration found at middle-right beside article body: the scene with FOUR standing phones on a light gray-white floor. Do not recreate page layout, article title, body text, hero with pedestal phones, or footer.\nReference composition: four separate tall slim rounded smartphones in a diagonal procession from front-left to back-right, each screen clearly visible in three-quarter view, parallel orientations with thin silver metal side edges, soft realistic floor shadows. First black phone is nearest/front-left; second white phone is a little farther back/right; third black phone farther back/right; fourth white phone farthest/right. Preserve the soft pale seamless studio background and alternating black/white screens. Keep ample separation so all four states read independently, no collisions, no fused devices.\nScreen states, left to right: (1) normal successful content state, black screen with white neutral heading exactly 'Ready to go', two short gray neutral content strokes, and one lime rounded button without label; (2) empty state, white screen with delicate gray empty-container line icon, black heading exactly 'Nothing here yet', two pale gray content strokes; (3) offline state, black screen with gray disconnected Wi-Fi line icon, white heading exactly 'You are offline', two gray content strokes; (4) low-battery/degraded state, white screen with a black low-charge battery outline icon, black heading exactly 'Low battery', and two pale gray content strokes. Quiet, restrained typography, no other screen copy.\nMaterials and lighting: polished glass faces, subtle brushed metal bevels, white softbox lighting, pale floor reflections, realistic cinematic product-render detail. Palette only black, white, neutral gray and one lime button accent. The full set centered across frame with margins, devices not cropped.\nConstraints: illustrative conceptual screens, not screenshots or evidence of a real Swiggy product. No brand logos or names, no metrics, no performance claims, no invented product capabilities. No exterior text or captions, no article text, no UI outside the four devices, no extra phones, no pedestals.\n\nInspection: four separate visible phones, alternating black and white screens, normal/empty/offline/low-battery states legible, lime normal-state button, soft white scene. No brands or metrics. Known fidelity gaps: landscape composition expands spacing; device details and neutral screen labels are redrawn, with neutral headings replacing reference food/assurance copy."
+  },
+  {
+    "file": "public/design/articles/mobile-lessons-from-swiggy-scale-reference.png",
+    "bytes": 1415293,
+    "sha256": "07450240f95ade8e2e9cca49666482dd35064b4f85f95a5a1be28033a8cd3a34",
+    "packSource": "assets/articles/mobile-lessons-from-swiggy-scale-reference.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/articles/openkvm-one-keyboard-two-macs-reference.png",
+    "bytes": 1447577,
+    "sha256": "7599a007ab782199f72da070c14dcb2f2e4640f9e6d4ef31406956fcda884d91",
+    "packSource": "assets/articles/openkvm-one-keyboard-two-macs-reference.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/articles/phased-agent-turns-gather-analyze-synthesize-reference.png",
+    "bytes": 1680713,
+    "sha256": "c5244944d3830330235a9869baf50fcf5c82e74bfefaa7a15b4f7f2d652c747f",
+    "packSource": "assets/articles/phased-agent-turns-gather-analyze-synthesize-reference.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/articles/progressive-tool-results-transcript-chunks-reference.png",
+    "bytes": 1363475,
+    "sha256": "8163ea02e17fcf40dab4b30eb2079df39579749ee6736877b5aca682f080e138",
+    "packSource": "assets/articles/progressive-tool-results-transcript-chunks-reference.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/articles/quivly-skills-agent-expertise-reference.png",
+    "bytes": 1509694,
+    "sha256": "1359975b91aa08dfa99b35501856ba737bbda1c29899d30438c74b304ae3f12c",
+    "packSource": "assets/articles/quivly-skills-agent-expertise-reference.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/articles/self-hosted-personal-agent-fleet-reference.png",
+    "bytes": 1538335,
+    "sha256": "6641e17a7405440b44fe997b8676359e2588bdb9be6fa2972bd09cb0e59c81da",
+    "packSource": "assets/articles/self-hosted-personal-agent-fleet-reference.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/articles/skip-your-own-api-when-you-own-the-database-reference.png",
+    "bytes": 1575199,
+    "sha256": "734c7fd3b6d7825c4ea68596be57415548526187afcf652be44f75398afb6852",
+    "packSource": "assets/articles/skip-your-own-api-when-you-own-the-database-reference.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/brand/digital-moshai.webp",
+    "bytes": 2786,
+    "sha256": "04143e7437608e3272d813ee4a126168d6953ef53aea07645f4fefe7e6bda78c",
+    "packSource": "assets/brand/digital-moshai.webp",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/brand/guby-rogers.webp",
+    "bytes": 3658,
+    "sha256": "22bfff294ce567f28e19e7b92f768b32afa357f28b756b5d0f40da9b3ea713ca",
+    "packSource": "assets/brand/guby-rogers.webp",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/brand/heroapp.webp",
+    "bytes": 2292,
+    "sha256": "5bb763a4292df80dbd6ebbd83e6dd705b79c8a1e0ef01f93ffe8bab2b3f55361",
+    "packSource": "assets/brand/heroapp.webp",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/brand/instahomes.webp",
+    "bytes": 3724,
+    "sha256": "8240d556aab758c12f4cb1a4d76e8ec3b4d8b615a683b373e1bc24ffac57b094",
+    "packSource": "assets/brand/instahomes.webp",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/brand/logo-black.webp",
+    "bytes": 14487,
+    "sha256": "fefa264c3c3979ba865c750450c67ad48c725340ae3d34ebb9b5f9d51779b7d4",
+    "packSource": "assets/brand/logo-black.webp",
+    "relationship": "PNG image-data chunks identical; metadata differs"
+  },
+  {
+    "file": "public/design/brand/logo-white.webp",
+    "bytes": 14649,
+    "sha256": "70e68f373397a1a92c9725e7a495b33701444e5f95235cabc9ad7416095cfead",
+    "packSource": "assets/brand/logo-white.webp",
+    "relationship": "PNG image-data chunks identical; metadata differs"
+  },
+  {
+    "file": "public/design/brand/microsoft.webp",
+    "bytes": 2741,
+    "sha256": "cb12de9180b4c459de417447c5ae0d017f6d8ddeb96d10e40b04289ed583c120",
+    "packSource": "assets/brand/microsoft.webp",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/brand/mukul-original.webp",
+    "bytes": 1765471,
+    "sha256": "31b00d7805e4e39d193d4a5b8dfd3d8b6a8ab7967da68a9f280bc15c3a254b6c",
+    "packSource": "assets/brand/mukul-original.webp",
+    "relationship": "PNG image-data chunks identical; metadata differs"
+  },
+  {
+    "file": "public/design/brand/quivly-icon.ico",
+    "bytes": 14510,
+    "sha256": "93f94bf1e6646a8970553bbef4b032914efd44d9d3f5127d84e39c5e9f145d1c",
+    "packSource": "assets/brand/quivly-icon.ico",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/brand/quivly-wordmark-white.webp",
+    "bytes": 22086,
+    "sha256": "ece3e4fea7f5ca3bd5f9d736710fb96742f0f4d8dbfad280c86175308262b296",
+    "packSource": "assets/brand/quivly-wordmark-white.webp",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/brand/swiggy.webp",
+    "bytes": 2908,
+    "sha256": "86d5f388bc835e39555d820ee30141b35d60e43f1a0d96ea92397352ec37c84b",
+    "packSource": "assets/brand/swiggy.webp",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/brand/zenduty.webp",
+    "bytes": 2611,
+    "sha256": "0ca0d5a8c0c69f8c6d9c346fb06c9c77daf239e9773e5a312f96aa71848ecbb8",
+    "packSource": "assets/brand/zenduty.webp",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/brik-featured-reference.png",
+    "bytes": 1424163,
+    "sha256": "f9400adb842e61695ef581ff196bad8b6ae99b8352315b4c4387e185961cd910",
+    "packSource": "assets/brik-featured-reference.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/chrome-ribbon.png",
+    "bytes": 1722724,
+    "sha256": "64b9fb58554e45638eed4065b24e88a1006747da0b674bfd2ec39395c396caf0",
+    "packSource": "assets/chrome-ribbon-v2.png",
+    "relationship": "byte-identical",
+    "promptRecord": "Use case: precise-object-edit. Production hero artwork for the approved portfolio. Input image is the exact approved 397x243 hero artwork reference. Recreate this very same brushed chrome single twisting loop sculpture and its tiny chartreuse sphere, same silhouette, perspective, placement, dark charcoal backdrop, directional highlights, fine brushed grain and floor reflections. Remove ONLY the three text groups and thin card border, leaving the scene underneath clean. Preserve the sculpture exactly: tall rounded ribbon rises at x30%-60%, broad loop curls down to lower center and right, small lime sphere at x85% y69%. Do not turn it into a sideways figure-eight. No lettering, logo, text, labels, controls or new objects. Fill a landscape canvas matching reference ratio 397:243. Highest available native resolution; retain the composition precisely, no added margins."
+  },
+  {
+    "file": "public/design/contact-orbit-v2.png",
+    "bytes": 1525492,
+    "sha256": "ec9c57556c1a2a058e615e8dfe637ba55fd88f543913103feff0462d36ee79ea",
+    "packSource": "assets/contact-orbit-v2.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/database-layers-home-reference.png",
+    "bytes": 1567575,
+    "sha256": "c4d901b1bcc17084a997005dd3bda7251310db0751dea8c771fb0af9bfdd8ed1",
+    "packSource": "assets/database-layers-home-reference.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/error-reference.png",
+    "bytes": 1905537,
+    "sha256": "ab5c2c2ddab746cc4938127c9d2eb2a1963307793004a1eb2247249ac685273a",
+    "packSource": "assets/error-reference.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/location-map.png",
+    "bytes": 1516346,
+    "sha256": "d5f44e971c71c9a75575a3aaf623b81af6bb952a90b1b50182283ce48ff14d02",
+    "packSource": "assets/location-map.png",
+    "relationship": "PNG image-data chunks identical; metadata differs"
+  },
+  {
+    "file": "public/design/openkvm-featured-reference.png",
+    "bytes": 1640069,
+    "sha256": "78b0070ce7a2ec549c96531b30a4044d84ba87ddf01881451715801d696b535b",
+    "packSource": "assets/openkvm-featured-reference.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/projects/altr-detail-1.png",
+    "bytes": 1863303,
+    "sha256": "fbdd775cb04f8cb2a2992e995d64779d2a724fc2674047665d34e809863b14e9",
+    "packSource": "assets/projects/altr-detail-1.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/projects/altr-detail-2.png",
+    "bytes": 2223092,
+    "sha256": "e6276271fc656bd31c858039c3d0d42ae16d31b83d5cdd22555c8c469e944118",
+    "packSource": "assets/projects/altr-detail-2.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/projects/altr-reference.png",
+    "bytes": 1884923,
+    "sha256": "55728945c22dd6084bb1efa41a56dcc379ded6f48870c0934f99e8d57524ee8c",
+    "packSource": "assets/projects/altr-reference.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/projects/brik-detail-1.png",
+    "bytes": 1593179,
+    "sha256": "feb84b82e3bdb85827ffe0cd4e0ce7a4f90987e754b4e542918e6f539bb7432e",
+    "packSource": "assets/projects/brik-detail-1.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/projects/brik-detail-2.png",
+    "bytes": 1581784,
+    "sha256": "9da3ce441d36318d110d93ef30afd186f221b4007b29f69a259a169128bcb6d8",
+    "packSource": "assets/projects/brik-detail-2.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/projects/brik-reference.png",
+    "bytes": 1287292,
+    "sha256": "d589a0f9637684a10bac9817fdc272dcf8dca97ab808187d6080a9c95ebfbb12",
+    "packSource": "assets/projects/brik-reference.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/projects/cryptomedia-cryptocurrency-tracker-detail-1-recovery.png",
+    "bytes": 1535496,
+    "sha256": "502aa7234592550986c22845eb23de81e94a8b5ee53f328b2de211780acd4f54",
+    "packSource": "assets/projects/cryptomedia-cryptocurrency-tracker-detail-1-recovery.png",
+    "relationship": "byte-identical",
+    "promptRecord": "Built-in image_gen provenance\nReference: design-pack/pages/projects/cryptomedia-cryptocurrency-tracker.png\nNative dimensions: 1536x1024\nIntended use: Illustrative UI concept; not evidence of production UI or current market data.\nOriginal exact generation prompt:\nUse case: ui-mockup\nAsset type: standalone lower-panel illustrative interface asset for portfolio case study.\nInput image 1 is a full-page approved design reference. Generate ONLY the specified lower-panel artwork, faithfully redrawn at native high resolution, landscape 3:2 (1536x1024 or larger). Do not generate the full page, white surrounding card, website navigation, section numbers, or outer captions. This is explicitly an illustrative concept, not a real product screenshot or evidence. Match reference composition, black glass materials, fine bevels, soft light and restrained color. Do not invent brand logos or capabilities. Any existing marks may be faithfully preserved from reference only. No watermarks.\nTarget: lower left panel 06 / SCREENSHOT, inner dark market table artwork only. Flat front-on dark charcoal cryptocurrency interface filling canvas, crisp polished black glass cards with subtle blue edge light. Top navigation: existing small blue reference mark and 'Cryptomedia', 'Markets' active in blue, 'Watchlist', search field 'Search coins...', circular user icon at far right. Below, heading 'Top Cryptocurrencies'. Bordered table with columns '#', 'Name', 'Price', '24h', 'Market Cap', 'Chart', five rows Bitcoin BTC, Ethereum ETH, Solana SOL, BNB BNB, XRP XRP. Faithfully retain coin emblems from reference, prices $67,432.12, $3,248.91, $152.36, $582.14, $0.5213; small green gains, em dash market-cap placeholders; fine green sparklines in rightmost column. Reference data is illustrative, not current. Tiny bottom-left 'Illustrative concept'. Match reference compact dense table layout, no laptop hardware or extra dashboard cards.\n\nExact edit prompt:\nUse case: precise-object-edit. Input image is edit target. Change ONLY the small blue circular brand emblem immediately to the left of the word Cryptomedia in the top navigation: erase that emblem and fill its small footprint with the seamless matching dark navbar background. Retain the Cryptomedia wordmark in its exact position, no replacement logo or symbol. Everything else unchanged: preserve full 1536x1024 landscape composition, all text, table rows, coin emblems inside table, graphs, prices, colors, light, glass edges, background and tiny Illustrative concept caption. Do not redesign or shift any element.\n\nKnown fidelity gaps: AI-redrawn details, typography proportions, gray placeholder lengths, highlights and minor icon strokes vary from the reference; composition and semantic panel distinction retained. Cryptomedia blue brand emblem omitted after a targeted edit removed a drifted generated mark; wordmark retained."
+  },
+  {
+    "file": "public/design/projects/cryptomedia-cryptocurrency-tracker-detail-2-recovery.png",
+    "bytes": 1530051,
+    "sha256": "c8191db1fc5721a27eb423aac76a89779fa420723df5261a14b15274531713f2",
+    "packSource": "assets/projects/cryptomedia-cryptocurrency-tracker-detail-2-recovery.png",
+    "relationship": "byte-identical",
+    "promptRecord": "Built-in image_gen provenance\nReference: design-pack/pages/projects/cryptomedia-cryptocurrency-tracker.png\nNative dimensions: 1536x1024\nIntended use: Illustrative UI concept; not evidence of production UI or current market data.\nOriginal exact generation prompt:\nUse case: ui-mockup\nAsset type: standalone lower-panel illustrative interface asset for portfolio case study.\nInput image 1 is a full-page approved design reference. Generate ONLY the specified lower-panel artwork, faithfully redrawn at native high resolution, landscape 3:2 (1536x1024 or larger). Do not generate the full page, white surrounding card, website navigation, section numbers, or outer captions. This is explicitly an illustrative concept, not a real product screenshot or evidence. Match reference composition, black glass materials, fine bevels, soft light and restrained color. Do not invent brand logos or capabilities. Any existing marks may be faithfully preserved from reference only. No watermarks.\nTarget: lower right panel 07 / SCREENSHOT, inner dark coin detail artwork only. Flat front-on charcoal cryptocurrency interface filling canvas. Top nav existing blue reference mark with 'Cryptomedia', Markets, Watchlist, search 'Search coins...', circular user icon. Below left 'Back to markets'. Large orange Bitcoin emblem, 'Bitcoin BTC', '$67,432.12', green '+2.4% (24h)'. Right upper outlined button with star and 'Add to Watchlist'. Under coin heading small range tabs 1D active blue, 1W, 1M, 1Y, ALL. Large green detailed jagged price line chart beneath, faint green area fill and subtle grid, upward overall trajectory then pullback at end, time-axis labels. To its right a narrow dark glass statistics card with rows 'Market Cap', '24h Volume', 'Circulating Supply', 'Max Supply', 'All Time High', each right value an em dash as in reference. Tiny bottom-left 'Illustrative concept'. Preserve chart-left/statistics-right hierarchy, blue accent only for selected tab and brand mark. No market table, no laptop hardware. Data is illustrative reference data, not current.\n\nExact edit prompt:\nUse case: precise-object-edit. Input image is edit target. Change ONLY the small blue circular brand emblem immediately to the left of the word Cryptomedia in the top navigation: erase that emblem and fill its small footprint with seamless matching dark navbar background. Retain the Cryptomedia wordmark in its exact position, no replacement logo or symbol. Everything else unchanged: preserve full 1536x1024 landscape composition, all text, large orange Bitcoin emblem, chart and its jagged line, statistic rows, prices, blue range tab, colors, light, glass edges, background and tiny Illustrative concept caption. Do not redesign or shift any element.\n\nKnown fidelity gaps: AI-redrawn details, typography proportions, gray placeholder lengths, highlights and minor icon strokes vary from the reference; composition and semantic panel distinction retained. Cryptomedia blue brand emblem omitted after a targeted edit removed a drifted generated mark; wordmark retained."
+  },
+  {
+    "file": "public/design/projects/cryptomedia-cryptocurrency-tracker-reference.png",
+    "bytes": 1651619,
+    "sha256": "370ca85dd28da7e2e4b4a8c58e9b01cb52ec5b2e247109e7cdc3e55837f99fcc",
+    "packSource": "assets/projects/cryptomedia-cryptocurrency-tracker-reference.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/projects/ferry-detail-1.png",
+    "bytes": 1747179,
+    "sha256": "4cd09ed5ca334d82d3c9c3c110b552bf7665cc3b9a0492fc745187e53024fa51",
+    "packSource": "assets/projects/ferry-detail-1.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/projects/ferry-detail-2.png",
+    "bytes": 1545308,
+    "sha256": "33c1d46d675038c858fad27ea960372ea01aeb3fecfd25e2c1853c38ec7dc4c5",
+    "packSource": "assets/projects/ferry-detail-2.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/projects/ferry-reference.png",
+    "bytes": 1688793,
+    "sha256": "8c44001657a717301b3cb43a724daf97875836e6c9c215d9d6db8c86bc193e00",
+    "packSource": "assets/projects/ferry-reference.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/projects/heroapp-detail-1.png",
+    "bytes": 2095813,
+    "sha256": "f4259e7b3f9d83a9a7a56da9fa90e87c66ea47d120bace8ace0b2828fb5a5944",
+    "packSource": "assets/projects/heroapp-detail-1.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/projects/heroapp-detail-2.png",
+    "bytes": 1728350,
+    "sha256": "ddc8a846c0fb128cb2f7e3e3c949549624095a3c08e325b2f171b690627609a7",
+    "packSource": "assets/projects/heroapp-detail-2.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/projects/heroapp-reference.png",
+    "bytes": 1416992,
+    "sha256": "8f7a89bae04e0d369a6b1e17613d61c77727d8d62fd99885cff76e30d086c4df",
+    "packSource": "assets/projects/heroapp-reference.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/projects/moshi-health-detail-1.png",
+    "bytes": 1707951,
+    "sha256": "b8d8433e200de9986c23ac5929f25c389dc6726b496e8a7963d6348cd9ee42d9",
+    "packSource": "assets/projects/moshi-health-detail-1.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/projects/moshi-health-detail-2.png",
+    "bytes": 1296835,
+    "sha256": "feb7407102bd1f23e7db096c87eaf20fb79d2945b31ac2781be86db4d06423f3",
+    "packSource": "assets/projects/moshi-health-detail-2.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/projects/moshi-health-reference.png",
+    "bytes": 1763881,
+    "sha256": "32dd625fb1ff07f706a7183252bd6aa68ac773114712518abb8bb63aeeb5e1e9",
+    "packSource": "assets/projects/moshi-health-reference.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/projects/moshi-personal-agent-fleet-reference.png",
+    "bytes": 1737062,
+    "sha256": "e38ad8eb0407fa623ff1fc496e781a73024ebdbaf572a0c2e7f967fd681c757b",
+    "packSource": "assets/projects/moshi-personal-agent-fleet-reference.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/projects/openkvm-detail-1.png",
+    "bytes": 1484395,
+    "sha256": "d8c998786f4e807dd57177fac8cf17ab581b857b556b42ede570250f9d10bdf2",
+    "packSource": "assets/projects/openkvm-detail-1.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/projects/openkvm-detail-2.png",
+    "bytes": 1582551,
+    "sha256": "a29968a417d5a04c3b6168f6f1041e0ddb77ba3a76005aaa6986f89bc3ebd278",
+    "packSource": "assets/projects/openkvm-detail-2.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/projects/openkvm-reference.png",
+    "bytes": 1294328,
+    "sha256": "a07af913bdb515518df84fef06f0fd41cb067fb0eefa799043abb4b7e41866e9",
+    "packSource": "assets/projects/openkvm-reference.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/projects/pulse-detail-1.png",
+    "bytes": 2025517,
+    "sha256": "c9723b5d1ac340e90b6908bf8b9a882f73c9164801abf901f63f52baf90ee591",
+    "packSource": "assets/projects/pulse-detail-1.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/projects/pulse-detail-2.png",
+    "bytes": 1688686,
+    "sha256": "e8e986e90b156ae4e09add58697a61c3dfa0b2e944e6555cd12192f64d29ef92",
+    "packSource": "assets/projects/pulse-detail-2.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/projects/pulse-reference.png",
+    "bytes": 1743097,
+    "sha256": "2c1de123dbd66f7cb5aa4271b6298c91814721310d39f144b8e373d662b262a5",
+    "packSource": "assets/projects/pulse-reference.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/projects/quivly-agents-reference.png",
+    "bytes": 1288229,
+    "sha256": "8e820b14f100c84f038735061597fd06cc2da6d7d16f556df14dc3d699e8fca6",
+    "packSource": "assets/projects/quivly-agents-reference.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/projects/quivly-design-language-detail-2.png",
+    "bytes": 1517170,
+    "sha256": "399d71794b8c69d21e10a9e601e736af16796ce333ee18bf9219bc90b2c25787",
+    "packSource": "assets/projects/quivly-design-language-detail-2.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/projects/quivly-design-language-reference.png",
+    "bytes": 1343812,
+    "sha256": "2c8ceb1113d3a7a0b86993402b922f5f2f4d950d53b08fc260a541526a65a7a8",
+    "packSource": "assets/projects/quivly-design-language-reference.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/projects/quivly-platform-detail-2.png",
+    "bytes": 2031382,
+    "sha256": "5158d31cd864975f5df0add7b0805e8cc60a00c7baf8aa7c7887dd4365647f74",
+    "packSource": "assets/projects/quivly-platform-detail-2.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/projects/quivly-platform-reference.png",
+    "bytes": 1510690,
+    "sha256": "60b887f99fce5796a389b412f349d43310432207ba3b208e5c24087547b26f28",
+    "packSource": "assets/projects/quivly-platform-reference.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/projects/quivly-skills-detail-2.png",
+    "bytes": 1840879,
+    "sha256": "f3829b10a46e00761a37cfab3d4fc9d4926fef1d7797772361719110541a5515",
+    "packSource": "assets/projects/quivly-skills-detail-2.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/projects/quivly-skills-reference.png",
+    "bytes": 1256197,
+    "sha256": "b81dc9af3df90e92aa6b3c17aa6d52660197bf462ffc3867b2bc96fe054b24e0",
+    "packSource": "assets/projects/quivly-skills-reference.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/projects/quivly-skills-v2.png",
+    "bytes": 1066912,
+    "sha256": "f299885890c6a04834a288ddf071dc94458fa157a84034a5a614589ed14c4e8f",
+    "packSource": "assets/quivly-skills-art-v2.png",
+    "relationship": "byte-identical",
+    "promptRecord": "Use case: precise-object-edit\nAsset type: opaque production portfolio artwork plate, target aspect ratio 313:181 (1.7293).\nInput image: approved skills-art composition crop, edit target and exact visual reference.\nPrimary request: recreate this exact crop as clean high resolution artwork, removing ALL page text, tags, arrow, label masking patches, and the Q letter on the front card. Preserve the reference geometry and composition exactly. Continuous uniform chartreuse background #d3f846 edge to edge, left half completely empty for future semantic HTML title and copy. No labels or characters anywhere.\nSubject: the SAME tight upright cascade of SEVEN thin PORTRAIT smoked translucent glass cards on the RIGHT. Preserve the reference pose: front-most card is at upper LEFT of the group, a narrow tall portrait parallelogram with vertical side edges; its four corners approximately (57%,25%), (75%,12%), (75%,61%), (57%,74%) of the full image. Each successive rear card shifts slightly RIGHT and DOWN, overlapping heavily, ending near x96%,y92%. Parallel top and bottom edges slope upward from left to right, exactly like reference. Long card edges remain VERTICAL. Front card dark olive smoked glass; next two lighter translucent olive; remaining cards progressively charcoal black. Thin pale glass outlines, fine subtle edge highlights, softly rounded individual card corners, translucent layering, restrained premium 3D material. Keep the object silhouette entirely within the right 44% of canvas. The cards are UPRIGHT PORTRAIT cards, taller than wide, not landscape cards and not a spread across the canvas. The stack goes DOWN TO THE RIGHT behind the front card, not up to the right. Front card has a plain uninterrupted face, NO Q, NO logo. Preserve exact scale, tilt, layering density and viewpoint. No invented brand or product UI.\nDo not add objects, heavy shadows, scenery, floor horizon, grid, icons, text, numbers, letters, watermark, diagram arrows, borders or outer card corners. Do not change the concept, restyle, center the object, or spread the cards apart. Same approved reference artwork with only UI and logo removed. Opaque full-frame chartreuse image, no margins, no background bands."
+  },
+  {
+    "file": "public/design/projects/rca-tool-grafana-plugin-detail-1-recovery.png",
+    "bytes": 1469694,
+    "sha256": "ec302c61c0d4cc2ab2cb047cc357d8854f6c25757342c21a3a5dbcf8d198bb75",
+    "packSource": "assets/projects/rca-tool-grafana-plugin-detail-1-recovery.png",
+    "relationship": "byte-identical",
+    "promptRecord": "Built-in image_gen provenance\nReference: design-pack/pages/projects/rca-tool-grafana-plugin.png\nNative dimensions: 1536x1024\nIntended use: Illustrative UI concept; not evidence of production UI or current market data.\nOriginal exact generation prompt:\nUse case: ui-mockup\nAsset type: standalone lower-panel illustrative interface asset for portfolio case study.\nInput image 1 is a full-page approved design reference. Generate ONLY the specified lower-panel artwork, faithfully redrawn at native high resolution, landscape 3:2 (1536x1024 or larger). Do not generate the full page, white surrounding card, website navigation, section numbers, or outer captions. This is explicitly an illustrative concept, not a real product screenshot or evidence. Match reference composition, black glass materials, fine bevels, soft light and restrained color. Do not invent brand logos or capabilities. Any existing marks may be faithfully preserved from reference only. No watermarks.\nTarget: lower left panel labelled 05 / KEY VISUAL, inner black artwork only. Front-on dark Grafana-style RCA interface, full bleed. Left quarter charcoal sidebar with existing reference orange Grafana mark, navigation Home, Dashboards, Explore, RCA highlighted muted lime, Alerting, Settings. Right area heading 'Root Cause Analysis', subheading 'From anomaly to resolution'. Four vertically stacked rounded dark glass cards, left connected by thin vertical lime line with four round illuminated nodes. Cards show respectively red warning triangle and 'Anomaly detected'; gray bar chart and 'Relevant telemetry'; white connected node icon and 'Correlated signals'; yellow bulb and 'Possible cause'. Subordinate gray short lines in each. Preserve reference exact structure and materials. No chart dashboard substitution, no new panels.\n\nKnown fidelity gaps: AI-redrawn details, typography proportions, gray placeholder lengths, highlights and minor icon strokes vary from the reference; composition and semantic panel distinction retained."
+  },
+  {
+    "file": "public/design/projects/rca-tool-grafana-plugin-detail-2-recovery.png",
+    "bytes": 1625852,
+    "sha256": "19293f74f8604d0c39086743d71cf365300d6b6743885342cd0d3b6b60e3f2ed",
+    "packSource": "assets/projects/rca-tool-grafana-plugin-detail-2-recovery.png",
+    "relationship": "byte-identical",
+    "promptRecord": "Built-in image_gen provenance\nReference: design-pack/pages/projects/rca-tool-grafana-plugin.png\nNative dimensions: 1536x1024\nIntended use: Illustrative UI concept; not evidence of production UI or current market data.\nOriginal exact generation prompt:\nUse case: ui-mockup\nAsset type: standalone lower-panel illustrative interface asset for portfolio case study.\nInput image 1 is a full-page approved design reference. Generate ONLY the specified lower-panel artwork, faithfully redrawn at native high resolution, landscape 3:2 (1536x1024 or larger). Do not generate the full page, white surrounding card, website navigation, section numbers, or outer captions. This is explicitly an illustrative concept, not a real product screenshot or evidence. Match reference composition, black glass materials, fine bevels, soft light and restrained color. Do not invent brand logos or capabilities. Any existing marks may be faithfully preserved from reference only. No watermarks.\nTarget: lower right panel labelled 06 / INVESTIGATION FLOW, inner black artwork only. A flat front-on premium black glass technical diagram. Three rounded glass cards stacked on left, each a white wavy telemetry sparkline, top one has a red-orange peak marker. Thin curved white connector lines converge into central small rounded-square glass tile outlined bright lime, with a lime search icon above white 'RCA'. Three curved outgoing lime/white arrows connect to three stacked glass cards at right: 'Related metrics' and a small gray vertical bar chart; 'Logs & events' with gray short horizontal log lines; 'Service context' with a fine node network. Lower left large white monospaced words stacked 'CONNECT' 'CORRELATE' 'CLARIFY'. Preserve distinct 3-input, 1-center, 3-output structure, spacing and near-black background.\n\nKnown fidelity gaps: AI-redrawn details, typography proportions, gray placeholder lengths, highlights and minor icon strokes vary from the reference; composition and semantic panel distinction retained."
+  },
+  {
+    "file": "public/design/projects/rca-tool-grafana-plugin-reference.png",
+    "bytes": 1429802,
+    "sha256": "988b61b1b8f281a546e54c1237c59857c6fb367bdaf9c1c3f41259b2794dc01f",
+    "packSource": "assets/projects/rca-tool-grafana-plugin-reference.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/projects/tethr-detail-2.png",
+    "bytes": 2335374,
+    "sha256": "40ac28edc847e5b2ac340c83c69e7a3025a9192b2994458cd1e69fa416fdabd9",
+    "packSource": "assets/projects/tethr-detail-2.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/projects/tethr-focus-recovery.png",
+    "bytes": 1391745,
+    "sha256": "76dc4ead0ee8d794305f000f32befdfb410cc1ae546ef53787f2d3f4e4214f9d",
+    "packSource": "assets/projects/tethr-focus-recovery.png",
+    "relationship": "byte-identical",
+    "promptRecord": "Built-in image_gen provenance\nReference: design-pack/pages/projects/tethr.png\nReference panel: middle-right 05 / FOCUS, lower white artwork only.\nNative dimensions: 1536x1024\nExact prompt:\nUse case: stylized-concept\nAsset type: standalone portfolio decorative illustration, landscape 1536x1024 native resolution.\nInput image 1 is the full approved Tethr project page, used ONLY as a visual reference. Generate a faithful high-resolution rendition of ONLY the small white lower artwork inside the middle-right tile headed '05 / FOCUS' beneath 'Propose. Review. Release.' Do not generate the page, typography, tile border or any UI.\nScene: seamless white/near-white studio background meeting a gently reflective white floor with no hard horizon. One small polished lime/chartreuse green sphere resting on the floor toward the right at approximately 74% horizontal position, with soft darker green shading on its lower-left side, a small luminous white highlight on its upper-right, and a subtle green reflection and soft contact shadow beneath.\nComposition: retain the precise concept of fine parallel curved lines coming in horizontally from the left, softly rising in a low broad wave near center, then gathering and converging toward the sphere. Beyond the sphere, two or three thin dark gray curves rise gently toward the right edge. Approximately nine delicate hairline strokes in gray-to-black, airy spacing and smooth flowing curves. Their paths should resemble the approved focus tile, not a wireframe mesh, not thick tubes. Generous white space above, all artwork centered vertically in the lower-middle region, sphere approximately 14% of frame height. Sophisticated minimal physical 3D render, soft studio daylight, subtle realistic reflection, extremely restrained texture.\nConstraints: pure illustration only, no typography, no letters, no numbers, no UI, no labels, no logos, no captions, no borders, no dark background, no extra spheres or objects. Preserve near-white airy palette and lime focal sphere.\n\nVisual inspection: near-white background, fine curved parallel lines, one lime sphere toward right, soft floor reflection, no typography/UI/logos. Faithful redrawing, not pixel-identical; sphere scale and curve spacing vary slightly from approved tile."
+  },
+  {
+    "file": "public/design/projects/tethr-reference.png",
+    "bytes": 1958679,
+    "sha256": "d0a2b0a025b07bc506d482b4901045e7c759138a0d02049a071f9976a7dbf0f6",
+    "packSource": "assets/projects/tethr-reference.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/projects/zendash-global-admin-dashboard-detail-1-recovery.png",
+    "bytes": 1453394,
+    "sha256": "39d39ebe73e76812cdd41c664395cd2f89a7b1095bd29f73557c50d1d39054ec",
+    "packSource": "assets/projects/zendash-global-admin-dashboard-detail-1-recovery.png",
+    "relationship": "byte-identical",
+    "promptRecord": "Built-in image_gen provenance\nReference: design-pack/pages/projects/zendash-global-admin-dashboard.png\nNative dimensions: 1536x1024\nIntended use: Illustrative UI concept; not evidence of production UI or current market data.\nOriginal exact generation prompt:\nUse case: ui-mockup\nAsset type: standalone lower-panel illustrative interface asset for portfolio case study.\nInput image 1 is a full-page approved design reference. Generate ONLY the specified lower-panel artwork, faithfully redrawn at native high resolution, landscape 3:2 (1536x1024 or larger). Do not generate the full page, white surrounding card, website navigation, section numbers, or outer captions. This is explicitly an illustrative concept, not a real product screenshot or evidence. Match reference composition, black glass materials, fine bevels, soft light and restrained color. Do not invent brand logos or capabilities. Any existing marks may be faithfully preserved from reference only. No watermarks.\nTarget: lower left black panel 04 / VISUAL 01, inner dashboard illustration only, omit outer caption strip. Front-on thin framed black glass administration dashboard, slight realistic luminous edges, no dramatic tilt. Slim charcoal icon sidebar at left with the existing white circular Z mark from reference and four tiny navigation icons. Main content: a top row of four compact dark glass metric cards with short neutral gray line details, large central white smooth line graph with a single glowing lime peak dot, a dark donut ring with lime quarter-segment immediately to its right, and two low glass cards below containing activity rows, restrained lime/gray/yellow status dots and short gray placeholder lines. Preserve dense balanced dashboard composition, black reflective surface, soft top light. No user table substitution and no large titles.\n\nKnown fidelity gaps: AI-redrawn details, typography proportions, gray placeholder lengths, highlights and minor icon strokes vary from the reference; composition and semantic panel distinction retained."
+  },
+  {
+    "file": "public/design/projects/zendash-global-admin-dashboard-detail-2-recovery.png",
+    "bytes": 1381448,
+    "sha256": "070d70e39651788c2fcc1b956605f722b8d85c7bf14d80e465f22cf0aa705653",
+    "packSource": "assets/projects/zendash-global-admin-dashboard-detail-2-recovery.png",
+    "relationship": "byte-identical",
+    "promptRecord": "Built-in image_gen provenance\nReference: design-pack/pages/projects/zendash-global-admin-dashboard.png\nNative dimensions: 1536x1024\nIntended use: Illustrative UI concept; not evidence of production UI or current market data.\nOriginal exact generation prompt:\nUse case: ui-mockup\nAsset type: standalone lower-panel illustrative interface asset for portfolio case study.\nInput image 1 is a full-page approved design reference. Generate ONLY the specified lower-panel artwork, faithfully redrawn at native high resolution, landscape 3:2 (1536x1024 or larger). Do not generate the full page, white surrounding card, website navigation, section numbers, or outer captions. This is explicitly an illustrative concept, not a real product screenshot or evidence. Match reference composition, black glass materials, fine bevels, soft light and restrained color. Do not invent brand logos or capabilities. Any existing marks may be faithfully preserved from reference only. No watermarks.\nTarget: lower right black panel 05 / VISUAL 02, inner dashboard illustration only, omit outer caption strip. Front-on thin framed black glass admin table view, slight luminous bevels, no dramatic perspective. Slim charcoal sidebar at left with the existing white circular Z mark and four tiny navigation icons. Main area is a data table, with dark header bar and small search field at upper right, subtle rules, four columns represented by small quiet gray lines, six compact rows each beginning with status dot (green, lime, yellow, red, pale gray, medium gray), gray cell lines and rightmost small rounded pill status badges, one lime-highlighted badge and remainder neutral gray. Preserve precisely the table-dominant composition and glass material of this panel; no charts, no donut ring, no invented functional claims. Sparse text is neutral visual placeholder strokes as in reference.\n\nKnown fidelity gaps: AI-redrawn details, typography proportions, gray placeholder lengths, highlights and minor icon strokes vary from the reference; composition and semantic panel distinction retained."
+  },
+  {
+    "file": "public/design/projects/zendash-global-admin-dashboard-reference.png",
+    "bytes": 1202774,
+    "sha256": "1ef59c3953680ac830a54eb25a207dbc467c3e301b10ff9a3fd5843dd5f1cb50",
+    "packSource": "assets/projects/zendash-global-admin-dashboard-reference.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/projects/zepeats-detail-1.png",
+    "bytes": 2173231,
+    "sha256": "ccebed8502c3cea881d0700a8c96a33425a2d8a79565c6fe02b100f54583ec69",
+    "packSource": "assets/projects/zepeats-detail-1.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/projects/zepeats-detail-2.png",
+    "bytes": 2025037,
+    "sha256": "7effc748fa35271b4e24b6b17d9bd387cf6c3dcbbc8bea700948aaea95b8c30f",
+    "packSource": "assets/projects/zepeats-detail-2.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/projects/zepeats-reference.png",
+    "bytes": 1785066,
+    "sha256": "fd5b194e02452e09d3184844974fa68b1b572f466eeae46d60eba43d33a044ba",
+    "packSource": "assets/projects/zepeats-reference.png",
+    "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/writing-featured-reference.png",
+    "bytes": 1345616,
+    "sha256": "484586a7b4db20bcb76f9f77ab1fc3cc3ee7e51904fc77e9857123c38c4dd3bc",
+    "packSource": "assets/writing-featured-reference.png",
+    "relationship": "byte-identical"
+  }
+]
