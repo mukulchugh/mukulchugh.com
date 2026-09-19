@@ -15,6 +15,9 @@ const nextConfig = {
   },
 
   async headers() {
+    // Let Next own HTML/RSC and development caching. A blanket public cache
+    // can pair fresh server markup with an outdated client bundle.
+    if (process.env.NODE_ENV !== "production") return [];
     return [
       {
         headers: [
@@ -24,24 +27,6 @@ const nextConfig = {
           },
         ],
         source: "/:all*(svg|jpg|jpeg|png|webp|avif|gif|woff|woff2|ttf|otf)",
-      },
-      {
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=3600, stale-while-revalidate=86400",
-          },
-        ],
-        source: "/blog/:slug*",
-      },
-      {
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=86400, stale-while-revalidate=604800",
-          },
-        ],
-        source: "/:path*",
       },
     ];
   },

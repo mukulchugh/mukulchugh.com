@@ -12,17 +12,17 @@
 import { stagger, type Transition, type Variants } from "motion/react";
 
 /** Soft spring — presence without bounce theater */
-export const premiumSpring: Transition = {
-  damping: 22,
-  mass: 0.9,
-  stiffness: 120,
+export const premiumSpring = {
+  damping: 32,
+  mass: 1,
+  stiffness: 260,
   type: "spring",
-};
+} satisfies Transition;
 
 export const softSpring: Transition = {
-  damping: 26,
-  mass: 0.85,
-  stiffness: 160,
+  damping: 30,
+  mass: 0.8,
+  stiffness: 300,
   type: "spring",
 };
 
@@ -35,20 +35,30 @@ export const softSpring: Transition = {
  * to slightly different numbers across cta-tile.tsx and socials-tile.tsx.
  */
 export const microSpring: Transition = {
-  damping: 24,
-  stiffness: 320,
+  damping: 28,
+  mass: 0.5,
+  stiffness: 480,
   type: "spring",
 };
 
+/** Pointer followers retain velocity when the target changes mid-flight. */
+export const pointerSpring = { damping: 26, mass: 0.6, stiffness: 280 };
+
+export const fadeTransition: Transition = {
+  duration: 0.16,
+  ease: [0.16, 1, 0.3, 1],
+  type: "tween",
+};
+
 export const viewportOnce = {
-  amount: 0.18,
-  margin: "0px 0px -8% 0px",
+  amount: "some",
+  margin: "0px 0px -32px 0px",
   once: true,
 } as const;
 
 /** Single element rise */
 export const riseVariants: Variants = {
-  hidden: { opacity: 0, y: 18 },
+  hidden: { opacity: 0.7, y: 10 },
   visible: {
     opacity: 1,
     transition: premiumSpring,
@@ -58,32 +68,32 @@ export const riseVariants: Variants = {
 
 /** Slightly stronger hero entrance */
 export const heroRiseVariants: Variants = {
-  hidden: { opacity: 0, y: 22 },
+  hidden: { opacity: 1, y: 0 },
   visible: {
     opacity: 1,
-    transition: { ...premiumSpring, damping: 20, stiffness: 110 },
+    transition: premiumSpring,
     y: 0,
   },
 };
 
 /** Parent orchestrator — stagger children via Motion stagger() */
 export const staggerContainer: Variants = {
-  hidden: { opacity: 0 },
+  hidden: { opacity: 1 },
   visible: {
     opacity: 1,
     transition: {
-      delayChildren: stagger(0.07, { startDelay: 0.04 }),
+      delayChildren: stagger(0.035),
       when: "beforeChildren",
     },
   },
 };
 
 export const staggerContainerFast: Variants = {
-  hidden: { opacity: 0 },
+  hidden: { opacity: 1 },
   visible: {
     opacity: 1,
     transition: {
-      delayChildren: stagger(0.05, { startDelay: 0.02 }),
+      delayChildren: stagger(0.025),
       when: "beforeChildren",
     },
   },
@@ -91,7 +101,7 @@ export const staggerContainerFast: Variants = {
 
 /** Child item used inside stagger containers */
 export const staggerItem: Variants = {
-  hidden: { opacity: 0, y: 14 },
+  hidden: { opacity: 0.7, y: 8 },
   visible: {
     opacity: 1,
     transition: softSpring,
@@ -100,16 +110,16 @@ export const staggerItem: Variants = {
 };
 
 export const fadeVariants: Variants = {
-  hidden: { opacity: 0 },
+  hidden: { opacity: 0.7 },
   visible: {
     opacity: 1,
-    transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] },
+    transition: fadeTransition,
   },
 };
 
 /** Scale-in for compact tiles (location / socials) */
 export const scaleInVariants: Variants = {
-  hidden: { opacity: 0, scale: 0.985, y: 12 },
+  hidden: { opacity: 0.7, scale: 0.995, y: 6 },
   visible: {
     opacity: 1,
     scale: 1,

@@ -11,15 +11,10 @@
  * - Animates only transform — no layout props
  */
 
-import {
-  motion,
-  useMotionValue,
-  useReducedMotion,
-  useSpring,
-  useTransform,
-} from "motion/react";
+import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import type React from "react";
 import { useCallback, useRef, useSyncExternalStore } from "react";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 
 interface TiltCardProps {
   children: React.ReactNode;

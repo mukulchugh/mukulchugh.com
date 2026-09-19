@@ -1,25 +1,25 @@
 "use client";
 
+import { motion, useSpring } from "motion/react";
 import {
-  motion,
-  useMotionValue,
-  useReducedMotion,
-  useSpring,
-  useTransform,
-} from "motion/react";
-import type React from "react";
-import { memo, useRef } from "react";
+  memo,
+  type PointerEvent,
+  type ReactNode,
+  useEffect,
+  useRef,
+} from "react";
 import { Button } from "@/components/ui/button";
+import { microSpring, pointerSpring } from "@/lib/motion";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 
 interface MagneticButtonProps {
   "aria-label"?: string;
   as?: "a" | "button";
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
   href?: string;
   onClick?: () => void;
   rel?: string;
-  /** How many px the button pulls toward the cursor. Default 10. */
   strength?: number;
   target?: string;
 }
@@ -29,73 +29,75 @@ export const MagneticButton = memo(function MagneticButton({
   className,
   href,
   onClick,
-  strength = 10,
+  strength = 6,
   as: Tag = "a",
   target,
   rel,
   "aria-label": ariaLabel,
 }: MagneticButtonProps) {
-  const shouldReduce = useReducedMotion();
+  const reduce = useReducedMotion();
   const ref = useRef<HTMLDivElement>(null);
+  const x = useSpring(0, pointerSpring);
+  const y = useSpring(0, pointerSpring);
 
-  // Raw motion values — live outside React render cycle
-  const rawX = useMotionValue(0);
-  const rawY = useMotionValue(0);
-
-  // Spring-physics smoothing
-  const x = useSpring(rawX, { damping: 22, mass: 0.6, stiffness: 180 });
-  const y = useSpring(rawY, { damping: 22, mass: 0.6, stiffness: 180 });
-
-  // Cap displacement at `strength` px
-  const tx = useTransform(
-    x,
-    [-strength * 5, strength * 5],
-    [-strength, strength]
-  );
-  const ty = useTransform(
-    y,
-    [-strength * 5, strength * 5],
-    [-strength, strength]
-  );
-
-  function handleMouseMove(e: React.MouseEvent<HTMLElement>) {
-    if (shouldReduce || !ref.current) {
-      return;
+  useEffect(() => {
+    if (reduce || strength <= 0) {
+      x.jump(0);
+      y.jump(0);
     }
-    const rect = ref.current.getBoundingClientRect();
-    const cx = rect.left + rect.width / 2;
-    const cy = rect.top + rect.height / 2;
-    rawX.set(e.clientX - cx);
-    rawY.set(e.clientY - cy);
-  }
+  }, [reduce, strength, x, y]);
 
-  function handleMouseLeave() {
-    rawX.set(0);
-    rawY.set(0);
+  function reset() {
+    x.set(0);
+    y.set(0);
+  }
+  function follow(event: PointerEvent<HTMLDivElement>) {
+    if (
+      reduce ||
+      strength <= 0 ||
+      event.pointerType !== "mouse" ||
+      !ref.current
+    )
+      return;
+    const bounds = ref.current.getBoundingClientRect();
+    // Measure the stationary wrapper, not the moving button: no feedback jitter.
+    x.set(
+      Math.max(
+        -1,
+        Math.min(1, ((event.clientX - bounds.left) / bounds.width) * 2 - 1)
+      ) * strength
+    );
+    y.set(
+      Math.max(
+        -1,
+        Math.min(1, ((event.clientY - bounds.top) / bounds.height) * 2 - 1)
+      ) * strength
+    );
   }
 
   return (
     <div
       className="inline-block"
-      onMouseLeave={handleMouseLeave}
-      onMouseMove={handleMouseMove}
+      onBlur={reset}
+      onPointerCancel={reset}
+      onPointerLeave={reset}
+      onPointerMove={follow}
       ref={ref}
     >
-      <motion.div
-        className="inline-block"
-        style={shouldReduce ? undefined : { x: tx, y: ty }}
-      >
+      <motion.div className="inline-block" style={{ x, y }}>
         {Tag === "a" ? (
-          <a
+          <motion.a
             aria-label={ariaLabel}
             className={className}
             href={href}
             onClick={onClick}
             rel={rel}
             target={target}
+            transition={microSpring}
+            whileTap={reduce ? undefined : { scale: 0.97 }}
           >
             {children}
-          </a>
+          </motion.a>
         ) : (
           <Button
             aria-label={ariaLabel}

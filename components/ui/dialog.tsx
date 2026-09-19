@@ -6,6 +6,14 @@ import type * as React from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
+// Motion's spring({ stiffness: 260, damping: 32, mass: 1, keyframes: [0, 1] })
+// sampled ahead of time. No generator runs during client module initialization.
+const dialogSpring =
+  "600ms linear(0, 0.0932, 0.272, 0.4534, 0.6067, 0.7254, 0.8124, 0.8741, 0.9166, 0.9454, 0.9646, 0.9773, 0.9855, 0.9908, 0.9942, 0.9964, 0.9977, 0.9986, 0.9991, 1)";
+const dialogStyle: React.CSSProperties & { "--dialog-spring": string } = {
+  "--dialog-spring": dialogSpring,
+};
+
 function Dialog({ ...props }: DialogPrimitive.Root.Props) {
   return <DialogPrimitive.Root data-slot="dialog" {...props} />;
 }
@@ -29,7 +37,7 @@ function DialogOverlay({
   return (
     <DialogPrimitive.Backdrop
       className={cn(
-        "fixed inset-0 isolate z-50 bg-black/40 backdrop-blur-sm duration-150 data-[open]:animate-in data-[open]:fade-in-0 data-[closed]:animate-out data-[closed]:fade-out-0",
+        "fixed inset-0 isolate z-50 bg-black/40 backdrop-blur-sm transition-opacity duration-150 data-[starting-style]:opacity-0 data-[ending-style]:opacity-0",
         className
       )}
       data-slot="dialog-overlay"
@@ -42,6 +50,7 @@ function DialogContent({
   className,
   children,
   showCloseButton = true,
+  style,
   ...props
 }: DialogPrimitive.Popup.Props & {
   showCloseButton?: boolean;
@@ -51,10 +60,14 @@ function DialogContent({
       <DialogOverlay />
       <DialogPrimitive.Popup
         className={cn(
-          "fixed left-1/2 top-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-none bg-popover p-4 text-sm text-popover-foreground ring-1 ring-foreground/10 duration-150 outline-none sm:max-w-sm data-[open]:animate-in data-[open]:fade-in-0 data-[open]:zoom-in-95 data-[closed]:animate-out data-[closed]:fade-out-0 data-[closed]:zoom-out-95",
+          "dialog-surface fixed left-1/2 top-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-none bg-popover p-4 text-sm text-popover-foreground ring-1 ring-foreground/10 outline-none sm:max-w-sm",
           className
         )}
         data-slot="dialog-content"
+        style={(state) => ({
+          ...dialogStyle,
+          ...(typeof style === "function" ? style(state) : style),
+        })}
         {...props}
       >
         {children}
@@ -63,7 +76,7 @@ function DialogContent({
             data-slot="dialog-close"
             render={
               <Button
-                className="absolute top-2 right-2"
+                className="absolute top-2 right-2 z-10 bg-popover text-popover-foreground shadow-sm hover:bg-muted"
                 size="icon"
                 variant="ghost"
               />

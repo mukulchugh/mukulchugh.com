@@ -60,7 +60,7 @@ function Badge({
     ? {
         background: `linear-gradient(to bottom, ${withAlpha(accentColor, 0.16)}, ${withAlpha(accentColor, 0.07)})`,
         borderColor: withAlpha(accentColor, 0.3),
-        color: accentColor,
+        color: "hsl(var(--foreground))",
       }
     : undefined;
 
