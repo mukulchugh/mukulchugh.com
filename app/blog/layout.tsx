@@ -1,3 +1,5 @@
+import { BrandBar } from "@/components/bento/brand-bar";
+import { CTATile } from "@/components/bento/cta-tile";
 import { siteConfig } from "@/lib/data";
 
 export const metadata = {
@@ -11,5 +13,13 @@ export default function BlogLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return children;
+  return (
+    <div className="bento-page">
+      <BrandBar />
+      {children}
+      <div className="mb-6">
+        <CTATile />
+      </div>
+    </div>
+  );
 }

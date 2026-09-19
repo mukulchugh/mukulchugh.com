@@ -32,7 +32,7 @@ function RelatedCard({ post }: { post: Post }) {
         >
           {post.title}
         </h3>
-        <div className="flex items-center gap-3 text-[11px] text-muted-foreground font-mono">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground font-mono">
           <span className="flex items-center gap-1">
             <IconCalendar aria-hidden="true" className="w-3 h-3" />
             {formattedDate}
@@ -58,13 +58,13 @@ export function RelatedPosts({ posts }: RelatedPostsProps) {
       aria-labelledby="related-posts-heading"
       className="mt-16 pt-8 border-t border-border"
     >
-      <p
+      <h2
         className="ui-label mb-6 text-muted-foreground"
         id="related-posts-heading"
       >
-        Related reads
-      </p>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        More writing
+      </h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
         {posts.map((post) => (
           <RelatedCard key={post.id} post={post} />
         ))}

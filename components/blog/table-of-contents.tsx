@@ -3,6 +3,7 @@
 import { IconChevronDown } from "@tabler/icons-react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Collapsible } from "@/components/ui/collapsible";
 import type { PostHeading } from "@/lib/blog";
 import { cn } from "@/lib/utils";
 
@@ -13,8 +14,7 @@ interface TableOfContentsProps {
 export function TableOfContents({ headings }: TableOfContentsProps) {
   const [activeId, setActiveId] = useState<string>("");
   const [isOpen, setIsOpen] = useState(false);
-  const observerRef = useRef<IntersectionObserver | null>(null);
-  useTOCObserver(headings, setActiveId, observerRef);
+  useTOCObserver(headings, setActiveId);
 
   // Only show if there are at least 2 headings
   if (headings.length < 2) {
@@ -36,81 +36,53 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
   );
 }
 
-// Shared hook: sets up IntersectionObserver for active heading tracking
+// Read current nodes on each scheduled update: streamed hydration and route
+// transitions can replace headings after the TOC's effect first runs.
 function useTOCObserver(
   headings: PostHeading[],
-  setActiveId: (id: string) => void,
-  observerRef: React.MutableRefObject<IntersectionObserver | null>
+  setActiveId: (id: string) => void
 ) {
   useEffect(() => {
-    if (typeof window === "undefined" || headings.length === 0) {
-      return;
-    }
-
-    // Disconnect any previous observer
-    if (observerRef.current) {
-      observerRef.current.disconnect();
-    }
-
-    const headingEls = headings
-      .map(({ id }) => document.getElementById(id))
-      .filter((el): el is HTMLElement => el !== null);
-
-    if (headingEls.length === 0) {
-      return;
-    }
-
-    observerRef.current = new IntersectionObserver(
-      () => {
-        // Pick the heading closest to the top that is visible or just above
-        const active = headingEls
-          .filter((el) => {
-            const top = el.getBoundingClientRect().top;
-            return top <= 120; // 120px from top = "active zone"
-          })
-          .at(-1); // last one in document order that's <= 120px from top
-
-        if (active) {
-          setActiveId(active.id);
-        } else {
-          // If nothing is in the active zone, set the first heading
-          setActiveId(headingEls[0]?.id ?? "");
-        }
-      },
-      {
-        rootMargin: "-96px 0px -60% 0px",
-        threshold: [0, 1],
-      }
-    );
-
-    headingEls.forEach((el) => observerRef.current!.observe(el));
-
-    return () => {
-      observerRef.current?.disconnect();
+    if (headings.length < 2) return;
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const elements = headings
+        .map(({ id }) => document.getElementById(id))
+        .filter((element): element is HTMLElement => element !== null);
+      const active = elements
+        .filter((element) => element.getBoundingClientRect().top <= 120)
+        .at(-1);
+      setActiveId(active?.id ?? elements[0]?.id ?? "");
     };
-  }, [headings, setActiveId, observerRef]);
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    const observer = new MutationObserver(schedule);
+    observer.observe(
+      document.getElementById("article-content") ?? document.body,
+      { childList: true, subtree: true }
+    );
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    update();
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+    };
+  }, [headings, setActiveId]);
 }
 
 function prefersReducedMotion() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
-function scrollToHeading(id: string) {
-  const el = document.getElementById(id);
-  if (!el) {
-    return;
-  }
-
-  el.scrollIntoView({
-    behavior: prefersReducedMotion() ? "instant" : "smooth",
-    block: "start",
-  });
-}
-
 interface TOCListProps {
   activeId: string;
   headings: PostHeading[];
-  onClickItem: (id: string) => void;
+  onClickItem?: (id: string) => void;
 }
 
 function TOCList({ headings, activeId, onClickItem }: TOCListProps) {
@@ -124,20 +96,31 @@ function TOCList({ headings, activeId, onClickItem }: TOCListProps) {
               {/* Active state mirrors the dock's own chip treatment (bg-muted
                   + a hairline foreground ring) instead of a left border, so
                   the TOC reads as part of the same nav vocabulary. */}
-              <Button
+              <a
                 aria-current={isActive ? "location" : undefined}
                 className={cn(
-                  "h-auto w-full justify-start whitespace-normal break-words rounded-none px-2.5 py-1.5 text-left font-mono text-[12px] leading-snug",
+                  "flex min-h-11 w-full items-center whitespace-normal break-words rounded-lg px-2.5 py-2 text-left text-[13px] leading-snug",
                   "transition-colors duration-200",
                   isActive
                     ? "bg-muted text-foreground font-medium shadow-[0_0_0_1px_hsl(var(--foreground)/0.1)]"
                     : "text-muted-foreground [@media(hover:hover)]:hover:bg-muted/60 [@media(hover:hover)]:hover:text-foreground"
                 )}
-                onClick={() => onClickItem(heading.id)}
-                variant="ghost"
+                href={`#${heading.id}`}
+                onClick={(event) => {
+                  if (
+                    !(
+                      event.metaKey ||
+                      event.ctrlKey ||
+                      event.shiftKey ||
+                      event.altKey
+                    )
+                  ) {
+                    onClickItem?.(heading.id);
+                  }
+                }}
               >
                 {heading.text}
-              </Button>
+              </a>
             </li>
           );
         })}
@@ -157,14 +140,10 @@ function DesktopTOC({ headings, activeId }: DesktopTOCProps) {
     // shadow ring) as the floating nav dock, so the two read as one system.
     <aside
       aria-label="Article navigation"
-      className="dock-shell hidden lg:block sticky top-24 self-start w-52 shrink-0 rounded-none p-3"
+      className="hidden lg:block sticky top-6 self-start max-h-[calc(100dvh-6rem-var(--dock-clearance))] w-52 shrink-0 overflow-y-auto rounded-[14px] border border-border p-3"
     >
-      <p className="ui-label mb-3 px-2.5 text-muted-foreground">On this page</p>
-      <TOCList
-        activeId={activeId}
-        headings={headings}
-        onClickItem={scrollToHeading}
-      />
+      <p className="ui-label mb-3 px-2.5 text-muted-foreground">Contents</p>
+      <TOCList activeId={activeId} headings={headings} />
     </aside>
   );
 }
@@ -196,15 +175,16 @@ function MobileTOC({ headings, activeId, isOpen, setIsOpen }: MobileTOCProps) {
     // dock-shell (same glass surface as the floating nav dock) replaces the
     // old flat bordered box, so mobile/desktop TOC and the dock share one
     // visual language.
-    <div className="dock-shell lg:hidden mb-8 rounded-none overflow-hidden">
-      <Button
-        aria-controls="mobile-toc-content"
-        aria-expanded={isOpen}
+    <Collapsible.Root
+      className="dock-shell lg:hidden mb-8 rounded-[14px] overflow-hidden"
+      onOpenChange={setIsOpen}
+      open={isOpen}
+    >
+      <Collapsible.Trigger
         className="h-auto min-h-[44px] w-full justify-between rounded-none px-4 py-3 text-left"
-        onClick={() => setIsOpen(!isOpen)}
-        variant="ghost"
+        render={<Button variant="ghost" />}
       >
-        <span className="ui-label text-muted-foreground">On this page</span>
+        <span className="ui-label text-muted-foreground">Contents</span>
         <IconChevronDown
           aria-hidden="true"
           className={cn(
@@ -213,26 +193,30 @@ function MobileTOC({ headings, activeId, isOpen, setIsOpen }: MobileTOCProps) {
           )}
           stroke={1.5}
         />
-      </Button>
+      </Collapsible.Trigger>
 
-      {isOpen && (
-        <div
-          className="px-4 pb-4 border-t border-border/60 [scroll-margin-bottom:var(--dock-clearance)]"
-          id="mobile-toc-content"
-          ref={contentRef}
-        >
-          <div className="pt-3">
-            <TOCList
-              activeId={activeId}
-              headings={headings}
-              onClickItem={(id) => {
-                scrollToHeading(id);
+      <Collapsible.Panel
+        className="px-4 pb-4 border-t border-border/60 [scroll-margin-bottom:var(--dock-clearance)]"
+        id="mobile-toc-content"
+        ref={contentRef}
+      >
+        <div className="pt-3">
+          <TOCList
+            activeId={activeId}
+            headings={headings}
+            onClickItem={(id) => {
+              // Leave the anchor mounted until its native fragment navigation
+              // finishes; closing during the click can cancel its default action.
+              requestAnimationFrame(() => {
                 setIsOpen(false);
-              }}
-            />
-          </div>
+                const heading = document.getElementById(id);
+                heading?.setAttribute("tabindex", "-1");
+                heading?.focus({ preventScroll: true });
+              });
+            }}
+          />
         </div>
-      )}
-    </div>
+      </Collapsible.Panel>
+    </Collapsible.Root>
   );
 }

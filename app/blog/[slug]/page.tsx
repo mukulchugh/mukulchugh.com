@@ -1,9 +1,10 @@
 import { IconArrowLeft, IconCalendar, IconClock } from "@tabler/icons-react";
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArticleBody } from "@/components/blog/article-body";
-import { PostCover } from "@/components/blog/post-cover";
+import { getPostCoverSrc, PostCover } from "@/components/blog/post-cover";
 import { PostNav } from "@/components/blog/post-nav";
 import { ReadingProgress } from "@/components/blog/reading-progress";
 import { RelatedPosts } from "@/components/blog/related-posts";
@@ -18,7 +19,6 @@ import {
 } from "@/lib/blog";
 import { accentColorForTags } from "@/lib/blog-topic";
 import { siteConfig } from "@/lib/data";
-import { PAGE_TITLE } from "@/lib/typography";
 import { cn } from "@/lib/utils";
 
 export const revalidate = 3600;
@@ -41,7 +41,7 @@ export async function generateMetadata({
   const post = await getPostServer(slug);
 
   if (!post) {
-    return { title: "Post Not Found" };
+    notFound();
   }
 
   return {
@@ -51,7 +51,7 @@ export async function generateMetadata({
     description: post.seo?.description || post.brief,
     openGraph: {
       description: post.brief,
-      images: post.coverImage?.url ? [post.coverImage.url] : [],
+      images: [getPostCoverSrc(post)],
       publishedTime: post.publishedAt,
       title: post.title,
       type: "article",
@@ -61,7 +61,7 @@ export async function generateMetadata({
     twitter: {
       card: "summary_large_image",
       description: post.brief,
-      images: post.coverImage?.url ? [post.coverImage.url] : [],
+      images: [getPostCoverSrc(post)],
       title: post.title,
     },
   };
@@ -99,7 +99,7 @@ export default async function PostPage({ params }: PostPageProps) {
     datePublished: post.publishedAt,
     description: post.brief,
     headline: post.title,
-    image: post.coverImage?.url || siteConfig.images.ogImage,
+    image: new URL(getPostCoverSrc(post), siteConfig.siteUrl).href,
     keywords: post.tags.map((tag) => tag.name).join(", "),
     mainEntityOfPage: {
       "@id": `${siteConfig.siteUrl}/blog/${slug}`,
@@ -142,6 +142,12 @@ export default async function PostPage({ params }: PostPageProps) {
     ],
   };
 
+  const lightHero = [
+    "brik-react-to-native-widgets",
+    "phased-agent-turns-gather-analyze-synthesize",
+    "progressive-tool-results-transcript-chunks",
+    "self-hosted-personal-agent-fleet",
+  ].includes(post.slug);
   const headings = post.headings ?? [];
   const hasTableOfContents = headings.length >= 2;
 
@@ -151,197 +157,190 @@ export default async function PostPage({ params }: PostPageProps) {
     // compute to `auto` (CSS overflow spec), turning <main> into a scroll
     // container that sits between the TOC's sticky aside and the real
     // scrolling viewport — silently breaking position: sticky.
-    <main className="dock-safe-bottom w-full pt-12 sm:pt-20 lg:pt-28">
-      {/* Reading progress bar */}
-      <ReadingProgress />
-
+    <main className="w-full py-5 sm:py-6">
       {/* Structured Data */}
       <script
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingSchema) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(blogPostingSchema).replace(/</g, "\\u003c"),
+        }}
         type="application/ld+json"
       />
       <script
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbSchema).replace(/</g, "\\u003c"),
+        }}
         type="application/ld+json"
       />
 
-      {/* Outer container — constrains horizontal width */}
-      <div className="container mx-auto max-w-5xl px-4 sm:px-6">
-        {/* Back link */}
-        <Link
-          className="inline-flex items-center gap-2 py-2 text-[14px] text-muted-foreground
-                     [@media(hover:hover)]:hover:text-foreground transition-colors mb-10"
-          href="/blog"
-        >
-          <IconArrowLeft className="w-4 h-4" />
-          Back to Blog
-        </Link>
-
-        <div
+      <div>
+        <header
           className={cn(
-            "grid items-start",
-            // TOC sits on the right as a reference rail; article reads
-            // left-to-right starting in the wider column.
-            hasTableOfContents &&
-              "lg:grid-cols-[minmax(0,48rem)_13rem] lg:gap-x-12"
+            "relative isolate mb-6 overflow-hidden rounded-[14px] border border-border px-6 pt-8 pb-72 sm:px-10 md:flex md:min-h-[460px] md:items-center md:py-12 lg:px-12",
+            lightHero ? "bg-white text-black" : "bg-[#101112] text-white"
           )}
         >
-          <header
-            className={cn(
-              "mb-10 max-w-3xl",
-              hasTableOfContents && "lg:col-start-1"
-            )}
-          >
-            {post.tags.length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-6">
-                {post.tags.map((tag) => (
-                  <Badge
-                    accentColor={accentColorForTags([tag.name])}
-                    key={tag.slug}
-                    variant="secondary"
-                  >
-                    {tag.name}
-                  </Badge>
-                ))}
-              </div>
-            )}
-
-            <h1
-              className={cn(
-                "font-syne",
-                "font-black text-foreground mb-6 leading-[1.08] tracking-tight break-words"
-              )}
-              style={{ fontSize: PAGE_TITLE }}
-            >
-              {post.title}
-            </h1>
-
-            <div className="flex flex-wrap items-center gap-3 sm:gap-6 text-[12px] text-muted-foreground">
-              {post.author && (
-                <div className="flex items-center gap-2">
-                  <Avatar className="h-7 w-7">
-                    <AvatarImage src={post.author.profilePicture} />
-                    <AvatarFallback>
-                      {post.author.name
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")}
-                    </AvatarFallback>
-                  </Avatar>
-                  <span className="text-foreground/80 font-medium">
-                    {post.author.name}
-                  </span>
-                </div>
-              )}
-              <div className="flex items-center gap-2">
-                <IconCalendar className="w-3.5 h-3.5" />
-                <time dateTime={post.publishedAt}>{formattedDate}</time>
-              </div>
-              <div className="flex items-center gap-2">
-                <IconClock className="w-3.5 h-3.5" />
-                <span>{post.readTimeInMinutes} min read</span>
-              </div>
-            </div>
-          </header>
-
+          <PostCover
+            className="absolute inset-x-0 bottom-0 h-64 w-full rounded-none md:inset-0 md:h-full [&_img]:object-right"
+            hero
+            post={post}
+            priority
+          />
           <div
             className={cn(
-              "mb-12 max-w-3xl",
-              hasTableOfContents && "lg:col-start-1"
+              "absolute inset-0 hidden bg-gradient-to-r md:block",
+              lightHero
+                ? "from-white via-white/80 to-transparent"
+                : "from-black/95 via-black/50 to-transparent"
             )}
-          >
-            <PostCover hero interactive post={post} priority />
+          />
+          <div className="relative md:w-[58%]">
+            <p className="mb-7 font-mono text-[11px] uppercase tracking-[0.14em]">
+              Writing / {post.tags[0]?.name || "Notes"}
+            </p>
+            <h1 className="mb-6 text-balance font-syne text-[clamp(1.85rem,3.5vw,3.25rem)] font-extrabold leading-[1.05] tracking-[-0.035em] [overflow-wrap:anywhere]">
+              {post.title}
+            </h1>
+            <p
+              className={cn(
+                "max-w-[48ch] text-base leading-relaxed sm:text-lg",
+                lightHero ? "text-black/80" : "text-white/90"
+              )}
+            >
+              {post.brief}
+            </p>
+            <Link
+              className="mt-7 inline-flex min-h-11 items-center gap-3 rounded-lg bg-[#d2ff00] px-4 text-sm font-semibold text-black"
+              href="/blog"
+            >
+              <IconArrowLeft aria-hidden="true" size={17} />
+              Back to writing
+            </Link>
           </div>
-
+        </header>
+        <div className="mb-8 flex flex-wrap items-center gap-x-6 gap-y-3 px-1 text-xs text-muted-foreground">
+          {post.author && (
+            <div className="flex items-center gap-2">
+              <Avatar className="h-7 w-7">
+                <AvatarImage alt="" src={post.author.profilePicture} />
+                <AvatarFallback>
+                  {post.author.name
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")}
+                </AvatarFallback>
+              </Avatar>
+              <span>{post.author.name}</span>
+            </div>
+          )}
+          <span className="flex items-center gap-2">
+            <IconCalendar aria-hidden="true" size={14} />
+            <time dateTime={post.publishedAt}>{formattedDate}</time>
+          </span>
+          <span className="flex items-center gap-2">
+            <IconClock aria-hidden="true" size={14} />
+            {post.readTimeInMinutes} min read
+          </span>
+        </div>
+        <div
+          className={cn(
+            "grid items-start gap-6",
+            hasTableOfContents
+              ? "lg:grid-cols-[13rem_minmax(0,1fr)] lg:gap-10"
+              : "lg:mx-auto lg:max-w-6xl"
+          )}
+        >
           {hasTableOfContents && (
-            // lg:self-stretch fills the full row-3 track height (the
-            // article's height) so the sticky aside inside it has room to
-            // travel with the scroll instead of scrolling away with the
-            // page — align-items:start on the grid only sizes items to
-            // their own content by default.
-            <div className="lg:col-start-2 lg:row-start-3 lg:self-stretch">
+            <div className="lg:self-stretch">
               <TableOfContents headings={headings} />
             </div>
           )}
-
-          <div
-            className={cn(
-              "min-w-0 max-w-3xl",
-              hasTableOfContents &&
-                "lg:col-start-1 lg:row-start-3 lg:self-stretch"
-            )}
-          >
+          <div className="min-w-0">
             {/* Article body — rendered from raw markdown via Streamdown
                 (components/blog/article-body.tsx), which renders real React
                 elements (not a raw HTML string) and provides built-in Shiki
                 syntax highlighting for code blocks. */}
             {post.content?.markdown && (
-              <article
-                className={cn(
-                  // Base prose setup
-                  "prose prose-zinc dark:prose-invert max-w-none",
-                  // Body text — 16px, 1.75 line-height
-                  "prose-p:text-[16px] prose-p:leading-[1.8] prose-p:text-foreground/80",
-                  // Headings — tight tracking, ink-dark
-                  "prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-foreground",
-                  "prose-h2:text-[1.375rem] prose-h2:mt-10 prose-h2:mb-4",
-                  "prose-h3:text-[1.125rem] prose-h3:mt-8 prose-h3:mb-3",
-                  // Scroll margin so TOC jumps land below any fixed header
-                  "[&_h2]:scroll-mt-24 [&_h3]:scroll-mt-24",
-                  // Links — subtle underline on hover
-                  "prose-a:text-foreground/80 prose-a:no-underline prose-a:font-medium",
-                  "[@media(hover:hover)]:prose-a:hover:underline [@media(hover:hover)]:prose-a:hover:text-foreground",
-                  // Blockquotes — left ink border, neutral bg
-                  "prose-blockquote:border-l-2 prose-blockquote:border-border",
-                  "prose-blockquote:bg-muted prose-blockquote:py-1 prose-blockquote:pr-4",
-                  "prose-blockquote:rounded-r-none prose-blockquote:not-italic",
-                  "prose-blockquote:text-muted-foreground",
-                  // Inline code — light chip
-                  "prose-code:bg-muted prose-code:text-foreground/90",
-                  "prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-none",
-                  "prose-code:text-[0.85em] prose-code:font-mono",
-                  "prose-code:before:content-none prose-code:after:content-none",
-                  // Code blocks — dark ink slab. Streamdown wraps fenced
-                  // code in its own chrome (language label, copy button)
-                  // rather than a bare <pre>, so it's restyled via the
-                  // [data-streamdown] hooks in globals.css instead of
-                  // prose-pre:* modifiers.
-                  "[&_[data-streamdown='code-block']]:text-[0.85em] [&_[data-streamdown='code-block']]:leading-relaxed",
-                  // Images
-                  "prose-img:rounded-none prose-img:shadow-sm",
-                  // Lists
-                  "prose-li:text-[16px] prose-li:text-foreground/80",
-                  "prose-li:marker:text-muted-foreground",
-                  // Tables
-                  "prose-table:text-[14px]",
-                  "prose-th:bg-muted prose-th:text-foreground/80 prose-th:font-semibold",
-                  "prose-td:text-muted-foreground",
-                  "prose-th:border prose-th:border-border",
-                  "prose-td:border prose-td:border-border",
-                  // Strong
-                  "prose-strong:text-foreground prose-strong:font-semibold",
-                  // HR
-                  "prose-hr:border-border"
-                )}
-              >
-                <ArticleBody
-                  headings={headings}
-                  markdown={post.content.markdown}
-                />
-              </article>
+              <ReadingProgress>
+                <article
+                  className={cn(
+                    // Base prose setup
+                    "prose prose-zinc dark:prose-invert max-w-[72ch] after:block after:clear-both",
+                    !hasTableOfContents && "max-w-none",
+                    // Body text — 16px, 1.75 line-height
+                    "prose-p:text-base prose-p:leading-[1.8] prose-p:text-foreground/80",
+                    // Headings — tight tracking, ink-dark
+                    "[&_h2]:[overflow-wrap:anywhere] [&_h3]:[overflow-wrap:anywhere] prose-headings:font-sans prose-headings:font-bold prose-headings:tracking-[-0.025em] prose-headings:text-foreground",
+                    "prose-h2:text-[clamp(1.5rem,2.5vw,2rem)] prose-h2:leading-[1.2] prose-h2:mt-10 prose-h2:mb-4",
+                    "prose-h3:text-[1.125rem] prose-h3:mt-8 prose-h3:mb-3",
+                    // Scroll margin so TOC jumps land below any fixed header
+                    "[&_h2]:scroll-mt-24 [&_h3]:scroll-mt-24",
+                    // Links — subtle underline on hover
+                    "prose-a:text-foreground prose-a:underline prose-a:underline-offset-4 prose-a:font-medium",
+                    "[@media(hover:hover)]:prose-a:hover:underline [@media(hover:hover)]:prose-a:hover:text-foreground",
+                    // Blockquotes — left ink border, neutral bg
+                    "prose-blockquote:border-l-2 prose-blockquote:border-border",
+                    "prose-blockquote:bg-muted prose-blockquote:py-1 prose-blockquote:pr-4",
+                    "prose-blockquote:rounded-r-none prose-blockquote:not-italic",
+                    "prose-blockquote:text-muted-foreground",
+                    // Inline code — light chip
+                    "prose-code:bg-muted prose-code:text-foreground/90",
+                    "prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-none",
+                    "prose-code:text-[0.85em] prose-code:font-mono",
+                    "prose-code:before:content-none prose-code:after:content-none",
+                    // Code blocks — dark ink slab. Streamdown wraps fenced
+                    // code in its own chrome (language label, copy button)
+                    // rather than a bare <pre>, so it's restyled via the
+                    // [data-streamdown] hooks in globals.css instead of
+                    // prose-pre:* modifiers.
+                    "[&_[data-streamdown='code-block']]:text-[0.85em] [&_[data-streamdown='code-block']]:leading-relaxed",
+                    // Images
+                    "prose-img:rounded-none prose-img:shadow-sm",
+                    // Lists
+                    "prose-li:text-base prose-li:text-foreground/80",
+                    "prose-li:marker:text-muted-foreground",
+                    // Tables
+                    "prose-table:text-[14px]",
+                    "prose-th:bg-muted prose-th:text-foreground/80 prose-th:font-semibold",
+                    "prose-td:text-muted-foreground",
+                    "prose-th:border prose-th:border-border",
+                    "prose-td:border prose-td:border-border",
+                    // Strong
+                    "prose-strong:text-foreground prose-strong:font-semibold",
+                    // HR
+                    "prose-hr:border-border"
+                  )}
+                  id="article-content"
+                >
+                  {post.slug === "mobile-lessons-from-swiggy-scale" && (
+                    <figure className="not-prose mb-6 overflow-hidden rounded-[14px] border border-border lg:float-right lg:mb-8 lg:ml-8 lg:w-[48%]">
+                      <Image
+                        alt="Four illustrative phones show ready, empty, offline, and low-battery states."
+                        className="h-auto w-full"
+                        height={1024}
+                        sizes="(max-width: 1023px) 95vw, 40vw"
+                        src="/design/articles/mobile-lessons-from-swiggy-scale-detail-recovery.png"
+                        width={1536}
+                      />
+                      <figcaption className="bg-background px-4 py-3 text-xs text-muted-foreground">
+                        Design for the states beyond the happy path.
+                        Illustrative concept.
+                      </figcaption>
+                    </figure>
+                  )}
+                  <ArticleBody
+                    headings={headings}
+                    markdown={post.content.markdown}
+                    slug={post.slug}
+                  />
+                </article>
+              </ReadingProgress>
             )}
 
-            {/* Prev / Next */}
-            <PostNav next={adjacent.next} prev={adjacent.prev} />
-
-            {/* Related reads */}
-            <RelatedPosts posts={related} />
-
             {/* Footer */}
-            <footer className="mt-16 pt-8 border-t border-border">
+            <footer className="mt-8 pt-8 border-t border-border">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <Link
-                  className="inline-flex items-center gap-2 text-sm font-medium text-foreground/80
+                  className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-foreground/80
                              [@media(hover:hover)]:hover:text-foreground transition-colors"
                   href="/blog"
                 >
@@ -367,6 +366,8 @@ export default async function PostPage({ params }: PostPageProps) {
             </footer>
           </div>
         </div>
+        <PostNav next={adjacent.next} prev={adjacent.prev} />
+        <RelatedPosts posts={related} />
       </div>
     </main>
   );
