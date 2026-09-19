@@ -1,6 +1,6 @@
 "use client";
 
-import { IconClock, IconWorld } from "@tabler/icons-react";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 function useSFTime() {
@@ -14,6 +14,7 @@ function useSFTime() {
           hour12: true,
           minute: "2-digit",
           timeZone: "America/Los_Angeles",
+          timeZoneName: "short",
         })
       );
     }
@@ -27,47 +28,49 @@ function useSFTime() {
 
 export function LocationTile() {
   const time = useSFTime();
-
   return (
-    <div className="flex h-full min-h-[120px] flex-col justify-center gap-4 p-5 sm:p-6">
-      {/* Based in */}
-      <div className="flex items-center gap-3">
-        <div className="icon-chip grid h-9 w-9 shrink-0 place-items-center rounded-none">
-          <IconWorld
-            aria-hidden="true"
-            className="h-4 w-4 text-muted-foreground"
-          />
-        </div>
-        <div className="min-w-0">
-          {/* Mono section label — 10px unified */}
-          <p className="ui-label text-muted-foreground">Based in</p>
-          {/* Tile/card title scale — 14px semibold */}
-          <p className="text-[14px] font-semibold text-foreground">India</p>
-        </div>
+    <div className="bento-location bento-surface">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute"
+        style={{ height: "110%", left: "26%", top: "-1%", width: "78%" }}
+      >
+        <Image
+          alt=""
+          className="object-fill opacity-55 grayscale mix-blend-multiply dark:invert dark:mix-blend-screen"
+          fill
+          sizes="(min-width: 768px) 30vw, 75vw"
+          src="/design/location-map.png"
+        />
+        <span
+          className="absolute flex aspect-square w-[4.2%] min-w-[10px] max-w-4 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-primary"
+          style={{ left: "65.5%", top: "45.7%" }}
+        >
+          <span className="size-[40%] rounded-full bg-black" />
+        </span>
       </div>
-
-      <div className="h-px bg-foreground/[0.07]" />
-
-      {/* Working hours */}
-      <div className="flex items-center gap-3">
-        <div className="icon-chip grid h-9 w-9 shrink-0 place-items-center rounded-none">
-          <IconClock
-            aria-hidden="true"
-            className="h-4 w-4 text-muted-foreground"
-          />
-        </div>
-        <div className="min-w-0">
-          {/* Mono section label */}
-          <p className="ui-label text-muted-foreground">Working</p>
-          {/* Tile/card title scale */}
-          <p className="text-[14px] font-semibold text-foreground">
-            SF hours
-            <span className="ml-1.5 text-[12px] font-normal text-muted-foreground tabular-nums">
-              {time ? `${time} PST` : "PST · UTC−8"}
-            </span>
-          </p>
-        </div>
+      <p className="bento-label relative">03 / Location</p>
+      <div className="relative mt-auto">
+        <p className="font-semibold">India</p>
+        <p className="bento-location-time">
+          SF hours{" "}
+          <span className="ml-2 text-muted-foreground tabular-nums">
+            {time ?? "Pacific time"}
+          </span>
+        </p>
       </div>
+      <p
+        aria-hidden="true"
+        className="bento-marginalia absolute bottom-[10%] right-[4%]"
+      >
+        Same
+        <br />
+        Planet
+        <br />
+        Different
+        <br />
+        Timezone
+      </p>
     </div>
   );
 }

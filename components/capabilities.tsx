@@ -2,17 +2,17 @@
 
 import {
   type Icon,
-  IconBolt,
   IconDeviceMobile,
   IconRobot,
   IconServer2,
 } from "@tabler/icons-react";
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import type { ReactNode } from "react";
 import { CanvasGrain } from "@/components/canvas-grain";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { accentColorForTags } from "@/lib/blog-topic";
 import { staggerContainer, staggerItem, viewportOnce } from "@/lib/motion";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import { cn } from "@/lib/utils";
 import { SectionHeader } from "./section-header";
 
@@ -219,8 +219,6 @@ export default function Capabilities() {
       <SectionHeader
         align="left"
         highlight="work"
-        icon={IconBolt}
-        label="Capabilities"
         subtitle="Three things that show up in nearly everything I ship."
         title="How I"
       />

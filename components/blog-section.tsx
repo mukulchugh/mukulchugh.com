@@ -1,121 +1,100 @@
 "use client";
 
-import {
-  IconArrowRight,
-  IconChevronLeft,
-  IconChevronRight,
-} from "@tabler/icons-react";
-import { motion, useReducedMotion } from "motion/react";
+import { IconArrowUpRight } from "@tabler/icons-react";
+import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
-import { BlogPostCard } from "@/components/blog/blog-post-card";
-import { Button } from "@/components/ui/button";
 import type { Post } from "@/lib/blog";
 import { useSectionInView } from "@/lib/hooks";
-import { staggerContainer, staggerItem, viewportOnce } from "@/lib/motion";
-import { SECTION_TITLE } from "@/lib/typography";
-import { cn } from "@/lib/utils";
 
-const PAGE_SIZE = 6;
+const featured = [
+  {
+    dark: true,
+    image: "/design/agent-loop-home-reference.png",
+    lines: ["Agents don't", "fail quietly:", "they loop"],
+    slug: "agent-stuck-detection-tool-loops",
+  },
+  {
+    dark: false,
+    image: "/design/database-layers-home-reference.png",
+    lines: ["Skip your own", "API when you", "own the database"],
+    slug: "skip-your-own-api-when-you-own-the-database",
+  },
+];
 
 export default function BlogSection({ posts = [] }: { posts?: Post[] }) {
   const { ref } = useSectionInView("Blog", 0.2);
-  const shouldReduce = useReducedMotion();
-  const pageCount = Math.ceil(posts.length / PAGE_SIZE);
-  const [page, setPage] = useState(0);
-  const pagePosts = posts.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE);
 
   return (
     <section
-      className="relative scroll-mt-28 w-full min-w-0 p-5 sm:p-6 lg:p-8"
+      className="bento-surface w-full min-w-0 scroll-mt-24 p-3"
       id="blog"
       ref={ref}
     >
-      <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-end sm:justify-between">
-        <div className="flex min-w-0 flex-col gap-2.5">
-          <p className="ui-label text-muted-foreground">05 · Writing</p>
-          <div aria-hidden="true" className="h-px w-10 bg-foreground/[0.07]" />
-          <h2
-            className={cn(
-              "font-syne font-black leading-[1.05] tracking-[-0.04em] text-balance text-foreground"
-            )}
-            style={{ fontSize: SECTION_TITLE }}
-          >
-            Writing &{" "}
-            <span className="font-light text-muted-foreground">notes</span>
-          </h2>
-          <p className="max-w-[48ch] text-[14px] leading-[1.7] text-pretty text-muted-foreground">
-            Short notes on engineering, product, and shipping, from OpenKVM and
-            Brik to agents and founding-team work.
-          </p>
-        </div>
-
+      <div className="relative mb-3 flex min-h-6 items-center justify-between gap-3 px-1">
+        <h2 className="bento-label">09 / Writing & notes</h2>
         <Link
-          className="group inline-flex w-fit items-center gap-1.5 py-2 text-[13px] font-semibold
-                     text-muted-foreground transition-colors duration-200
-                     [@media(hover:hover)]:hover:text-foreground"
+          className="bento-label absolute right-1 top-1/2 inline-flex min-h-6 -translate-y-1/2 items-center gap-1 hover:text-foreground"
           href="/blog"
         >
-          View all on /blog
-          <IconArrowRight
-            className="h-3.5 w-3.5 transition-transform duration-200
-                       [@media(hover:hover)]:group-hover:translate-x-0.5"
-          />
+          All articles <IconArrowUpRight aria-hidden="true" size={12} />
         </Link>
       </div>
-
-      {posts.length === 0 ? (
-        <div className="flex h-[160px] items-center justify-center rounded-none border border-border bg-foreground/[0.03]">
-          <p className="text-[12px] text-muted-foreground/50">No posts yet</p>
-        </div>
-      ) : (
-        <motion.div
-          className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 sm:gap-4"
-          initial={shouldReduce ? false : "hidden"}
-          key={page}
-          variants={shouldReduce ? undefined : staggerContainer}
-          viewport={viewportOnce}
-          whileInView={shouldReduce ? undefined : "visible"}
-        >
-          {pagePosts.map((post, index) => (
-            <motion.div
-              className="min-w-0"
-              key={post.slug}
-              variants={shouldReduce ? undefined : staggerItem}
+      <div className="grid gap-3 md:grid-cols-2">
+        {featured.map(({ slug, image, dark, lines }) => {
+          const post = posts.find((entry) => entry.slug === slug);
+          if (!post) return null;
+          return (
+            <Link
+              className={`group relative block h-[180px] overflow-hidden rounded-xl p-4 md:h-[16.7cqw] md:p-[1.7cqw] ${dark ? "bg-[#151515] text-white" : "bg-[#f3f2f0] text-black"}`}
+              href={`/blog/${slug}`}
+              key={slug}
             >
-              <BlogPostCard index={index} post={post} variant="compact" />
-            </motion.div>
-          ))}
-        </motion.div>
-      )}
-
-      {pageCount > 1 && (
-        <div className="mt-6 flex items-center justify-center gap-4">
-          <Button
-            aria-label="Previous posts"
-            disabled={page === 0}
-            onClick={() => setPage((p) => Math.max(0, p - 1))}
-            size="sm"
-            type="button"
-            variant="secondary"
-          >
-            <IconChevronLeft className="h-4 w-4" />
-          </Button>
-          <span className="font-mono text-[12px] tabular-nums text-muted-foreground">
-            Page {page + 1} of {pageCount}
-          </span>
-          <Button
-            aria-label="Next posts"
-            disabled={page === pageCount - 1}
-            onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
-            size="sm"
-            type="button"
-            variant="secondary"
-          >
-            <IconChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
-      )}
+              <span
+                aria-hidden="true"
+                className="absolute inset-y-0 right-0 w-[55%] [mask-image:linear-gradient(to_right,transparent,black_30%)]"
+              >
+                <Image
+                  alt=""
+                  className="object-cover object-right"
+                  fill
+                  sizes="(max-width: 767px) 95vw, 47vw"
+                  src={image}
+                />
+              </span>
+              <IconArrowUpRight
+                aria-hidden="true"
+                className="absolute right-3 top-3 z-10 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 motion-reduce:transform-none"
+                size={19}
+              />
+              <h3
+                aria-label={post.title}
+                className="relative font-sans text-[clamp(24px,3cqw,42px)] font-extrabold leading-[0.98] tracking-[-0.04em]"
+              >
+                {lines.map((line) => (
+                  <span
+                    aria-hidden="true"
+                    className="block whitespace-nowrap"
+                    key={line}
+                  >
+                    {line}
+                  </span>
+                ))}
+              </h3>
+              <p className="absolute bottom-2 left-4 font-mono text-[9px] md:left-[1.7cqw] md:text-[clamp(8px,0.85cqw,12px)]">
+                {post.readTimeInMinutes} min read ·{" "}
+                <time dateTime={post.publishedAt}>
+                  {new Date(post.publishedAt).toLocaleDateString("en-US", {
+                    day: "numeric",
+                    month: "short",
+                    timeZone: "UTC",
+                    year: "numeric",
+                  })}
+                </time>
+              </p>
+            </Link>
+          );
+        })}
+      </div>
     </section>
   );
 }

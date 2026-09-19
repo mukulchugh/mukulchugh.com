@@ -6,11 +6,12 @@ import {
   IconBrandLinkedin,
   IconBrandX,
   IconCheck,
+  IconCopy,
   IconMail,
 } from "@tabler/icons-react";
 import { motion } from "motion/react";
 import type React from "react";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/lib/data";
 import { microSpring } from "@/lib/motion";
@@ -72,13 +73,11 @@ const socials = [
 
 // ── Email card — copy-to-clipboard + mailto fallback ───────────────────────
 function EmailSocialCard({
-  name,
   handle,
   href,
   Icon,
   color,
 }: {
-  name: string;
   handle: string;
   href: string;
   Icon: typeof IconMail;
@@ -86,6 +85,12 @@ function EmailSocialCard({
 }) {
   const [copied, setCopied] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(
+    () => () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    },
+    []
+  );
 
   const handleClick = useCallback(
     async (e: React.MouseEvent) => {
@@ -178,7 +183,7 @@ function EmailSocialCard({
                   Copied
                 </span>
               ) : (
-                <IconArrowUpRight
+                <IconCopy
                   className="h-4 w-4 text-muted-foreground/50 transition-[color,transform] duration-200
                              [@media(hover:hover)]:group-hover:-translate-y-0.5
                              [@media(hover:hover)]:group-hover:translate-x-0.5
@@ -190,7 +195,7 @@ function EmailSocialCard({
 
           {/* Label — name only; handle shows in aria-label */}
           <span className="relative block truncate text-[14px] font-semibold text-foreground">
-            {name}
+            Copy email
           </span>
         </Button>
 
@@ -228,7 +233,6 @@ export function SocialsTile() {
                 href={href}
                 Icon={Icon}
                 key={name}
-                name={name}
               />
             ) : (
               <div className="h-full" key={name}>

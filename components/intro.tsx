@@ -11,7 +11,7 @@ import clsx from "clsx";
 import { motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
-import React, { Suspense, useCallback, useState } from "react";
+import React, { Suspense, useCallback, useRef, useState } from "react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Tooltip,
@@ -33,6 +33,7 @@ const Component = React.memo(() => {
   const { ref } = useSectionInView("Home", 0.5);
   const { setActiveSection, setTimeOfLastClick } = useActiveSectionContext();
   const [isCVModalOpen, setIsCVModalOpen] = useState(false);
+  const resumeButtonRef = useRef<HTMLButtonElement | null>(null);
 
   const handleClick = useCallback(() => {
     setActiveSection("Contact");
@@ -154,6 +155,7 @@ const Component = React.memo(() => {
             "rounded-none border border-border hover:border-border font-semibold"
           )}
           onClick={handleOpenCV}
+          ref={resumeButtonRef}
           variant="secondary"
         >
           {introContent.resumeButtonText}
@@ -205,6 +207,7 @@ const Component = React.memo(() => {
         isOpen={isCVModalOpen}
         name={siteConfig.firstName}
         onClose={handleCloseCV}
+        returnFocus={resumeButtonRef}
       />
     </section>
   );

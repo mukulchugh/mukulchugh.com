@@ -4,10 +4,10 @@ import type { Metadata } from "next";
 import type React from "react";
 import { AnalyticsWrapper } from "@/components/analytics-wrapper";
 import Footer from "@/components/footer";
-import { HeroBackground } from "@/components/hero-background";
 import { JsonLd } from "@/components/json-ld";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Dock } from "@/components/ui/dock";
+import { RouteTransition } from "@/components/ui/route-transition";
 import ActiveSectionContextProvider from "@/context/active-section-context";
 import { siteConfig, skillsData } from "@/lib/data";
 import { geist, syne } from "@/lib/fonts";
@@ -151,6 +151,7 @@ export default function RootLayout({
   return (
     <html
       className={`${syne.variable} ${geist.variable} !scroll-smooth`}
+      data-scroll-behavior="smooth"
       lang="en"
       suppressHydrationWarning
     >
@@ -172,9 +173,8 @@ export default function RootLayout({
       </head>
       <body className="font-sans bg-background text-foreground relative transition-colors duration-300 ease-out">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <HeroBackground />
           <ActiveSectionContextProvider>
-            {children}
+            <RouteTransition>{children}</RouteTransition>
             <Footer />
             <Dock />
           </ActiveSectionContextProvider>

@@ -23,11 +23,10 @@ export const siteConfig = {
   // Images
   images: {
     favicon: "/favicon.png",
-    logoDark: "https://ik.imagekit.io/kooxhdceru/portfolio/logo-white.webp",
-    logoLight: "https://ik.imagekit.io/kooxhdceru/portfolio/logo-black.webp",
+    logoDark: "/design/brand/logo-white.webp",
+    logoLight: "/design/brand/logo-black.webp",
     ogImage: "/Thumbnail.webp",
-    profileImage:
-      "https://ik.imagekit.io/kooxhdceru/portfolio/mukul.webp?updatedAt=1682213515842",
+    profileImage: "/design/brand/mukul-original.webp",
   },
 
   // Keywords for SEO (used in JSON-LD)
@@ -117,15 +116,15 @@ export const footerContent = {
 
 export const links = [
   {
-    hash: "#home",
+    hash: "/#home",
     name: "Home",
   },
   {
-    hash: "#about",
+    hash: "/#about",
     name: "About",
   },
   {
-    hash: "#projects",
+    hash: "/#projects",
     name: "Projects",
   },
   {
@@ -133,11 +132,11 @@ export const links = [
     name: "Blog",
   },
   {
-    hash: "#experience",
+    hash: "/#experience",
     name: "Experience",
   },
   {
-    hash: "#contact",
+    hash: "/#contact",
     name: "Contact",
   },
 ] as const;
@@ -152,7 +151,7 @@ export const experiencesData = [
       "Develop across the full stack: frontend, backend, and AI/ML integrations.",
       "Shape product design and engineering culture as a core founding team member.",
     ],
-    icon: "https://ik.imagekit.io/kooxhdceru/portfolio/quivly.webp",
+    icon: "/design/brand/quivly-icon.ico",
     location: "San Francisco, CA (Hybrid)",
     title: "Founding Engineer",
   },
@@ -167,7 +166,7 @@ export const experiencesData = [
       "Developed internal tools for product and category managers to monitor funnels, SLAs, and quality metrics.",
       "Profiled with Flipper, Metro, and platform-native tools; cut bundle size and resolved memory bottlenecks.",
     ],
-    icon: "https://ik.imagekit.io/kooxhdceru/portfolio/swiggy.webp",
+    icon: "/design/brand/swiggy.webp",
     location: "Bengaluru, Karnataka, India",
     title: "Software Development Engineer",
   },
@@ -183,7 +182,7 @@ export const experiencesData = [
       "Set up Customer Data Platform (CDP) and user analytics; owned product docs, blog, and landing pages.",
       "Represented Zenduty at KubeCon India and Grayscale AI Week, contributing to developer relations and community engagement.",
     ],
-    icon: "https://ik.imagekit.io/kooxhdceru/portfolio/zenduty.webp",
+    icon: "/design/brand/zenduty.webp",
     location: "Bengaluru, Karnataka, India",
     title: "Software Development Engineer",
   },
@@ -195,7 +194,7 @@ export const experiencesData = [
       "Owned product design, technology decisions, and development end-to-end as a co-founder.",
       "Ran agile sprints and led development from spec to ship, improving team delivery speed by 30%.",
     ],
-    icon: "https://ik.imagekit.io/kooxhdceru/portfolio/heroapp.webp",
+    icon: "/design/brand/heroapp.webp",
     location: "Gurugram, Haryana, India",
     title: "Co-Founder & Engineer",
   },
@@ -208,7 +207,7 @@ export const experiencesData = [
       "Shipped all deliverables on time and within budget.",
       "Improved cross-team communication and handoffs, raising overall team productivity.",
     ],
-    icon: "https://ik.imagekit.io/kooxhdceru/portfolio/instahomes.webp",
+    icon: "/design/brand/instahomes.webp",
     location: "Manila, NCR Region, Philippines",
     title: "Software Engineer Associate",
   },
@@ -220,7 +219,7 @@ export const experiencesData = [
       "Led a small team to revamp the brand's social media presence, increasing engagement and brand awareness by 30%.",
       "Developed event and workshop platform, leading to a 25% increase in attendance.",
     ],
-    icon: "https://ik.imagekit.io/kooxhdceru/portfolio/guby-rogers.webp",
+    icon: "/design/brand/guby-rogers.webp",
     location: "Gurugram, Haryana, India",
     title: "Web Developer & Product Generalist",
   },
@@ -232,7 +231,7 @@ export const experiencesData = [
       "Translated client requirements into clean, functional websites.",
       "Implemented SEO best practices to improve client website visibility.",
     ],
-    icon: "https://ik.imagekit.io/kooxhdceru/portfolio/digital-moshai.webp",
+    icon: "/design/brand/digital-moshai.webp",
     location: "New Delhi, India",
     title: "Freelance Web Developer",
   },
@@ -244,7 +243,7 @@ export const experiencesData = [
       "Mentored students in web development and cloud technologies.",
       "Represented Microsoft at campus events and tech conferences.",
     ],
-    icon: "https://ik.imagekit.io/kooxhdceru/portfolio/microsoft.webp",
+    icon: "/design/brand/microsoft.webp",
     location: "New Delhi, India",
     title: "Community Lead & Student Ambassador",
   },
