@@ -85,7 +85,7 @@ export function ProjectPeekModal({
           <div className="absolute top-4 left-5">
             <span
               className={cn(
-                "ui-label inline-flex items-center rounded-none border px-2.5 py-0.5",
+                "ui-label inline-flex items-center rounded-md border px-2.5 py-1",
                 cover.labelBg,
                 cover.labelColor
               )}
@@ -99,7 +99,7 @@ export function ProjectPeekModal({
             className="absolute inset-0 flex items-center pl-5 pr-16 sm:pl-7"
           >
             <span
-              className="font-syne block truncate font-extrabold tracking-[-0.04em] leading-[0.95]"
+              className="font-sans block truncate font-extrabold tracking-[-0.04em] leading-[0.95]"
               style={{
                 color: cover.titleColor,
                 fontSize: "clamp(2rem, 9vw, 3.25rem)",
@@ -123,8 +123,8 @@ export function ProjectPeekModal({
         <div className="flex min-h-0 flex-col gap-5 overflow-y-auto p-6 sm:p-7">
           <DialogTitle
             className={cn(
-              "font-syne",
-              "text-xl font-bold text-foreground sm:text-2xl"
+              "font-sans",
+              "text-2xl font-semibold leading-[1.15] tracking-[-0.025em] text-foreground sm:text-3xl"
             )}
           >
             {project.title}
@@ -138,8 +138,7 @@ export function ProjectPeekModal({
             <div className="flex flex-wrap gap-1.5">
               {project.tags.map((tag) => (
                 <Badge
-                  className="ui-label rounded-none px-2.5 py-0.5
-                             border border-border bg-foreground/[0.04] text-muted-foreground"
+                  className="border-border bg-muted text-foreground"
                   key={tag}
                   variant="outline"
                 >

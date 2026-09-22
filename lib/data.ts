@@ -34,7 +34,7 @@ export const siteConfig = {
     "Mukul Chugh",
     "themukulchugh",
     "Mukul Chugh portfolio",
-    "engineer turned generalist",
+    "product builder",
     "product engineer",
     "founding engineer",
     "full stack engineer",
@@ -61,7 +61,7 @@ export const siteConfig = {
   // Personal Info
   name: "Mukul Chugh",
   siteDescription:
-    "Founding Engineer at Quivly.ai, building AI-powered products. An engineer turned generalist spanning mobile, full-stack, product, and design. Previously at Swiggy and Zenduty (acquired).",
+    "Engineer by craft. Builder by instinct. Founding Engineer at Quivly.ai, working across mobile, full-stack, product, and design. Previously at Swiggy and Zenduty (acquired).",
   siteTitle: "Mukul Chugh | Product Engineer · Mobile, Full-Stack & AI",
 
   // SEO & Meta
@@ -74,19 +74,17 @@ export const siteConfig = {
     linkedin: "https://linkedin.com/in/mukulchugh",
     twitter: "https://twitter.com/themukulchugh",
   },
-  tagline: "Engineer turned generalist. Building products end to end.",
+  tagline: "Engineer by craft. Builder by instinct.",
   title: "Product Engineer",
 } as const;
 
 // About Section Content
 export const aboutContent = {
-  heading: "About me",
+  heading: "The longer story.",
   paragraphs: [
-    "Hey, I'm Mukul, an engineer who gradually absorbed product and design until the job title stopped making sense.",
-    "Mobile and full-stack development are my core, but I've spent years working close enough to product and design that the lines blur. I write code, shape features, and push pixels when needed, usually all in the same week.",
-    "Right now I'm a Founding Engineer at Quivly.ai in San Francisco, building AI-powered products from scratch alongside the CTO. Before that, I was at Swiggy building mobile products at scale, and at Zenduty where I shipped across mobile, web, and internal tooling until the company was acquired.",
-    "I've also co-founded a startup (HeroApp) and done enough freelance work to know what I don't want. What I do want: hard problems, small fast teams, and software that earns its keep by being genuinely useful.",
-    "Building something interesting? I'd like to hear about it.",
+    "Creating digital experiences for humans has been the thread through my work for years. Early on, that meant websites and visual design for freelance clients. I also co-founded HeroApp, working across product design and development. Engineering became my foundation, but I was interested in what people experienced as much as how it was built.",
+    "At Zenduty, I grew from an intern into an engineering role, contributing across the mobile app, web experiences, and internal products. At Swiggy, I worked on Pyng’s seller onboarding, self-service tools, and mobile updates. Today, I’m a founding engineer at Quivly, working with the team on AI-powered products for post-sales teams. Each chapter has brought a different part of the product into view.",
+    "AI gives me more room to take an idea further. I build with agents, and I build the tools around them: deciding how work is divided, how results are checked, and when a person needs to step in. Away from the day job, projects like OpenKVM and ctxr let me follow practical questions of my own, from making two Macs share a keyboard to making a video useful to an agent. I want a hand in the first question, the product decisions, and the details that make the result worth using.",
   ],
 } as const;
 
@@ -116,15 +114,15 @@ export const footerContent = {
 
 export const links = [
   {
-    hash: "/#home",
+    hash: "/",
     name: "Home",
   },
   {
-    hash: "/#about",
+    hash: "/about",
     name: "About",
   },
   {
-    hash: "/#projects",
+    hash: "/projects",
     name: "Projects",
   },
   {
@@ -132,11 +130,11 @@ export const links = [
     name: "Blog",
   },
   {
-    hash: "/#experience",
+    hash: "/experience",
     name: "Experience",
   },
   {
-    hash: "/#contact",
+    hash: "/contact",
     name: "Contact",
   },
 ] as const;
@@ -196,7 +194,7 @@ export const experiencesData = [
     ],
     icon: "/design/brand/heroapp.webp",
     location: "Gurugram, Haryana, India",
-    title: "Co-Founder & Engineer",
+    title: "Co-founder & CTO",
   },
   {
     company: "Instahomes PH",
@@ -251,6 +249,62 @@ export const experiencesData = [
 
 export const projectsData = [
   {
+    demo: "",
+    description:
+      "Portable plugins for Codex, Claude Code, and Cursor. Set up isolated work, turn pull requests into evidence-backed walkthroughs, and explain changes in product language.",
+    github: "https://github.com/mukulchugh/skills",
+    tags: ["Python", "Developer Tools", "AI Agents", "Open Source"],
+    title: "Agent workflow skills",
+  },
+  {
+    demo: "",
+    description:
+      "A dashboard plugin that makes Honcho agent memory explorable: relationship graphs, searchable facts, pipeline status, and questions about what an agent knows.",
+    github: "https://github.com/mukulchugh/hermes-memory",
+    tags: ["Python", "FastAPI", "React", "PostgreSQL"],
+    title: "Hermes Memory",
+  },
+  {
+    demo: "https://get-gitbook.vercel.app",
+    description:
+      "A React interface for searching GitHub profiles, comparing users, exploring repository activity, and keeping a personal watchlist.",
+    github: "https://github.com/mukulchugh/github-profile-explorer",
+    tags: ["React", "TypeScript", "TanStack Query", "GitHub API"],
+    title: "GitHub Profile Explorer",
+  },
+  {
+    demo: "",
+    description:
+      "A rent-receipt generator that turns tenant, property, and payment details into a multi-month PDF, with receipt previews and signature input.",
+    github: "https://github.com/mukulchugh/memo",
+    tags: ["React", "TypeScript", "PDF", "Vite"],
+    title: "Memo",
+  },
+  {
+    demo: "",
+    description:
+      "A lodging-marketplace web project with property listings, favorites, date-based reservations, and host-facing management screens. Presented as a code-backed prototype.",
+    github: "https://github.com/mukulchugh/hostville-app",
+    tags: ["NextJS", "React", "Prisma", "Prototype"],
+    title: "Hostville",
+  },
+  {
+    demo: "",
+    description:
+      "An editorial event website for an education-leadership and career-counselling summit, bringing the programme, speakers, passes, and contact information into one landing page.",
+    github: "https://github.com/mukulchugh/eil-website",
+    tags: ["HTML", "CSS", "TailwindCSS", "Web Design"],
+    title: "EIL Conference",
+  },
+  {
+    demo: "",
+    description:
+      "A React gym-management interface combining a public programme and shop website with account, member, and trainer dashboards. Historical project; live operations are not verified.",
+    github: "https://github.com/mukulchugh/GymCenter--RIZIQ-IT-Solutions",
+    tags: ["React", "React Router", "Dashboards", "Historical project"],
+    title: "Gym Center",
+  },
+  {
     demo: "https://github.com/mukulchugh/OpenKVM/releases/latest",
     description:
       "An open-source macOS menu bar app that shares one keyboard and mouse between two Macs over the local network. Captures HID input on one Mac and replays it on another via TCP/UDP with Bonjour discovery, a hotkey-driven alternative to Universal Control that works across different Apple IDs.",
@@ -265,6 +319,22 @@ export const projectsData = [
     github: "https://github.com/mukulchugh/brik",
     tags: ["React Native", "TypeScript", "SwiftUI", "Jetpack Compose", "Expo"],
     title: "Brik",
+  },
+  {
+    demo: "",
+    description:
+      "Turn YouTube videos into agent-readable context: transcripts, keyframes, and timestamped Markdown walkthroughs, available through a CLI and MCP server.",
+    github: "https://github.com/mukulchugh/ctxr",
+    tags: ["Python", "AI Agents", "MCP", "Video", "Open Source"],
+    title: "ctxr",
+  },
+  {
+    demo: "",
+    description:
+      "A workspace manager for worktrees and development environments, built for the Quivly engineering team. Private internal tooling; only a high-level overview is shared.",
+    github: "",
+    tags: ["Developer Tools", "Private product work", "Quivly"],
+    title: "Setu",
   },
   {
     demo: "",
@@ -315,16 +385,11 @@ export const projectsData = [
     title: "Quivly agents",
   },
   {
-    demo: "",
+    demo: "https://tethr.cc",
     description:
-      "A personal project for reviewing and releasing agent-written plans: agents propose attributable changes, people retain the final review and release decision.",
+      "A shared planning workspace for people and their existing AI agents. Versioned sections, reviewable proposals, and human-approved releases keep everyone working from the same plan. In private alpha.",
     github: "",
-    tags: [
-      "Private project",
-      "AI Agents",
-      "Collaboration",
-      "Human-in-the-loop",
-    ],
+    tags: ["Private alpha", "AI Agents", "Collaboration", "Human-in-the-loop"],
     title: "Tethr",
   },
   {
@@ -349,11 +414,11 @@ export const projectsData = [
     title: "Moshi Health",
   },
   {
-    demo: "",
+    demo: "https://altr.run",
     description:
-      "A personal product and design exploration, kept private while the direction and product surface continue to evolve.",
+      "A Mac-native workspace for taking team requests from context to spec, implementation, and review. Altr keeps the original intent and acceptance criteria attached as people and agents move the work forward. In early access.",
     github: "",
-    tags: ["Private project", "Product Design", "Web"],
+    tags: ["Early access", "AI Agents", "macOS", "Human-in-the-loop"],
     title: "Altr",
   },
   {
@@ -500,7 +565,7 @@ export const footerSocialLinks = [
     path: "M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5c.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34c-.46-1.16-1.11-1.47-1.11-1.47c-.91-.62.07-.6.07-.6c1 .07 1.53 1.03 1.53 1.03c.87 1.52 2.34 1.07 2.91.83c.09-.65.35-1.09.63-1.34c-2.22-.25-4.55-1.11-4.55-4.92c0-1.11.38-2 1.03-2.71c-.1-.25-.45-1.29.1-2.64c0 0 .84-.27 2.75 1.02c.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02c.55 1.35.2 2.39.1 2.64c.65.71 1.03 1.6 1.03 2.71c0 3.82-2.34 4.66-4.57 4.91c.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2",
   },
   {
-    ariaLabel: "Read my blog",
+    ariaLabel: "Read my writing",
     href: "https://mukulchugh.com/blog",
     name: "Blog",
     path: "M19 5v14H5V5zm0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m-5 14H7v-2h7zm3-4H7v-2h10zm0-4H7V7h10z",

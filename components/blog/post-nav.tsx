@@ -31,8 +31,8 @@ function NavCard({
       </span>
       <span
         className={cn(
-          "font-syne",
-          "text-[15px] font-semibold text-foreground leading-snug line-clamp-2"
+          "font-heading",
+          "text-base font-medium text-foreground leading-snug [overflow-wrap:anywhere]"
         )}
       >
         {post.title}

@@ -122,7 +122,7 @@ export function BlogPostCard({
           {/* Title */}
           <Heading
             className={cn(
-              "font-syne",
+              "font-sans",
               "font-semibold tracking-[-0.025em] text-foreground break-words text-balance",
               compact
                 ? "text-[1rem] leading-snug"

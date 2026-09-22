@@ -1,0 +1,172 @@
+.profile {
+  --tile-sheen: none;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(24px, 2.8cqw, 40px);
+  padding: clamp(24px, 2.2cqw, 32px);
+  overflow: hidden;
+  color: #11130c;
+  scroll-margin-top: 1rem;
+  background: #d5ff55;
+  border-color: rgb(17 19 12 / 16%);
+  isolation: isolate;
+}
+
+.shader {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+@media (forced-colors: active) {
+  .shader {
+    display: none;
+  }
+}
+
+.headline {
+  margin: 0;
+  font-size: clamp(32px, 5.25cqw, 74px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+
+.headline span {
+  display: block;
+}
+
+.introduction {
+  display: flex;
+  gap: clamp(16px, 2cqw, 28px);
+  align-items: center;
+}
+
+.portrait {
+  flex: 0 0 auto;
+  width: clamp(72px, 8cqw, 112px);
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+  background: linear-gradient(
+    145deg,
+    rgb(255 255 255 / 90%),
+    rgb(205 210 216 / 78%)
+  );
+  border: 1px solid rgb(255 255 255 / 80%);
+  border-radius: 50%;
+  box-shadow:
+    0 4px 14px rgb(17 19 12 / 8%),
+    inset 0 1px 2px rgb(255 255 255 / 60%);
+  -webkit-backdrop-filter: blur(12px) saturate(0);
+  backdrop-filter: blur(12px) saturate(0);
+}
+
+@supports not (
+    (backdrop-filter: blur(1px)) or
+    (-webkit-backdrop-filter: blur(1px))
+  ) {
+  .portrait {
+    background: #e5e7eb;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .portrait {
+    background: #e5e7eb;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+.intro {
+  max-width: 39ch;
+  margin: 0;
+  font-size: clamp(15px, 1.5cqw, 21px);
+  line-height: 1.45;
+}
+
+.workLink {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 64px;
+  padding-top: 20px;
+  margin-top: auto;
+  font-size: clamp(22px, 2.4cqw, 34px);
+  font-weight: 500;
+  line-height: 1.2;
+  color: inherit;
+  text-decoration: none;
+  border-top: 1px solid rgb(17 19 12 / 55%);
+}
+
+.workLink svg {
+  flex-shrink: 0;
+  width: 1.15em;
+  height: 1.15em;
+  transition: transform 180ms ease-out;
+}
+
+.workLink:hover svg {
+  transform: translateX(4px);
+}
+
+.workLink:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 6px;
+  border-radius: 2px;
+}
+
+.profile ::selection {
+  color: #d5ff55;
+  background: #11130c;
+}
+
+@media (max-width: 767px) {
+  .profile {
+    gap: 28px;
+    padding: 22px;
+  }
+
+  .headline {
+    font-size: clamp(30px, 9.5cqw, 68px);
+  }
+
+  .portrait {
+    width: 72px;
+  }
+
+  .intro {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 359px) {
+  .introduction {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .workLink svg {
+    transition: none;
+  }
+
+  .workLink:hover svg {
+    transform: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .profile {
+    color: CanvasText;
+    background: Canvas;
+  }
+}

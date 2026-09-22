@@ -23,14 +23,12 @@ export default function Error({
       <BrandBar />
       <div className="grid gap-3 md:grid-cols-[56fr_44fr] md:gap-[1cqw]">
         <section className="bento-surface flex flex-col items-start p-6 md:min-h-[51cqw] md:p-[3cqw]">
-          <p className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground md:mt-[1cqw] md:text-[0.95cqw]">
+          <p className="ui-label flex items-center gap-3 text-muted-foreground md:mt-[1cqw]">
             <span aria-hidden="true" className="h-px w-6 bg-current" />
             Something went wrong
           </p>
-          <h1 className="my-8 text-[clamp(36px,6cqw,84px)] font-black leading-[0.9] tracking-[-0.065em] md:mb-[2.6cqw] md:mt-[4.5cqw]">
-            Let’s try
-            <br />
-            that again.
+          <h1 className="my-8 text-balance font-sans text-[clamp(2rem,4.5cqw,3.5rem)] font-semibold leading-[1.12] tracking-[-0.025em] md:mb-[2.6cqw] md:mt-[4.5cqw]">
+            This page ran into a problem.
           </h1>
           <p className="text-lg leading-tight text-foreground/80 md:text-[2.05cqw]">
             Something interrupted this page.
@@ -76,7 +74,7 @@ export default function Error({
             sizes="(min-width: 768px) 42vw, 95vw"
             src="/design/error-reference.png"
           />
-          <span className="absolute left-6 top-6 font-mono text-xs uppercase leading-snug tracking-[0.15em] text-white md:left-[2.8cqw] md:top-[2.8cqw] md:text-[0.95cqw]">
+          <span className="ui-label absolute left-6 top-6 text-white md:left-[2.8cqw] md:top-[2.8cqw]">
             A small
             <br />
             setback

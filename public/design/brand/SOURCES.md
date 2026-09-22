@@ -1,5 +1,7 @@
 # Brand originals
 
+`xurrent.png`: official Xurrent webclip, retrieved unchanged from https://cdn.prod.website-files.com/67b20f268356de61cfe3fc70/67fa322c5cf0810424d8cd1d_xurrent%20webclip.png on 2026-09-21 (linked by https://www.xurrent.com).
+
 Mukul's `logo-black.webp`, `logo-white.webp`, and `mukul-original.webp` are the original assets supplied in the portfolio design pack.
 
 Quivly assets retrieved from its official site on 2026-09-19, unchanged:

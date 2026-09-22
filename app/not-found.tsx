@@ -17,7 +17,7 @@ export default function NotFound() {
           {siteConfig.name}
         </Link>
         <span className="border-l border-border pl-4 text-sm text-muted-foreground md:text-[1.25cqw]">
-          Engineer turned generalist.
+          {siteConfig.tagline}
         </span>
       </header>
       <div className="grid gap-3 md:grid-cols-2 md:gap-[1cqw]">
@@ -25,10 +25,8 @@ export default function NotFound() {
           <p className="font-mono text-xs tracking-wide text-muted-foreground md:text-[1.1cqw]">
             404 / NOT FOUND
           </p>
-          <h1 className="my-8 text-[clamp(40px,6.5cqw,90px)] font-black leading-[0.9] tracking-[-0.065em] md:mb-[2.5cqw] md:mt-[5.5cqw]">
-            Lost in
-            <br />
-            the grid.
+          <h1 className="my-8 text-balance font-sans text-[clamp(2rem,4.5cqw,3.5rem)] font-semibold leading-[1.12] tracking-[-0.025em] md:mb-[2.5cqw] md:mt-[5.5cqw]">
+            Page not found.
           </h1>
           <p className="max-w-[26ch] text-lg leading-snug text-muted-foreground md:text-[1.8cqw]">
             This page may have moved, or the link may be incorrect.
@@ -53,7 +51,8 @@ export default function NotFound() {
             fill
             preload
             sizes="(min-width: 768px) 48vw, 95vw"
-            src="/design/chrome-ribbon.png"
+            src="/design/chrome-ribbon.webp"
+            unoptimized
           />
         </div>
       </div>

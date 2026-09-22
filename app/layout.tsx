@@ -150,7 +150,7 @@ export default function RootLayout({
 }) {
   return (
     <html
-      className={`${syne.variable} ${geist.variable} !scroll-smooth`}
+      className={`${geist.variable} ${syne.variable} motion-safe:scroll-smooth`}
       data-scroll-behavior="smooth"
       lang="en"
       suppressHydrationWarning

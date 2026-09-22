@@ -14,11 +14,11 @@ export const metadata: Metadata = {
   openGraph: {
     description:
       "Notes on engineering, product, and the craft of building software that earns its keep.",
-    title: "Blog | Mukul Chugh",
+    title: "Writing | Mukul Chugh",
     type: "website",
     url: `${siteConfig.siteUrl}/blog`,
   },
-  title: "Blog",
+  title: "Writing",
 };
 
 export default async function BlogPage() {
@@ -27,14 +27,11 @@ export default async function BlogPage() {
   return (
     <main className="w-full py-6 sm:py-8">
       <header className="mb-6 px-1 sm:mb-8">
-        <p className="bento-label mb-4">01 / Writing</p>
-        <h1 className="font-syne text-[clamp(2.5rem,6vw,5.25rem)] font-extrabold leading-[0.85] tracking-[-0.065em]">
-          Writing &amp;
-          <br />
-          notes.
+        <h1 className="max-w-[16ch] text-balance font-sans text-[clamp(2.25rem,5vw,4rem)] font-semibold leading-[1.1] tracking-[-0.035em]">
+          Notes from the work.
         </h1>
-        <p className="mt-5 text-base tracking-[0.12em] sm:text-xl">
-          Ideas. Systems. Less noise.
+        <p className="mt-5 max-w-[55ch] text-base leading-relaxed text-muted-foreground">
+          On engineering, product, and building software.
         </p>
       </header>
       <PostsGrid posts={posts} />

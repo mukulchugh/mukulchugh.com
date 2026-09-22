@@ -64,11 +64,11 @@ export function CVModal({
             <div>
               <DialogTitle
                 className={cn(
-                  "font-syne",
-                  "text-lg font-semibold text-foreground sm:text-xl break-words"
+                  "font-sans",
+                  "text-xl font-semibold leading-[1.15] tracking-[-0.025em] text-foreground sm:text-2xl break-words"
                 )}
               >
-                {name}&apos;s Resume
+                Resume
               </DialogTitle>
               <DialogDescription className="sr-only">
                 View or download {name}&apos;s resume in PDF format

@@ -82,7 +82,13 @@ const tileSurfaceStyle: React.CSSProperties = {
   background: "#101112",
 };
 
-function CopyEmailButton() {
+function CopyEmailButton({
+  light = false,
+  homepage = false,
+}: {
+  light?: boolean;
+  homepage?: boolean;
+}) {
   const [copied, setCopied] = useState(false);
   const [copyFailed, setCopyFailed] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -110,12 +116,17 @@ function CopyEmailButton() {
   return (
     <Button
       aria-label={copied ? "Email copied to clipboard" : "Copy email address"}
-      className="inline-flex w-full items-center gap-2 px-3 py-1.5 min-h-[44px] rounded-none
+      className={cn(
+        `inline-flex w-full items-center gap-2 px-4 py-2 min-h-[44px] rounded-[10px]
                  bg-white/[0.06] border border-white/[0.1]
-                 text-[12px] font-mono text-white/75
+                 text-sm font-sans text-white/90
                  [@media(hover:hover)]:hover:bg-white/[0.12] [@media(hover:hover)]:hover:border-white/[0.2]
-                 [@media(hover:hover)]:hover:text-white/70
-                 transition-colors duration-200 cursor-pointer select-none"
+                 [@media(hover:hover)]:hover:text-white
+                 transition-colors duration-200 cursor-pointer select-none`,
+        homepage && "min-h-12 justify-start px-5 [&_svg]:size-4",
+        light &&
+          "border-black/15 bg-black/[0.03] text-black/75 [@media(hover:hover)]:hover:border-black/25 [@media(hover:hover)]:hover:bg-black/[0.06] [@media(hover:hover)]:hover:text-black"
+      )}
       onClick={handleCopy}
       type="button"
       variant="ghost"
@@ -137,7 +148,10 @@ function CopyEmailButton() {
         transition={microSpring}
       >
         {copied ? (
-          <IconCheck className="text-white/70" size={11} />
+          <IconCheck
+            className={light ? "text-black/70" : "text-white/70"}
+            size={11}
+          />
         ) : (
           <IconMail size={11} />
         )}
@@ -149,10 +163,14 @@ function CopyEmailButton() {
         key={copied ? "copied-label" : "email-label"}
         transition={microSpring}
       >
-        <span className="block text-left text-[11px]">
+        <span
+          className={cn("block text-left text-[11px]", homepage && "text-sm")}
+        >
           {copyFailed ? "Use the email link" : copied ? "Copied" : "Copy email"}
         </span>
-        <span className="block text-[9px]">{siteConfig.email.display}</span>
+        <span className={cn("block text-[9px]", homepage && "text-xs")}>
+          {siteConfig.email.display}
+        </span>
       </motion.span>
     </Button>
   );
@@ -254,7 +272,15 @@ function TileChrome() {
   );
 }
 
-export function CTATile() {
+export function CTATile({
+  appearance = "dark",
+  compact = false,
+  homepage = false,
+}: {
+  appearance?: "dark" | "light";
+  compact?: boolean;
+  homepage?: boolean;
+}) {
   const { ref } = useSectionInView("Contact");
   const sectionRef = useRef<HTMLElement | null>(null);
   const triggerWrapperRef = useRef<HTMLDivElement | null>(null);
@@ -265,6 +291,7 @@ export function CTATile() {
   const [mode, setMode] = useState<"intro" | "booking">("intro");
   const [isCVModalOpen, setIsCVModalOpen] = useState(false);
   const isBooking = mode === "booking";
+  const lightIntro = appearance === "light" && !isBooking;
 
   const rawX = useMotionValue(50);
   const rawY = useMotionValue(50);
@@ -338,9 +365,10 @@ export function CTATile() {
     if (!shouldRestoreFocusRef.current) {
       return;
     }
+    if (homepage) return;
     shouldRestoreFocusRef.current = false;
     triggerWrapperRef.current?.querySelector<HTMLElement>("button")?.focus();
-  }, [isBooking]);
+  }, [isBooking, homepage]);
 
   const handleMouseMove = useCallback(
     (e: React.MouseEvent<HTMLElement>) => {
@@ -374,23 +402,30 @@ export function CTATile() {
           page — other tiles, scroll position — stays exactly where it is. */}
       <motion.section
         className={cn(
-          "scroll-mt-28 relative h-full overflow-hidden rounded-[14px]",
+          "tile-glass scroll-mt-28 relative h-full overflow-hidden rounded-[14px]",
+          homepage &&
+            "transition-[min-height] duration-500 ease-out motion-reduce:transition-none",
           isBooking
             ? "min-h-[620px] sm:min-h-[680px] lg:min-h-[760px]"
-            : "min-h-[340px] md:min-h-[22cqw]"
+            : homepage
+              ? "min-h-[460px] md:min-h-[480px]"
+              : compact
+                ? "min-h-[320px]"
+                : "min-h-[340px] md:min-h-[22cqw]",
+          lightIntro && "border border-border"
         )}
         id="contact"
-        layout="size"
+        layout={homepage ? false : "size"}
         onMouseEnter={shouldReduce ? undefined : handleMouseEnter}
         onMouseLeave={shouldReduce ? undefined : handleMouseLeave}
         onMouseMove={shouldReduce ? undefined : handleMouseMove}
         ref={setRefs}
-        style={tileSurfaceStyle}
+        style={lightIntro ? { background: "#f4f4f2" } : tileSurfaceStyle}
         transition={shouldReduce ? { duration: 0 } : premiumSpring}
       >
-        <TileChrome />
+        {!lightIntro && <TileChrome />}
 
-        {!isBooking &&
+        {!(isBooking || lightIntro) &&
           (shouldReduce ? (
             <div
               aria-hidden="true"
@@ -417,21 +452,27 @@ export function CTATile() {
             different — without this the two would momentarily stack).
             Sync/popLayout only, never "wait": mode="wait" here would recreate
             the exact bug this rework fixes (see below). */}
-        <AnimatePresence initial={false} mode="popLayout">
+        <AnimatePresence initial={false} mode={homepage ? "wait" : "popLayout"}>
           {isBooking ? (
             <motion.div
               animate={shouldReduce ? { opacity: 1 } : bookingContentAnimate}
-              className="relative z-10 flex h-full flex-col gap-5 p-5 sm:p-6 lg:p-8"
+              className={cn(
+                "relative z-10 flex h-full flex-col gap-5 p-5 sm:p-6 lg:p-8",
+                appearance === "light" && "bg-[#101112]"
+              )}
               exit={shouldReduce ? { opacity: 0 } : contentExit}
               initial={shouldReduce ? { opacity: 0 } : bookingContentInitial}
               key="booking-content"
+              onAnimationComplete={() =>
+                backButtonRef.current?.focus({ preventScroll: true })
+              }
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex flex-col gap-1.5">
                   <h2
                     className={cn(
-                      "font-syne",
-                      "text-[1.35rem] sm:text-[1.6rem] font-extrabold tracking-[-0.04em] text-white"
+                      "font-sans",
+                      "text-2xl sm:text-3xl font-semibold leading-[1.15] tracking-[-0.025em] text-white"
                     )}
                   >
                     Pick a time
@@ -443,7 +484,7 @@ export function CTATile() {
 
                 <Button
                   aria-label="Back to contact options"
-                  className="shrink-0 rounded-none border border-white/[0.12] bg-white/[0.06]
+                  className="shrink-0 rounded-[10px] border border-white/[0.2] bg-white/[0.06]
                              px-3.5 text-[12px] font-medium text-white/70
                              hover:bg-white/[0.1] hover:text-white"
                   onClick={closeBooking}
@@ -476,59 +517,112 @@ export function CTATile() {
               // animate={{opacity:1, ...}} as an object literal, so children
               // matched against itemVariants.hidden and never received a
               // "visible" signal to animate away from it.
-              animate={shouldReduce ? undefined : "visible"}
-              className="relative z-10 h-full flex flex-col md:flex-row md:items-center justify-between
-                         gap-6 p-5 md:px-[2cqw] md:py-[1.6cqw]"
+              animate={
+                shouldReduce || homepage ? { opacity: 1, y: 0 } : "visible"
+              }
+              className={cn(
+                "relative z-10 h-full flex flex-col justify-between gap-6 p-5 md:px-[2cqw] md:py-[1.6cqw]",
+                !compact && "md:flex-row md:items-center",
+                homepage && "min-h-[460px] gap-10 p-7 md:min-h-[480px] md:p-12",
+                appearance === "light" && "bg-[#f4f4f2]"
+              )}
               exit={shouldReduce ? { opacity: 0 } : contentExit}
-              initial={shouldReduce ? undefined : "hidden"}
+              initial={
+                shouldReduce
+                  ? false
+                  : homepage
+                    ? { opacity: 0, y: 12 }
+                    : "hidden"
+              }
               key="intro-content"
               style={shouldReduce ? { opacity: 1 } : undefined}
-              variants={shouldReduce ? undefined : containerVariants}
+              variants={
+                shouldReduce || homepage ? undefined : containerVariants
+              }
             >
-              <div className="flex min-w-0 flex-col gap-3 md:w-[55%] md:gap-[1cqw]">
-                <span className="bento-label !text-white/80">11 / Contact</span>
+              <div
+                className={cn(
+                  "flex min-w-0 flex-col gap-3 md:gap-[1cqw]",
+                  !compact && "md:w-[55%]"
+                )}
+              >
+                {!homepage && (
+                  <span
+                    className={cn(
+                      "bento-label",
+                      lightIntro ? "!text-black/70" : "!text-white/80"
+                    )}
+                  >
+                    11 / Contact
+                  </span>
+                )}
                 <motion.h2
                   className={cn(
-                    "font-syne",
-                    "whitespace-nowrap font-extrabold tracking-[-0.04em] leading-[0.93] text-white"
+                    "font-sans",
+                    "font-semibold tracking-[-0.025em] leading-[1.1]",
+                    lightIntro ? "text-[#111]" : "text-white"
                   )}
-                  style={{ fontSize: "clamp(28px, 4cqw, 56px)" }}
-                  variants={shouldReduce ? undefined : itemVariants}
+                  style={{
+                    fontSize: compact
+                      ? "clamp(28px, 3cqw, 42px)"
+                      : "clamp(28px, 4cqw, 56px)",
+                  }}
+                  variants={shouldReduce || homepage ? undefined : itemVariants}
                 >
-                  <span className="block w-[109%] origin-left scale-x-[.8] md:scale-x-[.92]">
+                  <span className="block">
                     Let&apos;s build
                     <br />
                     {/* Keep the display size; de-emphasize with color and a supported weight. */}
                     <span>something</span>
                     <br />
-                    <span className="text-white">together.</span>
+                    <span>together.</span>
                   </span>
                 </motion.h2>
 
                 <motion.p
-                  className="sr-only"
-                  variants={shouldReduce ? undefined : itemVariants}
+                  className={
+                    homepage
+                      ? "mt-3 max-w-[34ch] text-sm leading-relaxed text-white/75"
+                      : "sr-only"
+                  }
+                  variants={shouldReduce || homepage ? undefined : itemVariants}
                 >
                   Have a problem worth solving? I want to hear about it.
                 </motion.p>
               </div>
 
               <motion.div
-                className="relative flex w-full max-w-[240px] shrink-0 flex-col items-stretch gap-2 md:mr-[3cqw] md:pt-[1cqw]"
-                variants={shouldReduce ? undefined : itemVariants}
+                className={cn(
+                  "relative flex w-full max-w-[240px] shrink-0 flex-col items-stretch gap-2",
+                  !compact && "md:mr-[3cqw] md:pt-[1cqw]",
+                  homepage && "max-w-[300px] gap-3 md:mr-0"
+                )}
+                variants={shouldReduce || homepage ? undefined : itemVariants}
               >
-                <div className="contents" ref={triggerWrapperRef}>
+                <div
+                  className="contents"
+                  ref={(node) => {
+                    triggerWrapperRef.current = node;
+                    if (homepage && node && shouldRestoreFocusRef.current) {
+                      shouldRestoreFocusRef.current = false;
+                      node
+                        .querySelector<HTMLElement>("button")
+                        ?.focus({ preventScroll: true });
+                    }
+                  }}
+                >
                   <MagneticButton
                     aria-label="Book a call"
                     as="button"
-                    className="inline-flex w-full items-center justify-between gap-2 px-4 py-2 min-h-[44px] rounded-none
-                               bg-[#caff32] text-zinc-950
-                               text-[13px] font-bold tracking-tight
-                               shadow-[0_4px_28px_-4px_rgba(255,255,255,0.18)]
-                               [@media(hover:hover)]:hover:shadow-[0_4px_36px_-4px_rgba(255,255,255,0.28)]
-                               transition-shadow duration-200"
+                    className={cn(
+                      `inline-flex w-full items-center justify-between gap-2 px-4 py-2 min-h-[44px] rounded-[10px]
+                               bg-[#caff32] text-zinc-950 hover:bg-[#bce92a] hover:text-zinc-950
+                               text-sm font-medium transition-colors duration-150`,
+                      homepage && "min-h-12 px-5"
+                    )}
+                    fullWidth={homepage}
                     onClick={openBooking}
-                    strength={shouldReduce ? 0 : 5}
+                    strength={shouldReduce || homepage ? 0 : 5}
                   >
                     <IconVideo size={15} />
                     Book a call
@@ -536,13 +630,16 @@ export function CTATile() {
                   </MagneticButton>
                 </div>
 
-                <CopyEmailButton />
+                <CopyEmailButton homepage={homepage} light={lightIntro} />
                 <div className="flex flex-wrap items-center justify-between gap-x-3">
                   <a
-                    className="inline-flex min-h-11 items-center whitespace-nowrap text-[11px] text-white/80 underline underline-offset-4"
+                    className={cn(
+                      "inline-flex min-h-11 items-center whitespace-nowrap text-[11px] underline underline-offset-4",
+                      lightIntro ? "text-black/80" : "text-white/80"
+                    )}
                     href={`mailto:${siteConfig.email.display}`}
                   >
-                    Open mail app
+                    {homepage ? "Send an email" : "Open mail app"}
                   </a>
                   <div
                     className="contents"
@@ -554,9 +651,14 @@ export function CTATile() {
                     <MagneticButton
                       aria-label="View resume"
                       as="button"
-                      className="inline-flex min-h-11 items-center gap-2 whitespace-nowrap text-[11px] text-white/80 underline underline-offset-4 hover:text-white"
+                      className={cn(
+                        "inline-flex min-h-11 items-center gap-2 whitespace-nowrap text-[11px] underline underline-offset-4",
+                        lightIntro
+                          ? "text-black/80 hover:text-black"
+                          : "text-white/80 hover:text-white"
+                      )}
                       onClick={() => setIsCVModalOpen(true)}
-                      strength={shouldReduce ? 0 : 10}
+                      strength={shouldReduce || homepage ? 0 : 10}
                     >
                       <IconFileText size={15} />
                       View Resume

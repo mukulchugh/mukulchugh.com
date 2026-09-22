@@ -45,7 +45,7 @@ export function PostsGrid({ posts }: { posts: Post[] }) {
         {topics.map((name) => (
           <button
             aria-pressed={topic === name}
-            className={`min-h-11 rounded-full border px-4 text-xs transition-colors ${topic === name ? "border-foreground bg-foreground text-background" : "border-border hover:bg-muted"}`}
+            className={`ui-label min-h-11 rounded-full border px-4 py-2 transition-colors ${topic === name ? "border-foreground bg-foreground text-background" : "border-border hover:bg-muted"}`}
             key={name}
             onClick={() => {
               setTopic(name);
@@ -63,7 +63,7 @@ export function PostsGrid({ posts }: { posts: Post[] }) {
       {featured ? (
         <>
           <Link
-            className="group relative isolate flex min-h-[300px] overflow-hidden rounded-[14px] bg-[#101112] p-6 text-white sm:min-h-[24cqw] sm:p-6"
+            className="tile-glass group relative isolate flex min-h-[300px] overflow-hidden rounded-[14px] bg-[#101112] p-6 text-white sm:min-h-[24cqw] sm:p-6"
             href={`/blog/${featured.slug}`}
           >
             <PostCover
@@ -80,10 +80,8 @@ export function PostsGrid({ posts }: { posts: Post[] }) {
             />
             <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-transparent" />
             <div className="relative flex max-w-xl flex-col items-start justify-between gap-5 sm:max-w-[48%]">
-              <span className="font-mono text-[10px] uppercase tracking-widest">
-                Featured / Latest
-              </span>
-              <h2 className="text-balance font-sans text-[clamp(1.75rem,3.5vw,3rem)] font-extrabold leading-[1.05] tracking-[-0.035em]">
+              <span className="ui-label">Latest article</span>
+              <h2 className="text-balance font-sans text-[clamp(1.75rem,3.5vw,3rem)] font-semibold leading-[1.12] tracking-[-0.025em]">
                 {featured.title}
               </h2>
               <span className="inline-flex min-h-11 items-center gap-5 rounded-lg bg-[#d2ff00] px-5 text-sm font-semibold text-black">
@@ -94,7 +92,7 @@ export function PostsGrid({ posts }: { posts: Post[] }) {
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {visible.map((post) => (
               <Link
-                className="group relative isolate flex min-h-[360px] flex-col justify-between overflow-hidden rounded-[14px] bg-[#101112] p-5 text-white"
+                className="tile-glass group relative isolate flex min-h-[360px] flex-col justify-between overflow-hidden rounded-[14px] bg-[#101112] p-5 text-white"
                 href={`/blog/${post.slug}`}
                 key={post.id}
               >
@@ -105,19 +103,17 @@ export function PostsGrid({ posts }: { posts: Post[] }) {
                 <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/30 to-black/80" />
                 <div className="relative">
                   <div className="mb-4 flex items-center justify-between gap-3">
-                    <span className="font-mono text-[10px] uppercase tracking-widest">
-                      {post.tags[0]?.name}
-                    </span>
+                    <span className="ui-label">{post.tags[0]?.name}</span>
                     <IconArrowUpRight aria-hidden="true" size={22} />
                   </div>
-                  <h2 className="text-balance font-sans text-[clamp(1.5rem,2.2vw,2rem)] font-extrabold leading-[1.1] tracking-[-0.035em]">
+                  <h2 className="text-balance font-sans text-[clamp(1.5rem,2.2vw,2rem)] font-semibold leading-[1.15] tracking-[-0.025em]">
                     {post.title}
                   </h2>
                 </div>
                 <div className="relative mt-24 flex flex-wrap gap-2">
                   {post.tags.slice(0, 3).map((tag) => (
                     <span
-                      className="border border-white/40 px-2 py-1 font-mono text-[9px] uppercase tracking-wider"
+                      className="ui-label rounded-md border border-white/40 px-2.5 py-1"
                       key={tag.slug}
                     >
                       {tag.name}

@@ -41,7 +41,7 @@ function TooltipContent({
       >
         <TooltipPrimitive.Popup
           className={cn(
-            "overflow-hidden rounded-none bg-neutral-800/90 px-3 py-1.5 text-xs text-white/90 ring-1 ring-white/10 backdrop-blur-md",
+            "liquid-surface liquid-floating overflow-hidden rounded-lg px-3 py-1.5 text-xs text-foreground",
             "transition-opacity duration-150 data-[starting-style]:opacity-0 data-[ending-style]:opacity-0",
             className
           )}

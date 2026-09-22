@@ -17,6 +17,7 @@ interface MagneticButtonProps {
   as?: "a" | "button";
   children: ReactNode;
   className?: string;
+  fullWidth?: boolean;
   href?: string;
   onClick?: () => void;
   rel?: string;
@@ -30,6 +31,7 @@ export const MagneticButton = memo(function MagneticButton({
   href,
   onClick,
   strength = 6,
+  fullWidth = false,
   as: Tag = "a",
   target,
   rel,
@@ -77,14 +79,17 @@ export const MagneticButton = memo(function MagneticButton({
 
   return (
     <div
-      className="inline-block"
+      className={fullWidth ? "block w-full" : "inline-block"}
       onBlur={reset}
       onPointerCancel={reset}
       onPointerLeave={reset}
       onPointerMove={follow}
       ref={ref}
     >
-      <motion.div className="inline-block" style={{ x, y }}>
+      <motion.div
+        className={fullWidth ? "block w-full" : "inline-block"}
+        style={{ x, y }}
+      >
         {Tag === "a" ? (
           <motion.a
             aria-label={ariaLabel}

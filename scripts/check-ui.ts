@@ -1,11 +1,45 @@
 import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
 import path from "node:path";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { Badge } from "../components/ui/badge";
+import { buttonVariants } from "../components/ui/button";
+import { Card } from "../components/ui/card";
 import { getAllPosts, getPostServer } from "../lib/blog";
 import { links } from "../lib/data";
 import { getAllProjectSlugs, projectLinkLabel } from "../lib/projects";
 
 // Run with Bun. An optional local URL adds an HTTP smoke check for every page.
+const badge = renderToStaticMarkup(
+  createElement(Badge, { variant: "secondary" }, "React Native")
+);
+assert.match(badge, /ui-label/);
+assert.match(badge, /rounded-md/);
+assert.match(badge, /overflow-wrap:anywhere/);
+assert.match(badge, /React Native/); // CSS changes presentation, not source text.
+assert.match(badge, /liquid-badge/);
+assert.match(
+  renderToStaticMarkup(createElement(Card, null, "Readable content")),
+  /bento-surface/
+);
+for (const variant of [
+  "default",
+  "secondary",
+  "outline",
+  "destructive",
+  "ghost",
+] as const) {
+  assert.doesNotMatch(buttonVariants({ variant }), /liquid-control|backdrop/);
+  assert.match(buttonVariants({ variant }), /focus-visible:ring-2/);
+  assert.match(buttonVariants({ variant }), /disabled:pointer-events-none/);
+}
+assert.match(buttonVariants({ variant: "outline" }), /border-foreground\/20/);
+assert.match(
+  buttonVariants({ variant: "default" }),
+  /bg-primary text-primary-foreground/
+);
+assert.doesNotMatch(buttonVariants({ variant: "link" }), /liquid-control/);
 for (const link of links) {
   assert.ok(link.hash.startsWith("/"), `Cross-page navigation: ${link.name}`);
 }
@@ -59,6 +93,7 @@ if (base) {
   const routes = [
     "/",
     "/blog",
+    "/experience",
     ...posts.map((p) => `/blog/${p.slug}`),
     ...projectSlugs.map((s) => `/projects/${s}`),
   ];

@@ -7,6 +7,8 @@ import {
   IconCheck,
   IconCode,
   IconDatabase,
+  IconDeviceDesktop,
+  IconDeviceWatch,
   IconFileText,
   IconFolder,
   IconGitBranch,
@@ -17,6 +19,7 @@ import {
   IconSearch,
   IconShieldCheck,
   IconUser,
+  IconWaveSine,
   IconWifi,
   IconX,
 } from "@tabler/icons-react";
@@ -331,27 +334,31 @@ export function SupportingDiagram({ kind }: { kind: string }) {
     case "phases":
       return (
         <Figure title="A budgeted turn has a finish line">
-          <ol>
+          <ol className="space-y-6 px-2 pb-3">
             {[
               {
                 detail: "Broad tool use; collect evidence.",
                 title: "Gather",
-                tone: "bg-background border border-border",
+                tone: "bg-gradient-to-br from-white via-[#e8e9eb] to-[#b7bbc0] text-[#101112] shadow-[0_8px_0_-2px_#969ba2,0_15px_18px_-10px_#10111255]",
               },
               {
                 detail: "Targeted calls; fill specific gaps.",
                 title: "Analyze",
-                tone: "bg-[#101112] text-white",
+                tone: "bg-gradient-to-br from-[#424548] to-[#101112] text-white shadow-[0_8px_0_-2px_#080909,0_15px_18px_-10px_#10111266]",
               },
               {
                 detail: "Tools off. Answer from what you have.",
                 title: "Synthesize",
-                tone: "bg-[#d2ff00] text-black",
+                tone: "bg-gradient-to-br from-[#e4ff6e] to-[#c5ee00] text-black shadow-[0_8px_0_-2px_#98b900,0_15px_18px_-10px_#10111255]",
               },
             ].map((phase, index) => (
-              <li key={phase.title}>
-                {index > 0 && <Down />}
-                <div className={`rounded-xl px-5 py-6 ${phase.tone}`}>
+              <li
+                className={index === 1 ? "ml-3" : index === 2 ? "ml-6" : ""}
+                key={phase.title}
+              >
+                <div
+                  className={`rounded-xl px-5 py-6 [transform:perspective(700px)_rotateX(8deg)_rotateY(-6deg)] ${phase.tone}`}
+                >
                   <p className="text-lg font-semibold">{phase.title}</p>
                   <p className="mt-2 text-xs leading-relaxed">{phase.detail}</p>
                 </div>
@@ -399,45 +406,50 @@ export function SupportingDiagram({ kind }: { kind: string }) {
       );
     case "fleet":
       return (
-        <Figure title="A small system, with real boundaries">
-          <IconUser aria-hidden="true" className="mx-auto" size={32} />
-          <Down />
-          <div className="rounded-xl bg-[#d2ff00] p-4 text-center text-sm font-semibold text-black">
-            One model gateway
+        <figure className="not-prose m-0 min-w-0 space-y-3">
+          <figcaption className="text-sm font-semibold leading-snug">
+            A small system, with real boundaries
+          </figcaption>
+          <div className="rounded-[14px] border border-border bg-muted/30 p-5 text-foreground">
+            <IconUser aria-hidden="true" className="mx-auto" size={32} />
+            <Down />
+            <div className="rounded-xl bg-[#d2ff00] p-4 text-center text-sm font-semibold text-black">
+              One model gateway
+            </div>
+            <Down />
+            <div className="grid grid-cols-3 gap-2 text-center text-xs">
+              {[
+                {
+                  detail: "Per-domain tiers",
+                  Icon: IconDatabase,
+                  title: "Memory",
+                },
+                {
+                  detail: "Coordinate handoffs",
+                  Icon: IconArrowsSplit,
+                  title: "Shared board",
+                },
+                {
+                  detail: "Scoped jobs and tools",
+                  Icon: IconBox,
+                  title: "Specialists",
+                },
+              ].map(({ Icon, title, detail }) => (
+                <div className="min-w-0" key={title}>
+                  <Icon aria-hidden="true" className="mx-auto mb-3" size={25} />
+                  <p className="font-semibold">{title}</p>
+                  <p className="mt-2 leading-relaxed text-muted-foreground">
+                    {detail}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
-          <Down />
-          <div className="grid grid-cols-3 gap-2 text-center text-xs">
-            {[
-              {
-                detail: "Per-domain tiers",
-                Icon: IconDatabase,
-                title: "Memory",
-              },
-              {
-                detail: "Coordinate handoffs",
-                Icon: IconArrowsSplit,
-                title: "Shared board",
-              },
-              {
-                detail: "Scoped jobs and tools",
-                Icon: IconBox,
-                title: "Specialists",
-              },
-            ].map(({ Icon, title, detail }) => (
-              <div className="min-w-0" key={title}>
-                <Icon aria-hidden="true" className="mx-auto mb-3" size={25} />
-                <p className="font-semibold">{title}</p>
-                <p className="mt-2 leading-relaxed text-muted-foreground">
-                  {detail}
-                </p>
-              </div>
-            ))}
-          </div>
-          <blockquote className="mt-7 border-t border-border pt-5 text-lg font-medium leading-snug">
+          <blockquote className="m-0 rounded-[14px] bg-[#d2ff00] p-6 text-xl font-semibold leading-snug text-black">
             Less sci-fi assistant, more private operating system for my own
             work.
           </blockquote>
-        </Figure>
+        </figure>
       );
     case "compilation":
       return (
@@ -473,28 +485,37 @@ export function SupportingDiagram({ kind }: { kind: string }) {
     case "watch-audio":
       return (
         <Figure title="From wrist to system input">
-          <div className="overflow-hidden rounded-xl">
-            <Image
-              alt="Illustration of Ferry capturing audio on an Apple Watch"
-              className="h-auto w-full"
-              height={512}
-              src="/design/projects/ferry-detail-1.png"
-              width={768}
-            />
-          </div>
-          <div className="my-4 flex items-center justify-between gap-3 text-xs">
-            <span>Capture on watchOS</span>
-            <IconArrowRight aria-hidden="true" className="shrink-0" size={24} />
-            <span>Stream to the Mac</span>
-          </div>
-          <div className="overflow-hidden rounded-xl">
-            <Image
-              alt="Illustration of the Mac receiving Ferry audio as a microphone input"
-              className="h-auto w-full"
-              height={512}
-              src="/design/projects/ferry-detail-2.png"
-              width={768}
-            />
+          <div className="grid grid-cols-[1fr_.7fr_1fr] items-center gap-2 py-8 text-center">
+            <div className="min-w-0">
+              <IconDeviceWatch
+                aria-hidden="true"
+                className="mx-auto h-20 w-full max-w-20"
+                stroke={1.25}
+              />
+              <p className="mt-4 text-xs leading-relaxed">Capture on watchOS</p>
+            </div>
+            <div className="min-w-0 text-lime-700 dark:text-[#d2ff00]">
+              <IconWaveSine
+                aria-hidden="true"
+                className="h-10 w-full"
+                stroke={1.5}
+              />
+              <IconArrowRight
+                aria-hidden="true"
+                className="mx-auto mt-2"
+                size={24}
+              />
+            </div>
+            <div className="min-w-0">
+              <IconDeviceDesktop
+                aria-hidden="true"
+                className="mx-auto h-20 w-full max-w-20"
+                stroke={1.25}
+              />
+              <p className="mt-4 text-xs leading-relaxed">
+                Mac microphone input
+              </p>
+            </div>
           </div>
           <ul className="mt-5 flex flex-wrap gap-x-4 gap-y-2 border-t border-border pt-4 text-xs text-muted-foreground">
             <li>Battery</li>
@@ -538,21 +559,25 @@ export function SupportingDiagram({ kind }: { kind: string }) {
     case "gateway":
       return (
         <Figure title="Many tools, one governed door">
-          <div className="grid grid-cols-2 gap-3 text-center text-sm">
-            {["Team tools", "Dashboards"].map((label) => (
-              <div
-                className="rounded-xl border border-border bg-background p-5"
-                key={label}
-              >
-                {label}
+          <div className="grid grid-cols-3 gap-x-3 text-center text-xs">
+            {["Tool A", "Tool B", "Dashboard"].map((label) => (
+              <div className="min-w-0" key={label}>
+                <div className="flex min-h-20 flex-col items-center justify-center gap-2 rounded-xl border border-border bg-background p-2">
+                  <IconBox aria-hidden="true" size={22} />
+                  {label}
+                </div>
+                <div
+                  aria-hidden="true"
+                  className="mx-auto h-6 w-px bg-foreground/40"
+                />
               </div>
             ))}
           </div>
-          <IconArrowsSplit
+          <div
             aria-hidden="true"
-            className="mx-auto my-5"
-            size={32}
+            className="mx-auto w-2/3 border-t border-foreground/40"
           />
+          <Down />
           <div className="rounded-xl bg-[#d2ff00] p-6 text-center text-black">
             <p className="text-2xl font-bold">MCP gateway</p>
             <p className="mt-3 text-sm">
@@ -572,16 +597,20 @@ export function SupportingDiagram({ kind }: { kind: string }) {
     case "transports":
       return (
         <Figure dark title="One keyboard, two Macs">
-          <div className="mb-7 flex items-center justify-between border-b border-white/25 pb-5 text-sm">
-            <span>Source Mac</span>
-            <IconArrowRight
-              aria-hidden="true"
-              className="text-[#d2ff00]"
-              size={30}
-            />
-            <span>Other Mac</span>
+          <div className="mb-6 flex items-start justify-between gap-6 text-center text-xs">
+            {["Source Mac", "Other Mac"].map((label) => (
+              <div key={label}>
+                <IconDeviceDesktop
+                  aria-hidden="true"
+                  className="mx-auto mb-3"
+                  size={56}
+                  stroke={1.25}
+                />
+                {label}
+              </div>
+            ))}
           </div>
-          <dl className="space-y-7">
+          <dl className="space-y-5 border-x border-white/25 px-3">
             {[
               {
                 Icon: IconKeyboard,
@@ -611,6 +640,13 @@ export function SupportingDiagram({ kind }: { kind: string }) {
                   </span>
                 </dt>
                 <dd className="mt-3 text-xs leading-relaxed text-white/75">
+                  <span
+                    aria-hidden="true"
+                    className="mb-2 flex items-center text-[#d2ff00]"
+                  >
+                    <span className="h-px flex-1 bg-current" />
+                    <IconArrowRight className="-ml-1 shrink-0" size={20} />
+                  </span>
                   {note}
                 </dd>
               </div>
@@ -624,25 +660,30 @@ export function SupportingDiagram({ kind }: { kind: string }) {
       );
     case "skills":
       return (
-        <Figure dark title="Expertise that travels across tools">
-          <div className="relative overflow-hidden rounded-xl">
-            <Image
-              alt="Glass panels illustrating reusable skill layers"
-              className="h-auto w-full"
-              height={512}
-              src="/design/projects/quivly-skills-detail-2.png"
-              width={768}
-            />
+        <Figure title="Expertise that travels across tools">
+          <div className="rounded-xl bg-[#f0f1ed] px-5 pb-8 pt-5 text-[#101112]">
             <Image
               alt="Quivly"
-              className="absolute left-5 top-5 h-14 w-14 rounded-lg bg-white p-2"
+              className="mb-7 h-12 w-12 rounded-xl bg-[#caff32] p-2"
               height={52}
               src="/design/brand/quivly-icon.ico"
               unoptimized
               width={52}
             />
+            <ol className="space-y-3 px-2">
+              {["Knowledge", "Tools", "Context", "Actions"].map(
+                (layer, index) => (
+                  <li
+                    className={`rounded-xl px-5 py-4 text-sm font-semibold shadow-[0_6px_10px_-5px_#10111255] [transform:perspective(600px)_rotateX(12deg)_rotateY(-8deg)] ${index === 3 ? "bg-[#d2ff00]" : "bg-white/90"}`}
+                    key={layer}
+                  >
+                    {layer}
+                  </li>
+                )
+              )}
+            </ol>
           </div>
-          <dl className="mt-5 divide-y divide-white/20">
+          <dl className="mt-5 divide-y divide-border">
             {[
               ["Health reviews", "Workflow judgment"],
               ["Churn checks", "Signals worth noticing"],
@@ -653,11 +694,13 @@ export function SupportingDiagram({ kind }: { kind: string }) {
                 key={job}
               >
                 <dt>{job}</dt>
-                <dd className="text-right text-xs text-white/75">{detail}</dd>
+                <dd className="text-right text-xs text-muted-foreground">
+                  {detail}
+                </dd>
               </div>
             ))}
           </dl>
-          <p className="mt-3 text-xs text-[#d2ff00]">
+          <p className="mt-3 text-xs text-muted-foreground">
             Specific to a job. Reviewable. Portable. Versioned.
           </p>
         </Figure>

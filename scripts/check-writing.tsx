@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
+import { renderToStaticMarkup } from "react-dom/server";
 import { getWritingPage } from "../components/blog/posts-grid";
-import { getAllPosts } from "../lib/blog";
+import { RelatedPosts } from "../components/blog/related-posts";
+import { getAllPosts, getRelatedPosts } from "../lib/blog";
 
 const posts = getAllPosts();
 const first = getWritingPage(posts, "All", 0);
@@ -36,6 +38,28 @@ assert.deepEqual(empty, {
   visible: [],
 });
 assert.equal(getWritingPage([], "All", 0).total, 0);
+for (const post of posts) {
+  const related = getRelatedPosts(post.slug, 3);
+  const html = renderToStaticMarkup(
+    <RelatedPosts currentSlug={post.slug} posts={related} />
+  );
+  assert.equal((html.match(/<h3\b/g) ?? []).length, related.length);
+  assert.doesNotMatch(html, /line-clamp/);
+  for (const recommendation of related) {
+    assert.ok(html.includes(`href="/blog/${recommendation.slug}"`));
+    assert.ok(
+      html
+        .toLowerCase()
+        .includes(`datetime="${recommendation.publishedAt.toLowerCase()}"`)
+    );
+  }
+  if (post.slug === "ferry-apple-watch-mac-mic") {
+    assert.ok(html.includes("grid-cols-[minmax(0,1fr)_30%]"));
+  }
+  if (post.slug === "agent-working-memory-injection-hygiene") {
+    assert.ok(html.includes("grid-cols-[4.5rem_minmax(0,1fr)]"));
+  }
+}
 console.log(
   `Writing checks passed: ${posts.length} articles, complete pagination, topic filtering, and empty states.`
 );

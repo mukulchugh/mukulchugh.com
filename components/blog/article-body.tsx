@@ -9,6 +9,7 @@ import {
   IconRefresh,
   IconSearch,
 } from "@tabler/icons-react";
+import Image from "next/image";
 import type { ReactNode } from "react";
 import type { BundledTheme, Components } from "streamdown";
 import { Streamdown } from "streamdown";
@@ -27,16 +28,11 @@ interface ArticleBodyProps {
   slug?: string;
 }
 
-// A muted, low-saturation Shiki theme (not a loud rainbow VSCode-default)
-// so code blocks read as a premium dark-ink slab that matches the site's
-// established `prose-pre:bg-[#111113]` treatment. The same theme is used
-// for both slots — Streamdown's [light, dark] pair normally toggles with
-// the page's color scheme, but code blocks here are deliberately *always*
-// dark regardless of the site's light/dark mode, exactly as they were
-// before this migration.
+// Code surfaces stay dark in either site theme. Use opaque, readable tokens
+// in both slots rather than the former palette's translucent strings.
 const SHIKI_THEME: [BundledTheme, BundledTheme] = [
-  "vitesse-dark",
-  "vitesse-dark",
+  "github-dark-default",
+  "github-dark-default",
 ];
 
 // Streamdown resolves the active Shiki theme from `plugins.code.getThemes()`
@@ -165,6 +161,26 @@ export function ArticleBody({
         : undefined;
   function withDiagram(content: ReactNode, offset: number | undefined) {
     if (offset === undefined) return content;
+    if (
+      slug === "agent-working-memory-injection-hygiene" &&
+      offset < (headings[0]?.offset ?? 0)
+    ) {
+      return (
+        <>
+          <figure className="not-prose mb-6 overflow-hidden rounded-[14px] md:float-right md:ml-6 md:w-[48%]">
+            <Image
+              alt="Layered scratchpad cards separated from instructions by a bright trust boundary. Sanitize, separate, and be explicit."
+              className="h-auto w-full"
+              height={1086}
+              sizes="(min-width: 768px) 40vw, 95vw"
+              src="/design/articles/agent-working-memory-trust-boundary-support.png"
+              width={1448}
+            />
+          </figure>
+          {content}
+        </>
+      );
+    }
     const heading = headings.find(
       (item) =>
         item.level === 2 &&
@@ -182,26 +198,39 @@ export function ArticleBody({
     const supportingKind = articleSectionDiagrams[slug ?? ""]?.[heading.text];
     if (!(existingKind || supportingKind)) return content;
     return (
-      <div className="my-6 grid min-w-0 items-start gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] [&>p]:my-0 [&>ul]:my-0 [&>ol]:my-0">
+      <>
+        <div
+          className="mb-6 min-w-0 md:float-right md:ml-6 md:w-[48%]"
+          data-article-diagram=""
+        >
+          {existingKind ? (
+            <ArticleDiagram kind={existingKind} />
+          ) : (
+            <SupportingDiagram kind={supportingKind} />
+          )}
+        </div>
         {content}
-        {existingKind ? (
-          <ArticleDiagram kind={existingKind} />
-        ) : (
-          <SupportingDiagram kind={supportingKind} />
-        )}
-      </div>
+      </>
     );
   }
 
   const components: Components = {
     a: ({ children, node: _node, ...props }) => <a {...props}>{children}</a>,
     h2: ({ children, node, ...props }) => (
-      <h2 {...props} id={idByOffset.get(node?.position?.start.offset ?? -1)}>
+      <h2
+        {...props}
+        className={cn(props.className, "clear-both")}
+        id={idByOffset.get(node?.position?.start.offset ?? -1)}
+      >
         {children}
       </h2>
     ),
     h3: ({ children, node, ...props }) => (
-      <h3 {...props} id={idByOffset.get(node?.position?.start.offset ?? -1)}>
+      <h3
+        {...props}
+        className={cn(props.className, "clear-both")}
+        id={idByOffset.get(node?.position?.start.offset ?? -1)}
+      >
         {children}
       </h3>
     ),
@@ -218,7 +247,12 @@ export function ArticleBody({
 
   const body = (
     <Streamdown
-      className={cn(className)}
+      // Lists and Streamdown's flex code blocks form independent formatting
+      // contexts beside the float; auto width keeps code in that available lane.
+      className={cn(
+        "flow-root [&>ol]:flow-root [&>ul]:flow-root [&>[data-streamdown='code-block']]:w-auto",
+        className
+      )}
       components={components}
       mode="static"
       plugins={{ code: codePlugin }}

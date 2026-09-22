@@ -9,8 +9,11 @@ import { Button } from "@/components/ui/button";
 import { Popover } from "@/components/ui/popover";
 import { links, siteConfig } from "@/lib/data";
 
-export function BrandBar() {
+export function BrandBar({ homepage = false }: { homepage?: boolean }) {
   const [open, setOpen] = useState(false);
+  const tagline = homepage
+    ? "Engineer by craft. Builder by design."
+    : siteConfig.tagline;
   return (
     <header className="bento-brand-bar">
       <Link
@@ -19,16 +22,11 @@ export function BrandBar() {
         href="/"
       >
         <ThemeLogo alt="" height={32} priority width={32} />
-        <span className="font-semibold">
-          {siteConfig.name}
-          <span className="block text-[11px] font-normal text-muted-foreground md:hidden">
-            Engineer turned generalist.
-          </span>
-        </span>
       </Link>
-      <span className="bento-brand-description">
-        Engineer turned generalist.
+      <span className="max-w-[23ch] text-balance text-[11px] text-muted-foreground md:hidden">
+        {tagline}
       </span>
+      <span className="bento-brand-description">{tagline}</span>
       <nav
         aria-label="Header navigation"
         className="ml-auto hidden items-center md:flex"
@@ -37,7 +35,7 @@ export function BrandBar() {
           .filter((link) => link.name !== "About")
           .map((link) => (
             <Link
-              className="flex min-h-11 items-center px-2 text-muted-foreground transition-colors hover:text-foreground"
+              className="ui-label flex min-h-11 items-center px-2 text-muted-foreground transition-colors hover:text-foreground"
               href={link.hash}
               key={link.name}
             >
@@ -67,7 +65,7 @@ export function BrandBar() {
               <nav aria-label="Mobile header navigation">
                 {links.map((link) => (
                   <Link
-                    className="flex min-h-11 items-center px-3 text-sm hover:bg-muted"
+                    className="ui-label flex min-h-11 items-center px-3 hover:bg-muted"
                     href={link.hash}
                     key={link.name}
                     onNavigate={() => setOpen(false)}
@@ -76,20 +74,22 @@ export function BrandBar() {
                   </Link>
                 ))}
               </nav>
-              <div className="flex items-center justify-between border-t border-border px-3 pt-2 text-sm">
+              <div className="ui-label flex items-center justify-between border-t border-border px-3 pt-2">
                 Theme <ThemeToggle />
               </div>
             </Popover.Popup>
           </Popover.Positioner>
         </Popover.Portal>
       </Popover.Root>
-      <span aria-hidden="true" className="bento-marginalia hidden md:block">
-        Build
-        <br />
-        Learn
-        <br />
-        Ship
-      </span>
+      {!homepage && (
+        <span aria-hidden="true" className="bento-marginalia hidden md:block">
+          Build
+          <br />
+          Learn
+          <br />
+          Ship
+        </span>
+      )}
     </header>
   );
 }

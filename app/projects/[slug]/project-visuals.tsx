@@ -15,13 +15,14 @@ import {
 } from "@tabler/icons-react";
 import Image from "next/image";
 import type { ReactNode } from "react";
+import { projectArtwork } from "@/lib/project-artwork";
 
 // Explicit assets keep reference selection deterministic across builds.
 export const projectReferenceAssets: Record<string, string> = {
   altr: "/design/projects/altr-reference.png",
   brik: "/design/projects/brik-reference.png",
   "cryptomedia-cryptocurrency-tracker":
-    "/design/projects/cryptomedia-cryptocurrency-tracker-reference.png",
+    "/design/projects/cryptomedia-cryptocurrency-tracker-reference.webp",
   ferry: "/design/projects/ferry-reference.png",
   heroapp: "/design/projects/heroapp-reference.png",
   "moshi-health": "/design/projects/moshi-health-reference.png",
@@ -40,13 +41,16 @@ export const projectReferenceAssets: Record<string, string> = {
   "zendash-global-admin-dashboard":
     "/design/projects/zendash-global-admin-dashboard-reference.png",
   zepeats: "/design/projects/zepeats-reference.png",
+  ...Object.fromEntries(
+    Object.entries(projectArtwork).map(([slug, art]) => [slug, art.src])
+  ),
 };
 
 const panel =
-  "relative flex min-h-[280px] min-w-0 flex-col overflow-hidden rounded-[14px] border border-white/10 bg-[#101112] p-5 text-white sm:p-6 md:min-h-[27cqw] md:p-[2cqw]";
+  "tile-glass relative flex min-h-[280px] min-w-0 flex-col overflow-hidden rounded-[14px] border border-white/10 bg-[#101112] p-5 text-white sm:p-6 md:min-h-[27cqw] md:p-[2cqw]";
 const glass =
-  "rounded-lg border border-white/20 bg-gradient-to-br from-white/10 to-white/[0.02] p-3 sm:p-4";
-const label = "font-mono text-[10px] uppercase tracking-[.1em] text-white/65";
+  "rounded-lg border border-white/20 bg-[#17191b] bg-gradient-to-br from-white/10 to-white/[0.02] p-3 sm:p-4";
+const label = "ui-label text-white/80";
 
 function Visual({
   title,
@@ -82,12 +86,10 @@ function Artwork({
   src?: string;
 }) {
   return (
-    <figure className="flex min-w-0 flex-col overflow-hidden rounded-[14px] border border-border bg-[#101112] text-white">
+    <figure className="tile-glass flex min-w-0 flex-col overflow-hidden rounded-[14px] border border-border bg-[#101112] text-white">
       <figcaption className="flex flex-wrap items-center justify-between gap-2 px-5 py-4 text-xs">
         <span>{title}</span>
-        <span className="font-mono text-[9px] uppercase tracking-wider text-white/70">
-          Illustrative concept
-        </span>
+        <span className="ui-label text-white/80">Illustrative concept</span>
       </figcaption>
       <Image
         alt=""
@@ -160,6 +162,7 @@ export function ProjectVisuals({ slug }: { slug: string }) {
               <div className="relative flex min-w-0 flex-col items-center gap-3 rounded-xl border border-[#caff32]/60 bg-[#252b18] px-2 py-5 text-center text-xs">
                 <Image
                   alt=""
+                  className="rounded-xl bg-[#caff32] p-1.5"
                   height={42}
                   src="/design/brand/quivly-icon.ico"
                   unoptimized
@@ -204,7 +207,7 @@ export function ProjectVisuals({ slug }: { slug: string }) {
                   ) : (
                     <Image
                       alt="Quivly"
-                      className="w-10"
+                      className="h-auto w-10 rounded-xl bg-[#caff32] p-1.5"
                       height={48}
                       src="/design/brand/quivly-icon.ico"
                       unoptimized
@@ -286,7 +289,7 @@ export function ProjectVisuals({ slug }: { slug: string }) {
               <div className="flex flex-col items-center gap-5 border-r border-white/10 pr-2">
                 <Image
                   alt="Quivly"
-                  className="mb-3"
+                  className="mb-3 rounded-md bg-[#caff32] p-1"
                   height={28}
                   src="/design/brand/quivly-icon.ico"
                   unoptimized
@@ -502,18 +505,18 @@ export function ProjectVisuals({ slug }: { slug: string }) {
             />
             <Image
               alt="Quivly"
-              className="absolute left-[58%] top-[38%] rounded-lg bg-white p-2"
+              className="absolute left-[58%] top-[38%] rounded-xl bg-[#caff32] p-2"
               height={48}
               src="/design/brand/quivly-icon.ico"
               unoptimized
               width={48}
             />
-            <figcaption className="absolute bottom-5 left-5 font-mono text-[10px] uppercase tracking-wide text-white/70">
+            <figcaption className="ui-label absolute bottom-5 left-5 text-white/80">
               06 / Illustrative concept
             </figcaption>
           </figure>
           <Visual light title="07 / About this project">
-            <h3 className="max-w-[12ch] text-4xl font-extrabold leading-none tracking-tight md:text-[4.5cqw]">
+            <h3 className="max-w-[14ch] text-[clamp(28px,3.3cqw,44px)] font-semibold leading-[1.12] tracking-[-0.025em]">
               Open source
               <br />
               by design.
@@ -567,7 +570,7 @@ export function ProjectVisuals({ slug }: { slug: string }) {
   return (
     <section
       aria-label="Project visual explorations"
-      className="grid items-start gap-3 md:grid-cols-2"
+      className="grid items-stretch gap-3 md:grid-cols-2"
     >
       {content}
     </section>
@@ -608,7 +611,7 @@ export function SkillsWorkflow() {
 
 export function HealthPrinciple() {
   return (
-    <figure className="relative min-h-52 overflow-hidden rounded-[14px] bg-[#caff32] p-5 text-black md:min-h-[20cqw]">
+    <figure className="tile-glass relative min-h-52 overflow-hidden rounded-[14px] bg-[#caff32] p-5 text-black md:min-h-[20cqw]">
       <div className="absolute inset-y-4 right-0 w-[52%] overflow-hidden">
         <Image
           alt=""
@@ -618,10 +621,10 @@ export function HealthPrinciple() {
           src="/design/projects/moshi-health-detail-2.png"
         />
       </div>
-      <figcaption className="relative font-mono text-[10px] uppercase tracking-wide">
+      <figcaption className="ui-label relative">
         05 / Design principle
       </figcaption>
-      <h3 className="relative mt-6 max-w-[8ch] text-[clamp(26px,3.3cqw,46px)] font-extrabold leading-none tracking-tight">
+      <h3 className="relative mt-6 max-w-[10ch] text-[clamp(24px,2.6cqw,34px)] font-semibold leading-[1.15] tracking-[-0.025em]">
         Your data.
         <br />
         Your story.
@@ -629,7 +632,7 @@ export function HealthPrinciple() {
       <p className="relative mt-3 max-w-[52%] text-sm">
         Tools for reflection, not diagnosis.
       </p>
-      <span className="absolute bottom-3 right-3 font-mono text-[9px] uppercase tracking-wide">
+      <span className="ui-label absolute bottom-3 right-3">
         Illustrative concept
       </span>
     </figure>

@@ -94,7 +94,7 @@ for (const { headings, html } of await Promise.all([
 const diagramCounts: Record<string, number> = {
   "agent-stuck-detection-tool-loops": 1,
   "agent-suggested-actions-as-tools": 3,
-  "agent-working-memory-injection-hygiene": 3,
+  "agent-working-memory-injection-hygiene": 4,
   "brik-react-to-native-widgets": 1,
   "checkpointing-agent-edits-without-touching-git-index": 2,
   "ferry-apple-watch-mac-mic": 1,
@@ -134,6 +134,21 @@ await Promise.all(
       post.slug
     );
     assert.doesNotMatch(html, /<(?:ul|ol)\b[^>]*>\s*<div/);
+    if (full.headings?.length && diagramCounts[post.slug]) {
+      // A diagram is a sibling of the canonical first block, so later blocks
+      // can continue beside it instead of waiting for a first-paragraph grid.
+      assert.match(html, /data-article-diagram=""/);
+      assert.match(html, /<\/figure><\/div><(?:p|ol|ul)\b/);
+      assert.doesNotMatch(html, /my-6 grid min-w-0 items-start/);
+      assert.match(html, /<h2\b[^>]*class="clear-both"/);
+      if (html.includes('data-streamdown="code-block"')) {
+        assert.match(
+          html,
+          /code-block&#x27;\]\]:w-auto|code-block'\]\]:w-auto/
+        );
+        assert.match(html, /data-streamdown="code-block-copy-button"/);
+      }
+    }
   })
 );
 for (const { html } of await Promise.all([

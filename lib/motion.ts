@@ -3,8 +3,9 @@
  * Docs: https://motion.dev/docs/react-scroll-animations + https://motion.dev/docs/stagger
  *
  * Rules:
- * - Animate only opacity + transform (GPU-friendly)
- * - Never animate filter/blur/width/height/top/left
+ * - Prefer opacity + transform for routine feedback
+ * - Confine masks/light effects to authored artwork; never distort reading text
+ * - Avoid layout-driven animation outside bounded, user-triggered transitions
  * - viewport.once so scroll doesn't re-trigger
  * - Always respect prefers-reduced-motion via useReducedMotion at call sites
  */
@@ -43,6 +44,11 @@ export const microSpring: Transition = {
 
 /** Pointer followers retain velocity when the target changes mid-flight. */
 export const pointerSpring = { damping: 26, mass: 0.6, stiffness: 280 };
+
+/** Fixed dock slots keep the pointer distance independent of icon scaling. */
+export function dockProximity(pointerX: number, centerX: number) {
+  return Math.max(0, 1 - Math.abs(pointerX - centerX) / 120);
+}
 
 export const fadeTransition: Transition = {
   duration: 0.16,

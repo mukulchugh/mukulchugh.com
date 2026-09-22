@@ -5,7 +5,7 @@ import { siteConfig } from "@/lib/data";
 export const metadata = {
   description:
     "Notes on engineering, product, and the craft of building software that earns its keep.",
-  title: `Blog | ${siteConfig.name}`,
+  title: `Writing | ${siteConfig.name}`,
 };
 
 export default function BlogLayout({

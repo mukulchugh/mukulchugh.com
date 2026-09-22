@@ -37,7 +37,7 @@ export function SectionHeader({
       whileInView={{ opacity: 1, y: 0 }}
     >
       <h2
-        className="font-syne font-extrabold leading-[1.05] tracking-[-0.04em] text-balance text-foreground break-words min-w-0"
+        className="font-sans font-extrabold leading-[1.05] tracking-[-0.04em] text-balance text-foreground break-words min-w-0"
         style={{ fontSize: SECTION_TITLE }}
       >
         {title}

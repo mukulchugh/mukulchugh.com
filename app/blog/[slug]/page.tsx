@@ -130,7 +130,7 @@ export default async function PostPage({ params }: PostPageProps) {
       {
         "@type": "ListItem",
         item: `${siteConfig.siteUrl}/blog`,
-        name: "Blog",
+        name: "Writing",
         position: 2,
       },
       {
@@ -175,7 +175,7 @@ export default async function PostPage({ params }: PostPageProps) {
       <div>
         <header
           className={cn(
-            "relative isolate mb-6 overflow-hidden rounded-[14px] border border-border px-6 pt-8 pb-72 sm:px-10 md:flex md:min-h-[460px] md:items-center md:py-12 lg:px-12",
+            "tile-glass relative isolate mb-6 overflow-hidden rounded-[14px] border border-border px-4 pt-8 pb-72 sm:px-10 md:flex md:min-h-[460px] md:items-center md:py-12 lg:px-12",
             lightHero ? "bg-white text-black" : "bg-[#101112] text-white"
           )}
         >
@@ -193,11 +193,11 @@ export default async function PostPage({ params }: PostPageProps) {
                 : "from-black/95 via-black/50 to-transparent"
             )}
           />
-          <div className="relative md:w-[58%]">
-            <p className="mb-7 font-mono text-[11px] uppercase tracking-[0.14em]">
+          <div className="relative min-w-0 md:w-[62%] lg:w-[58%]">
+            <p className="ui-label mb-7">
               Writing / {post.tags[0]?.name || "Notes"}
             </p>
-            <h1 className="mb-6 text-balance font-syne text-[clamp(1.85rem,3.5vw,3.25rem)] font-extrabold leading-[1.05] tracking-[-0.035em] [overflow-wrap:anywhere]">
+            <h1 className="mb-6 max-w-[24ch] text-balance font-sans text-[clamp(1.75rem,5vw,3.25rem)] font-bold leading-[1.12] tracking-[-0.025em] [overflow-wrap:anywhere]">
               {post.title}
             </h1>
             <p
@@ -270,8 +270,8 @@ export default async function PostPage({ params }: PostPageProps) {
                     "prose-p:text-base prose-p:leading-[1.8] prose-p:text-foreground/80",
                     // Headings — tight tracking, ink-dark
                     "[&_h2]:[overflow-wrap:anywhere] [&_h3]:[overflow-wrap:anywhere] prose-headings:font-sans prose-headings:font-bold prose-headings:tracking-[-0.025em] prose-headings:text-foreground",
-                    "prose-h2:text-[clamp(1.5rem,2.5vw,2rem)] prose-h2:leading-[1.2] prose-h2:mt-10 prose-h2:mb-4",
-                    "prose-h3:text-[1.125rem] prose-h3:mt-8 prose-h3:mb-3",
+                    "prose-h2:text-[clamp(1.5rem,2.5vw,2rem)] prose-h2:leading-[1.2] prose-h2:tracking-[-0.02em] prose-h2:mt-10 prose-h2:mb-4",
+                    "prose-h3:text-[1.125rem] prose-h3:leading-[1.35] prose-h3:tracking-[-0.01em] prose-h3:mt-8 prose-h3:mb-3",
                     // Scroll margin so TOC jumps land below any fixed header
                     "[&_h2]:scroll-mt-24 [&_h3]:scroll-mt-24",
                     // Links — subtle underline on hover
@@ -367,7 +367,7 @@ export default async function PostPage({ params }: PostPageProps) {
           </div>
         </div>
         <PostNav next={adjacent.next} prev={adjacent.prev} />
-        <RelatedPosts posts={related} />
+        <RelatedPosts currentSlug={post.slug} posts={related} />
       </div>
     </main>
   );

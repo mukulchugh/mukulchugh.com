@@ -16,15 +16,13 @@ const FOOTER_ICONS: Record<string, typeof IconBrandX> = {
 
 export default function Footer() {
   return (
-    <footer className="mx-auto flex w-[95.5%] max-w-[1400px] flex-wrap items-center justify-between gap-4 px-3 pb-28 pt-4 md:py-3">
+    <footer className="dock-safe-bottom mx-auto flex w-[95.5%] max-w-[1400px] flex-wrap items-center justify-between gap-4 px-3 pt-4 md:pt-3">
       <Link
         className="flex min-h-11 flex-col justify-center text-xs leading-snug md:min-h-8"
         href="/"
       >
         <span className="font-semibold">{siteConfig.name}</span>
-        <span className="text-muted-foreground">
-          Engineer turned generalist.
-        </span>
+        <span className="text-muted-foreground">{siteConfig.tagline}</span>
       </Link>
       <div className="flex flex-wrap items-center gap-1 sm:gap-2">
         {footerSocialLinks.map((link) => {

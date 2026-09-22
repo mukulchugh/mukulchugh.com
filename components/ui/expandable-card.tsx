@@ -49,7 +49,7 @@ export default function ExpandableCard({
               <span className="ui-label mb-0.5 block text-muted-foreground">
                 {item.date}
               </span>
-              <span className="font-syne block break-words text-base font-semibold text-foreground sm:text-[1.0625rem]">
+              <span className="font-sans block break-words text-base font-semibold text-foreground sm:text-[1.0625rem]">
                 {item.title}
               </span>
               <span className="block text-sm text-muted-foreground">
@@ -76,7 +76,7 @@ export default function ExpandableCard({
                 <p className="ui-label mb-2 text-muted-foreground">
                   {item.date}
                 </p>
-                <DialogTitle className="font-syne break-words text-xl font-semibold sm:text-2xl">
+                <DialogTitle className="font-sans break-words text-xl font-semibold sm:text-2xl">
                   {item.title}
                 </DialogTitle>
                 <DialogDescription className="mt-2">
