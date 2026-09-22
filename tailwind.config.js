@@ -61,8 +61,8 @@ module.exports = {
         },
       },
       fontFamily: {
+        heading: ["var(--font-syne)", "sans-serif"],
         sans: ["var(--font-geist)", "ui-sans-serif", "system-ui", "sans-serif"],
-        syne: ["var(--font-syne)", "ui-sans-serif", "system-ui", "sans-serif"],
       },
       screens: {
         xs: "400px",

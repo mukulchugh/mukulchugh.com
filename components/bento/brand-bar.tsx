@@ -1,40 +1,95 @@
 "use client";
 
+import { IconMenu2 } from "@tabler/icons-react";
 import Link from "next/link";
+import { useState } from "react";
 import { ThemeLogo } from "@/components/theme-logo";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { Button } from "@/components/ui/button";
+import { Popover } from "@/components/ui/popover";
 import { links, siteConfig } from "@/lib/data";
 
-/**
- * BrandBar — the old sticky header, folded into the bento grid as a slim
- * full-width top tile: logo + wordmark on the left, section nav on the right.
- */
-export function BrandBar() {
+export function BrandBar({ homepage = false }: { homepage?: boolean }) {
+  const [open, setOpen] = useState(false);
+  const tagline = homepage
+    ? "Engineer by craft. Builder by design."
+    : siteConfig.tagline;
   return (
-    <div className="flex items-center justify-between gap-4 px-5 py-3.5 sm:px-6">
-      <Link aria-label="Home" className="flex items-center gap-2.5" href="/">
-        <ThemeLogo className="h-6 w-6" height={26} width={26} />
-        <span
-          className={
-            "font-syne text-sm font-bold tracking-tight text-foreground"
-          }
-        >
-          {siteConfig.name}
-        </span>
+    <header className="bento-brand-bar">
+      <Link
+        aria-label="Mukul Chugh, home"
+        className="flex min-h-11 shrink-0 items-center gap-3"
+        href="/"
+      >
+        <ThemeLogo alt="" height={32} priority width={32} />
       </Link>
-
-      <nav className="hidden items-center gap-0.5 sm:flex">
+      <span className="max-w-[23ch] text-balance text-[11px] text-muted-foreground md:hidden">
+        {tagline}
+      </span>
+      <span className="bento-brand-description">{tagline}</span>
+      <nav
+        aria-label="Header navigation"
+        className="ml-auto hidden items-center md:flex"
+      >
         {links
-          .filter((l) => l.name !== "Home")
-          .map((l) => (
+          .filter((link) => link.name !== "About")
+          .map((link) => (
             <Link
-              className="rounded-none px-3 py-1.5 text-[13px] font-medium text-muted-foreground transition-colors hover:bg-foreground/[0.05] hover:text-foreground"
-              href={l.hash}
-              key={l.name}
+              className="ui-label flex min-h-11 items-center px-2 text-muted-foreground transition-colors hover:text-foreground"
+              href={link.hash}
+              key={link.name}
             >
-              {l.name}
+              {link.name === "Blog" ? "Writing" : link.name}
             </Link>
           ))}
       </nav>
-    </div>
+      <ThemeToggle className="hidden shrink-0 md:flex" />
+      <Popover.Root onOpenChange={setOpen} open={open}>
+        <Popover.Trigger
+          aria-label="Open header navigation"
+          className="ml-auto md:hidden"
+          render={<Button size="icon" variant="ghost" />}
+        >
+          <IconMenu2 aria-hidden="true" />
+        </Popover.Trigger>
+        <Popover.Portal>
+          <Popover.Positioner
+            align="end"
+            className="z-50 md:hidden"
+            sideOffset={8}
+          >
+            <Popover.Popup
+              aria-label="Header navigation"
+              className="w-64 max-w-[calc(100vw-24px)] border border-border bg-background p-2 shadow-lg"
+            >
+              <nav aria-label="Mobile header navigation">
+                {links.map((link) => (
+                  <Link
+                    className="ui-label flex min-h-11 items-center px-3 hover:bg-muted"
+                    href={link.hash}
+                    key={link.name}
+                    onNavigate={() => setOpen(false)}
+                  >
+                    {link.name === "Blog" ? "Writing" : link.name}
+                  </Link>
+                ))}
+              </nav>
+              <div className="ui-label flex items-center justify-between border-t border-border px-3 pt-2">
+                Theme <ThemeToggle />
+              </div>
+            </Popover.Popup>
+          </Popover.Positioner>
+        </Popover.Portal>
+      </Popover.Root>
+      {!homepage && (
+        <span aria-hidden="true" className="bento-marginalia hidden md:block">
+          Build
+          <br />
+          Learn
+          <br />
+          Ship
+        </span>
+      )}
+    </header>
   );
 }

@@ -57,9 +57,12 @@ export function CalBookingModal({ isOpen, onClose }: CalBookingModalProps) {
       >
         <DialogHeader className="flex-row items-center justify-between border-b border-border px-6 py-5">
           <DialogTitle
-            className={cn("font-syne", "ui-label text-muted-foreground")}
+            className={cn(
+              "font-sans",
+              "text-2xl font-semibold leading-[1.15] tracking-[-0.025em]"
+            )}
           >
-            Book a Call
+            Pick a time
           </DialogTitle>
           <DialogDescription className="sr-only">
             Choose a time for a fifteen minute call.

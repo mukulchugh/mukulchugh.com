@@ -11,6 +11,7 @@ export type SectionName = (typeof links)[number]["name"];
 export interface PostHeading {
   id: string;
   level: 2 | 3;
+  offset: number;
   text: string;
 }
 

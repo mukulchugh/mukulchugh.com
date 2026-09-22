@@ -1,0 +1,133 @@
+.card {
+  min-width: 0;
+  padding: clamp(24px, 5cqw, 40px);
+  container-type: inline-size;
+  scroll-margin-top: 80px;
+}
+.title {
+  max-width: 20ch;
+  margin: 0;
+  font-size: clamp(30px, 5.5cqw, 44px);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+.story {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 28px;
+  margin-top: 28px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: hsl(var(--muted-foreground));
+}
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding-bottom: 12px;
+  margin-top: 32px;
+  border-bottom: 1px solid hsl(var(--border));
+}
+.choice {
+  min-height: 44px;
+  padding: 10px 16px;
+  font-size: 11px;
+  font-weight: 500;
+  color: hsl(var(--muted-foreground));
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  border-radius: 10px;
+}
+.choice:hover {
+  color: hsl(var(--foreground));
+  background: hsl(var(--muted));
+}
+.choice[aria-pressed="true"] {
+  color: #172000;
+  background: #d5ff55;
+}
+.perspective {
+  min-height: 210px;
+  padding: 24px 0 16px;
+}
+.perspective h3 {
+  max-width: 32ch;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+.perspective p {
+  max-width: 62ch;
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: hsl(var(--muted-foreground));
+}
+.projectLink {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 8px;
+  font-size: 14px;
+  text-underline-offset: 4px;
+}
+.projectLink:hover {
+  text-decoration: underline;
+}
+.projectLink:focus-visible,
+.choice:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 22px;
+  border-top: 1px solid hsl(var(--border));
+}
+.footer > span {
+  color: hsl(var(--muted-foreground));
+}
+.reveal {
+  animation: arrive 240ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes arrive {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@container (max-width: 540px) {
+  .story {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-top: 22px;
+  }
+  .perspective {
+    min-height: 270px;
+  }
+  .choice {
+    padding-inline: 12px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    animation: none;
+  }
+}
+@media (forced-colors: active) {
+  .choice[aria-pressed="true"] {
+    outline: 2px solid Highlight;
+  }
+}

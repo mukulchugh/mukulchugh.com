@@ -2,23 +2,23 @@
 
 import {
   IconArrowLeft,
-  IconCalendar,
+  IconArrowRight,
   IconCheck,
   IconFileText,
   IconMail,
+  IconVideo,
 } from "@tabler/icons-react";
 import {
   AnimatePresence,
   motion,
   useMotionValue,
-  useReducedMotion,
   useSpring,
   useTransform,
 } from "motion/react";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import type React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { CanvasGrain } from "@/components/canvas-grain";
 import { Button } from "@/components/ui/button";
 import { CVModal } from "@/components/ui/cv-modal";
 import { MagneticButton } from "@/components/ui/magnetic-button";
@@ -26,7 +26,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { siteConfig } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
 import { microSpring, premiumSpring, softSpring } from "@/lib/motion";
-import { TILE_TITLE } from "@/lib/typography";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import { cn } from "@/lib/utils";
 
 const contentExit = { opacity: 0, transition: { duration: 0.15 } } as const;
@@ -34,14 +34,14 @@ const contentExit = { opacity: 0, transition: { duration: 0.15 } } as const;
 const bookingContentInitial = { opacity: 0, y: 16 } as const;
 const bookingContentAnimate = {
   opacity: 1,
-  transition: { ...softSpring, delay: 0.18 },
+  transition: softSpring,
   y: 0,
 } as const;
 
 const calEmbedInitial = { opacity: 0, y: 20 } as const;
 const calEmbedAnimate = {
   opacity: 1,
-  transition: { ...softSpring, delay: 0.32 },
+  transition: { ...softSpring, delay: 0.06 },
   y: 0,
 } as const;
 
@@ -79,43 +79,64 @@ const itemVariants = {
 };
 
 const tileSurfaceStyle: React.CSSProperties = {
-  background: "linear-gradient(180deg, #0e0e11 0%, #18181c 100%)",
-  boxShadow:
-    "inset 0 1px 0 rgba(255,255,255,0.06), inset 0 -1px 0 rgba(0,0,0,0.30)",
+  background: "#101112",
 };
 
-function CopyEmailButton() {
+function CopyEmailButton({
+  light = false,
+  homepage = false,
+}: {
+  light?: boolean;
+  homepage?: boolean;
+}) {
   const [copied, setCopied] = useState(false);
+  const [copyFailed, setCopyFailed] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(
+    () => () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    },
+    []
+  );
 
   const handleCopy = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(siteConfig.email.display);
+      setCopyFailed(false);
       setCopied(true);
       if (timerRef.current) {
         clearTimeout(timerRef.current);
       }
       timerRef.current = setTimeout(() => setCopied(false), 1500);
     } catch {
-      // clipboard API unavailable — graceful no-op; mailto link still works
+      setCopyFailed(true);
     }
   }, []);
 
   return (
     <Button
       aria-label={copied ? "Email copied to clipboard" : "Copy email address"}
-      className="inline-flex items-center gap-1.5 px-3 py-1.5 min-h-[36px] rounded-none
+      className={cn(
+        `inline-flex w-full items-center gap-2 px-4 py-2 min-h-[44px] rounded-[10px]
                  bg-white/[0.06] border border-white/[0.1]
-                 text-[12px] font-mono text-white/40
+                 text-sm font-sans text-white/90
                  [@media(hover:hover)]:hover:bg-white/[0.12] [@media(hover:hover)]:hover:border-white/[0.2]
-                 [@media(hover:hover)]:hover:text-white/70
-                 transition-all duration-200 active:scale-[0.97] cursor-pointer select-none"
+                 [@media(hover:hover)]:hover:text-white
+                 transition-colors duration-200 cursor-pointer select-none`,
+        homepage && "min-h-12 justify-start px-5 [&_svg]:size-4",
+        light &&
+          "border-black/15 bg-black/[0.03] text-black/75 [@media(hover:hover)]:hover:border-black/25 [@media(hover:hover)]:hover:bg-black/[0.06] [@media(hover:hover)]:hover:text-black"
+      )}
       onClick={handleCopy}
       type="button"
       variant="ghost"
     >
       <span aria-atomic="true" aria-live="polite" className="sr-only">
-        {copied ? "Email copied to clipboard" : ""}
+        {copyFailed
+          ? "Could not copy. Use the open mail app link."
+          : copied
+            ? "Email copied to clipboard"
+            : ""}
       </span>
 
       <motion.span
@@ -127,7 +148,10 @@ function CopyEmailButton() {
         transition={microSpring}
       >
         {copied ? (
-          <IconCheck className="text-white/70" size={11} />
+          <IconCheck
+            className={light ? "text-black/70" : "text-white/70"}
+            size={11}
+          />
         ) : (
           <IconMail size={11} />
         )}
@@ -139,77 +163,135 @@ function CopyEmailButton() {
         key={copied ? "copied-label" : "email-label"}
         transition={microSpring}
       >
-        {copied ? "Copied" : siteConfig.email.display}
+        <span
+          className={cn("block text-left text-[11px]", homepage && "text-sm")}
+        >
+          {copyFailed ? "Use the email link" : copied ? "Copied" : "Copy email"}
+        </span>
+        <span className={cn("block text-[9px]", homepage && "text-xs")}>
+          {siteConfig.email.display}
+        </span>
       </motion.span>
     </Button>
   );
 }
 
 function CalEmbed() {
+  const [configured, setConfigured] = useState(false);
+  const [status, setStatus] = useState<"loading" | "ready" | "slow" | "error">(
+    "loading"
+  );
   useEffect(() => {
-    void import("@calcom/embed-react").then(async ({ getCalApi }) => {
-      const cal = await getCalApi({ namespace: "15min" });
-      cal("ui", {
-        hideEventTypeDetails: false,
-        layout: "month_view",
-        styles: {
-          branding: { brandColor: "#fafafa" },
-        },
-        theme: "dark",
-      });
-    });
+    let disposed = false;
+    let unsubscribe: (() => void) | undefined;
+    const timeout = setTimeout(() => setStatus("slow"), 15_000);
+    const ready = () => {
+      clearTimeout(timeout);
+      if (!disposed) setStatus("ready");
+    };
+    const failed = () => {
+      clearTimeout(timeout);
+      if (!disposed) setStatus("error");
+    };
+    void import("@calcom/embed-react")
+      .then(async ({ getCalApi }) => {
+        const cal = await getCalApi({ namespace: "15min" });
+        if (disposed) return;
+        cal("on", { action: "linkReady", callback: ready });
+        cal("on", { action: "linkFailed", callback: failed });
+        unsubscribe = () => {
+          cal("off", { action: "linkReady", callback: ready });
+          cal("off", { action: "linkFailed", callback: failed });
+        };
+        cal("ui", {
+          hideEventTypeDetails: false,
+          layout: "month_view",
+          styles: { branding: { brandColor: "#fafafa" } },
+          theme: "dark",
+        });
+        setConfigured(true);
+      })
+      .catch(failed);
+    return () => {
+      disposed = true;
+      clearTimeout(timeout);
+      unsubscribe?.();
+    };
   }, []);
 
   return (
-    <Cal
-      calLink="mukulchugh/15min"
-      config={{ layout: "month_view", theme: "dark" }}
-      namespace="15min"
-      style={{ height: 560, width: "100%" }}
-    />
+    <>
+      <div className="space-y-2 px-4 py-4 text-base text-white/75">
+        <p aria-live="polite" role="status">
+          {status === "loading" && "Loading available times…"}
+          {status === "slow" &&
+            "The calendar is taking longer than expected. You can open it directly or email me."}
+          {status === "error" &&
+            "The calendar could not load. Open it directly or email me to arrange a time."}
+        </p>
+        <div className="flex flex-wrap gap-x-5 gap-y-2">
+          <a
+            className="underline underline-offset-4"
+            href="https://cal.com/mukulchugh/15min"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Open calendar
+          </a>
+          <a
+            className="underline underline-offset-4"
+            href={`mailto:${siteConfig.email.display}`}
+          >
+            Email instead
+          </a>
+        </div>
+      </div>
+      {configured && status !== "error" && (
+        <Cal
+          calLink="mukulchugh/15min"
+          config={{ layout: "month_view", theme: "dark" }}
+          namespace="15min"
+          style={{ height: 560, width: "100%" }}
+        />
+      )}
+    </>
   );
 }
 
 /** Grain + soft radial blobs — decoration shared by both tile states. */
 function TileChrome() {
   return (
-    <>
-      <CanvasGrain
-        className="mix-blend-multiply dark:mix-blend-soft-light"
-        opacity={0.055}
-      />
-
-      <div
-        aria-hidden="true"
-        className="absolute -top-32 -left-32 w-[560px] h-[560px] rounded-none pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(circle at 30% 30%, rgba(255,255,255,0.055) 0%, transparent 62%)",
-        }}
-      />
-
-      <div
-        aria-hidden="true"
-        className="absolute bottom-0 right-0 w-[320px] h-[320px] rounded-none pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(circle at 70% 80%, rgba(255,255,255,0.018) 0%, transparent 60%)",
-        }}
-      />
-    </>
+    <Image
+      alt=""
+      className="pointer-events-none z-0 object-cover md:object-fill"
+      fill
+      loading="eager"
+      sizes="100vw"
+      src="/design/contact-orbit-v2.png"
+    />
   );
 }
 
-export function CTATile() {
+export function CTATile({
+  appearance = "dark",
+  compact = false,
+  homepage = false,
+}: {
+  appearance?: "dark" | "light";
+  compact?: boolean;
+  homepage?: boolean;
+}) {
   const { ref } = useSectionInView("Contact");
   const sectionRef = useRef<HTMLElement | null>(null);
   const triggerWrapperRef = useRef<HTMLDivElement | null>(null);
   const backButtonRef = useRef<HTMLButtonElement | null>(null);
+  const resumeButtonRef = useRef<HTMLButtonElement | null>(null);
   const shouldRestoreFocusRef = useRef(false);
   const shouldReduce = useReducedMotion();
   const [mode, setMode] = useState<"intro" | "booking">("intro");
   const [isCVModalOpen, setIsCVModalOpen] = useState(false);
   const isBooking = mode === "booking";
+  const lightIntro = appearance === "light" && !isBooking;
 
   const rawX = useMotionValue(50);
   const rawY = useMotionValue(50);
@@ -283,9 +365,10 @@ export function CTATile() {
     if (!shouldRestoreFocusRef.current) {
       return;
     }
+    if (homepage) return;
     shouldRestoreFocusRef.current = false;
     triggerWrapperRef.current?.querySelector<HTMLElement>("button")?.focus();
-  }, [isBooking]);
+  }, [isBooking, homepage]);
 
   const handleMouseMove = useCallback(
     (e: React.MouseEvent<HTMLElement>) => {
@@ -317,24 +400,32 @@ export function CTATile() {
           same spirit as main's pre-redesign contact section) instead of
           lifting it out of the bento grid's document flow. The rest of the
           page — other tiles, scroll position — stays exactly where it is. */}
-      <section
+      <motion.section
         className={cn(
-          "scroll-mt-28 relative h-full overflow-hidden rounded-none",
-          "transition-[min-height] duration-500 ease-out",
+          "tile-glass scroll-mt-28 relative h-full overflow-hidden rounded-[14px]",
+          homepage &&
+            "transition-[min-height] duration-500 ease-out motion-reduce:transition-none",
           isBooking
             ? "min-h-[620px] sm:min-h-[680px] lg:min-h-[760px]"
-            : "min-h-[420px] sm:min-h-[480px] lg:min-h-[560px]"
+            : homepage
+              ? "min-h-[460px] md:min-h-[480px]"
+              : compact
+                ? "min-h-[320px]"
+                : "min-h-[340px] md:min-h-[22cqw]",
+          lightIntro && "border border-border"
         )}
         id="contact"
+        layout={homepage ? false : "size"}
         onMouseEnter={shouldReduce ? undefined : handleMouseEnter}
         onMouseLeave={shouldReduce ? undefined : handleMouseLeave}
         onMouseMove={shouldReduce ? undefined : handleMouseMove}
         ref={setRefs}
-        style={tileSurfaceStyle}
+        style={lightIntro ? { background: "#f4f4f2" } : tileSurfaceStyle}
+        transition={shouldReduce ? { duration: 0 } : premiumSpring}
       >
-        <TileChrome />
+        {!lightIntro && <TileChrome />}
 
-        {!isBooking &&
+        {!(isBooking || lightIntro) &&
           (shouldReduce ? (
             <div
               aria-hidden="true"
@@ -361,34 +452,39 @@ export function CTATile() {
             different — without this the two would momentarily stack).
             Sync/popLayout only, never "wait": mode="wait" here would recreate
             the exact bug this rework fixes (see below). */}
-        <AnimatePresence initial={false} mode="popLayout">
+        <AnimatePresence initial={false} mode={homepage ? "wait" : "popLayout"}>
           {isBooking ? (
             <motion.div
               animate={shouldReduce ? { opacity: 1 } : bookingContentAnimate}
-              className="relative z-10 flex h-full flex-col gap-5 p-5 sm:p-6 lg:p-8"
+              className={cn(
+                "relative z-10 flex h-full flex-col gap-5 p-5 sm:p-6 lg:p-8",
+                appearance === "light" && "bg-[#101112]"
+              )}
               exit={shouldReduce ? { opacity: 0 } : contentExit}
               initial={shouldReduce ? { opacity: 0 } : bookingContentInitial}
               key="booking-content"
+              onAnimationComplete={() =>
+                backButtonRef.current?.focus({ preventScroll: true })
+              }
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <p className="ui-label text-white/30">06 · Contact</p>
                   <h2
                     className={cn(
-                      "font-syne",
-                      "text-[1.35rem] sm:text-[1.6rem] font-black tracking-[-0.04em] text-white"
+                      "font-sans",
+                      "text-2xl sm:text-3xl font-semibold leading-[1.15] tracking-[-0.025em] text-white"
                     )}
                   >
                     Pick a time
                   </h2>
-                  <p className="text-[13px] text-white/40 max-w-[42ch]">
+                  <p className="text-base text-white/70 max-w-[42ch]">
                     Fifteen minutes. No pitch deck required.
                   </p>
                 </div>
 
                 <Button
                   aria-label="Back to contact options"
-                  className="shrink-0 rounded-none border border-white/[0.12] bg-white/[0.06]
+                  className="shrink-0 rounded-[10px] border border-white/[0.2] bg-white/[0.06]
                              px-3.5 text-[12px] font-medium text-white/70
                              hover:bg-white/[0.1] hover:text-white"
                   onClick={closeBooking}
@@ -421,121 +517,166 @@ export function CTATile() {
               // animate={{opacity:1, ...}} as an object literal, so children
               // matched against itemVariants.hidden and never received a
               // "visible" signal to animate away from it.
-              animate={shouldReduce ? undefined : "visible"}
-              className="relative z-10 h-full flex flex-col lg:flex-row lg:items-center justify-between
-                         gap-6 sm:gap-8 p-6 sm:p-8 lg:p-10"
+              animate={
+                shouldReduce || homepage ? { opacity: 1, y: 0 } : "visible"
+              }
+              className={cn(
+                "relative z-10 h-full flex flex-col justify-between gap-6 p-5 md:px-[2cqw] md:py-[1.6cqw]",
+                !compact && "md:flex-row md:items-center",
+                homepage && "min-h-[460px] gap-10 p-7 md:min-h-[480px] md:p-12",
+                appearance === "light" && "bg-[#f4f4f2]"
+              )}
               exit={shouldReduce ? { opacity: 0 } : contentExit}
-              initial={shouldReduce ? undefined : "hidden"}
+              initial={
+                shouldReduce
+                  ? false
+                  : homepage
+                    ? { opacity: 0, y: 12 }
+                    : "hidden"
+              }
               key="intro-content"
               style={shouldReduce ? { opacity: 1 } : undefined}
-              variants={shouldReduce ? undefined : containerVariants}
+              variants={
+                shouldReduce || homepage ? undefined : containerVariants
+              }
             >
-              <div className="flex flex-col gap-3 max-w-xl">
-                <motion.p
-                  className="ui-label text-white/30"
-                  variants={shouldReduce ? undefined : itemVariants}
-                >
-                  06 · Contact
-                </motion.p>
-
+              <div
+                className={cn(
+                  "flex min-w-0 flex-col gap-3 md:gap-[1cqw]",
+                  !compact && "md:w-[55%]"
+                )}
+              >
+                {!homepage && (
+                  <span
+                    className={cn(
+                      "bento-label",
+                      lightIntro ? "!text-black/70" : "!text-white/80"
+                    )}
+                  >
+                    11 / Contact
+                  </span>
+                )}
                 <motion.h2
                   className={cn(
-                    "font-syne",
-                    "font-black tracking-[-0.05em] leading-[0.93] text-white text-balance"
+                    "font-sans",
+                    "font-semibold tracking-[-0.025em] leading-[1.1]",
+                    lightIntro ? "text-[#111]" : "text-white"
                   )}
-                  style={{ fontSize: TILE_TITLE }}
-                  variants={shouldReduce ? undefined : itemVariants}
+                  style={{
+                    fontSize: compact
+                      ? "clamp(28px, 3cqw, 42px)"
+                      : "clamp(28px, 4cqw, 56px)",
+                  }}
+                  variants={shouldReduce || homepage ? undefined : itemVariants}
                 >
-                  Let&apos;s build
-                  <br />
-                  {/* Same font-size as the black-weight lines above/below
-                      (TILE_TITLE applies uniformly) — the de-emphasis comes
-                      from color + weight, not a smaller size. font-light
-                      (300) next to font-black (900) at identical size read
-                      as visibly smaller than its siblings (thin strokes vs.
-                      heavy ones), so this uses font-normal instead: still
-                      clearly lighter than the surrounding black weight, but
-                      without the "shrunk" illusion. */}
-                  <span className="text-white/40 font-normal">something</span>
-                  <br />
-                  <span className="text-white">together.</span>
+                  <span className="block">
+                    Let&apos;s build
+                    <br />
+                    {/* Keep the display size; de-emphasize with color and a supported weight. */}
+                    <span>something</span>
+                    <br />
+                    <span>together.</span>
+                  </span>
                 </motion.h2>
 
                 <motion.p
-                  className="text-[14px] text-white/40 leading-relaxed max-w-[44ch]"
-                  variants={shouldReduce ? undefined : itemVariants}
+                  className={
+                    homepage
+                      ? "mt-3 max-w-[34ch] text-sm leading-relaxed text-white/75"
+                      : "sr-only"
+                  }
+                  variants={shouldReduce || homepage ? undefined : itemVariants}
                 >
                   Have a problem worth solving? I want to hear about it.
                 </motion.p>
-
-                <motion.div
-                  className="flex items-center gap-2 flex-wrap"
-                  variants={shouldReduce ? undefined : itemVariants}
-                >
-                  <CopyEmailButton />
-                  <a
-                    aria-label={`Send email to ${siteConfig.email.display}`}
-                    className="font-mono text-[11px] text-white/20 [@media(hover:hover)]:hover:text-white/40
-                               transition-colors duration-150 underline underline-offset-2
-                               decoration-white/15 [@media(hover:hover)]:hover:decoration-white/30"
-                    href={`mailto:${siteConfig.email.display}`}
-                  >
-                    or open mail app
-                  </a>
-                </motion.div>
               </div>
 
               <motion.div
-                className="flex flex-wrap items-start gap-3 flex-shrink-0"
-                variants={shouldReduce ? undefined : itemVariants}
+                className={cn(
+                  "relative flex w-full max-w-[240px] shrink-0 flex-col items-stretch gap-2",
+                  !compact && "md:mr-[3cqw] md:pt-[1cqw]",
+                  homepage && "max-w-[300px] gap-3 md:mr-0"
+                )}
+                variants={shouldReduce || homepage ? undefined : itemVariants}
               >
-                <div className="contents" ref={triggerWrapperRef}>
+                <div
+                  className="contents"
+                  ref={(node) => {
+                    triggerWrapperRef.current = node;
+                    if (homepage && node && shouldRestoreFocusRef.current) {
+                      shouldRestoreFocusRef.current = false;
+                      node
+                        .querySelector<HTMLElement>("button")
+                        ?.focus({ preventScroll: true });
+                    }
+                  }}
+                >
                   <MagneticButton
                     aria-label="Book a call"
                     as="button"
-                    className="inline-flex items-center gap-2 px-6 py-3 min-h-[44px] rounded-none
-                               bg-white text-zinc-950
-                               text-[13px] font-bold tracking-tight
-                               shadow-[0_4px_28px_-4px_rgba(255,255,255,0.18)]
-                               [@media(hover:hover)]:hover:shadow-[0_4px_36px_-4px_rgba(255,255,255,0.28)]
-                               transition-shadow duration-200
-                               active:scale-[0.97]"
+                    className={cn(
+                      `inline-flex w-full items-center justify-between gap-2 px-4 py-2 min-h-[44px] rounded-[10px]
+                               bg-[#caff32] text-zinc-950 hover:bg-[#bce92a] hover:text-zinc-950
+                               text-sm font-medium transition-colors duration-150`,
+                      homepage && "min-h-12 px-5"
+                    )}
+                    fullWidth={homepage}
                     onClick={openBooking}
-                    strength={shouldReduce ? 0 : 12}
+                    strength={shouldReduce || homepage ? 0 : 5}
                   >
-                    <IconCalendar size={15} />
-                    Get in touch
+                    <IconVideo size={15} />
+                    Book a call
+                    <IconArrowRight size={15} />
                   </MagneticButton>
                 </div>
 
-                <MagneticButton
-                  aria-label="View resume"
-                  as="button"
-                  className="inline-flex items-center gap-2 px-6 py-3 min-h-[44px] rounded-none
-                             bg-white/[0.07] border border-white/[0.14]
-                             text-[13px] font-semibold text-white/80
-                             [@media(hover:hover)]:hover:bg-white/[0.12]
-                             [@media(hover:hover)]:hover:border-white/[0.24]
-                             [@media(hover:hover)]:hover:text-white
-                             transition-all duration-200
-                             active:scale-[0.97]"
-                  onClick={() => setIsCVModalOpen(true)}
-                  strength={shouldReduce ? 0 : 10}
-                >
-                  <IconFileText size={15} />
-                  View Resume
-                </MagneticButton>
+                <CopyEmailButton homepage={homepage} light={lightIntro} />
+                <div className="flex flex-wrap items-center justify-between gap-x-3">
+                  <a
+                    className={cn(
+                      "inline-flex min-h-11 items-center whitespace-nowrap text-[11px] underline underline-offset-4",
+                      lightIntro ? "text-black/80" : "text-white/80"
+                    )}
+                    href={`mailto:${siteConfig.email.display}`}
+                  >
+                    {homepage ? "Send an email" : "Open mail app"}
+                  </a>
+                  <div
+                    className="contents"
+                    ref={(node) => {
+                      resumeButtonRef.current =
+                        node?.querySelector("button") ?? null;
+                    }}
+                  >
+                    <MagneticButton
+                      aria-label="View resume"
+                      as="button"
+                      className={cn(
+                        "inline-flex min-h-11 items-center gap-2 whitespace-nowrap text-[11px] underline underline-offset-4",
+                        lightIntro
+                          ? "text-black/80 hover:text-black"
+                          : "text-white/80 hover:text-white"
+                      )}
+                      onClick={() => setIsCVModalOpen(true)}
+                      strength={shouldReduce || homepage ? 0 : 10}
+                    >
+                      <IconFileText size={15} />
+                      View Resume
+                    </MagneticButton>
+                  </div>
+                </div>
               </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
-      </section>
+      </motion.section>
 
       <CVModal
         cvUrl={siteConfig.files.cv}
         isOpen={isCVModalOpen}
         name={siteConfig.firstName}
         onClose={() => setIsCVModalOpen(false)}
+        returnFocus={resumeButtonRef}
       />
     </>
   );

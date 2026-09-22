@@ -1,45 +1,61 @@
+import { IconArrowRight } from "@tabler/icons-react";
+import Image from "next/image";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
+import { ThemeLogo } from "@/components/theme-logo";
+import { buttonVariants } from "@/components/ui/button";
+import { siteConfig } from "@/lib/data";
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
-      <div className="text-center max-w-2xl mx-auto">
-        <h1
-          className={cn(
-            "font-syne",
-            "text-6xl md:text-8xl font-bold text-foreground mb-4"
-          )}
+    <main className="bento-page py-8 md:pb-10 md:pt-[7cqw]">
+      <header className="mb-6 flex flex-wrap items-center gap-x-4 gap-y-1 md:mb-[2cqw]">
+        <Link
+          className="flex min-h-11 items-center gap-3 text-lg font-bold md:text-[1.6cqw]"
+          href="/"
         >
-          404
-        </h1>
-        <h2
-          className={cn(
-            "font-syne",
-            "text-2xl md:text-3xl font-semibold text-foreground mb-6"
-          )}
-        >
-          Page Not Found
-        </h2>
-        <p className="text-muted-foreground text-lg mb-8">
-          That page doesn&apos;t exist, or it moved and I forgot to update the
-          link.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <ThemeLogo alt="" height={32} width={32} />
+          {siteConfig.name}
+        </Link>
+        <span className="border-l border-border pl-4 text-sm text-muted-foreground md:text-[1.25cqw]">
+          {siteConfig.tagline}
+        </span>
+      </header>
+      <div className="grid gap-3 md:grid-cols-2 md:gap-[1cqw]">
+        <section className="bento-surface flex flex-col items-start p-6 md:min-h-[47.6cqw] md:p-[3cqw]">
+          <p className="font-mono text-xs tracking-wide text-muted-foreground md:text-[1.1cqw]">
+            404 / NOT FOUND
+          </p>
+          <h1 className="my-8 text-balance font-sans text-[clamp(2rem,4.5cqw,3.5rem)] font-semibold leading-[1.12] tracking-[-0.025em] md:mb-[2.5cqw] md:mt-[5.5cqw]">
+            Page not found.
+          </h1>
+          <p className="max-w-[26ch] text-lg leading-snug text-muted-foreground md:text-[1.8cqw]">
+            This page may have moved, or the link may be incorrect.
+          </p>
           <Link
-            className="inline-flex items-center justify-center px-6 py-3 rounded-none bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors"
+            className={buttonVariants({
+              className:
+                "mt-7 h-12 gap-6 rounded-[4px] px-6 text-base font-semibold md:mt-[2.5cqw] md:h-[5.5cqw] md:px-[2.2cqw] md:text-[1.8cqw] [&_svg]:size-6",
+            })}
             href="/"
           >
-            Go Home
+            Back home <IconArrowRight aria-hidden="true" />
           </Link>
-          <Link
-            className="inline-flex items-center justify-center px-6 py-3 rounded-none border border-border text-foreground font-medium hover:bg-secondary transition-colors"
-            href="/blog"
-          >
-            Browse Blog
-          </Link>
+        </section>
+        <div
+          aria-hidden="true"
+          className="relative min-h-72 overflow-hidden rounded-[4px] bg-[#101010] md:min-h-0"
+        >
+          <Image
+            alt=""
+            className="object-contain"
+            fill
+            preload
+            sizes="(min-width: 768px) 48vw, 95vw"
+            src="/design/chrome-ribbon.webp"
+            unoptimized
+          />
         </div>
       </div>
-    </div>
+    </main>
   );
 }

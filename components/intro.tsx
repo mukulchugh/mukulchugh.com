@@ -11,7 +11,7 @@ import clsx from "clsx";
 import { motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
-import React, { Suspense, useCallback, useState } from "react";
+import React, { Suspense, useCallback, useRef, useState } from "react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Tooltip,
@@ -33,6 +33,7 @@ const Component = React.memo(() => {
   const { ref } = useSectionInView("Home", 0.5);
   const { setActiveSection, setTimeOfLastClick } = useActiveSectionContext();
   const [isCVModalOpen, setIsCVModalOpen] = useState(false);
+  const resumeButtonRef = useRef<HTMLButtonElement | null>(null);
 
   const handleClick = useCallback(() => {
     setActiveSection("Contact");
@@ -90,7 +91,7 @@ const Component = React.memo(() => {
           className={clsx(
             "ui-label inline-flex items-center gap-1.5 rounded-none px-3.5 py-1.5",
             "text-muted-foreground bg-muted border border-border",
-            "font-syne"
+            "font-sans"
           )}
         >
           <span className="relative flex size-1.5">
@@ -107,7 +108,7 @@ const Component = React.memo(() => {
         className={clsx(
           "mb-8 px-2 font-bold tracking-tight",
           "text-[1.6rem] leading-[1.25] sm:text-[2.25rem] md:text-[2.75rem]",
-          "font-syne"
+          "font-sans"
         )}
         initial={{ opacity: 0, y: 12 }}
         transition={{ delay: 0.1, duration: 0.4 }}
@@ -138,7 +139,7 @@ const Component = React.memo(() => {
         <Link
           className={clsx(
             buttonVariants(),
-            "font-syne",
+            "font-sans",
             "rounded-none bg-foreground hover:bg-foreground/90 text-white font-semibold shadow-[0_4px_20px_-4px_rgba(24,24,27,0.15)] transition-[background-color,transform] duration-200"
           )}
           href="#contact"
@@ -150,10 +151,11 @@ const Component = React.memo(() => {
 
         <Button
           className={clsx(
-            "font-syne",
+            "font-sans",
             "rounded-none border border-border hover:border-border font-semibold"
           )}
           onClick={handleOpenCV}
+          ref={resumeButtonRef}
           variant="secondary"
         >
           {introContent.resumeButtonText}
@@ -205,6 +207,7 @@ const Component = React.memo(() => {
         isOpen={isCVModalOpen}
         name={siteConfig.firstName}
         onClose={handleCloseCV}
+        returnFocus={resumeButtonRef}
       />
     </section>
   );

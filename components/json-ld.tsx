@@ -459,19 +459,27 @@ export function JsonLd() {
   return (
     <>
       <script
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(personSchema).replace(/</g, "\\u003c"),
+        }}
         type="application/ld+json"
       />
       <script
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(websiteSchema).replace(/</g, "\\u003c"),
+        }}
         type="application/ld+json"
       />
       <script
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(profilePageSchema) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(profilePageSchema).replace(/</g, "\\u003c"),
+        }}
         type="application/ld+json"
       />
       <script
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(organizationSchema).replace(/</g, "\\u003c"),
+        }}
         type="application/ld+json"
       />
     </>

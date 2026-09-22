@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import type { ReactNode } from "react";
 import {
   fadeVariants,
@@ -12,7 +12,14 @@ import {
   staggerItem,
   viewportOnce,
 } from "@/lib/motion";
-import { cn } from "@/lib/utils";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
+
+const visibleWithoutMotion = {
+  opacity: 1,
+  scale: 1,
+  transition: { duration: 0 },
+  y: 0,
+};
 
 type RevealVariant = "rise" | "hero" | "fade" | "scale";
 
@@ -43,10 +50,6 @@ export function Reveal({
 }: RevealProps) {
   const reduce = useReducedMotion();
 
-  if (reduce) {
-    return <div className={className}>{children}</div>;
-  }
-
   const base = variantMap[variant];
   const variants =
     delay > 0
@@ -68,11 +71,12 @@ export function Reveal({
 
   return (
     <motion.div
-      className={cn(className)}
-      initial="hidden"
+      animate={reduce ? visibleWithoutMotion : undefined}
+      className={className}
+      initial={reduce ? false : "hidden"}
       variants={variants}
       viewport={viewportOnce}
-      whileInView="visible"
+      whileInView={reduce ? undefined : "visible"}
     >
       {children}
     </motion.div>
@@ -93,17 +97,14 @@ export function RevealGroup({
 }: RevealGroupProps) {
   const reduce = useReducedMotion();
 
-  if (reduce) {
-    return <div className={className}>{children}</div>;
-  }
-
   return (
     <motion.div
-      className={cn(className)}
-      initial="hidden"
+      animate={reduce ? visibleWithoutMotion : undefined}
+      className={className}
+      initial={reduce ? false : "hidden"}
       variants={fast ? staggerContainerFast : staggerContainer}
       viewport={viewportOnce}
-      whileInView="visible"
+      whileInView={reduce ? undefined : "visible"}
     >
       {children}
     </motion.div>
@@ -118,12 +119,12 @@ type RevealItemProps = {
 export function RevealItem({ children, className }: RevealItemProps) {
   const reduce = useReducedMotion();
 
-  if (reduce) {
-    return <div className={className}>{children}</div>;
-  }
-
   return (
-    <motion.div className={cn(className)} variants={staggerItem}>
+    <motion.div
+      animate={reduce ? visibleWithoutMotion : undefined}
+      className={className}
+      variants={staggerItem}
+    >
       {children}
     </motion.div>
   );

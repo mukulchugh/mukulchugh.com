@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { type CSSProperties, useEffect, useState } from "react";
 import { siteConfig } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
@@ -34,13 +34,26 @@ export function ThemeLogo({
       : siteConfig.images.logoLight;
 
   return (
-    <Image
-      alt={alt}
-      className={cn("object-contain", className)}
-      height={height}
-      priority={priority}
-      src={src}
-      width={width}
-    />
+    <span
+      className={cn(
+        "relative inline-block shrink-0 h-[var(--logo-height)] w-[var(--logo-width)]",
+        className
+      )}
+      style={
+        {
+          "--logo-height": `${height}px`,
+          "--logo-width": `${width}px`,
+        } as CSSProperties
+      }
+    >
+      <Image
+        alt={alt}
+        className="object-contain"
+        fill
+        priority={priority}
+        sizes={`${width}px`}
+        src={src}
+      />
+    </span>
   );
 }

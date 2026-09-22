@@ -1,8 +1,9 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import React, { memo } from "react";
 import { skillsData } from "@/lib/data";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 
 // Double the array for seamless loop
 const ITEMS = [...skillsData, ...skillsData];

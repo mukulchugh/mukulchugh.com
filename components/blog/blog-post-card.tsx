@@ -1,13 +1,14 @@
 "use client";
 
 import { IconArrowRight, IconClock } from "@tabler/icons-react";
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import Link from "next/link";
 import { PostCover } from "@/components/blog/post-cover";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import type { Post } from "@/lib/blog";
 import { accentColorForTags } from "@/lib/blog-topic";
+import { microSpring, softSpring } from "@/lib/motion";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import { cn } from "@/lib/utils";
 
 function fmtDate(iso: string) {
@@ -40,18 +41,21 @@ export function BlogPostCard({
 }: BlogPostCardProps) {
   const shouldReduce = useReducedMotion();
   const compact = variant === "compact";
+  const Heading = compact ? "h3" : "h2";
 
   return (
     <motion.article
-      initial={shouldReduce ? false : { opacity: 0, y: compact ? 14 : 24 }}
+      initial={shouldReduce || compact ? false : { opacity: 0.7, y: 10 }}
       transition={{
-        damping: 20,
-        delay: index * 0.05,
-        stiffness: 100,
-        type: "spring",
+        ...softSpring,
+        delay: Math.min(index, 4) * 0.025,
       }}
       viewport={{ amount: 0.15, once: true }}
-      whileInView={shouldReduce ? undefined : { opacity: 1, y: 0 }}
+      whileHover={shouldReduce ? undefined : { transition: microSpring, y: -2 }}
+      whileInView={shouldReduce || compact ? undefined : { opacity: 1, y: 0 }}
+      whileTap={
+        shouldReduce ? undefined : { scale: 0.99, transition: microSpring }
+      }
     >
       <Link
         aria-label={`Read: ${post.title}`}
@@ -59,10 +63,9 @@ export function BlogPostCard({
           "group block min-w-0",
           compact
             ? `overflow-hidden rounded-none border border-border bg-foreground/[0.03]
-               transition-[border-color,background-color,transform] duration-300 active:scale-[0.98]
+               transition-[border-color,background-color] duration-150
                [@media(hover:hover)]:hover:border-border
-               [@media(hover:hover)]:hover:bg-foreground/[0.05]
-               [@media(hover:hover)]:hover:-translate-y-0.5`
+               [@media(hover:hover)]:hover:bg-foreground/[0.05]`
             : `grid gap-5 border-t border-border pt-6 transition-opacity
                md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] md:items-center md:gap-8
                active:opacity-75
@@ -93,21 +96,6 @@ export function BlogPostCard({
                 {post.tags[0].name}
               </Badge>
             )}
-            {!compact && post.author && (
-              <span className="flex items-center gap-2">
-                <Avatar className="h-5 w-5">
-                  <AvatarImage src={post.author.profilePicture} />
-                  <AvatarFallback>
-                    {post.author.name
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")}
-                  </AvatarFallback>
-                </Avatar>
-                <span className="text-foreground/80">{post.author.name}</span>
-                <span className="opacity-40">·</span>
-              </span>
-            )}
             {compact && (
               <>
                 <IconClock className="h-3 w-3 flex-shrink-0" />
@@ -117,9 +105,12 @@ export function BlogPostCard({
                 <span className="opacity-40">·</span>
               </>
             )}
-            <span className={compact ? "font-mono tabular-nums" : undefined}>
+            <time
+              className={compact ? "font-mono tabular-nums" : undefined}
+              dateTime={post.publishedAt}
+            >
               {fmtDate(post.publishedAt)}
-            </span>
+            </time>
             {!compact && (
               <>
                 <span className="opacity-40">·</span>
@@ -129,9 +120,9 @@ export function BlogPostCard({
           </div>
 
           {/* Title */}
-          <h3
+          <Heading
             className={cn(
-              "font-syne",
+              "font-sans",
               "font-semibold tracking-[-0.025em] text-foreground break-words text-balance",
               compact
                 ? "text-[1rem] leading-snug"
@@ -139,15 +130,13 @@ export function BlogPostCard({
             )}
           >
             {post.title}
-          </h3>
+          </Heading>
 
           {/* Brief */}
           <p
             className={cn(
               "text-muted-foreground leading-[1.7] line-clamp-2 text-pretty",
-              compact
-                ? "text-[13px]"
-                : "text-[14px] sm:text-[15px] max-w-[68ch]"
+              compact ? "text-[13px]" : "text-base max-w-[68ch]"
             )}
           >
             {post.brief}

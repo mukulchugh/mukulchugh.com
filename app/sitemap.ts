@@ -6,6 +6,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = siteConfig.siteUrl;
 
   const staticRoutes: MetadataRoute.Sitemap = [
+    ...["/about", "/projects", "/contact"].map((route) => ({
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+      url: `${baseUrl}${route}`,
+    })),
+    {
+      changeFrequency: "monthly",
+      priority: 0.8,
+      url: `${baseUrl}/experience`,
+    },
     {
       changeFrequency: "daily",
       lastModified: new Date(),

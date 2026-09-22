@@ -1,9 +1,11 @@
+import { BrandBar } from "@/components/bento/brand-bar";
+import { CTATile } from "@/components/bento/cta-tile";
 import { siteConfig } from "@/lib/data";
 
 export const metadata = {
   description:
     "Notes on engineering, product, and the craft of building software that earns its keep.",
-  title: `Blog | ${siteConfig.name}`,
+  title: `Writing | ${siteConfig.name}`,
 };
 
 export default function BlogLayout({
@@ -11,5 +13,13 @@ export default function BlogLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return children;
+  return (
+    <div className="bento-page">
+      <BrandBar />
+      {children}
+      <div className="mb-6">
+        <CTATile />
+      </div>
+    </div>
+  );
 }

@@ -1,245 +1,119 @@
 "use client";
 
-import {
-  IconBrandGithub,
-  IconChevronLeft,
-  IconChevronRight,
-  IconExternalLink,
-  IconLayoutKanban,
-} from "@tabler/icons-react";
+import { IconArrowUpRight, IconChevronDown } from "@tabler/icons-react";
 import { motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
 import { useState } from "react";
-import { accentColorForTags } from "@/lib/blog-topic";
-import { hiddenProjectTitles, projectsData } from "@/lib/data";
-import { useSectionInView } from "@/lib/hooks";
-import { softSpring } from "@/lib/motion";
-import { slugifyProjectTitle } from "@/lib/projects";
-import { SectionHeader } from "./section-header";
-import { Button } from "./ui/button";
-
-// Featured projects (index 0-3) shown as dedicated tiles; list the rest here.
-const restProjects = projectsData
-  .slice(4)
-  .filter(({ title }) => !hiddenProjectTitles.has(title));
-
-const PAGE_SIZE = 6;
-
-// Small identity mark per card — the project's own initials rather than a
-// generic code icon, keeping the text-forward direction without a full
-// hero-scale treatment (these are compact list cards, not banners).
-function initialsFor(title: string): string {
-  const words = title
-    .trim()
-    .split(/\s+/)
-    .filter((word) => /[a-zA-Z0-9]/.test(word.charAt(0)));
-  if (words.length === 0) {
-    return "";
-  }
-  if (words.length === 1) {
-    return words[0].charAt(0).toUpperCase();
-  }
-  return (words[0].charAt(0) + words[1].charAt(0)).toUpperCase();
-}
-
-function ProjectCard({
-  title,
-  description,
-  tags,
-  github,
-  demo,
-  index,
-}: {
-  title: string;
-  description: string;
-  tags: readonly string[];
-  github: string;
-  demo: string;
-  index: number;
-}) {
-  const shouldReduce = useReducedMotion();
-  const accent = accentColorForTags(tags);
-
-  return (
-    <motion.li
-      className="list-none"
-      initial={shouldReduce ? false : { opacity: 0, y: 18 }}
-      transition={{
-        damping: 20,
-        delay: index * 0.06,
-        stiffness: 110,
-        type: "spring",
-      }}
-      viewport={{ amount: 0.12, once: true }}
-      whileInView={shouldReduce ? undefined : { opacity: 1, y: 0 }}
-    >
-      <div
-        className="project-card relative flex h-full flex-col justify-between gap-4 overflow-hidden rounded-none
-                   border border-border bg-card p-5
-                   transition-transform duration-300 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]
-                   active:scale-[0.985] active:duration-100
-                   [@media(hover:hover)]:hover:border-border"
-      >
-        {/* Subtle ambient glow, tinted per project — content-seeded, not decorative noise */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-none opacity-[0.10] blur-2xl [@media(hover:hover)]:group-hover:opacity-[0.16]"
-          style={{ background: accent }}
-        />
-
-        <div className="relative flex flex-col gap-3">
-          <div className="flex items-start justify-between">
-            <div
-              className="flex h-8 w-8 items-center justify-center rounded-none border border-border bg-muted"
-              style={{ boxShadow: `0 0 24px -8px ${accent}` }}
-            >
-              <span
-                className="font-syne text-[13px] font-bold leading-none tracking-tight"
-                style={{ color: accent }}
-              >
-                {initialsFor(title)}
-              </span>
-            </div>
-            <div className="flex items-center gap-0.5">
-              {github && (
-                <a
-                  aria-label={`${title} on GitHub`}
-                  className="flex items-center justify-center w-11 h-11 rounded-none text-muted-foreground
-                             transition-colors
-                             [@media(hover:hover)]:hover:bg-foreground/[0.06] [@media(hover:hover)]:hover:text-foreground
-                             active:bg-foreground/[0.08]"
-                  href={github}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  <IconBrandGithub className="h-4 w-4" />
-                </a>
-              )}
-              {demo && (
-                <a
-                  aria-label={`${title} demo`}
-                  className="flex items-center justify-center w-11 h-11 rounded-none text-muted-foreground
-                             transition-colors
-                             [@media(hover:hover)]:hover:bg-foreground/[0.06] [@media(hover:hover)]:hover:text-foreground
-                             active:bg-foreground/[0.08]"
-                  href={demo}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  <IconExternalLink className="h-4 w-4" />
-                </a>
-              )}
-            </div>
-          </div>
-          <div className="space-y-1.5">
-            {/* Tile/card title — 1rem semibold tracking-tight. font-syne to match
-                every other card title in the app (blog-post-card, featured-project-tile,
-                related-posts) — this one had drifted onto the plain sans face. */}
-            <h3 className="font-syne text-[1rem] font-semibold tracking-tight text-foreground">
-              <Link
-                className="[@media(hover:hover)]:hover:underline [@media(hover:hover)]:hover:underline-offset-2"
-                href={`/projects/${slugifyProjectTitle(title)}`}
-              >
-                {title}
-              </Link>
-            </h3>
-            {/* Body scale — 14px leading-relaxed muted */}
-            <p className="text-[14px] leading-relaxed text-muted-foreground">
-              {description}
-            </p>
-          </div>
-        </div>
-        {tags && tags.length > 0 && (
-          <div className="flex flex-wrap gap-1.5">
-            {tags.map((tag) => (
-              <span
-                className="ui-label rounded-none border border-border bg-foreground/[0.04] px-2.5 py-0.5 text-muted-foreground
-                           [@media(hover:hover)]:hover:border-border [@media(hover:hover)]:hover:text-foreground/80
-                           transition-colors duration-200 cursor-default select-none"
-                key={tag}
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
-      </div>
-    </motion.li>
-  );
-}
+import { Button } from "@/components/ui/button";
+import { getProjectBySlug, projectCollections } from "@/lib/projects";
 
 export default function Projects() {
-  const { ref } = useSectionInView("Projects", 0.5);
-  const shouldReduce = useReducedMotion();
-  const pageCount = Math.ceil(restProjects.length / PAGE_SIZE);
-  const [page, setPage] = useState(0);
-  const pageItems = restProjects.slice(
-    page * PAGE_SIZE,
-    page * PAGE_SIZE + PAGE_SIZE
-  );
-
+  const [open, setOpen] = useState<Record<string, boolean>>({
+    independent: true,
+  });
+  const reducedMotion = useReducedMotion();
   return (
-    <section
-      className="scroll-mt-28 w-full p-5 sm:p-6 lg:p-8 min-w-0"
-      id="projects"
-      ref={ref}
-    >
-      <SectionHeader
-        align="left"
-        highlight="built"
-        icon={IconLayoutKanban}
-        index="04"
-        label="Projects"
-        subtitle="Public work is linked. Selected private product work is described without exposing confidential code or company details."
-        title="More things I've"
-      />
-      <motion.ul
-        animate={{ opacity: 1, y: 0 }}
-        className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"
-        initial={shouldReduce ? false : { opacity: 0, y: 12 }}
-        key={page}
-        transition={softSpring}
-      >
-        {pageItems.map((project, index) => (
-          <ProjectCard
-            demo={project.demo}
-            description={project.description}
-            github={project.github}
-            index={index}
-            key={project.title}
-            tags={project.tags}
-            title={project.title}
-          />
-        ))}
-      </motion.ul>
-
-      {pageCount > 1 && (
-        <div className="mt-6 flex items-center justify-center gap-4">
-          <Button
-            aria-label="Previous page"
-            disabled={page === 0}
-            onClick={() => setPage((p) => Math.max(0, p - 1))}
-            size="sm"
-            type="button"
-            variant="secondary"
-          >
-            <IconChevronLeft className="h-4 w-4" />
-          </Button>
-          <span className="font-mono text-[12px] tabular-nums text-muted-foreground">
-            Page {page + 1} of {pageCount}
-          </span>
-          <Button
-            aria-label="Next page"
-            disabled={page === pageCount - 1}
-            onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
-            size="sm"
-            type="button"
-            variant="secondary"
-          >
-            <IconChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
-      )}
-    </section>
+    <div className="min-w-0">
+      <div className="divide-y divide-border">
+        {projectCollections.map((collection) => {
+          const expanded = Boolean(open[collection.id]);
+          const slugs = collection.slugs;
+          const archive = collection.id === "archive";
+          return (
+            <section
+              className="py-5 first:pt-0"
+              id={`work-${collection.id}`}
+              key={collection.id}
+            >
+              {collection.id === "independent" ? (
+                <h3 className="sr-only">{collection.title}</h3>
+              ) : (
+                <h3>
+                  <Button
+                    aria-controls={`collection-${collection.id}`}
+                    aria-expanded={expanded}
+                    className="h-auto min-h-12 w-full justify-between whitespace-normal px-0 py-2 text-left hover:bg-transparent"
+                    onClick={() =>
+                      setOpen((current) => ({
+                        ...current,
+                        [collection.id]: !current[collection.id],
+                      }))
+                    }
+                    variant="ghost"
+                  >
+                    <span className="font-heading text-base font-medium tracking-[-.02em]">
+                      {collection.title}
+                    </span>
+                    <span className="ml-4 flex shrink-0 items-center gap-4">
+                      <span className="ui-label text-muted-foreground">
+                        <span aria-hidden="true">
+                          {String(slugs.length).padStart(2, "0")}
+                        </span>
+                        <span className="sr-only">{slugs.length} projects</span>
+                      </span>
+                      <IconChevronDown
+                        aria-hidden="true"
+                        className={`size-5 transition-transform duration-200 motion-reduce:transition-none ${expanded ? "rotate-180" : ""}`}
+                      />
+                    </span>
+                  </Button>
+                </h3>
+              )}
+              <motion.div
+                animate={{
+                  height: expanded ? "auto" : 0,
+                  opacity: expanded ? 1 : 0,
+                }}
+                aria-hidden={!expanded}
+                className="overflow-hidden"
+                id={`collection-${collection.id}`}
+                inert={!expanded}
+                initial={false}
+                transition={{
+                  duration: reducedMotion ? 0 : 0.24,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+              >
+                <ul
+                  className={
+                    archive
+                      ? "mt-5 grid gap-x-8 sm:grid-cols-2"
+                      : collection.id === "independent"
+                        ? "divide-y divide-border"
+                        : "mt-3 divide-y divide-border"
+                  }
+                >
+                  {slugs.map((slug) => {
+                    const project = getProjectBySlug(slug);
+                    if (!project) return null;
+                    return (
+                      <li key={slug}>
+                        <Link
+                          className={`group grid min-w-0 grid-cols-[minmax(0,1fr)_auto] gap-x-5 gap-y-2 py-5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${archive ? "border-t border-border" : "md:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)_auto]"}`}
+                          href={`/projects/${slug}`}
+                        >
+                          <h4 className="text-base font-medium leading-snug tracking-[-.02em] underline-offset-4 group-hover:underline sm:text-lg">
+                            {project.title}
+                          </h4>
+                          <p
+                            className={`col-start-1 row-start-2 max-w-[64ch] text-sm leading-relaxed text-muted-foreground ${archive ? "" : "md:col-start-2 md:row-start-1"}`}
+                          >
+                            {project.description}
+                          </p>
+                          <IconArrowUpRight
+                            aria-hidden="true"
+                            className={`col-start-2 row-start-1 size-5 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 motion-reduce:transform-none ${archive ? "" : "md:col-start-3"}`}
+                          />
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </motion.div>
+            </section>
+          );
+        })}
+      </div>
+    </div>
   );
 }

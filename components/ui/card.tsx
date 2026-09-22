@@ -4,10 +4,7 @@ import { cn } from "@/lib/utils";
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
   ({ className, ...props }, ref) => (
     <div
-      className={cn(
-        "rounded-none border border-border bg-card text-card-foreground shadow-sm",
-        className
-      )}
+      className={cn("bento-surface text-card-foreground", className)}
       data-slot="card"
       ref={ref}
       {...props}

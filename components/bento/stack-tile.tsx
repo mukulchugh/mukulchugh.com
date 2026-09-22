@@ -89,11 +89,7 @@ export function StackTile() {
             <div className="flex flex-wrap gap-1">
               {skills.map((skill) => (
                 <span
-                  className="ui-label rounded-none px-2 py-0.5
-                             border border-border bg-card text-muted-foreground shadow-sm
-                             hover:border-border hover:text-foreground hover:-translate-y-px
-                             transition-[color,border-color,transform] duration-200 ease-premium
-                             cursor-default select-none"
+                  className="ui-label max-w-full rounded-md border border-border bg-muted px-2.5 py-1 text-foreground [overflow-wrap:anywhere]"
                   key={skill}
                 >
                   {skill}

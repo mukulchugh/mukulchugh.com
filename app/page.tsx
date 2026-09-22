@@ -5,8 +5,8 @@ export default function Home() {
   const posts = getAllPosts();
 
   return (
-    <main className="dock-safe-bottom overflow-x-hidden px-3 pt-2 sm:px-5 lg:px-6">
-      <div className="mx-auto w-full min-w-0 max-w-[1400px]">
+    <main>
+      <div className="bento-page">
         <HomeBento posts={posts} />
       </div>
     </main>

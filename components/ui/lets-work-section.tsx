@@ -85,7 +85,7 @@ export function LetsWorkTogether() {
               </span>
               <h3
                 className={clsx(
-                  "font-syne",
+                  "font-sans",
                   "text-3xl font-light tracking-tight text-foreground transition-[opacity,transform] duration-500 sm:text-4xl"
                 )}
                 style={{
@@ -148,7 +148,7 @@ export function LetsWorkTogether() {
               <div className="flex flex-col items-center gap-6">
                 <h2
                   className={clsx(
-                    "font-syne",
+                    "font-sans",
                     "relative text-center text-5xl font-light tracking-tight text-foreground sm:text-6xl md:text-7xl lg:text-8xl transition-[opacity,transform] duration-700 ease-out"
                   )}
                   style={{

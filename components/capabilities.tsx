@@ -2,17 +2,17 @@
 
 import {
   type Icon,
-  IconBolt,
   IconDeviceMobile,
   IconRobot,
   IconServer2,
 } from "@tabler/icons-react";
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import type { ReactNode } from "react";
 import { CanvasGrain } from "@/components/canvas-grain";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { accentColorForTags } from "@/lib/blog-topic";
 import { staggerContainer, staggerItem, viewportOnce } from "@/lib/motion";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import { cn } from "@/lib/utils";
 import { SectionHeader } from "./section-header";
 
@@ -91,7 +91,7 @@ function CardHeading({
       >
         <TablerIcon className="h-4 w-4" />
       </div>
-      <h3 className="font-syne font-bold text-[17px] tracking-[-0.01em] text-foreground">
+      <h3 className="font-sans font-bold text-[17px] tracking-[-0.01em] text-foreground">
         {title}
       </h3>
       <p className="text-[13.5px] leading-[1.65] text-muted-foreground text-pretty">
@@ -219,8 +219,6 @@ export default function Capabilities() {
       <SectionHeader
         align="left"
         highlight="work"
-        icon={IconBolt}
-        label="Capabilities"
         subtitle="Three things that show up in nearly everything I ship."
         title="How I"
       />
@@ -272,7 +270,7 @@ export default function Capabilities() {
         >
           <CapabilityCard accent={INFRA_ACCENT} className="p-6">
             <CanvasGrain opacity={0.05} />
-            <p className="relative z-10 mx-auto my-2 max-w-md text-balance text-center text-[19px] sm:text-[21px] font-syne font-bold tracking-[-0.01em] text-foreground">
+            <p className="relative z-10 mx-auto my-2 max-w-md text-balance text-center text-[19px] sm:text-[21px] font-sans font-bold tracking-[-0.01em] text-foreground">
               One person, the whole stack: agents, apps, and the infrastructure
               between them.
             </p>

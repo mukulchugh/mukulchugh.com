@@ -1,0 +1,280 @@
+.study {
+  margin-top: 32px;
+}
+.controls,
+.surfaceButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.controls {
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.surfaceButtons button {
+  min-height: 44px;
+  padding: 0 16px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  border: 1px solid hsl(var(--border));
+  border-radius: 24px;
+}
+.surfaceButtons button:hover {
+  background: hsl(var(--muted));
+}
+.toggle {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  min-height: 44px;
+  font-size: 12px;
+}
+.toggle input {
+  accent-color: #54791c;
+}
+.viewport {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid hsl(var(--border));
+  border-radius: 14px;
+}
+.stage {
+  position: relative;
+  height: min(620px, 70svh);
+  min-height: 370px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+.surface {
+  position: relative;
+  min-height: 620px;
+  padding: clamp(28px, 5vw, 80px);
+  overflow: hidden;
+  color: #1a1c17;
+  background: #f3f1eb;
+}
+.surface[data-dock-surface="dark"] {
+  color: #f5f4ed;
+  background: #181c1b;
+}
+.surface[data-dock-surface="lime"] {
+  background: #d3ff59;
+}
+.surface[data-dock-surface="moving"] {
+  color: #fff;
+  background: #142a34;
+}
+.surfaceContent {
+  position: relative;
+}
+.surface h2 {
+  max-width: 10ch;
+  font-family: var(--font-syne), sans-serif;
+  font-size: clamp(36px, 5vw, 68px);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+.surface p {
+  max-width: 38ch;
+  margin-top: 24px;
+  font-size: 15px;
+  line-height: 1.7;
+}
+.specimen {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  display: block;
+  margin-top: 120px;
+  font-size: clamp(30px, 5vw, 64px);
+  font-weight: 500;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+.art {
+  position: absolute;
+  top: 40px;
+  right: 15%;
+  width: 280px;
+  height: 540px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  opacity: 0.25;
+  transform: rotate(32deg);
+}
+.surface[data-dock-surface="moving"] .art {
+  inset: -20% -10%;
+  width: 120%;
+  height: 140%;
+  background:
+    radial-gradient(ellipse at 28% 35%, #486e85, transparent 40%),
+    url("/design/project-art-v3/openkvm.webp") center / cover;
+  border: none;
+  border-radius: 0;
+  opacity: 1;
+  animation: drift 8s ease-in-out infinite alternate;
+  animation-play-state: paused;
+}
+.surface[data-dock-surface="moving"][data-active="true"] .art {
+  animation-play-state: running;
+}
+.dock {
+  --ink: #172017;
+  --fill: rgb(248 250 244 / 52%);
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  display: flex;
+  gap: 10px;
+  padding: 7px 16px;
+  color: var(--ink);
+  border: 1px solid rgb(255 255 255 / 42%);
+  border-radius: 999px;
+  isolation: isolate;
+  transform: translateX(-50%);
+}
+.dock[data-tone="dark"],
+.dock[data-tone="moving"] {
+  --ink: #f7f9f4;
+  --fill: rgb(19 25 26 / 56%);
+  border-color: rgb(255 255 255 / 22%);
+}
+.dock[data-tone="lime"] {
+  --fill: rgb(226 255 162 / 52%);
+}
+.dock.fixed {
+  position: fixed;
+  bottom: max(20px, env(safe-area-inset-bottom));
+  z-index: 40;
+}
+.item[aria-current="page"] {
+  color: #172017;
+  background: #d3ff59;
+}
+.material {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: var(--fill);
+  border-radius: inherit;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 36%),
+    0 8px 20px rgb(0 0 0 / 12%);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  backdrop-filter: blur(14px) saturate(1.2);
+}
+.item {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  color: inherit;
+  border-radius: 50%;
+  transition:
+    color 180ms ease,
+    transform 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 160ms ease;
+}
+.item:hover,
+.item:focus-visible {
+  background: color-mix(in srgb, var(--ink) 9%, transparent);
+}
+.item:focus-visible,
+.surfaceButtons button:focus-visible,
+.stage:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+.label {
+  position: absolute;
+  bottom: calc(100% + 20px);
+  left: 50%;
+  padding: 9px 12px;
+  font-size: 10px;
+  font-weight: 500;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+  pointer-events: none;
+  background: #1b211e;
+  border: 1px solid rgb(255 255 255 / 20%);
+  border-radius: 8px;
+  opacity: 0;
+  transform: translate(-50%, 4px);
+  transition:
+    opacity 140ms ease,
+    transform 180ms ease;
+}
+.item:hover .label,
+.item:focus-visible .label {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+.note {
+  max-width: 75ch;
+  margin-top: 16px;
+  font-size: 12px;
+  line-height: 1.7;
+  color: hsl(var(--muted-foreground));
+}
+.definitions {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+@keyframes drift {
+  to {
+    transform: translate(10%, -5%) rotate(-12deg);
+  }
+}
+@media (hover: hover) {
+  .item:hover {
+    transform: translateY(-3px) scale(1.08);
+  }
+}
+@media (max-width: 480px) {
+  .dock {
+    bottom: 18px;
+    gap: 0;
+    padding: 5px;
+  }
+  .surface {
+    padding: 24px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .study *,
+  .study *::before,
+  .dock * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .material {
+    background: #f3f1eb;
+    backdrop-filter: none !important;
+  }
+  .dock[data-tone="dark"] .material,
+  .dock[data-tone="moving"] .material {
+    background: #19201e;
+  }
+}
+@media (forced-colors: active) {
+  .dock {
+    color: CanvasText;
+    border-color: CanvasText;
+  }
+  .material {
+    background: Canvas;
+    backdrop-filter: none !important;
+  }
+}

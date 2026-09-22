@@ -6,8 +6,10 @@
 
 import fs from "fs";
 import matter from "gray-matter";
-import { marked, Renderer } from "marked";
 import path from "path";
+import remarkGfm from "remark-gfm";
+import remarkParse from "remark-parse";
+import { unified } from "unified";
 import { siteConfig } from "./data";
 import type { Post, PostHeading, PostsResponse } from "./types/index";
 
@@ -46,40 +48,42 @@ function slugifyHeading(text: string): string {
     .replace(/^-|-$/g, "");
 }
 
-/**
- * Build a marked Renderer that injects id attributes on h2/h3 and
- * simultaneously populates a headings array (side-effect via closure).
+const markdownParser = unified().use(remarkParse).use(remarkGfm);
+
+/** Use Streamdown's Markdown grammar and source offsets, never render order.
+ * Raw HTML headings are intentionally outside the Markdown TOC contract.
  */
-function buildRenderer(headings: PostHeading[]): Renderer {
-  const renderer = new Renderer();
-  const seen: Record<string, number> = {};
-
-  renderer.heading = ({
-    text,
-    depth,
-  }: {
-    text: string;
-    depth: number;
-  }): string => {
-    // Strip any HTML tags that marked might nest inside the heading text
-    const plainText = text.replace(/<[^>]+>/g, "");
-
-    if (depth === 2 || depth === 3) {
-      let id = slugifyHeading(plainText);
-      // Deduplicate: append -2, -3, … on collision
-      if (seen[id] === undefined) {
-        seen[id] = 1;
-      } else {
-        seen[id]++;
-        id = `${id}-${seen[id]}`;
-      }
-      headings.push({ id, level: depth as 2 | 3, text: plainText });
-      return `<h${depth} id="${id}" class="scroll-mt-24">${text}</h${depth}>\n`;
+export function getPostHeadings(markdown: string): PostHeading[] {
+  const headings: PostHeading[] = [];
+  const used = new Set<string>();
+  const tree = markdownParser.parse(markdown);
+  type Node = (typeof tree)["children"][number];
+  function textOf(node: Node): string {
+    if (node.type === "html") return "";
+    if ("children" in node)
+      return node.children.map((child) => textOf(child as Node)).join("");
+    if ("alt" in node) return node.alt ?? "";
+    return "value" in node ? node.value : "";
+  }
+  function visit(node: Node) {
+    if (node.type === "heading" && (node.depth === 2 || node.depth === 3)) {
+      const text = textOf(node).trim();
+      const base = slugifyHeading(text) || "section";
+      let id = base;
+      for (let suffix = 2; used.has(id); suffix++) id = `${base}-${suffix}`;
+      used.add(id);
+      headings.push({
+        id,
+        level: node.depth,
+        offset: node.position!.start.offset!,
+        text,
+      });
     }
-    return `<h${depth}>${text}</h${depth}>\n`;
-  };
-
-  return renderer;
+    if ("children" in node)
+      node.children.forEach((child) => visit(child as Node));
+  }
+  tree.children.forEach(visit);
+  return headings;
 }
 
 function fileToPost(file: string, withContent: boolean): Post | null {
@@ -98,23 +102,7 @@ function fileToPost(file: string, withContent: boolean): Post | null {
       : t
   );
 
-  let headings: PostHeading[] | undefined;
-
-  if (withContent) {
-    // Rendering itself now happens client-side via Streamdown
-    // (components/blog/article-body.tsx), which parses the raw markdown
-    // directly and does not generate heading ids/slugs on its own. We still
-    // run the markdown through the same marked Renderer here — discarding
-    // the HTML output — purely to extract an ordered h2/h3 heading list
-    // (id + text) using slugifyHeading. ArticleBody consumes this array
-    // positionally (nth h2/h3 it renders gets headings[n]'s id), which
-    // keeps the TOC's anchors and the rendered heading ids in lockstep
-    // without duplicating the slug/dedup algorithm on the client.
-    const collectedHeadings: PostHeading[] = [];
-    const renderer = buildRenderer(collectedHeadings);
-    marked.parse(content, { async: false, renderer });
-    headings = collectedHeadings;
-  }
+  const headings = withContent ? getPostHeadings(content) : undefined;
 
   return {
     author: {

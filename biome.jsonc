@@ -8,6 +8,9 @@
   "files": {
     "includes": [
       "!node_modules",
+      "!.scratch",
+      "!.impeccable",
+      "!.gstack",
       "!.next",
       "!public",
       "!bun.lock",

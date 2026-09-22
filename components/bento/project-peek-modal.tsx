@@ -6,6 +6,8 @@ import {
   IconExternalLink,
 } from "@tabler/icons-react";
 import Link from "next/link";
+import type { RefObject } from "react";
+import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import {
   Dialog,
@@ -14,7 +16,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import type { projectsData } from "@/lib/data";
-import { slugifyProjectTitle } from "@/lib/projects";
+import { projectLinkLabel, slugifyProjectTitle } from "@/lib/projects";
 import { cn } from "@/lib/utils";
 
 type ProjectData = (typeof projectsData)[number];
@@ -36,6 +38,7 @@ interface ProjectPeekModalProps {
   onOpenChange: (open: boolean) => void;
   open: boolean;
   project: ProjectData;
+  returnFocus?: RefObject<HTMLElement | null>;
 }
 
 // "Peek" preview — a lightweight step between the compact tile and the full
@@ -49,6 +52,7 @@ export function ProjectPeekModal({
   cover,
   open,
   onOpenChange,
+  returnFocus,
 }: ProjectPeekModalProps) {
   const slug = slugifyProjectTitle(project.title);
 
@@ -56,6 +60,7 @@ export function ProjectPeekModal({
     <Dialog onOpenChange={onOpenChange} open={open}>
       <DialogContent
         className="modal-shadow flex max-h-[calc(100dvh-2rem)] w-full flex-col gap-0 overflow-hidden rounded-none p-0 sm:max-w-[min(32rem,calc(100%-4rem))]"
+        finalFocus={returnFocus}
         showCloseButton
       >
         {/* Larger version of the tile's editorial cover treatment */}
@@ -80,7 +85,7 @@ export function ProjectPeekModal({
           <div className="absolute top-4 left-5">
             <span
               className={cn(
-                "ui-label inline-flex items-center rounded-none border px-2.5 py-0.5",
+                "ui-label inline-flex items-center rounded-md border px-2.5 py-1",
                 cover.labelBg,
                 cover.labelColor
               )}
@@ -94,7 +99,7 @@ export function ProjectPeekModal({
             className="absolute inset-0 flex items-center pl-5 pr-16 sm:pl-7"
           >
             <span
-              className="font-syne block truncate font-black tracking-[-0.04em] leading-[0.95]"
+              className="font-sans block truncate font-extrabold tracking-[-0.04em] leading-[0.95]"
               style={{
                 color: cover.titleColor,
                 fontSize: "clamp(2rem, 9vw, 3.25rem)",
@@ -115,30 +120,30 @@ export function ProjectPeekModal({
         </div>
 
         {/* Body — full description, all tags, actions */}
-        <div className="flex flex-col gap-5 overflow-y-auto p-6 sm:p-7">
+        <div className="flex min-h-0 flex-col gap-5 overflow-y-auto p-6 sm:p-7">
           <DialogTitle
             className={cn(
-              "font-syne",
-              "text-xl font-bold text-foreground sm:text-2xl"
+              "font-sans",
+              "text-2xl font-semibold leading-[1.15] tracking-[-0.025em] text-foreground sm:text-3xl"
             )}
           >
             {project.title}
           </DialogTitle>
 
-          <DialogDescription className="text-[14px] leading-[1.7] text-foreground/75 text-pretty">
+          <DialogDescription className="text-base leading-[1.7] text-foreground/75 text-pretty">
             {project.description}
           </DialogDescription>
 
           {project.tags.length > 0 && (
             <div className="flex flex-wrap gap-1.5">
               {project.tags.map((tag) => (
-                <span
-                  className="ui-label rounded-none px-2.5 py-0.5
-                             border border-border bg-foreground/[0.04] text-muted-foreground"
+                <Badge
+                  className="border-border bg-muted text-foreground"
                   key={tag}
+                  variant="outline"
                 >
                   {tag}
-                </span>
+                </Badge>
               ))}
             </div>
           )}
@@ -148,7 +153,7 @@ export function ProjectPeekModal({
               className={cn(buttonVariants({ size: "sm" }), "rounded-none")}
               href={`/projects/${slug}`}
             >
-              View full project
+              Project overview
               <IconArrowUpRight data-icon="inline-end" />
             </Link>
             {project.github && (
@@ -176,7 +181,7 @@ export function ProjectPeekModal({
                 target="_blank"
               >
                 <IconExternalLink data-icon="inline-start" />
-                Demo
+                {projectLinkLabel(project.demo)}
               </a>
             )}
           </div>
