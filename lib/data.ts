@@ -74,7 +74,7 @@ export const siteConfig = {
     linkedin: "https://linkedin.com/in/mukulchugh",
     twitter: "https://twitter.com/themukulchugh",
   },
-  tagline: "Engineer by craft. Builder by instinct.",
+  tagline: "Engineer by craft. Builder by design.",
   title: "Product Engineer",
 } as const;
 

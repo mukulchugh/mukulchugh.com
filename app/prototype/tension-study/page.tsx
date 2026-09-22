@@ -15,7 +15,7 @@ export default function TensionPrototypePage() {
   if (process.env.NODE_ENV === "production") notFound();
   return (
     <main className="bento-page home-design">
-      <BrandBar homepage />
+      <BrandBar />
       <div className="mb-5 flex flex-wrap items-center justify-between gap-2 text-sm text-muted-foreground">
         <p>Prototype only. Pull the lime ball, then let it fly.</p>
         <a

@@ -9,7 +9,7 @@ import {
 } from "@tabler/icons-react";
 import dynamic from "next/dynamic";
 import { useTheme } from "next-themes";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { CVModal } from "@/components/ui/cv-modal";
 import { FluorescentShader } from "@/components/ui/fluorescent-shader";
@@ -124,7 +124,8 @@ function Calendar({
   );
 }
 
-export function ContactSection({ id = "contact" }: { id?: string }) {
+export function ContactSection({ id }: { id?: string }) {
+  const instance = `contact-${useId().replace(/:/g, "")}`;
   const { ref } = useSectionInView("Contact");
   const [booking, setBooking] = useState(false);
   const [visited, setVisited] = useState(false);
@@ -160,7 +161,7 @@ export function ContactSection({ id = "contact" }: { id?: string }) {
         aria-label="Start a conversation"
         className={styles.tile}
         data-booking={booking}
-        id={id}
+        id={id ?? instance}
         onKeyDown={(event) => {
           if (booking && !resume && event.key === "Escape") {
             event.stopPropagation();
@@ -194,7 +195,7 @@ export function ContactSection({ id = "contact" }: { id?: string }) {
               <p>An idea is enough.</p>
             </div>
             <Button
-              aria-controls={`${id}-calendar`}
+              aria-controls={`${instance}-calendar`}
               aria-expanded={booking}
               aria-label={
                 booking ? "Back to contact options" : "Book a short call"
@@ -225,14 +226,14 @@ export function ContactSection({ id = "contact" }: { id?: string }) {
           <div
             aria-hidden={!booking}
             className={styles.reveal}
-            id={`${id}-calendar`}
+            id={`${instance}-calendar`}
             inert={!booking}
           >
             <div className={styles.revealInner}>
               {visited && (
                 <Calendar
                   key={resolvedTheme}
-                  namespace={id}
+                  namespace={instance}
                   theme={resolvedTheme === "dark" ? "dark" : "light"}
                 />
               )}

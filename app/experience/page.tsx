@@ -2,7 +2,7 @@ import { IconArrowLeft, IconArrowUpRight } from "@tabler/icons-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { BrandBar } from "@/components/bento/brand-bar";
+import { PageShell } from "@/components/page-shell";
 import { buttonVariants } from "@/components/ui/button";
 import { experiencesData, siteConfig } from "@/lib/data";
 
@@ -21,9 +21,8 @@ export const metadata: Metadata = {
 
 export default function ExperiencePage() {
   return (
-    <div className="bento-page">
-      <BrandBar />
-      <main className="py-6 sm:py-10">
+    <PageShell>
+      <main className="page-content">
         <header className="mb-8 px-1 sm:mb-12">
           <Link
             className="mb-5 inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
@@ -76,15 +75,15 @@ export default function ExperiencePage() {
         <div className="mt-8 flex flex-wrap items-center gap-3">
           <Link
             className={buttonVariants({ variant: "outline" })}
-            href="/#projects"
+            href="/projects"
           >
             View selected work <IconArrowUpRight aria-hidden="true" />
           </Link>
-          <Link className={buttonVariants()} href="/#contact">
+          <Link className={buttonVariants()} href="/contact">
             Get in touch <IconArrowUpRight aria-hidden="true" />
           </Link>
         </div>
       </main>
-    </div>
+    </PageShell>
   );
 }

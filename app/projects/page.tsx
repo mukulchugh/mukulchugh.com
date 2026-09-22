@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { BrandBar } from "@/components/bento/brand-bar";
+import { PageShell } from "@/components/page-shell";
 import Projects from "@/components/projects";
 
 export const metadata: Metadata = {
@@ -11,9 +11,8 @@ export const metadata: Metadata = {
 
 export default function ProjectsPage() {
   return (
-    <div className="bento-page">
-      <BrandBar />
-      <main className="py-8 pb-36 sm:py-12 sm:pb-36">
+    <PageShell>
+      <main className="page-content">
         <header className="mb-10">
           <h1 className="font-heading text-4xl font-semibold tracking-tight sm:text-6xl">
             The work.
@@ -30,6 +29,6 @@ export default function ProjectsPage() {
           <Projects />
         </section>
       </main>
-    </div>
+    </PageShell>
   );
 }

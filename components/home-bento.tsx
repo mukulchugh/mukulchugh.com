@@ -18,7 +18,7 @@ export function HomeBento({ posts }: { posts: Post[] }) {
   return (
     <div className="home-design flex min-w-0 flex-col gap-3">
       <div className="-mb-3">
-        <BrandBar homepage />
+        <BrandBar />
       </div>
       <div className="bento-hero-grid">
         <ProfileTile />
@@ -41,7 +41,7 @@ export function HomeBento({ posts }: { posts: Post[] }) {
         <Experience />
       </div>
       <BlogSection posts={posts} />
-      <ContactSection />
+      <ContactSection id="contact" />
     </div>
   );
 }

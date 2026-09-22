@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { BrandBar } from "@/components/bento/brand-bar";
 import { ContactSection } from "@/components/contact/contact-section";
+import { PageShell } from "@/components/page-shell";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/contact" },
@@ -11,12 +11,11 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="bento-page">
-      <BrandBar />
-      <main className="home-design py-8 pb-36 sm:py-12 sm:pb-36">
+    <PageShell contact={false}>
+      <main className="page-content">
         <h1 className="sr-only">Contact Mukul Chugh</h1>
         <ContactSection />
       </main>
-    </div>
+    </PageShell>
   );
 }

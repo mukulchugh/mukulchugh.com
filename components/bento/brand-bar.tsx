@@ -2,6 +2,7 @@
 
 import { IconMenu2 } from "@tabler/icons-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { ThemeLogo } from "@/components/theme-logo";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -9,11 +10,14 @@ import { Button } from "@/components/ui/button";
 import { Popover } from "@/components/ui/popover";
 import { links, siteConfig } from "@/lib/data";
 
-export function BrandBar({ homepage = false }: { homepage?: boolean }) {
+export function BrandBar() {
   const [open, setOpen] = useState(false);
-  const tagline = homepage
-    ? "Engineer by craft. Builder by design."
-    : siteConfig.tagline;
+  const pathname = usePathname();
+  const active = (href: string) =>
+    href === "/"
+      ? pathname === "/"
+      : pathname === href || pathname.startsWith(`${href}/`);
+  const tagline = siteConfig.tagline;
   return (
     <header className="bento-brand-bar">
       <Link
@@ -35,6 +39,7 @@ export function BrandBar({ homepage = false }: { homepage?: boolean }) {
           .filter((link) => link.name !== "About")
           .map((link) => (
             <Link
+              aria-current={active(link.hash) ? "page" : undefined}
               className="ui-label flex min-h-11 items-center px-2 text-muted-foreground transition-colors hover:text-foreground"
               href={link.hash}
               key={link.name}
@@ -65,6 +70,7 @@ export function BrandBar({ homepage = false }: { homepage?: boolean }) {
               <nav aria-label="Mobile header navigation">
                 {links.map((link) => (
                   <Link
+                    aria-current={active(link.hash) ? "page" : undefined}
                     className="ui-label flex min-h-11 items-center px-3 hover:bg-muted"
                     href={link.hash}
                     key={link.name}
@@ -81,15 +87,6 @@ export function BrandBar({ homepage = false }: { homepage?: boolean }) {
           </Popover.Positioner>
         </Popover.Portal>
       </Popover.Root>
-      {!homepage && (
-        <span aria-hidden="true" className="bento-marginalia hidden md:block">
-          Build
-          <br />
-          Learn
-          <br />
-          Ship
-        </span>
-      )}
     </header>
   );
 }
