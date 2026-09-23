@@ -31,6 +31,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { zendutyChapter } from "@/lib/data";
 import { premiumSpring } from "@/lib/motion";
 import styles from "./experience-tile.module.css";
 import { ZendutyHandoff } from "./zenduty-handoff";
@@ -93,8 +94,8 @@ const recentRoles = [
     title: "Software Development Engineer",
   },
   {
-    company: "Zenduty",
-    date: "Jun 2022–May 2025",
+    company: zendutyChapter.company,
+    date: zendutyChapter.date,
     description:
       "Contributing across mobile, web, and internal products within the team, through Zenduty’s acquisition by Xurrent.",
     details: [
@@ -118,7 +119,7 @@ const recentRoles = [
     href: "/projects/zendash-global-admin-dashboard",
     logo: "/design/brand/zenduty.webp",
     summary: "Growing from an internship into work across the product.",
-    title: "Intern → Software Engineer",
+    title: zendutyChapter.progression,
   },
 ];
 
@@ -686,7 +687,9 @@ export function ExperienceTile() {
                 />
               </span>
               <DialogTitle className={styles.company}>
-                {role.company === "Zenduty" ? "IMR by Xurrent" : role.company}
+                {role.company === zendutyChapter.company
+                  ? zendutyChapter.currentBrand
+                  : role.company}
               </DialogTitle>
             </div>
             <div className={styles.toolbar}>
@@ -743,12 +746,10 @@ export function ExperienceTile() {
                     </span>
                     <span>
                       <strong>Xurrent</strong>
-                      <span>Jan–May 2025 · Four-month acquisition chapter</span>
+                      <span>{zendutyChapter.acquisitionPeriod}</span>
                     </span>
                     <p className={styles.transitionNote}>
-                      Internal acquisition discussions began in January; the
-                      announcement followed in February. I stayed with Zenduty
-                      through May, then joined Swiggy.
+                      {zendutyChapter.acquisitionStory}
                     </p>
                   </div>
                 )}

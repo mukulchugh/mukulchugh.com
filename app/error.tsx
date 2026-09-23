@@ -36,16 +36,12 @@ export default function Error({
             You can retry, or head back home.
           </p>
           <div className="mt-7 flex flex-wrap gap-3 md:mt-[3.2cqw] md:gap-[1cqw]">
-            <Button
-              className="h-12 gap-5 rounded-[4px] px-6 text-base font-semibold md:h-[5.6cqw] md:px-[2.7cqw] md:text-[1.8cqw] [&_svg]:size-6"
-              onClick={retry}
-            >
+            <Button className="h-12 gap-3 px-6" onClick={retry}>
               Try again <IconRefresh aria-hidden="true" />
             </Button>
             <Link
               className={buttonVariants({
-                className:
-                  "h-12 gap-5 rounded-[4px] border-foreground px-6 text-base font-semibold md:h-[5.6cqw] md:px-[2.5cqw] md:text-[1.8cqw] [&_svg]:size-6",
+                className: "h-12 gap-3 px-6",
                 variant: "outline",
               })}
               href="/"
@@ -64,7 +60,7 @@ export default function Error({
         </section>
         <div
           aria-hidden="true"
-          className="relative min-h-80 overflow-hidden rounded-[4px] bg-[#101010] md:min-h-0"
+          className="relative min-h-80 overflow-hidden rounded-[14px] bg-[#101010] md:min-h-0"
         >
           <Image
             alt=""

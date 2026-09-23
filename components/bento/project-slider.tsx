@@ -114,15 +114,8 @@ export function ProjectSlider({
       });
       for (const { card, rect, old } of positions) {
         const slot = Number(card.dataset.slot);
-        if (slot === 4) continue;
-        const copy = card.querySelector("[data-copy]");
         const isFeature = slot === 0;
         const duration = mode === "handoff" ? 0.9 : 0.65;
-        const resized =
-          old &&
-          (Math.abs(old.width - rect.width) > 2 ||
-            Math.abs(old.height - rect.height) > 2);
-        const delay = slot > 0 ? 0.08 + slot * 0.045 : 0;
         if (isFeature && mode === "relay") {
           timeline.fromTo(
             card,
@@ -143,6 +136,20 @@ export function ProjectSlider({
               0.08
             );
         } else if (old) {
+          const copy = Array.from(
+            card.querySelectorAll<HTMLElement>("[data-copy] > *")
+          );
+          const resized =
+            Math.abs(old.width / rect.width - old.height / rect.height) > 0.01;
+          const preserveText = () => {
+            // Cancel non-uniform card scaling without detaching or fading its copy.
+            const scaleX = Number(gsap.getProperty(card, "scaleX"));
+            const scaleY = Number(gsap.getProperty(card, "scaleY"));
+            for (const element of copy) {
+              element.style.transformOrigin = "top left";
+              element.style.transform = `scaleY(${scaleX / scaleY})`;
+            }
+          };
           timeline.fromTo(
             card,
             {
@@ -155,15 +162,17 @@ export function ProjectSlider({
             },
             {
               duration,
-              ease: slot === -1 ? "power3.in" : "power3.inOut",
-              opacity: slot === -1 ? 0.001 : 1,
+              ease: "power3.inOut",
+              onUpdate: resized ? preserveText : undefined,
+              opacity: 1,
               scaleX: 1,
               scaleY: 1,
-              x: slot === -1 ? -24 : 0,
-              y: slot === -1 ? 8 : 0,
+              x: 0,
+              y: 0,
             },
-            isFeature ? 0 : delay
+            0
           );
+          if (resized) preserveText();
         } else if (slot > 0) {
           timeline.fromTo(
             card,
@@ -174,21 +183,7 @@ export function ProjectSlider({
               opacity: 1,
               y: 0,
             },
-            delay
-          );
-        }
-        if (copy && (isFeature || resized)) {
-          timeline.fromTo(
-            Array.from(copy.children),
-            { opacity: 0, y: 8 },
-            {
-              duration: 0.3,
-              ease: "power2.out",
-              opacity: 1,
-              stagger: 0.04,
-              y: 0,
-            },
-            isFeature ? 0.8 : 0.7
+            0
           );
         }
       }
@@ -202,7 +197,7 @@ export function ProjectSlider({
         frameTime !== null &&
         Number.isFinite(Number(frameTime))
       ) {
-        timeline.pause(Math.max(0, Number(frameTime)));
+        timeline.pause(Math.max(0, Number(frameTime)), false);
       }
       window.addEventListener("resize", settle);
       document.addEventListener("visibilitychange", settle);
@@ -355,12 +350,13 @@ export function ProjectSlider({
         <fieldset aria-label="Project navigation" className={styles.controls}>
           <Button
             aria-disabled={busy}
-            aria-label="Previous project"
-            onClick={() => advance(-1)}
+            aria-label="Next project"
+            onClick={() => advance(1)}
+            ref={nextControl}
             size="icon"
             variant="unstyled"
           >
-            <IconArrowLeft />
+            <IconArrowLeft className={styles.directionArrow} />
           </Button>
           <Button
             aria-label={paused ? "Resume autoplay" : "Pause autoplay"}
@@ -376,13 +372,12 @@ export function ProjectSlider({
           </Button>
           <Button
             aria-disabled={busy}
-            aria-label="Next project"
-            onClick={() => advance(1)}
-            ref={nextControl}
+            aria-label="Previous project"
+            onClick={() => advance(-1)}
             size="icon"
             variant="unstyled"
           >
-            <IconArrowRight />
+            <IconArrowRight className={styles.directionArrow} />
           </Button>
           <span
             aria-live={paused || focused || reduced ? "polite" : "off"}

@@ -2,9 +2,13 @@
 
 import { IconArrowRight, IconArrowUpRight } from "@tabler/icons-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PostCover } from "@/components/blog/post-cover";
+import { Badge } from "@/components/ui/badge";
+import { Button, buttonVariants } from "@/components/ui/button";
 import type { Post } from "@/lib/blog";
+
+const topics = ["All", "AI Agents", "Developer Tools", "React Native"];
 
 export function getWritingPage(
   posts: Post[],
@@ -29,7 +33,48 @@ export function getWritingPage(
 export function PostsGrid({ posts }: { posts: Post[] }) {
   const [topic, setTopic] = useState("All");
   const [requestedPage, setPage] = useState(0);
-  const topics = ["All", "AI Agents", "Developer Tools", "React Native"];
+  const resultsRef = useRef<HTMLElement>(null);
+  const scrollToResults = useRef(false);
+
+  useEffect(() => {
+    const restore = () => {
+      const saved = window.history.state?.portfolioWriting;
+      setTopic(topics.includes(saved?.topic) ? saved.topic : "All");
+      setPage(
+        Number.isInteger(saved?.page) && saved.page >= 0 ? saved.page : 0
+      );
+    };
+    restore();
+    window.addEventListener("popstate", restore);
+    return () => window.removeEventListener("popstate", restore);
+  }, []);
+
+  const selectResults = (nextTopic: string, nextPage: number) => {
+    // Store on this history entry, not in the route: Writing can also live
+    // inside a dock window above a different dedicated page.
+    window.history.replaceState(
+      {
+        ...window.history.state,
+        portfolioWriting: { page: nextPage, topic: nextTopic },
+      },
+      ""
+    );
+    scrollToResults.current = nextPage !== requestedPage && nextTopic === topic;
+    setTopic(nextTopic);
+    setPage(nextPage);
+  };
+
+  useEffect(() => {
+    if (!scrollToResults.current) return;
+    scrollToResults.current = false;
+    resultsRef.current?.focus({ preventScroll: true });
+    resultsRef.current?.scrollIntoView({
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "instant"
+        : "smooth",
+      block: "start",
+    });
+  }, [requestedPage]);
   const { featured, page, pages, total, visible } = getWritingPage(
     posts,
     topic,
@@ -48,8 +93,7 @@ export function PostsGrid({ posts }: { posts: Post[] }) {
             className={`ui-label min-h-11 rounded-full border px-4 py-2 transition-colors ${topic === name ? "border-foreground bg-foreground text-background" : "border-border hover:bg-muted"}`}
             key={name}
             onClick={() => {
-              setTopic(name);
-              setPage(0);
+              selectResults(name, 0);
             }}
             type="button"
           >
@@ -63,11 +107,11 @@ export function PostsGrid({ posts }: { posts: Post[] }) {
       {featured ? (
         <>
           <Link
-            className="tile-glass group relative isolate flex min-h-[300px] overflow-hidden rounded-[14px] bg-[#101112] p-6 text-white sm:min-h-[24cqw] sm:p-6"
+            className="tile-glass group relative isolate flex min-h-[300px] flex-col overflow-hidden rounded-[14px] bg-[#101112] text-white sm:min-h-[24cqw] sm:p-6"
             href={`/blog/${featured.slug}`}
           >
             <PostCover
-              className="absolute inset-0 h-full w-full"
+              className="h-56 w-full rounded-none sm:absolute sm:inset-0 sm:h-full"
               hero
               post={featured}
               priority
@@ -78,18 +122,27 @@ export function PostsGrid({ posts }: { posts: Post[] }) {
                   : undefined
               }
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-transparent" />
-            <div className="relative flex max-w-xl flex-col items-start justify-between gap-5 sm:max-w-[48%]">
+            <div className="absolute inset-0 hidden bg-gradient-to-r from-black/80 via-black/30 to-transparent sm:block" />
+            <div className="relative flex max-w-xl flex-col items-start justify-between gap-5 p-6 sm:max-w-[48%] sm:flex-1 sm:p-0">
               <span className="ui-label">Latest article</span>
               <h2 className="text-balance font-sans text-[clamp(1.75rem,3.5vw,3rem)] font-semibold leading-[1.12] tracking-[-0.025em]">
                 {featured.title}
               </h2>
-              <span className="inline-flex min-h-11 items-center gap-5 rounded-lg bg-[#d2ff00] px-5 text-sm font-semibold text-black">
+              <span
+                className={buttonVariants({
+                  className: "gap-5 bg-[#d2ff00] text-black",
+                })}
+              >
                 Read article <IconArrowRight aria-hidden="true" size={19} />
               </span>
             </div>
           </Link>
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <section
+            aria-label={`Articles, page ${page + 1} of ${pages}`}
+            className="grid scroll-mt-6 gap-5 outline-none focus-visible:ring-2 focus-visible:ring-ring sm:grid-cols-2 lg:grid-cols-3"
+            ref={resultsRef}
+            tabIndex={-1}
+          >
             {visible.map((post) => (
               <Link
                 className="tile-glass group relative isolate flex min-h-[360px] flex-col justify-between overflow-hidden rounded-[14px] bg-[#101112] p-5 text-white"
@@ -103,7 +156,9 @@ export function PostsGrid({ posts }: { posts: Post[] }) {
                 <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/30 to-black/80" />
                 <div className="relative">
                   <div className="mb-4 flex items-center justify-between gap-3">
-                    <span className="ui-label">{post.tags[0]?.name}</span>
+                    <span className="ui-label">
+                      {post.readTimeInMinutes} min read
+                    </span>
                     <IconArrowUpRight aria-hidden="true" size={22} />
                   </div>
                   <h2 className="text-balance font-sans text-[clamp(1.5rem,2.2vw,2rem)] font-semibold leading-[1.15] tracking-[-0.025em]">
@@ -112,17 +167,18 @@ export function PostsGrid({ posts }: { posts: Post[] }) {
                 </div>
                 <div className="relative mt-24 flex flex-wrap gap-2">
                   {post.tags.slice(0, 3).map((tag) => (
-                    <span
-                      className="ui-label rounded-md border border-white/40 px-2.5 py-1"
+                    <Badge
+                      className="border-white/20 bg-[#101112]/90 text-white shadow-none"
                       key={tag.slug}
+                      variant="outline"
                     >
                       {tag.name}
-                    </span>
+                    </Badge>
                   ))}
                 </div>
               </Link>
             ))}
-          </div>
+          </section>
         </>
       ) : (
         <p className="py-12 text-muted-foreground">
@@ -135,24 +191,26 @@ export function PostsGrid({ posts }: { posts: Post[] }) {
           className="flex justify-center gap-2 py-2"
         >
           {Array.from({ length: pages }, (_, index) => (
-            <button
+            <Button
               aria-current={page === index ? "page" : undefined}
-              className={`h-11 min-w-11 rounded-lg border px-3 text-sm ${page === index ? "border-foreground bg-foreground text-background" : "border-border hover:bg-muted"}`}
+              className={`min-w-11 px-3 ${page === index ? "border-foreground bg-foreground text-background" : ""}`}
               key={index}
-              onClick={() => setPage(index)}
+              onClick={() => selectResults(topic, index)}
               type="button"
+              variant="outline"
             >
               {index + 1}
-            </button>
+            </Button>
           ))}
-          <button
-            className="min-h-11 rounded-lg border border-border px-4 text-sm disabled:opacity-40"
+          <Button
+            className="px-4"
             disabled={page === pages - 1}
-            onClick={() => setPage(page + 1)}
+            onClick={() => selectResults(topic, page + 1)}
             type="button"
+            variant="outline"
           >
             Next →
-          </button>
+          </Button>
         </nav>
       )}
     </div>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import AboutPage from "@/app/about/page";
+import BlogLayout from "@/app/blog/layout";
 import BlogPage from "@/app/blog/page";
 import ExperiencePage from "@/app/experience/page";
 import ProjectsPage from "@/app/projects/page";
@@ -35,7 +36,11 @@ export default function Page() {
       <DockNavigation
         pages={{
           About: <AboutPage />,
-          Blog: <BlogPage />,
+          Blog: (
+            <BlogLayout>
+              <BlogPage />
+            </BlogLayout>
+          ),
           Contact: <ContactSection />,
           Experience: <ExperiencePage />,
           Projects: <ProjectsPage />,

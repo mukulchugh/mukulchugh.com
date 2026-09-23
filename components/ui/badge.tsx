@@ -6,7 +6,7 @@ import type { CSSProperties } from "react";
 import { cn } from "@/lib/utils";
 
 const badgeVariants = cva(
-  "ui-label liquid-badge inline-flex max-w-full items-center gap-1.5 rounded-md border px-2.5 py-1 [overflow-wrap:anywhere] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+  "ui-label liquid-badge inline-flex max-w-full items-center gap-1.5 rounded-[6px] border px-2.5 py-1 [overflow-wrap:anywhere] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
   {
     defaultVariants: {
       variant: "default",

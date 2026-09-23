@@ -1,4 +1,5 @@
 import AboutPage from "@/app/about/page";
+import BlogLayout from "@/app/blog/layout";
 import BlogPage from "@/app/blog/page";
 import ExperiencePage from "@/app/experience/page";
 import ProjectsPage from "@/app/projects/page";
@@ -10,7 +11,11 @@ export function Dock() {
     <DockNavigation
       pages={{
         About: <AboutPage />,
-        Blog: <BlogPage />,
+        Blog: (
+          <BlogLayout>
+            <BlogPage />
+          </BlogLayout>
+        ),
         Contact: <ContactSection id="dock-contact" />,
         Experience: <ExperiencePage />,
         Projects: <ProjectsPage />,

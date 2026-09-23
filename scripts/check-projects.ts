@@ -59,6 +59,9 @@ for (const project of projects) {
   assert.equal(getProjectBySlug(slugifyProjectTitle(project.title)), project);
   assert.ok(!hiddenProjectTitles.has(project.title));
   assert.ok(project.description.trim());
+  assert.ok(project.summary.trim(), `Index summary: ${project.title}`);
+  assert.ok(project.summary.length <= 100, `Concise summary: ${project.title}`);
+  assert.ok(project.summary.length < project.description.length);
   for (const href of [project.github, project.demo].filter(Boolean)) {
     assert.equal(new URL(href).protocol, "https:");
   }

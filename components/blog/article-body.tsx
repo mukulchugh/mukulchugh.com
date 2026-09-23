@@ -247,10 +247,9 @@ export function ArticleBody({
 
   const body = (
     <Streamdown
-      // Lists and Streamdown's flex code blocks form independent formatting
-      // contexts beside the float; auto width keeps code in that available lane.
+      // Prose can wrap around a diagram; code needs the full reading measure.
       className={cn(
-        "flow-root [&>ol]:flow-root [&>ul]:flow-root [&>[data-streamdown='code-block']]:w-auto",
+        "flow-root [&>ol]:flow-root [&>ul]:flow-root [&>[data-streamdown='code-block']]:clear-both [&>[data-streamdown='code-block']]:w-auto",
         className
       )}
       components={components}

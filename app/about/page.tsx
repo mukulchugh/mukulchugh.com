@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { BrandBar } from "@/components/bento/brand-bar";
+import { PageShell } from "@/components/page-shell";
 import { aboutContent, siteConfig } from "@/lib/data";
 
 export const metadata: Metadata = {
@@ -13,14 +13,13 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="bento-page">
-      <BrandBar />
-      <main className="py-8 pb-36 sm:py-12 sm:pb-36">
+    <PageShell>
+      <main className="page-content">
         <article className="bento-surface grid gap-8 p-6 sm:p-10 lg:grid-cols-[1fr_2fr] lg:gap-16">
           <header>
             <Image
               alt="Mukul Chugh"
-              className="mb-8 rounded-full bg-muted"
+              className="mb-8 rounded-full border border-border bg-muted p-2"
               height={128}
               src={siteConfig.images.profileImage}
               width={128}
@@ -50,6 +49,6 @@ export default function AboutPage() {
           </div>
         </article>
       </main>
-    </div>
+    </PageShell>
   );
 }

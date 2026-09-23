@@ -11,6 +11,7 @@ import { RelatedPosts } from "@/components/blog/related-posts";
 import { TableOfContents } from "@/components/blog/table-of-contents";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
 import {
   getAdjacentPosts,
   getPostServer,
@@ -209,7 +210,10 @@ export default async function PostPage({ params }: PostPageProps) {
               {post.brief}
             </p>
             <Link
-              className="mt-7 inline-flex min-h-11 items-center gap-3 rounded-lg bg-[#d2ff00] px-4 text-sm font-semibold text-black"
+              className={cn(
+                buttonVariants(),
+                "mt-7 gap-3 bg-[#d2ff00] text-black hover:bg-[#c4ee00]"
+              )}
               href="/blog"
             >
               <IconArrowLeft aria-hidden="true" size={17} />
@@ -217,7 +221,7 @@ export default async function PostPage({ params }: PostPageProps) {
             </Link>
           </div>
         </header>
-        <div className="mb-8 flex flex-wrap items-center gap-x-6 gap-y-3 px-1 text-xs text-muted-foreground">
+        <div className="ui-label mb-8 flex flex-wrap items-center gap-x-6 gap-y-3 px-1 text-muted-foreground">
           {post.author && (
             <div className="flex items-center gap-2">
               <Avatar className="h-7 w-7">

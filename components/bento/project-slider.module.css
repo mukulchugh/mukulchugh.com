@@ -1,5 +1,6 @@
 .carousel {
   display: grid;
+  overflow-anchor: none;
   grid-template-columns: minmax(0, 1fr) 44px;
   gap: 12px 10px;
   min-width: 0;
@@ -60,8 +61,7 @@
   isolation: isolate;
 }
 .stage[data-busy="true"] .card,
-.stage[data-busy="true"] .art,
-.stage[data-busy="true"] .copy > * {
+.stage[data-busy="true"] .art {
   will-change: transform, opacity;
 }
 .card[data-slot="0"],
@@ -75,6 +75,7 @@
   z-index: 3;
 }
 .card[data-slot="-1"] {
+  left: calc(-65% - 6px);
   z-index: 2;
   pointer-events: none;
   opacity: 0;
@@ -154,7 +155,7 @@
 .tags {
   padding-top: 12px;
   margin-top: auto;
-  font-size: 10px;
+  font-size: 12px;
 }
 .card:not([data-slot="0"], [data-slot="-1"]) .tags {
   display: none;
@@ -245,6 +246,9 @@
 .explore svg {
   transition: transform 180ms ease-out;
 }
+.directionArrow {
+  rotate: 90deg;
+}
 .controls > button:active svg {
   transform: scale(0.88);
 }
@@ -301,6 +305,9 @@
   }
   .card[data-slot="1"] {
     top: 448px;
+  }
+  .card[data-slot="-1"] {
+    top: -448px;
   }
   .card[data-slot="2"] {
     top: 586px;

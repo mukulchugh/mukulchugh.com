@@ -7,6 +7,9 @@
   margin-inline: auto;
   container-type: inline-size;
 }
+.page-content {
+  padding-block: clamp(24px, 3vw, 40px);
+}
 :root {
   --font-home-heading: var(--font-syne);
 }
@@ -15,12 +18,7 @@
 .font-heading {
   font-family: var(--font-home-heading), sans-serif;
 }
-.home-design .bento-brand-description {
-  max-width: none;
-  font-size: 13px;
-  white-space: nowrap;
-}
-.home-design :is([data-slot="button"], .bento-work-link) {
+:is([data-slot="button"], .bento-work-link) {
   min-height: 44px;
   font-size: 14px;
   font-weight: 500;
@@ -65,10 +63,10 @@
   height: 48px;
   padding-inline: 22px;
 }
-.home-design .bento-brand-bar nav a {
+.bento-brand-bar nav a {
   position: relative;
 }
-.home-design .bento-brand-bar nav a::after {
+.bento-brand-bar nav a::after {
   position: absolute;
   right: 8px;
   bottom: 7px;
@@ -80,7 +78,9 @@
   transform-origin: left;
   transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
 }
-.home-design .bento-brand-bar nav a:is(:hover, :focus-visible)::after {
+.bento-brand-bar
+  nav
+  a:is(:hover, :focus-visible, [aria-current="page"])::after {
   transform: scaleX(1);
 }
 @media (hover: hover) and (pointer: fine) and (
@@ -101,12 +101,12 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .home-design .bento-brand-bar nav a::after {
+  .bento-brand-bar nav a::after {
     transition: none;
   }
 }
 @media (min-width: 768px) and (max-width: 1100px) {
-  .home-design .bento-brand-description {
+  .bento-brand-description {
     display: none;
   }
 }
@@ -160,11 +160,12 @@
   border-radius: 4px;
 }
 .bento-brand-description {
-  max-width: 24ch;
+  max-width: none;
   padding-left: 1.2cqw;
-  font-size: clamp(11px, 1.16cqw, 16px);
+  font-size: 13px;
   color: hsl(var(--muted-foreground));
   text-wrap: balance;
+  white-space: nowrap;
   border-left: 1px solid hsl(var(--border));
 }
 .bento-brand-bar nav {

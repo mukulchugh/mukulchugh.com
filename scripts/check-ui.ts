@@ -15,7 +15,7 @@ const badge = renderToStaticMarkup(
   createElement(Badge, { variant: "secondary" }, "React Native")
 );
 assert.match(badge, /ui-label/);
-assert.match(badge, /rounded-md/);
+assert.match(badge, /rounded-\[6px\]/);
 assert.match(badge, /overflow-wrap:anywhere/);
 assert.match(badge, /React Native/); // CSS changes presentation, not source text.
 assert.match(badge, /liquid-badge/);
@@ -33,6 +33,7 @@ for (const variant of [
   assert.doesNotMatch(buttonVariants({ variant }), /liquid-control|backdrop/);
   assert.match(buttonVariants({ variant }), /focus-visible:ring-2/);
   assert.match(buttonVariants({ variant }), /disabled:pointer-events-none/);
+  assert.match(buttonVariants({ variant }), /rounded-\[10px\]/);
 }
 assert.match(buttonVariants({ variant: "outline" }), /border-foreground\/20/);
 assert.match(
