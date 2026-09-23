@@ -114,6 +114,7 @@ export function GenieWindow({
   const content = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLElement | null>(null);
   const animation = useRef<Animation[]>([]);
+  const geometry = useRef("");
   const closing = useRef(false);
   const wasOpen = useRef(false);
   const [ready, setReady] = useState(false);
@@ -130,13 +131,8 @@ export function GenieWindow({
       current.includes(selected) ? current : [...current, selected]
     );
     if (wasOpen.current) {
-      if (!matchMedia("(prefers-reduced-motion: reduce)").matches)
-        content.current?.animate([{ opacity: 0.4 }, { opacity: 1 }], {
-          duration: 160,
-        });
       return;
     }
-    wasOpen.current = true;
     closing.current = false;
     setReady(false);
     // Base UI reveals the kept-mounted portal during its layout effects.
@@ -145,7 +141,16 @@ export function GenieWindow({
       const target = panel.current;
       const shape = shell.current;
       if (!(target && shape)) return;
+      wasOpen.current = true;
       const bounds = target.getBoundingClientRect();
+      geometry.current = [
+        bounds.x,
+        bounds.y,
+        bounds.width,
+        bounds.height,
+        launch.x,
+        launch.y,
+      ].join(",");
       const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
       shape.style.opacity = "1";
       animation.current.forEach((item) => item.cancel());
@@ -164,6 +169,17 @@ export function GenieWindow({
     return () => cancelAnimationFrame(frame);
   }, [launch, selected]);
 
+  useLayoutEffect(() => {
+    if (content.current) content.current.scrollTop = 0;
+    if (
+      wasOpen.current &&
+      !matchMedia("(prefers-reduced-motion: reduce)").matches
+    )
+      content.current?.animate([{ opacity: 0.4 }, { opacity: 1 }], {
+        duration: 160,
+      });
+  }, [selected]);
+
   useLayoutEffect(
     () => () => {
       animation.current.forEach((item) => item.cancel());
@@ -180,6 +196,26 @@ export function GenieWindow({
     if (reduce || !animation.current.length) {
       onDismiss();
       return;
+    }
+    const bounds = panel.current?.getBoundingClientRect();
+    if (
+      bounds &&
+      shell.current &&
+      geometry.current !==
+        [
+          bounds.x,
+          bounds.y,
+          bounds.width,
+          bounds.height,
+          launch.x,
+          launch.y,
+        ].join(",")
+    ) {
+      // Resize invalidates the original strip projection. Start its replacement
+      // at the fully open pose before reversing, without replaying an entrance.
+      animation.current.forEach((item) => item.cancel());
+      animation.current = animateShell(shell.current, bounds, launch, false);
+      animation.current.forEach((item) => item.finish());
     }
     // Reverse the existing geometry and shared clock, including mid-flight closes.
     // Rebuilding the strips here caused a one-frame reset and a visible jump.
@@ -207,6 +243,34 @@ export function GenieWindow({
           className={styles.popup}
           finalFocus={() => trigger.current}
           initialFocus={closeRef}
+          onClickCapture={(event) => {
+            if (
+              event.button !== 0 ||
+              event.metaKey ||
+              event.ctrlKey ||
+              event.shiftKey ||
+              event.altKey
+            )
+              return;
+            const anchor = (event.target as Element).closest<HTMLAnchorElement>(
+              "a[href]"
+            );
+            if (
+              !anchor ||
+              anchor.target === "_blank" ||
+              !anchor.getAttribute("href")?.startsWith("/")
+            )
+              return;
+            const url = new URL(anchor.href);
+            // Pathname effects cannot observe an overview link on the page
+            // already behind this window. Local #section links stay in-window.
+            if (
+              url.origin === location.origin &&
+              url.pathname === location.pathname &&
+              url.search === location.search
+            )
+              onDismiss();
+          }}
           style={
             launch
               ? ({

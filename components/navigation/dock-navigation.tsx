@@ -35,6 +35,7 @@ export function DockNavigation({
 }) {
   const pathname = usePathname();
   const [launch, setLaunch] = useState<Launch | null>(null);
+  const launchTrigger = launch?.trigger;
   const [selected, setSelected] = useState<Destination>("Contact");
   const stage = useRef<HTMLDivElement>(null);
   const tray = useRef<HTMLElement>(null);
@@ -52,6 +53,38 @@ export function DockNavigation({
   useEffect(() => {
     setLaunch(null);
   }, [pathname]);
+
+  useEffect(() => {
+    if (!(launchTrigger && tray.current)) return;
+    let frame = 0;
+    const resize = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const dock = tray.current?.getBoundingClientRect();
+        if (!dock) return;
+        const rect = launchTrigger.getBoundingClientRect();
+        setLaunch((current) =>
+          current
+            ? {
+                ...current,
+                dock,
+                x: rect.left + rect.width / 2,
+                y: dock.top + dock.height / 2,
+              }
+            : null
+        );
+      });
+    };
+    // A viewport resize can precede the responsive tray's final layout.
+    const observer = new ResizeObserver(resize);
+    observer.observe(tray.current);
+    window.addEventListener("resize", resize);
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+      window.removeEventListener("resize", resize);
+    };
+  }, [launchTrigger]);
 
   useEffect(() => {
     // Parsing support alone cannot establish that displacement is rendered.
@@ -282,7 +315,7 @@ export function DockNavigation({
             style={
               refraction && map.url
                 ? {
-                    backdropFilter: `url("#${filterId}") blur(1px) saturate(1.25)`,
+                    backdropFilter: `url("#${filterId}") blur(4px) saturate(1.2)`,
                   }
                 : undefined
             }
@@ -317,7 +350,7 @@ export function DockNavigation({
                     dock: tray.current!.getBoundingClientRect(),
                     filter:
                       refraction && map.url
-                        ? `url("#${filterId}") blur(1px) saturate(1.25)`
+                        ? `url("#${filterId}") blur(4px) saturate(1.2)`
                         : undefined,
                     tone,
                     trigger,
@@ -370,7 +403,7 @@ export function DockNavigation({
             <feDisplacementMap
               in="SourceGraphic"
               in2="lens"
-              scale="24"
+              scale="14"
               xChannelSelector="R"
               yChannelSelector="G"
             />
