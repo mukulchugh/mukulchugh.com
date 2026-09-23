@@ -92,8 +92,6 @@
 .feature p {
   position: relative;
   margin-top: 30px;
-  font-size: 13px;
-  line-height: 1.6;
 }
 .featureArrow {
   position: absolute;
@@ -276,9 +274,6 @@
   .art {
     width: 58%;
     mask-image: linear-gradient(to right, transparent, black 65%);
-  }
-  .feature p {
-    font-size: 12px;
   }
   .list {
     padding-inline: 18px;

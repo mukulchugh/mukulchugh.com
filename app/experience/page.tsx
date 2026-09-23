@@ -1,10 +1,14 @@
-import { IconArrowLeft, IconArrowUpRight } from "@tabler/icons-react";
+import {
+  IconArrowLeft,
+  IconArrowUpRight,
+  IconChevronDown,
+} from "@tabler/icons-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { PageShell } from "@/components/page-shell";
 import { buttonVariants } from "@/components/ui/button";
-import { experiencesData, siteConfig } from "@/lib/data";
+import { experiencesData, siteConfig, zendutyChapter } from "@/lib/data";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/experience" },
@@ -63,11 +67,44 @@ export default function ExperiencePage() {
                     {experience.location}
                   </p>
                 </div>
-                <ul className="max-w-[70ch] list-disc space-y-3 pl-5 text-base leading-relaxed text-muted-foreground marker:text-foreground/40">
-                  {experience.description.map((line) => (
-                    <li key={line}>{line}</li>
-                  ))}
-                </ul>
+                <div className="min-w-0 max-w-[70ch]">
+                  <p className="text-base leading-relaxed">
+                    {experience.description[0]}
+                  </p>
+                  <details className="group mt-3">
+                    <summary className="flex min-h-11 w-fit cursor-pointer list-none items-center gap-2 rounded-[10px] text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 [&::-webkit-details-marker]:hidden">
+                      <span className="group-open:hidden">
+                        More about the role
+                      </span>
+                      <span className="hidden group-open:inline">
+                        Less detail
+                      </span>
+                      <span className="sr-only"> at {experience.company}</span>
+                      <IconChevronDown
+                        aria-hidden="true"
+                        className="size-4 transition-transform duration-200 group-open:rotate-180 motion-reduce:transition-none"
+                      />
+                    </summary>
+                    <ul className="mt-3 list-disc space-y-3 pl-5 text-sm leading-relaxed text-muted-foreground marker:text-foreground/40">
+                      {experience.description.slice(1).map((line) => (
+                        <li key={line}>{line}</li>
+                      ))}
+                    </ul>
+                    {experience.company === zendutyChapter.company && (
+                      <section className="mt-5 border-t border-border pt-5">
+                        <h3 className="text-base font-medium">
+                          {zendutyChapter.currentBrand}, formerly Zenduty
+                        </h3>
+                        <p className="mt-2 text-sm text-muted-foreground">
+                          {zendutyChapter.acquisitionPeriod}
+                        </p>
+                        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                          {zendutyChapter.acquisitionStory}
+                        </p>
+                      </section>
+                    )}
+                  </details>
+                </div>
               </article>
             </li>
           ))}

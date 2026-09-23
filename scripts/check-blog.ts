@@ -147,6 +147,11 @@ await Promise.all(
           /code-block&#x27;\]\]:w-auto|code-block'\]\]:w-auto/
         );
         assert.match(html, /data-streamdown="code-block-copy-button"/);
+        assert.match(
+          html,
+          /clear-both/,
+          "Code retains the full reading measure beside diagrams"
+        );
       }
     }
   })

@@ -2,6 +2,7 @@
 
 import { IconChevronDown } from "@tabler/icons-react";
 import { useEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Collapsible } from "@/components/ui/collapsible";
 import type { PostHeading } from "@/lib/blog";
@@ -113,9 +114,11 @@ function TOCList({ headings, activeId, onClickItem }: TOCListProps) {
                       event.ctrlKey ||
                       event.shiftKey ||
                       event.altKey
-                    )
+                    ) &&
+                    onClickItem
                   ) {
-                    onClickItem?.(heading.id);
+                    event.preventDefault();
+                    onClickItem(heading.id);
                   }
                 }}
               >
@@ -205,13 +208,21 @@ function MobileTOC({ headings, activeId, isOpen, setIsOpen }: MobileTOCProps) {
             activeId={activeId}
             headings={headings}
             onClickItem={(id) => {
-              // Leave the anchor mounted until its native fragment navigation
-              // finishes; closing during the click can cancel its default action.
-              requestAnimationFrame(() => {
-                setIsOpen(false);
-                const heading = document.getElementById(id);
-                heading?.setAttribute("tabindex", "-1");
-                heading?.focus({ preventScroll: true });
+              // Collapse before measuring the destination. Native fragment
+              // scrolling first targets its old position below the open list.
+              flushSync(() => setIsOpen(false));
+              const heading = document.getElementById(id);
+              if (!heading) return;
+              window.history.pushState(
+                window.history.state,
+                "",
+                `#${encodeURIComponent(id)}`
+              );
+              heading.setAttribute("tabindex", "-1");
+              heading.focus({ preventScroll: true });
+              heading.scrollIntoView({
+                behavior: prefersReducedMotion() ? "instant" : "smooth",
+                block: "start",
               });
             }}
           />

@@ -56,7 +56,7 @@ function RelatedCard({ post, titleLed }: { post: Post; titleLed: boolean }) {
         >
           {post.title}
         </h3>
-        <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
+        <div className="ui-label mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-muted-foreground">
           <span className="flex items-center gap-1">
             <IconCalendar aria-hidden="true" className="w-3 h-3" />
             <time dateTime={post.publishedAt}>{formattedDate}</time>

@@ -1,11 +1,24 @@
 import assert from "node:assert/strict";
 import { renderToStaticMarkup } from "react-dom/server";
-import { getWritingPage } from "../components/blog/posts-grid";
+import { getWritingPage, PostsGrid } from "../components/blog/posts-grid";
 import { RelatedPosts } from "../components/blog/related-posts";
 import { getAllPosts, getRelatedPosts } from "../lib/blog";
 
 const posts = getAllPosts();
 const first = getWritingPage(posts, "All", 0);
+const gridHtml = renderToStaticMarkup(<PostsGrid posts={posts} />);
+assert.equal(
+  (gridHtml.match(/data-slot="badge"/g) ?? []).length,
+  first.visible.reduce(
+    (count, post) => count + Math.min(post.tags.length, 3),
+    0
+  ),
+  "Article topics use shared badges, once per card"
+);
+assert.ok(
+  gridHtml.includes("bg-[#101112]/90"),
+  "Artwork badges have a readable backing"
+);
 assert.equal(first.featured?.slug, posts[0].slug);
 const collected = [first.featured?.slug];
 for (let page = 0; page < first.pages; page++) {

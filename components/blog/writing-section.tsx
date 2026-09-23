@@ -93,7 +93,7 @@ export function WritingSection({ posts }: { posts: Post[] }) {
                   size={21}
                 />
                 <h3>{post.title}</h3>
-                <p>
+                <p className="ui-label">
                   {post.readTimeInMinutes} min read ·{" "}
                   <time dateTime={post.publishedAt}>
                     {new Date(post.publishedAt).toLocaleDateString("en-US", {

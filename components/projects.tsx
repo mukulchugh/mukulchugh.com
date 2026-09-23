@@ -98,7 +98,7 @@ export default function Projects() {
                           <p
                             className={`col-start-1 row-start-2 max-w-[64ch] text-sm leading-relaxed text-muted-foreground ${archive ? "" : "md:col-start-2 md:row-start-1"}`}
                           >
-                            {project.description}
+                            {project.summary}
                           </p>
                           <IconArrowUpRight
                             aria-hidden="true"

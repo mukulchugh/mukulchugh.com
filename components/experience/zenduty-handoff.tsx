@@ -4,6 +4,7 @@ import { IconArrowRight } from "@tabler/icons-react";
 import { useInView, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
+import { zendutyChapter } from "@/lib/data";
 import styles from "./experience-tile.module.css";
 
 export function ZendutyHandoff({
@@ -69,14 +70,15 @@ export function ZendutyHandoff({
           </span>
           <span aria-hidden="true" className={styles.handoffName}>
             <span className={styles.handoffOldText}>
-              <strong>Zenduty</strong> / Founding team
+              <strong>{zendutyChapter.company}</strong> / {zendutyChapter.team}
             </span>
             <span className={styles.handoffNewText}>
-              <strong>IMR by Xurrent</strong> / Founding team
+              <strong>{zendutyChapter.currentBrand}</strong> /{" "}
+              {zendutyChapter.team}
             </span>
           </span>
         </span>
-        <span className={styles.date}>Jun 2022–May 2025</span>
+        <span className={styles.date}>{zendutyChapter.date}</span>
       </span>
       <span className={styles.handoffFooter} data-phase={phase}>
         <span aria-hidden={!complete} className={styles.handoffNewText}>

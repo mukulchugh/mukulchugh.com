@@ -87,7 +87,7 @@ export function BlogPostCard({
           )}
         >
           {/* Meta row */}
-          <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[12px] text-muted-foreground">
+          <div className="ui-label flex flex-wrap items-center gap-2 sm:gap-3 text-muted-foreground">
             {!compact && post.tags.length > 0 && (
               <Badge
                 accentColor={accentColorForTags([post.tags[0].name])}
@@ -99,16 +99,13 @@ export function BlogPostCard({
             {compact && (
               <>
                 <IconClock className="h-3 w-3 flex-shrink-0" />
-                <span className="font-mono tabular-nums">
+                <span className="tabular-nums">
                   {post.readTimeInMinutes} min read
                 </span>
                 <span className="opacity-40">·</span>
               </>
             )}
-            <time
-              className={compact ? "font-mono tabular-nums" : undefined}
-              dateTime={post.publishedAt}
-            >
+            <time className="tabular-nums" dateTime={post.publishedAt}>
               {fmtDate(post.publishedAt)}
             </time>
             {!compact && (

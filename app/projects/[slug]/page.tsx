@@ -651,6 +651,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-1">
                   {collection.slugs
                     .filter((item) => item !== slug)
+                    .slice(0, 3)
                     .map((item) => (
                       <li key={item}>
                         <Link
@@ -661,6 +662,14 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                         </Link>
                       </li>
                     ))}
+                  <li>
+                    <Link
+                      className="inline-flex min-h-11 items-center text-sm underline underline-offset-4"
+                      href="/projects"
+                    >
+                      All projects
+                    </Link>
+                  </li>
                 </ul>
               </nav>
             )}
