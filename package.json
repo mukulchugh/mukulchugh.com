@@ -11,6 +11,9 @@
     "start": "next start",
     "test:analytics": "NODE_ENV=production bun scripts/check-analytics.mjs",
     "test:analytics:browser": "bun scripts/check-analytics-browser.mjs",
+    "test:assets": "bun scripts/check-assets.mjs",
+    "test:css": "bun scripts/check-css-classes.mjs",
+    "test:dead": "bun scripts/check-dead-source.mjs",
     "test:dock": "node scripts/check-dock-windows.mjs",
     "test:seo": "bun scripts/check-seo.ts",
     "test:ui": "bun scripts/check-motion.tsx && bun scripts/check-blog.ts && bun scripts/check-projects.ts && bun scripts/check-ui.ts && bun scripts/check-writing.tsx && bun scripts/check-writing-covers.ts && bun scripts/check-tile-surfaces.ts"
@@ -32,7 +35,6 @@
     "clsx": "^2.1.1",
     "gray-matter": "^4.0.3",
     "gsap": "^3.15.0",
-    "marked": "^18.0.9",
     "motion": "^13.0.0",
     "next": "^16.3.0",
     "next-themes": "^0.4.6",

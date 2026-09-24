@@ -81,11 +81,6 @@ export const contactContent = {
   ],
 } as const;
 
-// Footer Content
-export const footerContent = {
-  copyright: "All rights reserved.",
-} as const;
-
 export const links = [
   {
     hash: "/",

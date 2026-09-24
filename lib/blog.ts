@@ -13,7 +13,7 @@ import { unified } from "unified";
 import { siteConfig } from "./data";
 import type { Post, PostHeading, PostsResponse } from "./types/index";
 
-export type { PageInfo, Post, PostHeading, PostsResponse } from "./types/index";
+export type { Post, PostHeading } from "./types/index";
 
 const BLOG_DIR = path.join(process.cwd(), "content", "blog");
 

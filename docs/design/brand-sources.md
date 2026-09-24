@@ -1,3 +1,5 @@
+> Asset files live in `public/design/brand/`. Moved out of `public/` so provenance notes are not served publicly.
+
 # Brand originals
 
 `xurrent.png`: official Xurrent webclip, retrieved unchanged from https://cdn.prod.website-files.com/67b20f268356de61cfe3fc70/67fa322c5cf0810424d8cd1d_xurrent%20webclip.png on 2026-09-21 (linked by https://www.xurrent.com).
