@@ -3,6 +3,7 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { BrandBar } from "../components/bento/brand-bar";
 import { Badge } from "../components/ui/badge";
 import { buttonVariants } from "../components/ui/button";
 import { Card } from "../components/ui/card";
@@ -11,6 +12,11 @@ import { links } from "../lib/data";
 import { getAllProjectSlugs, projectLinkLabel } from "../lib/projects";
 
 // Run with Bun. An optional local URL adds an HTTP smoke check for every page.
+const header = renderToStaticMarkup(createElement(BrandBar));
+assert.match(header, /Mukul Chugh, home/);
+assert.match(header, /Engineer by craft\. Builder by design\./);
+assert.match(header, /Switch to dark mode/);
+assert.doesNotMatch(header, /<nav|Open header navigation/);
 const badge = renderToStaticMarkup(
   createElement(Badge, { variant: "secondary" }, "React Native")
 );

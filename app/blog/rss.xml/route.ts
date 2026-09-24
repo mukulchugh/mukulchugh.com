@@ -1,5 +1,6 @@
 import { getAllPosts } from "@/lib/blog";
 import { siteConfig } from "@/lib/data";
+import { socialImage } from "@/lib/seo";
 
 export const dynamic = "force-static";
 
@@ -28,13 +29,14 @@ export async function GET() {
       <guid>${siteConfig.siteUrl}/blog/${p.slug}</guid>
       <pubDate>${new Date(p.publishedAt).toUTCString()}</pubDate>
       <description>${escapeXml(p.brief)}</description>
+      <media:thumbnail url="${escapeXml(socialImage(`/blog/${p.slug}`))}" width="1200" height="630" />
     </item>`
     )
     .join("");
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0">
-  <channel>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">
+  <channel>\n    <atom:link href="${siteConfig.siteUrl}/blog/rss.xml" rel="self" type="application/rss+xml" />
     <title>${escapeXml(siteConfig.name)} — Blog</title>
     <link>${siteConfig.siteUrl}/blog</link>
     <description>Writing by ${escapeXml(siteConfig.name)}</description>

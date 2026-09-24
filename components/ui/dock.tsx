@@ -16,7 +16,7 @@ export function Dock() {
             <BlogPage />
           </BlogLayout>
         ),
-        Contact: <ContactSection id="dock-contact" />,
+        Contact: <ContactSection defaultBooking id="dock-contact" />,
         Experience: <ExperiencePage />,
         Projects: <ProjectsPage />,
       }}

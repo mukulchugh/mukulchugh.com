@@ -4,15 +4,14 @@ import {
   IconBrandGithub,
   IconBrandLinkedin,
   IconBrandX,
-  IconFileText,
   IconMessage,
 } from "@tabler/icons-react";
 import clsx from "clsx";
 import { motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
-import React, { Suspense, useCallback, useRef, useState } from "react";
-import { Button, buttonVariants } from "@/components/ui/button";
+import React, { Suspense, useCallback } from "react";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
@@ -22,7 +21,6 @@ import {
 import { useActiveSectionContext } from "@/context/active-section-context";
 import { introContent, introSocialLinks, siteConfig } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
-import { CVModal } from "./ui/cv-modal";
 
 const stagger = {
   animate: { opacity: 1, y: 0 },
@@ -32,16 +30,11 @@ const stagger = {
 const Component = React.memo(() => {
   const { ref } = useSectionInView("Home", 0.5);
   const { setActiveSection, setTimeOfLastClick } = useActiveSectionContext();
-  const [isCVModalOpen, setIsCVModalOpen] = useState(false);
-  const resumeButtonRef = useRef<HTMLButtonElement | null>(null);
 
   const handleClick = useCallback(() => {
     setActiveSection("Contact");
     setTimeOfLastClick(Date.now());
   }, [setActiveSection, setTimeOfLastClick]);
-
-  const handleOpenCV = useCallback(() => setIsCVModalOpen(true), []);
-  const handleCloseCV = useCallback(() => setIsCVModalOpen(false), []);
 
   return (
     <section
@@ -149,19 +142,6 @@ const Component = React.memo(() => {
           <IconMessage className="opacity-80" data-icon="inline-end" />
         </Link>
 
-        <Button
-          className={clsx(
-            "font-sans",
-            "rounded-none border border-border hover:border-border font-semibold"
-          )}
-          onClick={handleOpenCV}
-          ref={resumeButtonRef}
-          variant="secondary"
-        >
-          {introContent.resumeButtonText}
-          <IconFileText className="w-4 h-4 ml-1 opacity-70" />
-        </Button>
-
         {/* Social links */}
         <TooltipProvider delay={200}>
           <div className="flex gap-2">
@@ -201,14 +181,6 @@ const Component = React.memo(() => {
           </div>
         </TooltipProvider>
       </motion.div>
-
-      <CVModal
-        cvUrl={siteConfig.files.cv}
-        isOpen={isCVModalOpen}
-        name={siteConfig.firstName}
-        onClose={handleCloseCV}
-        returnFocus={resumeButtonRef}
-      />
     </section>
   );
 });

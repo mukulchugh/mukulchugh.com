@@ -1,20 +1,22 @@
-import type { Metadata } from "next";
 import { ContactSection } from "@/components/contact/contact-section";
+import { PageJsonLd } from "@/components/page-json-ld";
 import { PageShell } from "@/components/page-shell";
+import { publicPages, staticMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/contact" },
-  description:
-    "Start a conversation with Mukul Chugh. Book a short call or get in touch by email.",
-  title: "Contact",
-};
+export const metadata = staticMetadata("/contact");
 
 export default function ContactPage() {
   return (
     <PageShell contact={false}>
       <main className="page-content">
+        <PageJsonLd
+          description={publicPages["/contact"].description}
+          path="/contact"
+          title={publicPages["/contact"].title}
+          type="ContactPage"
+        />
         <h1 className="sr-only">Contact Mukul Chugh</h1>
-        <ContactSection />
+        <ContactSection defaultBooking />
       </main>
     </PageShell>
   );

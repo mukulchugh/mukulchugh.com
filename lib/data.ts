@@ -5,7 +5,7 @@
 export const siteConfig = {
   // Analytics
   analytics: {
-    googleAnalyticsId: "G-VTWNXFFM1L",
+    googleAnalyticsId: process.env.NEXT_PUBLIC_GA_ID ?? "G-VTWNXFFM1L",
   },
 
   // Contact
@@ -14,10 +14,6 @@ export const siteConfig = {
     recipient: "contact@mukulchugh.com",
   },
 
-  // Files
-  files: {
-    cv: "/MukulChughCV.pdf",
-  },
   firstName: "Mukul",
 
   // Images
@@ -25,44 +21,18 @@ export const siteConfig = {
     favicon: "/favicon.png",
     logoDark: "/design/brand/logo-white.webp",
     logoLight: "/design/brand/logo-black.webp",
-    ogImage: "/Thumbnail.webp",
+    ogImage: "/og/home.png",
     profileImage: "/design/brand/mukul-original.webp",
   },
 
-  // Keywords for SEO (used in JSON-LD)
-  keywords: [
-    "Mukul Chugh",
-    "themukulchugh",
-    "Mukul Chugh portfolio",
-    "product builder",
-    "product engineer",
-    "founding engineer",
-    "full stack engineer",
-    "mobile engineer",
-    "React",
-    "React Native",
-    "TypeScript",
-    "Next.js",
-    "Swift",
-    "Golang",
-    "Quivly",
-    "Swiggy",
-    "Zenduty",
-    "OpenKVM",
-    "Brik",
-    "human-centric design",
-    "digital experiences for humans",
-    "San Francisco engineer",
-    "software developer India",
-  ],
   lastName: "Chugh",
-  location: "San Francisco, CA",
-  locationFull: "San Francisco, California, USA",
+  location: "India",
+  locationFull: "India",
   // Personal Info
   name: "Mukul Chugh",
   siteDescription:
     "Engineer by craft. Builder by design. Founding Engineer at Quivly.ai, working across mobile, full-stack, product, and design. Previously at Swiggy and Zenduty (acquired).",
-  siteTitle: "Mukul Chugh | Product Engineer · Mobile, Full-Stack & AI",
+  siteTitle: "Mukul Chugh | Creating digital experiences for humans",
 
   // SEO & Meta
   siteUrl: "https://mukulchugh.com",
@@ -94,7 +64,6 @@ export const introContent = {
   emoji: "👋",
   greeting: "Hi, I'm Mukul Chugh",
   passion: "shipping useful software with small, fast teams",
-  resumeButtonText: "View Resume",
   role: "product engineer",
   specialty: "Mobile & Full-Stack Development",
   tagline: "I build products end to end: mobile, web, and everything between.",
@@ -103,8 +72,8 @@ export const introContent = {
 // Contact Section Content
 export const contactContent = {
   description:
-    "Drop me an email or find me on social. I'm always up for talking about interesting problems.",
-  heading: "Contact me",
+    "Bring the idea you keep coming back to. Let’s see where a conversation takes it.",
+  heading: "What should we make next?",
 } as const;
 
 // Footer Content

@@ -69,12 +69,8 @@ try {
         0,
         "Destination must start at top"
       );
-      await page
-        .getByRole("dialog")
-        .getByRole("link", { name: "Back to overview" })
-        .click();
+      await switcher.getByRole("button", { exact: true, name: "Home" }).click();
       await page.getByRole("dialog").waitFor({ state: "hidden" });
-      await page.waitForURL("**/#experience");
       await dock.getByRole("link", { exact: true, name: "About" }).click();
       await page.locator('[data-ready="true"]').waitFor();
       await page.setViewportSize({ height: 640, width: 320 });

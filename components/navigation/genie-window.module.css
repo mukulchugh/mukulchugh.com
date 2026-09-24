@@ -10,9 +10,9 @@
 }
 .popup {
   position: fixed;
-  inset: max(24px, 5svh) 24px 110px;
+  inset: max(16px, env(safe-area-inset-top)) 20px 96px;
   z-index: 50;
-  width: min(1120px, calc(100% - 48px));
+  width: calc(100% - 40px);
   margin-inline: auto;
   pointer-events: none;
   outline: none;
@@ -109,6 +109,9 @@
   overscroll-behavior: contain;
   scrollbar-width: thin;
 }
+.content [data-window-page] > main {
+  padding-block: 0;
+}
 .switcher {
   position: fixed;
   bottom: max(24px, env(safe-area-inset-bottom));
@@ -140,8 +143,8 @@
 }
 @media (max-width: 600px) {
   .popup {
-    inset: 12px 12px 96px;
-    width: calc(100% - 24px);
+    inset: max(8px, env(safe-area-inset-top)) 8px 96px;
+    width: calc(100% - 16px);
   }
   .content {
     padding: 12px;

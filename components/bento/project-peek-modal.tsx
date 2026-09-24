@@ -46,7 +46,7 @@ interface ProjectPeekModalProps {
 // and carries the direct external-link behavior that used to live on the
 // tile's cover click (now a secondary action here, next to the primary
 // "View full project" internal nav) — per the base Dialog primitive already
-// used by cv-modal.tsx / expandable-card.tsx, not a new modal system.
+// used by expandable-card.tsx, not a new modal system.
 export function ProjectPeekModal({
   project,
   cover,

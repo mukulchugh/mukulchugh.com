@@ -4,7 +4,6 @@ import {
   IconArrowLeft,
   IconArrowRight,
   IconCheck,
-  IconFileText,
   IconMail,
   IconVideo,
 } from "@tabler/icons-react";
@@ -20,7 +19,6 @@ import Image from "next/image";
 import type React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { CVModal } from "@/components/ui/cv-modal";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { siteConfig } from "@/lib/data";
@@ -285,11 +283,9 @@ export function CTATile({
   const sectionRef = useRef<HTMLElement | null>(null);
   const triggerWrapperRef = useRef<HTMLDivElement | null>(null);
   const backButtonRef = useRef<HTMLButtonElement | null>(null);
-  const resumeButtonRef = useRef<HTMLButtonElement | null>(null);
   const shouldRestoreFocusRef = useRef(false);
   const shouldReduce = useReducedMotion();
   const [mode, setMode] = useState<"intro" | "booking">("intro");
-  const [isCVModalOpen, setIsCVModalOpen] = useState(false);
   const isBooking = mode === "booking";
   const lightIntro = appearance === "light" && !isBooking;
 
@@ -641,43 +637,12 @@ export function CTATile({
                   >
                     {homepage ? "Send an email" : "Open mail app"}
                   </a>
-                  <div
-                    className="contents"
-                    ref={(node) => {
-                      resumeButtonRef.current =
-                        node?.querySelector("button") ?? null;
-                    }}
-                  >
-                    <MagneticButton
-                      aria-label="View resume"
-                      as="button"
-                      className={cn(
-                        "inline-flex min-h-11 items-center gap-2 whitespace-nowrap text-[11px] underline underline-offset-4",
-                        lightIntro
-                          ? "text-black/80 hover:text-black"
-                          : "text-white/80 hover:text-white"
-                      )}
-                      onClick={() => setIsCVModalOpen(true)}
-                      strength={shouldReduce || homepage ? 0 : 10}
-                    >
-                      <IconFileText size={15} />
-                      View Resume
-                    </MagneticButton>
-                  </div>
                 </div>
               </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
       </motion.section>
-
-      <CVModal
-        cvUrl={siteConfig.files.cv}
-        isOpen={isCVModalOpen}
-        name={siteConfig.firstName}
-        onClose={() => setIsCVModalOpen(false)}
-        returnFocus={resumeButtonRef}
-      />
     </>
   );
 }
