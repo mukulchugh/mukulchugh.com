@@ -11,6 +11,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import dockStyles from "@/components/navigation/dock.module.css";
 import { Button } from "@/components/ui/button";
+import { trackPortfolioEvent } from "@/lib/analytics";
 import { siteConfig } from "@/lib/data";
 import { useReducedMotion } from "@/lib/use-reduced-motion";
 import { opponentState, updateDemoPlayer, updateOpponent } from "./opponent";
@@ -113,6 +114,7 @@ export function Rebound() {
   }
   async function expand() {
     if (transition.current || !card.current || !shell.current) return;
+    trackPortfolioEvent("game_fullscreen", { surface: "rebound" });
     transition.current = true;
     returnBounds.current = field.current!.getBoundingClientRect();
     dockBounds.current =
@@ -221,6 +223,7 @@ export function Rebound() {
         ?.closest("section")
         ?.scrollIntoView({ behavior: "instant", block: "start" });
     if (demo.current) {
+      trackPortfolioEvent("game_start", { surface: "rebound" });
       demo.current = false;
       game.current = initial();
       target.current = { x: 240, y: H / 2 };
@@ -528,7 +531,9 @@ export function Rebound() {
                 alt=""
                 className={styles.rink}
                 draggable={false}
+                fetchPriority="high"
                 height={1000}
+                loading="eager"
                 sizes="(max-width: 600px) 90vw, 1100px"
                 src="/design/rebound-v1/rink-tall.png"
                 width={2000}

@@ -12,8 +12,8 @@ import { useTheme } from "next-themes";
 import { useEffect, useId, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FluorescentShader } from "@/components/ui/fluorescent-shader";
-import { siteConfig } from "@/lib/data";
 import { trackPortfolioEvent } from "@/lib/analytics";
+import { siteConfig } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
 import styles from "./contact-section.module.css";
 
@@ -41,12 +41,17 @@ function Calendar({
     }, 12_000);
     const ready = () => {
       clearTimeout(timer);
-      if (!disposed) setStatus("");
+      if (!disposed) {
+        setStatus("");
+        trackPortfolioEvent("booking_ready", { surface: "calendar" });
+      }
     };
-    const booked = () => trackPortfolioEvent("booking_complete", { surface: "calendar" });
+    const booked = () =>
+      trackPortfolioEvent("booking_complete", { surface: "calendar" });
     const failed = () => {
       clearTimeout(timer);
       if (!disposed) {
+        trackPortfolioEvent("booking_failed", { surface: "calendar" });
         setDelayed(true);
         setStatus(
           "The calendar couldn’t load. Open it directly or send me an email."
@@ -90,7 +95,11 @@ function Calendar({
           <IconArrowUpRight aria-hidden="true" size={14} />
         </a>
       </div>
-      <div aria-busy={Boolean(status)} className={styles.calendarStage}>
+      <div
+        aria-busy={Boolean(status)}
+        className={styles.calendarStage}
+        data-analytics-private
+      >
         {status && (
           <div
             aria-hidden="true"

@@ -30,7 +30,6 @@ export interface Post {
   headings?: PostHeading[];
   id: string;
   publishedAt: string;
-  updatedAt?: string;
   readTimeInMinutes: number;
   seo?: {
     title: string;
@@ -42,6 +41,7 @@ export interface Post {
     slug: string;
   }>;
   title: string;
+  updatedAt?: string;
 }
 
 export interface PageInfo {

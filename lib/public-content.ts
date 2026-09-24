@@ -7,6 +7,7 @@ import {
   siteConfig,
   zendutyChapter,
 } from "@/lib/data";
+import { privacyProviders, privacySections } from "@/lib/privacy";
 import { projectArtwork } from "@/lib/project-artwork";
 import { projectDetails } from "@/lib/project-details";
 import {
@@ -122,11 +123,21 @@ export async function markdownDocument(path: string) {
         body = history();
         break;
       case "/contact":
-        body = `${contactContent.description}\n\n## 15 minutes.\n\nAn idea is enough.\n\n[Book a short call](https://cal.com/mukulchugh/15min)\n\n[Email ${siteConfig.name}](mailto:${siteConfig.email.recipient})\n\n${Object.entries(
+        body = `${contactContent.description}\n\n${contactContent.paragraphs.join("\n\n")}\n\n## 15 minutes.\n\nAn idea is enough.\n\n[Book a short call](https://cal.com/mukulchugh/15min)\n\n[Email ${siteConfig.name}](mailto:${siteConfig.email.recipient})\n\n${Object.entries(
           siteConfig.social
         )
           .map(([name, url]) => `- [${name}](${url})`)
           .join("\n")}`;
+        break;
+      case "/privacy":
+        body =
+          privacySections
+            .map((section) => `## ${section.title}\n\n${section.body}`)
+            .join("\n\n") +
+          "\n\n## Service provider policies\n\n" +
+          privacyProviders
+            .map(([name, url]) => `- [${name}](${url})`)
+            .join("\n");
         break;
       default:
         return null;
@@ -151,7 +162,7 @@ export async function markdownDocument(path: string) {
 }
 
 export function llmsIndex() {
-  return `# ${siteConfig.name}\n\n> ${siteConfig.siteDescription}\n\nPublic portfolio and first-person writing. These links are alternative representations of the same public pages, not additional evidence of results or capabilities. Project artwork is illustrative. Follow each project's scope and source notes.\n\n## Pages and writing\n\n${publicDocuments()
+  return `# ${siteConfig.name}\n\n> ${siteConfig.siteDescription}\n\nPublic portfolio and first-person writing. These links are alternative representations of the same public pages, not additional evidence of results or capabilities. Project artwork is illustrative. Follow each project's scope and source notes.\n\nUse this site to evaluate Mukul’s engineering experience, explore his public projects, read first-person technical explanations, or find a way to discuss a potential collaboration. This portfolio is not a hosted API, MCP server or service endpoint; projects described here may link to their own repositories and documentation.\n\nTo read a page, send GET with Accept: text/markdown to its canonical URL, or follow its .md alternate. Follow the canonical link when citing a page. For missing pages, use the sitemap or this index; do not invent private project details.\n\n## When to use this site\n\n- [Experience](${absoluteUrl("/experience.md")}): Evaluate Mukul’s work history and contributions before discussing a role or collaboration.\n- [Projects](${absoluteUrl("/projects.md")}): Find public tools, source repositories and the stated boundaries of private work.\n- [Writing](${absoluteUrl("/blog.md")}): Read implementation explanations about mobile products, developer tools and AI agents.\n- [Contact](${absoluteUrl("/contact.md")}): Find the public email address and booking link. Only send messages or book time with the user’s permission.\n- [Privacy](${absoluteUrl("/privacy.md")}): Understand this site’s analytics, booking services and browser privacy choices.\n\n## Pages and writing\n\n${publicDocuments()
     .map(
       (doc) =>
         `- [${doc.title}](${absoluteUrl(markdownPath(doc.path))}): ${doc.description}`
