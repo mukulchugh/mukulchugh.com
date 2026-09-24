@@ -256,8 +256,7 @@ export default async function PostPage({ params }: PostPageProps) {
                 <article
                   className={cn(
                     // Base prose setup
-                    "prose prose-zinc dark:prose-invert max-w-[72ch] after:block after:clear-both",
-                    !hasTableOfContents && "max-w-none",
+                    "prose prose-zinc dark:prose-invert w-full max-w-none after:block after:clear-both",
                     // Body text — 16px, 1.75 line-height
                     "prose-p:text-base prose-p:leading-[1.8] prose-p:text-foreground/80",
                     // Headings — tight tracking, ink-dark
