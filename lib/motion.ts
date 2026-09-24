@@ -33,7 +33,7 @@ export const softSpring: Transition = {
  * than premiumSpring/softSpring — those are for section/tile entrances,
  * this is for an instant "acknowledge the click" swap. Previously three
  * near-identical ad-hoc versions of this same micro-swap spring had drifted
- * to slightly different numbers across cta-tile.tsx and socials-tile.tsx.
+ * to slightly different numbers across the tiles that used it.
  */
 export const microSpring: Transition = {
   damping: 28,
