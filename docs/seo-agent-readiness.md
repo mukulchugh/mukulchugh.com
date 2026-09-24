@@ -55,7 +55,7 @@ The generator uses Next.js ImageResponse, locally bundled OFL-licensed Syne/Geis
 
 ## Verification
 
-Pre-push refresh (24 September 2026): the exact staged build, UI/source checks and dock/no-JavaScript browser checks pass. All 48 HTML and Markdown routes pass. The previously observed production OG failure recurred: 43 PNG responses failed during concurrent browser checks, then all 48 failed on a serial rerun with `Input buffer contains unsupported image format`. The OG implementation is unchanged; this remains an unresolved release check despite an earlier successful full sweep.
+Pre-push refresh (24 September 2026): the exact build, UI/source checks and dock/no-JavaScript browser checks pass. The final isolated production sweep also passes all 48 HTML, Markdown and 1200×630 social-image endpoints.
 
 - `bun run test:seo`: public registry, sitemap completeness, hidden/unknown exclusions, Markdown article parity, image-file presence, canonical metadata.
 - `bun scripts/check-seo.ts http://127.0.0.1:4179`: all 48 HTML/Markdown/PNG routes, negotiation, cache headers, real discovery bodies, sitemap/RSS membership, raw headings/content, Person identity, HEAD and representative 404/406 responses. Run against an isolated production build, not an unrelated dev server.
