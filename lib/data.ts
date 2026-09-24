@@ -1,11 +1,12 @@
 // ============================================
 // SITE CONFIGURATION - All content in one place
 // ============================================
+import { GA_ID } from "./analytics-config";
 
 export const siteConfig = {
   // Analytics
   analytics: {
-    googleAnalyticsId: process.env.NEXT_PUBLIC_GA_ID ?? "G-VTWNXFFM1L",
+    googleAnalyticsId: GA_ID,
   },
 
   // Contact

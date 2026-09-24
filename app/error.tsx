@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useEffect } from "react";
 import { BrandBar } from "@/components/bento/brand-bar";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { reportPageError } from "@/lib/analytics";
 
 export default function Error({
   error,
@@ -16,6 +17,7 @@ export default function Error({
 }) {
   useEffect(() => {
     console.error("Application error:", error);
+    reportPageError();
   }, [error]);
 
   return (

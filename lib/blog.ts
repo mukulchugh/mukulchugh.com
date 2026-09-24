@@ -28,12 +28,12 @@ interface Frontmatter {
   coverImage?: string;
   draft?: boolean;
   publishedAt?: string;
-  updatedAt?: string;
   seoDescription?: string;
   seoTitle?: string;
   slug?: string;
   tags?: Array<string | { name: string; slug: string }>;
   title?: string;
+  updatedAt?: string;
 }
 
 /**
@@ -116,7 +116,6 @@ function fileToPost(file: string, withContent: boolean): Post | null {
     headings,
     id: slug,
     publishedAt: fm.publishedAt || new Date(0).toISOString(),
-    updatedAt: fm.updatedAt,
     readTimeInMinutes: readTimeFromText(content),
     seo:
       fm.seoTitle || fm.seoDescription
@@ -128,6 +127,7 @@ function fileToPost(file: string, withContent: boolean): Post | null {
     slug,
     tags,
     title: fm.title || slug,
+    updatedAt: fm.updatedAt,
   };
 }
 

@@ -1,28 +1,35 @@
 "use client";
 
-import { GoogleAnalytics } from "@next/third-parties/google";
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
-import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { canTrack, linkEvent, trackPortfolioEvent, validGaId } from "@/lib/analytics";
+import Script from "next/script";
+import { useEffect, useState } from "react";
+import {
+  canTrack,
+  initializeAnalytics,
+  linkEvent,
+  trackPageView,
+  trackPortfolioEvent,
+  validGaId,
+} from "@/lib/analytics";
+import { GA_ID, GOOGLE_PROXY } from "@/lib/analytics-config";
 
-export function AnalyticsWrapper({ gaId }: { gaId: string }) {
-  const [shouldLoad, setShouldLoad] = useState(false);
+export function AnalyticsWrapper() {
+  const [enabled, setEnabled] = useState(false);
   const pathname = usePathname();
+  useEffect(() => {
+    initializeAnalytics();
+    setEnabled(canTrack());
+    trackPageView(pathname);
+  }, [pathname]);
 
   useEffect(() => {
-    if (!canTrack()) return;
-    const analyticsWindow = window as Window & { dataLayer?: unknown[] };
-    const queue = (analyticsWindow.dataLayer ??= []);
-    // Configure privacy before Google's config command; no advertising features.
-    queue.push(["consent", "default", { ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied", analytics_storage: "granted" }]);
-    queue.push(["set", { allow_google_signals: false, allow_ad_personalization_signals: false }]);
-    setShouldLoad(true);
     const clicked = (event: MouseEvent) => {
-      if (!(event.target instanceof Element) || event.defaultPrevented || event.button !== 0) return;
+      if (!(event.target instanceof Element) || event.button !== 0) return;
+      if (event.target.closest("[data-analytics-private], .ph-no-capture"))
+        return;
       const link = event.target.closest<HTMLAnchorElement>("a[href]");
       if (!link) return;
+      // Next Link prevents default browser navigation; that is still a real click.
       const action = linkEvent(link.href, window.location.href);
       if (action) trackPortfolioEvent(action.event, action.properties);
     };
@@ -30,15 +37,12 @@ export function AnalyticsWrapper({ gaId }: { gaId: string }) {
     return () => document.removeEventListener("click", clicked);
   }, []);
 
-  if (!shouldLoad || pathname.startsWith("/prototype")) {
-    return null;
-  }
-
-  return (
-    <>
-      {validGaId(gaId) && <GoogleAnalytics gaId={gaId} />}
-      <Analytics />
-      <SpeedInsights />
-    </>
-  );
+  // next/third-parties doesn't expose custom transport or disable-auto-pageview config.
+  return enabled && validGaId(GA_ID) ? (
+    <Script
+      id="portfolio-google-analytics"
+      src={`${GOOGLE_PROXY}/gtag/js?id=${GA_ID}`}
+      strategy="afterInteractive"
+    />
+  ) : null;
 }

@@ -66,7 +66,7 @@ Verification uses an isolated production copy on a spare port. The user-owned de
 
 ## Limits and next release checks
 
-No ranking, rich-result, citation, or indexing gain is claimed. Search Console, Bing Webmaster Tools, analytics, and production bot access were not accessed. After deployment, verify public response headers, CDN behavior, Google URL Inspection/Rich Results Test, social-card fetches, and submit the updated sitemap. Monitor real search and referral data before changing the editorial content further.
+No ranking, rich-result, citation, or indexing gain is claimed. PostHog setup and local proxy delivery have since been verified; see [analytics setup and production gates](analytics-setup.md). Google Analytics account reports, Search Console, Bing Webmaster Tools, and production bot access remain unverified. After deployment, verify public response headers, CDN behavior, Google URL Inspection/Rich Results Test, social-card fetches, and submit the updated sitemap. Monitor real search and referral data before changing the editorial content further.
 
 No invented FAQs, testimonials, ratings, credentials, metrics, or “fresh” dates were added. No content was hidden specifically for crawlers. Markdown access is available both by explicit URL and Accept-header negotiation.
 

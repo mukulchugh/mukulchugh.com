@@ -69,7 +69,7 @@ export default function RootLayout({
             <Footer />
             <Dock />
           </ActiveSectionContextProvider>
-          <AnalyticsWrapper gaId={siteConfig.analytics.googleAnalyticsId} />
+          <AnalyticsWrapper />
         </ThemeProvider>
       </body>
     </html>
