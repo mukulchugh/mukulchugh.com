@@ -13,7 +13,7 @@ import { unified } from "unified";
 import { siteConfig } from "./data";
 import type { Post, PostHeading, PostsResponse } from "./types/index";
 
-export type { PageInfo, Post, PostHeading, PostsResponse } from "./types/index";
+export type { Post, PostHeading } from "./types/index";
 
 const BLOG_DIR = path.join(process.cwd(), "content", "blog");
 
@@ -28,12 +28,12 @@ interface Frontmatter {
   coverImage?: string;
   draft?: boolean;
   publishedAt?: string;
-  updatedAt?: string;
   seoDescription?: string;
   seoTitle?: string;
   slug?: string;
   tags?: Array<string | { name: string; slug: string }>;
   title?: string;
+  updatedAt?: string;
 }
 
 /**
@@ -116,7 +116,6 @@ function fileToPost(file: string, withContent: boolean): Post | null {
     headings,
     id: slug,
     publishedAt: fm.publishedAt || new Date(0).toISOString(),
-    updatedAt: fm.updatedAt,
     readTimeInMinutes: readTimeFromText(content),
     seo:
       fm.seoTitle || fm.seoDescription
@@ -128,6 +127,7 @@ function fileToPost(file: string, withContent: boolean): Post | null {
     slug,
     tags,
     title: fm.title || slug,
+    updatedAt: fm.updatedAt,
   };
 }
 
