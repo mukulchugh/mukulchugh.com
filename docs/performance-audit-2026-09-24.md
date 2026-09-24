@@ -116,7 +116,7 @@ Original raw reports: `/private/tmp/portfolio-lighthouse/final` and `/private/tm
 - Home additionally loads the visible game board and hydrates the interactive bento. Its remaining mobile LCP was 4.79 s despite TBT improving to 87 ms. Retaining the approved game, fonts, motion, and imagery is a release constraint.
 - Articles now render their content and highlighting on the server. The database article improved from 364 ms baseline TBT to 21 ms in the final sweep. Their remaining initial render cost is largely shared shell/styles/fonts plus editorial cover delivery.
 - Project pages share the same initial script resources, with different editorial imagery and content. Late-sweep mobile results coincided with a CPU benchmark drop from 2805.5 (OpenKVM) to 763 (Tethr). This makes the late TBT comparisons noisy; it is not sufficient evidence to blame an individual project's content. Original results remain above and controlled repeats are reported separately.
-- Contact has no measured layout shift after reserving the booking viewport. Its remaining Best Practices failure is provider-owned third-party cookies, not a portfolio console error.
+- Contact had no measured layout shift in the local sweep after reserving the booking viewport. Production verification below exposes additional behavior with the live analytics scripts enabled.
 
 ### Controlled outlier repeats
 
@@ -136,6 +136,23 @@ Repeat reports: `/private/tmp/portfolio-lighthouse/outlier-repeat`. The audit ha
 - `b8ec29b`: server-rendered articles, responsive assets, deferred dock windows, and stable booking layout, with regression checks.
 - `220cce0`: delayed analytics loading with queued explicit events and corrected Google worker scope, with unit and real-browser checks.
 - This report records the completed optimization pass, not completion of the all-100 objective. A further initial-client-graph reduction remains engineering work; changing the live calendar integration requires a product decision. Production scores must be remeasured after deployment.
+
+## Post-deployment verification
+
+Vercel reported deployment success for `9043cd5fb86f519fb56df2cf606df20f1e406325`. Eight further Lighthouse runs checked the live production domain with real analytics enabled. These are locally executed audits of production, not new PageSpeed Insights service reports.
+
+| Route | Mobile performance | Desktop performance | Accessibility | Best Practices | SEO |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `/` | 80 | 99 | 100 | 100 | 100 |
+| `/about` | 93 | 100 | 100 | 100 | 100 |
+| `/blog/skip-your-own-api-when-you-own-the-database` | 88 | 99 | 100 | 100 | 100 |
+| `/contact` | 92 | 98 | 100 | 58 | 100 |
+
+Production homepage mobile LCP was 3.97 s and TBT 239 ms. Analytics contributes real production work that is intentionally absent on localhost, so local TBT is not a production guarantee. The supplied earlier PSI snapshot was 71 mobile / 93 desktop; different machines, timing, and test environments prevent treating the difference as a controlled benchmark.
+
+Contact's production Best Practices score additionally includes an Attribution Reporting API deprecation from Google's proxied service-worker iframe, alongside Cal.com's third-party cookies. The live embed also produced desktop CLS 0.086 (mobile 0.000018); the local zero-CLS result is not a claim that production is shift-free. The Lighthouse node attribution includes invalid-looking metadata nodes, so the exact production shift requires a dedicated trace rather than a guessed CSS patch. No portfolio runtime exception was reported by the browser checks.
+
+Production reports: `/private/tmp/portfolio-lighthouse/production-release`. The all-100 objective remains open. Removing or rewriting vendor scripts solely to suppress these diagnostics was not part of this release.
 
 ## Reproduce
 
