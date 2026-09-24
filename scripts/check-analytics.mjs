@@ -225,8 +225,94 @@ try {
 } finally {
   globalThis.fetch = originalFetch;
 }
+const { GET: posthogGet, POST: posthogPost } = await import(
+  "../app/api/analytics/posthog/[...path]/route"
+);
+const posthogForwarded = [];
+globalThis.fetch = async (url, options) => {
+  posthogForwarded.push({ options, url: String(url) });
+  const asset = String(url).includes("us-assets.i.posthog.com");
+  return new Response(asset ? "/* sdk asset */" : '{"status":1}', {
+    headers: {
+      "Content-Type": asset ? "application/javascript" : "application/json",
+    },
+    status: 200,
+  });
+};
+try {
+  const base = "https://mukulchugh.com/api/analytics/posthog/";
+  assert.equal(
+    (await posthogGet(new Request(`${base}anything`), context("anything")))
+      .status,
+    404
+  );
+  assert.equal(
+    (await posthogGet(new Request(`${base}e/`), context("e"))).status,
+    405
+  );
+  assert.equal(
+    (
+      await posthogPost(
+        new Request(`${base}e/`, {
+          headers: { origin: "https://other.example" },
+          method: "POST",
+        }),
+        context("e")
+      )
+    ).status,
+    403
+  );
+  assert.equal(
+    (
+      await posthogPost(
+        new Request(`${base}e/`, { headers: { dnt: "1" }, method: "POST" }),
+        context("e")
+      )
+    ).status,
+    204
+  );
+  const event = await posthogPost(
+    new Request(`${base}i/v0/e/?ip=0`, {
+      body: '{"event":"$pageview"}',
+      headers: {
+        authorization: "secret",
+        "content-type": "application/json",
+        cookie: "secret",
+      },
+      method: "POST",
+    }),
+    context("i/v0/e")
+  );
+  assert.equal(event.status, 200);
+  assert.equal(posthogForwarded.length, 1);
+  assert.equal(new URL(posthogForwarded[0].url).hostname, "us.i.posthog.com");
+  assert(!JSON.stringify(posthogForwarded[0].options).includes("secret"));
+  assert.equal(
+    (
+      await posthogPost(
+        new Request(`${base}e/`, {
+          body: "x".repeat(524_289),
+          method: "POST",
+        }),
+        context("e")
+      )
+    ).status,
+    413
+  );
+  const asset = await posthogGet(
+    new Request(`${base}static/array.js`),
+    context("static/array.js")
+  );
+  assert.equal(asset.status, 200);
+  assert.equal(
+    new URL(posthogForwarded[1].url).hostname,
+    "us-assets.i.posthog.com"
+  );
+} finally {
+  globalThis.fetch = originalFetch;
+}
 const config = await readFile("next.config.js", "utf8");
-assert(config.indexOf("/posthog/static/") < config.indexOf("/posthog/:path*"));
+assert(!config.includes('destination: "https://us.i.posthog.com/:path*"'));
 assert(config.includes("skipTrailingSlashRedirect: true"));
 console.log(
   "PASS: shared analytics, three-provider dedupe, privacy gates, URL scrubbing, and bounded proxy."

@@ -102,18 +102,6 @@ const nextConfig = {
   async rewrites() {
     return {
       beforeFiles: [
-        {
-          destination: "https://us-assets.i.posthog.com/static/:path*",
-          source: "/api/analytics/posthog/static/:path*",
-        },
-        {
-          destination: "https://us-assets.i.posthog.com/array/:path*",
-          source: "/api/analytics/posthog/array/:path*",
-        },
-        {
-          destination: "https://us.i.posthog.com/:path*",
-          source: "/api/analytics/posthog/:path*",
-        },
         { destination: "/markdown", source: "/index.md" },
         { destination: "/markdown", source: "/.md" },
         { destination: "/markdown/:path+", source: "/:path+.md" },

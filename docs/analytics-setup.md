@@ -6,9 +6,9 @@
 - Project: **mukulchugh.com**, ID **625612**, US region.
 - Website: `https://mukulchugh.com`; timezone: `Asia/Kolkata`; IP anonymization enabled.
 - [Portfolio dashboard](https://us.posthog.com/project/625612/dashboard/2129654): audience, pages, work/writing engagement, calendar health, navigation/play, site reliability, and the ordered visit → calendar ready → booked-call funnel.
-- Google Analytics account **Mukul Chugh** (`115390794`), property **Mukul Chugh - GA4** (`277128377`), web stream `2670310844`, measurement ID `G-VTWNXFFM1L`.
+- Google Analytics account, property, and web stream are configured for this site; the public measurement ID is `G-VTWNXFFM1L`.
 - Vercel personal Hobby team **mukulchughs-projects**, project **mukulchugh**, with `mukulchugh.com` attached.
-- Search Console domain property `sc-domain:mukulchugh.com`, owned through `mukulchughofficial@gmail.com`, linked to the GA property.
+- Search Console domain property `sc-domain:mukulchugh.com` is verified and linked to the GA property.
 
 ## One tracking entry point
 
@@ -16,11 +16,11 @@
 
 | Provider | Browser transport | Responsibility |
 | --- | --- | --- |
-| PostHog | `/api/analytics/posthog/*` | Native Next.js rewrites to US ingestion/assets |
+| PostHog | `/api/analytics/posthog/*` | Bounded proxy for approved US ingestion and SDK asset endpoints |
 | Google Analytics | `/api/analytics/google/*` | Bounded proxy for the tag, explicit collection events, and tag worker assets |
 | Vercel Analytics / Speed Insights | Native same-origin Vercel endpoints | Official installed SDKs, retaining deployment-injected observability configuration |
 
-The Google route is a transport proxy, not a provisioned server-side Google Tag Manager container. It rejects unknown paths, cross-origin browser submissions, oversized bodies, other measurement IDs, and automatic events lacking the shared-layer marker. It does not forward cookies, authorization headers, or client-IP headers to Google.
+The Google route is a transport proxy, not a provisioned server-side Google Tag Manager container. It rejects unknown paths, cross-origin browser submissions, oversized bodies, other measurement IDs, and automatic events lacking the shared-layer marker. The PostHog route similarly limits methods, paths, query and body size. Neither proxy forwards cookies, authorization headers, or client-IP headers.
 
 Public ingestion IDs and the PostHog `phc_` project token are intentionally browser-visible. They are not administrative credentials. Optional environment overrides are documented in `.env.example`; never place a personal PostHog API key in client configuration.
 
@@ -53,7 +53,7 @@ npm run build
 
 The unit check verifies dispatch/deduplication, privacy controls, nested URL sanitization, and bounded proxy behavior. The disposable browser check runs the actual Google and PostHog SDKs, verifies same-origin requests and duplicate prevention, and inspects Vercel's native command queue. It intercepts all analytics writes and does not prove provider-side receipt. The fixture disables PostHog's automation filter only inside that intercepted test; production keeps it enabled.
 
-Latest local results: analytics unit check, browser check, TypeScript, scoped lint, and diff whitespace checks pass. The latest full build is blocked by the current `components/ui/dock.tsx` client import graph pulling in metadata-exporting About, Experience, and Projects page modules. Those concurrent dock changes were left untouched; this build failure must be resolved before release.
+Latest local results: analytics unit and browser checks, TypeScript, lint, diff whitespace checks, and the full production build pass.
 
 A single labeled `analytics_verification` event was sent through the local Next.js PostHog proxy and read back from project 625612 at **2026-09-24 09:08:08 +05:30**. This proves local proxy-to-project delivery, not a production release. The seven reporting queries executed successfully; their business-event results were empty at setup, not manufactured sample visitors.
 
