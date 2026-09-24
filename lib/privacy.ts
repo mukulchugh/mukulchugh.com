@@ -4,7 +4,7 @@ export const privacySections = [
     title: "About this site",
   },
   {
-    body: "Email links open your mail application. If you send a message, your email address and the information you include are used to respond to your enquiry. Opening the booking calendar loads Cal.com, which handles the contact details, appointment time and other information you choose to submit. Please avoid sending confidential project information in an initial enquiry.",
+    body: "Email links open your mail application. If you send a message, your email address and the information you include are used to respond to your enquiry. The booking form requests available times from Cal.com. Confirming a booking sends Cal.com your name, email, chosen time, timezone and any notes or guest emails you provide. These booking requests do not send browser cookies. Please avoid sending confidential project information in an initial enquiry.",
     title: "Messages and bookings",
   },
   {

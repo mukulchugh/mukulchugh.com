@@ -14,7 +14,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { type ReactNode, useEffect, useId, useRef, useState } from "react";
 import { trackPortfolioEvent } from "@/lib/analytics";
-import { links } from "@/lib/data";
+import { links } from "@/lib/site-config";
 import styles from "./dock.module.css";
 import type { Destination, Launch } from "./genie-window";
 

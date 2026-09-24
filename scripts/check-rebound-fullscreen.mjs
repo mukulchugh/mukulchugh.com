@@ -25,7 +25,7 @@ try {
           Promise.reject(new Error("Fullscreen unavailable"));
       });
     await page.goto(process.env.SITE_URL || "http://localhost:3000", {
-      waitUntil: "networkidle",
+      waitUntil: "domcontentloaded",
     });
     const game = page.getByRole("region", { name: "Rebound air hockey" });
     await game.getByRole("button", { exact: true, name: "Play" }).click();

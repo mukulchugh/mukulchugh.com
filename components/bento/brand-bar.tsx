@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { ThemeLogo } from "@/components/theme-logo";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { siteConfig } from "@/lib/data";
+import { siteConfig } from "@/lib/site-config";
 import styles from "./brand-bar.module.css";
 
 export function BrandBar() {

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useTheme } from "next-themes";
 import { type CSSProperties, useEffect, useState } from "react";
-import { siteConfig } from "@/lib/data";
+import { siteConfig } from "@/lib/site-config";
 import { cn } from "@/lib/utils";
 
 type ThemeLogoProps = {

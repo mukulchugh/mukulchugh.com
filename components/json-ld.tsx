@@ -1,4 +1,4 @@
-import { siteConfig } from "@/lib/data";
+import { siteConfig } from "@/lib/site-config";
 
 export function JsonLd() {
   const base = siteConfig.siteUrl;

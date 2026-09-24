@@ -21,9 +21,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { siteConfig } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
 import { microSpring, premiumSpring, softSpring } from "@/lib/motion";
+import { siteConfig } from "@/lib/site-config";
 import { useReducedMotion } from "@/lib/use-reduced-motion";
 import { cn } from "@/lib/utils";
 

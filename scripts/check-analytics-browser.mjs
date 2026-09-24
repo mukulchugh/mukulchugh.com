@@ -42,6 +42,10 @@ try {
   const failures = [];
   const warnings = [];
   const requests = [];
+  const issues = [];
+  const audit = await context.newCDPSession(page);
+  await audit.send("Audits.enable");
+  audit.on("Audits.issueAdded", ({ issue }) => issues.push(issue));
   page.on("pageerror", (error) => failures.push(error.message));
   page.on("console", (message) => {
     warnings.push(message.text().replace(/phc_[A-Za-z0-9_-]+/g, "[token]"));
@@ -57,9 +61,14 @@ try {
         externalWrites.push(url.hostname + url.pathname);
       return route.abort();
     }
-    if (url.pathname === "/api/analytics/google/gtag/js") {
+    if (
+      url.pathname === "/api/analytics/google/gtag/js" ||
+      url.pathname.includes("/google/_/service_worker/")
+    ) {
       const response = await googleProxy(new Request(url), {
-        params: Promise.resolve({ path: ["gtag", "js"] }),
+        params: Promise.resolve({
+          path: url.pathname.replace("/api/analytics/google/", "").split("/"),
+        }),
       });
       assert.equal(response.status, 200);
       return route.fulfill({
@@ -216,6 +225,13 @@ try {
     "all attempted browser analytics writes are same-origin"
   );
   assert.deepEqual(failures, []);
+  console.log("Browser issue codes:", [
+    ...new Set(issues.map((issue) => issue.code)),
+  ]);
+  console.log(
+    "Worker resources:",
+    requests.filter((request) => request.includes("service_worker"))
+  );
   console.log(
     "PASS: real Google + PostHog browser SDKs, native Vercel queue, same-origin requests, no duplicate pageviews; writes intercepted."
   );

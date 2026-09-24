@@ -10,7 +10,7 @@ try {
     viewport: { height: 844, width: 390 },
   });
   await page.goto(process.env.SITE_URL || "http://localhost:3000", {
-    waitUntil: "networkidle",
+    waitUntil: "domcontentloaded",
   });
   for (const name of ["Next project", "Previous project"]) {
     const incoming = await page

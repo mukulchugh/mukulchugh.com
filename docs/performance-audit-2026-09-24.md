@@ -1,6 +1,6 @@
 # Portfolio performance audit
 
-Status: implementation, regression checks, and the 96-run all-page Lighthouse sweep are complete. The requested 100 in every category is not achieved.
+Status: the original 96-run sweep and a second shared-runtime/native-booking pass are complete. See the September 25 update below for current results. The requested 100 in every category is not achieved.
 
 ## Measurement
 
@@ -49,7 +49,7 @@ Blog prose also fills its complete right-hand grid column, as requested.
 
 ## Remaining limits
 
-Cal.com's live default-open embed sets third-party cookies (`__cf_bm` and NextAuth cookies), producing a Best Practices score of 77 on Contact. The portfolio cannot remove cookies from the provider's cross-origin responses. Booking was not hidden, removed, or replaced to improve the score, and no real booking was submitted during tests. A different booking integration requires a product decision and its own end-to-end verification.
+At the original release, Cal.com's live default-open embed set third-party cookies (`__cf_bm` and NextAuth cookies), producing a local Best Practices score of 77 on Contact. The owner subsequently approved replacing that embed with native in-site booking. The September 25 implementation and verification below supersede this integration limitation; real meeting creation remains deliberately untested.
 
 Mobile Performance remains below 100. Further work must address the remaining initial client-code and rendering cost without discarding the requested game, motion, fonts, or content. No universal 100 guarantee, production re-audit pass, or real-user CWV pass is implied by this report.
 
@@ -153,6 +153,41 @@ Production homepage mobile LCP was 3.97 s and TBT 239 ms. Analytics contributes 
 Contact's production Best Practices score additionally includes an Attribution Reporting API deprecation from Google's proxied service-worker iframe, alongside Cal.com's third-party cookies. The live embed also produced desktop CLS 0.086 (mobile 0.000018); the local zero-CLS result is not a claim that production is shift-free. The Lighthouse node attribution includes invalid-looking metadata nodes, so the exact production shift requires a dedicated trace rather than a guessed CSS patch. No portfolio runtime exception was reported by the browser checks.
 
 Production reports: `/private/tmp/portfolio-lighthouse/production-release`. The all-100 objective remains open. Removing or rewriting vendor scripts solely to suppress these diagnostics was not part of this release.
+
+## September 25: native booking and shared-runtime follow-up
+
+The owner approved preserving in-site booking with a native interface. The approved CTA composition, shader, expansion, dock contact window, and default-open dedicated Contact page remain. The iframe is replaced by native date/timezone controls, availability, attendee details, and accepted/pending outcomes using the [Cal booking API](https://cal.com/docs/api-reference/v2/bookings/create-a-booking). No new dependency or private API key is required by this public event flow.
+
+### Changes and root-cause checks
+
+- Shared button press, theme icon, and route-fade feedback use CSS/WAAPI instead of loading Motion on otherwise static routes. Base UI semantics, keyboard activation, focus and reduced-motion behavior remain.
+- Shared site configuration no longer imports the complete project catalog. Initial Privacy script transfer dropped from 309,765 to 214,937 bytes in the controlled intermediate samples, approximately 31%. The regression check rejects project records and booking submission code in Privacy's initial scripts.
+- Booking code loads on first use. Requests omit credentials and referrers. The form is private to analytics, protects against duplicate in-flight submits, preserves details on conflict, and warns about uncertain outcomes before retrying.
+- A production-only missing script preload survived a clean build with `next/dynamic`. React lazy loading resolved that missing reference. `bun run build` now validates every generated static asset reference: 1,073 references across 60 generated HTML pages passed.
+- React lazy loading exposed a separate stylesheet arrival issue: the initial booking stage rendered at 129px before its 540px minimum-height style arrived. Including the small booking stylesheet with the CTA fixed the observed Contact CLS of 0.129. A new browser assertion checks the initial layout shift before interaction.
+- The visible game board explicitly requests high fetch priority. No gameplay, artwork, or approved motion was removed. The latest homepage sample remains below target; this hint alone did not establish a performance gain.
+
+### Final local samples
+
+| Route | Mobile performance | Desktop performance | Accessibility | Best Practices | SEO | CLS |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `/contact` | 94 | 100 | 100 | 100 | 100 | 0 |
+| `/about` | 95 | 100 | 100 | 100 | 100 | 0 |
+| `/privacy` | 95 | 100 | 100 | 100 | 100 | 0 |
+
+These six final-build runs are stored in `/private/tmp/portfolio-lighthouse/native-verified`. Contact mobile LCP was 3.05s with 82.5ms TBT. The immediately preceding homepage sample was 84 mobile / 99 desktop, with all other categories 100 and CLS 0 (`native-release-candidate`); it preceded the small booking stylesheet fix and is not represented as a final all-page sweep. Original measurements and unsuccessful intermediate experiments remain on disk, rather than replacing them with best scores.
+
+### Verification and limits
+
+- Final build, TypeScript, lint, UI/content, SEO, analytics unit checks, and whitespace checks pass.
+- All 49 routes (48 public plus 404) rechecked at 1440px/light and 320px/dark after the final stylesheet fix.
+- Native booking checks cover accepted, pending, conflict, validation failure, server error, network uncertainty, unavailable slots, preserved details, both themes and 320px. Every valid booking submission was intercepted; no appointment or invitation email was created.
+- Live availability returned HTTP 200 without Cal cookies or CDP issues. A separate empty-body POST returned validation HTTP 400; this does not certify a successful booking. Real confirmation and invitation delivery remain unverified.
+- Shared native controls, both dock themes/sizes, fullscreen native/fallback continuity, and mobile slider scroll preservation pass. Old `networkidle` waits were replaced with DOM readiness in two interaction checks. The prototype-only slider frame sampler cannot run against production; the actual homepage forward/reverse interaction test passed instead.
+- Real Google/PostHog SDK and Vercel queue checks pass with analytics writes intercepted. Google's production Attribution Reporting warning was not reproduced in the controlled fixture and is not claimed fixed.
+- Impeccable finish review retained the established design and corrected native input borders to at least 3:1 in both themes. Eight review screenshots cover availability/details at 1440px and 320px. An image detector false positive on a test regex was ignored only for that test file, not treated as an image defect.
+
+Remaining performance work is real: mobile initial rendering, render-blocking shared styles/fonts, and homepage/editorial image LCP still prevent all-100. Privacy currently receives CSS for deferred dock destinations as well as its own surface; splitting that CSS is a candidate, not an implemented or measured gain. No production score or real-user Core Web Vitals pass is implied by these local results.
 
 ## Reproduce
 

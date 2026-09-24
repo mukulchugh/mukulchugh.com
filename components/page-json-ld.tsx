@@ -1,5 +1,5 @@
-import { siteConfig } from "@/lib/data";
 import { absoluteUrl, socialImage } from "@/lib/seo";
+import { siteConfig } from "@/lib/site-config";
 
 export function PageJsonLd({
   path,

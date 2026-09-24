@@ -107,7 +107,7 @@ for (const defaultBooking of [false, true]) {
       defaultBooking ? "Back to contact options" : "Book a short call"
     )
   );
-  assert.equal(markup.includes("Loading available times"), defaultBooking);
+  assert.equal(markup.includes("Checking available times"), defaultBooking);
 }
 
 const homepage = renderToStaticMarkup(

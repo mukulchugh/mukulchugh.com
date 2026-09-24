@@ -151,74 +151,12 @@
   min-height: 0;
   overflow: hidden;
 }
-.calendar {
-  min-width: 0;
-}
-.calendarHelp {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 8px 20px;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 24px;
-  font-size: 12px;
-  line-height: 1.5;
-  border-top: 1px solid hsl(var(--border));
-}
-.calendarHelp p {
-  min-height: 3em;
-  color: hsl(var(--muted-foreground));
-}
-.calendarHelp a {
-  display: inline-flex;
-  gap: 5px;
-  align-items: center;
-  min-height: 44px;
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
-.calendarStage {
-  position: relative;
-  height: clamp(540px, 75svh, 800px);
-  overflow: auto;
-  overscroll-behavior: contain;
-}
-.embed {
-  opacity: 0;
-  transition: opacity 220ms ease;
-}
-.embed[data-ready="true"] {
-  opacity: 1;
-}
-.loading {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  align-items: center;
-  justify-content: center;
-  padding: 28px;
-  text-align: center;
-}
-.loadingMark {
-  display: grid;
-  place-items: center;
-  width: 64px;
-  height: 64px;
-  margin-bottom: 12px;
-  color: #151710;
-  background: #d3ff59;
-  border-radius: 14px;
-  animation: breathe 1600ms ease-in-out infinite alternate;
-}
-.loading > p {
-  font-family: var(--font-syne), sans-serif;
-  font-size: 24px;
-}
-.loading > span:last-child {
+.calendarLoading {
+  min-height: 604px;
+  padding: 28px 24px;
   font-size: 13px;
   color: hsl(var(--muted-foreground));
+  border-top: 1px solid hsl(var(--border));
 }
 .utilities {
   display: flex;
@@ -244,16 +182,6 @@
 .tile a:focus-visible {
   outline: 2px solid hsl(var(--ring));
   outline-offset: 4px;
-}
-@keyframes breathe {
-  to {
-    opacity: 0.55;
-    transform: scale(0.96);
-  }
-}
-.tile[data-booking="false"] .loadingMark,
-.loading[data-delayed="true"] .loadingMark {
-  animation: none;
 }
 @media (hover: hover) {
   .book:hover {
@@ -306,9 +234,6 @@
   .utilities {
     grid-area: 3 / 1;
     padding: 18px 24px;
-  }
-  .calendarHelp {
-    padding-inline: 16px;
   }
 }
 @media (prefers-reduced-motion: reduce) {

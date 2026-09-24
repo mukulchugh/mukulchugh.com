@@ -9,10 +9,9 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Dock } from "@/components/ui/dock";
 import { RouteTransition } from "@/components/ui/route-transition";
 import ActiveSectionContextProvider from "@/context/active-section-context";
-import { siteConfig } from "@/lib/data";
 import { geist, syne } from "@/lib/fonts";
-
 import { staticMetadata } from "@/lib/seo";
+import { siteConfig } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   ...staticMetadata("/"),

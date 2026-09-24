@@ -361,6 +361,63 @@
   }
 }
 
+/* The shared microSpring sampled once: k=480, damping=28, mass=.5.
+   Native feedback keeps static pages from loading the full motion runtime. */
+[data-native-press] {
+  transition-timing-function:
+    ease, ease, ease, ease,
+    linear(
+      0,
+      0.1326,
+      0.3701,
+      0.5885,
+      0.7519,
+      0.8608,
+      0.9274,
+      0.9654,
+      0.9856,
+      0.9954,
+      0.9996,
+      1.0011,
+      1.0013,
+      1.0011,
+      1.0008,
+      1.0005,
+      1.0003,
+      1.0002,
+      1.0001,
+      1,
+      1
+    );
+  transition-duration: 150ms, 150ms, 150ms, 150ms, 400ms;
+}
+[data-native-press]:active:not(:disabled):not([data-disabled]) {
+  scale: 0.97;
+}
+.theme-icons {
+  display: grid;
+}
+.theme-icons > svg {
+  grid-area: 1 / 1;
+  transition:
+    opacity 100ms ease-out,
+    transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.theme-icons[data-dark="false"] .theme-sun,
+.theme-icons[data-dark="true"] .theme-moon {
+  opacity: 0;
+  transform: rotate(-30deg) scale(0.8);
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-native-press],
+  .theme-icons > svg {
+    transition: none;
+  }
+  [data-native-press]:active:not(:disabled):not([data-disabled]) {
+    scale: none;
+  }
+}
+
 /* Server-highlighted code preserves the existing styling hooks and dark
    surfaces in both themes, without shipping the highlighter to browsers. */
 .prose [data-streamdown="code-block"] {

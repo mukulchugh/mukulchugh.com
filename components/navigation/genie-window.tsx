@@ -13,7 +13,7 @@ import {
 } from "@tabler/icons-react";
 import { type ReactNode, useLayoutEffect, useRef, useState } from "react";
 import { PageWindowContext } from "@/components/page-shell";
-import { links } from "@/lib/data";
+import { links } from "@/lib/site-config";
 import dockStyles from "./dock.module.css";
 import styles from "./genie-window.module.css";
 

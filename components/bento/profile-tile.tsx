@@ -6,9 +6,9 @@ import Image from "next/image";
 import { useId, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FluorescentShader } from "@/components/ui/fluorescent-shader";
-import { siteConfig } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
 import { premiumSpring } from "@/lib/motion";
+import { siteConfig } from "@/lib/site-config";
 import { useReducedMotion } from "@/lib/use-reduced-motion";
 import styles from "./profile-tile.module.css";
 

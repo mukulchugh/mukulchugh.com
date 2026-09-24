@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { siteConfig } from "@/lib/data";
+import { siteConfig } from "@/lib/site-config";
 
 export const publicPages = {
   "/": {
