@@ -60,8 +60,9 @@ export function PostCover({
           interactive &&
             "transition-transform duration-500 motion-safe:group-hover:scale-[1.03]"
         )}
+        fetchPriority={priority ? "high" : undefined}
         fill
-        preload={priority}
+        loading={priority ? "eager" : "lazy"}
         sizes={
           hero
             ? "(max-width: 768px) 100vw, 1400px"

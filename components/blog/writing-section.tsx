@@ -84,7 +84,6 @@ export function WritingSection({ posts }: { posts: Post[] }) {
                     fill
                     sizes="(max-width: 900px) 55vw, 25vw"
                     src={image}
-                    unoptimized
                   />
                 </span>
                 <IconArrowUpRight

@@ -10,7 +10,7 @@ export default function Footer() {
       className={`bento-surface ${styles.tile}`}
     >
       <div className={styles.signature}>
-        <Link className={styles.name} href="/">
+        <Link className={styles.name} href="/" prefetch={false}>
           {siteConfig.name}
         </Link>
         <p className={styles.note}>Still building.</p>

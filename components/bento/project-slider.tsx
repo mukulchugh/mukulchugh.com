@@ -287,10 +287,9 @@ export function ProjectSlider({
                   alt=""
                   className={styles.art}
                   fill
-                  loading="eager"
+                  loading="lazy"
                   sizes="(max-width: 767px) 95vw, 65vw"
                   src={project.art}
-                  unoptimized
                 />
               )}
               <div className={styles.copy} data-copy>

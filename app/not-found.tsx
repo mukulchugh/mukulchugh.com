@@ -37,7 +37,6 @@ export default function NotFound() {
               preload
               sizes="(min-width: 768px) 48vw, 95vw"
               src="/design/chrome-ribbon.webp"
-              unoptimized
             />
           </div>
         </div>

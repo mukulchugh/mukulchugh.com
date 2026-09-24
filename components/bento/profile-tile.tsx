@@ -68,7 +68,6 @@ export function HeroArtwork() {
             preload
             sizes="(min-width: 768px) 44vw, 100vw"
             src="/design/chrome-ribbon.webp"
-            unoptimized
           />
         </motion.div>
       </div>

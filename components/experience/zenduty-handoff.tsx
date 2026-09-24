@@ -38,7 +38,6 @@ export function ZendutyHandoff({
             alt=""
             height={40}
             src="/design/brand/zenduty.webp"
-            unoptimized
             width={40}
           />
         </span>
@@ -54,7 +53,6 @@ export function ZendutyHandoff({
               alt=""
               height={32}
               src="/design/brand/xurrent.png"
-              unoptimized
               width={32}
             />
           </span>

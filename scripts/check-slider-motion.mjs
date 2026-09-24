@@ -13,7 +13,7 @@ try {
     for (const direction of [1, -1]) {
       for (const time of [0, 0.45, 1.3]) {
         await page.goto(
-          `http://localhost:3000/prototype/project-slider?t=${time}`,
+          `${process.env.SITE_URL || "http://localhost:3000"}/prototype/project-slider?t=${time}`,
           {
             waitUntil: "networkidle",
           }

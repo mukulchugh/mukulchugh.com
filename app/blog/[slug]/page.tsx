@@ -1,6 +1,6 @@
 import { IconArrowLeft, IconCalendar, IconClock } from "@tabler/icons-react";
 import type { Metadata } from "next";
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArticleBody } from "@/components/blog/article-body";
@@ -213,7 +213,14 @@ export default async function PostPage({ params }: PostPageProps) {
           {post.author && (
             <div className="flex items-center gap-2">
               <Avatar className="h-7 w-7">
-                <AvatarImage alt="" src={post.author.profilePicture} />
+                <AvatarImage
+                  {...getImageProps({
+                    alt: "",
+                    height: 28,
+                    src: post.author.profilePicture,
+                    width: 28,
+                  }).props}
+                />
                 <AvatarFallback>
                   {post.author.name
                     .split(" ")
@@ -247,10 +254,8 @@ export default async function PostPage({ params }: PostPageProps) {
             </div>
           )}
           <div className="min-w-0">
-            {/* Article body — rendered from raw markdown via Streamdown
-                (components/blog/article-body.tsx), which renders real React
-                elements (not a raw HTML string) and provides built-in Shiki
-                syntax highlighting for code blocks. */}
+            {/* Markdown and syntax highlighting render on the server.
+                Only code-copy controls need client-side JavaScript. */}
             {post.content?.markdown && (
               <ReadingProgress>
                 <article
@@ -278,11 +283,7 @@ export default async function PostPage({ params }: PostPageProps) {
                     "prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-none",
                     "prose-code:text-[0.85em] prose-code:font-mono",
                     "prose-code:before:content-none prose-code:after:content-none",
-                    // Code blocks — dark ink slab. Streamdown wraps fenced
-                    // code in its own chrome (language label, copy button)
-                    // rather than a bare <pre>, so it's restyled via the
-                    // [data-streamdown] hooks in globals.css instead of
-                    // prose-pre:* modifiers.
+                    // Preserve the code-block styling hooks with server-rendered highlighting.
                     "[&_[data-streamdown='code-block']]:text-[0.85em] [&_[data-streamdown='code-block']]:leading-relaxed",
                     // Images
                     "prose-img:rounded-none prose-img:shadow-sm",

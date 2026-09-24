@@ -531,9 +531,8 @@ export function Rebound() {
                 alt=""
                 className={styles.rink}
                 draggable={false}
-                fetchPriority="high"
                 height={1000}
-                loading="eager"
+                preload
                 sizes="(max-width: 600px) 90vw, 1100px"
                 src="/design/rebound-v1/rink-tall.png"
                 width={2000}

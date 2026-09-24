@@ -77,7 +77,7 @@ const expected = [
   ["inline-html", "Inline HTML"],
   ["reference", "Reference"],
 ];
-// Concurrent, complete renders exercise Streamdown's code-block Suspense path.
+// Concurrent renders exercise the server highlighter without shared heading state.
 for (const { headings, html } of await Promise.all([
   render(fixture),
   render(fixture),
@@ -87,7 +87,7 @@ for (const { headings, html } of await Promise.all([
     expected
   );
   assert.match(html, /<strong>Bold<\/strong>/);
-  assert.match(html, /<a\b[^>]*href="https:\/\/example.com\/"[^>]*>link<\/a>/);
+  assert.match(html, /<a\b[^>]*href="https:\/\/example.com\/?"[^>]*>link<\/a>/);
   assert.match(html, /data-streamdown="code-block"/);
 }
 

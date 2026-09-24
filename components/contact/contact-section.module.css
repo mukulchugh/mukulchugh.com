@@ -155,8 +155,8 @@
   min-width: 0;
 }
 .calendarHelp {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 8px 20px;
   align-items: center;
   justify-content: space-between;
@@ -166,6 +166,7 @@
   border-top: 1px solid hsl(var(--border));
 }
 .calendarHelp p {
+  min-height: 3em;
   color: hsl(var(--muted-foreground));
 }
 .calendarHelp a {
@@ -178,7 +179,9 @@
 }
 .calendarStage {
   position: relative;
-  min-height: 540px;
+  height: clamp(540px, 75svh, 800px);
+  overflow: auto;
+  overscroll-behavior: contain;
 }
 .embed {
   opacity: 0;

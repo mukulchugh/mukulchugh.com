@@ -1,6 +1,3 @@
-"use client";
-
-import { createCodePlugin } from "@streamdown/code";
 import {
   IconArrowDown,
   IconArrowRight,
@@ -11,8 +8,9 @@ import {
 } from "@tabler/icons-react";
 import Image from "next/image";
 import type { ReactNode } from "react";
-import type { BundledTheme, Components } from "streamdown";
-import { Streamdown } from "streamdown";
+import Markdown, { type Components } from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { bundledLanguages, codeToTokens } from "shiki";
 import type { PostHeading } from "@/lib/blog";
 import { cn } from "@/lib/utils";
 import {
@@ -20,6 +18,7 @@ import {
   SupportingDiagram,
   shortArticleDiagrams,
 } from "./article-diagrams";
+import { CodeCopy } from "./code-copy";
 
 interface ArticleBodyProps {
   className?: string;
@@ -27,19 +26,6 @@ interface ArticleBodyProps {
   markdown: string;
   slug?: string;
 }
-
-// Code surfaces stay dark in either site theme. Use opaque, readable tokens
-// in both slots rather than the former palette's translucent strings.
-const SHIKI_THEME: [BundledTheme, BundledTheme] = [
-  "github-dark-default",
-  "github-dark-default",
-];
-
-// Streamdown resolves the active Shiki theme from `plugins.code.getThemes()`
-// when a code plugin is supplied, ignoring the top-level `shikiTheme` prop
-// in that case — so the theme has to be baked into the plugin itself via
-// `createCodePlugin`, not passed through `shikiTheme` alone.
-const codePlugin = createCodePlugin({ themes: SHIKI_THEME });
 
 function ArticleDiagram({ kind }: { kind: "loop" | "database" }) {
   return (
@@ -238,6 +224,68 @@ export function ArticleBody({
       withDiagram(<ol {...props}>{children}</ol>, node?.position?.start.offset),
     p: ({ children, node, ...props }) =>
       withDiagram(<p {...props}>{children}</p>, node?.position?.start.offset),
+    pre: async ({ node }) => {
+      const code = node?.children[0];
+      if (code?.type !== "element") return null;
+      const source = code.children
+        .map((child) => (child.type === "text" ? child.value : ""))
+        .join("");
+      const language = String(code.properties.className || "").replace(
+        /^language-/,
+        ""
+      );
+      const lang = Object.hasOwn(bundledLanguages, language)
+        ? (language as keyof typeof bundledLanguages)
+        : "text";
+      const { tokens } = await codeToTokens(source.replace(/\n$/, ""), {
+        lang,
+        theme: "github-dark-default",
+      });
+      return (
+        <div
+          className="not-prose my-6 overflow-hidden rounded-[14px] border"
+          data-streamdown="code-block"
+        >
+          <div
+            className="flex items-center justify-between border-b border-white/10 px-4 py-2"
+            data-streamdown="code-block-header"
+          >
+            <span className="text-xs font-medium uppercase tracking-wider">
+              {language || "text"}
+            </span>
+            <div className="flex items-center gap-1">
+              <CodeCopy text={source} />
+              <a
+                className="inline-flex min-h-11 items-center rounded-md px-3 text-xs focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
+                data-streamdown="code-block-download-button"
+                download={`code.${language || "txt"}`}
+                href={`data:text/plain;charset=utf-8,${encodeURIComponent(source)}`}
+              >
+                Download
+              </a>
+            </div>
+          </div>
+          <pre
+            className="overflow-x-auto p-4 text-sm leading-relaxed"
+            data-streamdown="code-block-body"
+          >
+            <code>
+              {tokens.map((line, index) => (
+                // Source lines and tokens have no persistent identity outside this static render.
+                <span key={index}>
+                  {line.map((token, tokenIndex) => (
+                    <span key={tokenIndex} style={{ color: token.color }}>
+                      {token.content}
+                    </span>
+                  ))}
+                  {index < tokens.length - 1 ? "\n" : ""}
+                </span>
+              ))}
+            </code>
+          </pre>
+        </div>
+      );
+    },
     strong: ({ children, node: _node, ...props }) => (
       <strong {...props}>{children}</strong>
     ),
@@ -246,19 +294,17 @@ export function ArticleBody({
   };
 
   const body = (
-    <Streamdown
+    <div
       // Prose can wrap around a diagram; code needs the full reading measure.
       className={cn(
         "flow-root [&>ol]:flow-root [&>ul]:flow-root [&>[data-streamdown='code-block']]:clear-both [&>[data-streamdown='code-block']]:w-auto",
         className
       )}
-      components={components}
-      mode="static"
-      plugins={{ code: codePlugin }}
-      shikiTheme={SHIKI_THEME}
     >
-      {markdown}
-    </Streamdown>
+      <Markdown components={components} remarkPlugins={[remarkGfm]} skipHtml>
+        {markdown}
+      </Markdown>
+    </div>
   );
   const shortDiagram = shortArticleDiagrams[slug ?? ""];
   return shortDiagram &&

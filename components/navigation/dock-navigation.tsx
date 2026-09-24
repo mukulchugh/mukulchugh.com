@@ -9,13 +9,19 @@ import {
   IconMail,
   IconUser,
 } from "@tabler/icons-react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { type ReactNode, useEffect, useId, useRef, useState } from "react";
 import { trackPortfolioEvent } from "@/lib/analytics";
 import { links } from "@/lib/data";
 import styles from "./dock.module.css";
-import { type Destination, GenieWindow, type Launch } from "./genie-window";
+import type { Destination, Launch } from "./genie-window";
+
+const loadWindow = () => import("./genie-window");
+const GenieWindow = dynamic(() =>
+  loadWindow().then((module) => module.GenieWindow)
+);
 
 const surfaces = ["light", "dark", "lime", "moving"] as const;
 const icons = {
@@ -36,6 +42,7 @@ export function DockNavigation({
 }) {
   const pathname = usePathname();
   const [launch, setLaunch] = useState<Launch | null>(null);
+  const [hasOpened, setHasOpened] = useState(false);
   const launchTrigger = launch?.trigger;
   const [selected, setSelected] = useState<Destination>("Contact");
   const stage = useRef<HTMLDivElement>(null);
@@ -333,7 +340,7 @@ export function DockNavigation({
                 className={styles.item}
                 href={item.hash}
                 key={item.name}
-                onClick={(event) => {
+                onClick={async (event) => {
                   if (
                     item.name === "Home" ||
                     event.metaKey ||
@@ -345,7 +352,15 @@ export function DockNavigation({
                     return;
                   event.preventDefault();
                   const trigger = event.currentTarget;
+                  try {
+                    await loadWindow();
+                  } catch {
+                    window.location.assign(item.hash);
+                    return;
+                  }
+                  if (!(trigger.isConnected && tray.current)) return;
                   const rect = trigger.getBoundingClientRect();
+                  setHasOpened(true);
                   setSelected(item.name);
                   if (!study)
                     trackPortfolioEvent("dock_window_open", {
@@ -366,6 +381,10 @@ export function DockNavigation({
                       tray.current!.offsetHeight / 2,
                   });
                 }}
+                onPointerEnter={() => {
+                  if (item.name !== "Home")
+                    void loadWindow().catch(() => undefined);
+                }}
                 prefetch={false}
               >
                 <Icon aria-hidden="true" size={21} stroke={1.65} />
@@ -382,21 +401,23 @@ export function DockNavigation({
           in each window opens the dedicated page.
         </p>
       )}
-      <GenieWindow
-        launch={launch}
-        onDismiss={() => setLaunch(null)}
-        onSelect={(name) => {
-          setSelected(name);
-          const item = links.find((link) => link.name === name);
-          if (!study && item)
-            trackPortfolioEvent("dock_window_open", {
-              destination: item.hash,
-              surface: "window-tab",
-            });
-        }}
-        pages={pages}
-        selected={selected}
-      />
+      {hasOpened && (
+        <GenieWindow
+          launch={launch}
+          onDismiss={() => setLaunch(null)}
+          onSelect={(name) => {
+            setSelected(name);
+            const item = links.find((link) => link.name === name);
+            if (!study && item)
+              trackPortfolioEvent("dock_window_open", {
+                destination: item.hash,
+                surface: "window-tab",
+              });
+          }}
+          pages={pages}
+          selected={selected}
+        />
+      )}
       <svg aria-hidden="true" className={styles.definitions}>
         <defs>
           <filter

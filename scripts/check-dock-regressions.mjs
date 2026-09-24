@@ -16,7 +16,7 @@ try {
       );
       const errors = [];
       page.on("pageerror", (error) => errors.push(error.message));
-      await page.goto("http://localhost:3000");
+      await page.goto(process.env.SITE_URL || "http://localhost:3000");
       const dock = page.getByRole("navigation", {
         exact: true,
         name: "Primary",
@@ -54,6 +54,7 @@ try {
       const scroller = page
         .locator('[data-ready="true"] [class*="content"]')
         .first();
+      await scroller.locator('a[href^="/blog/"]').first().waitFor();
       await scroller.evaluate((element) => {
         element.scrollTop = 900;
       });

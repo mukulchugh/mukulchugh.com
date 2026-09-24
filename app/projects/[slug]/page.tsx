@@ -474,7 +474,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                         fill
                         sizes="(max-width: 767px) 52vw, 18vw"
                         src="/design/projects/quivly-skills-v2.webp"
-                        unoptimized
                       />
                     </div>
                   )}

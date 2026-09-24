@@ -36,6 +36,7 @@ const nextConfig = {
     formats: ["image/avif", "image/webp"],
     imageSizes: [32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 60 * 60 * 24 * 365,
+    qualities: [75, 90],
     remotePatterns: [
       {
         hostname: "ik.imagekit.io",
@@ -109,8 +110,7 @@ const nextConfig = {
     };
   },
   skipTrailingSlashRedirect: true,
-  // Streamdown's code-highlighting plugin pulls in shiki, which ships ESM
-  // that Next's default external-package handling can't resolve in RSC.
+  // Highlight static articles on the server, without a browser highlighter.
   transpilePackages: ["shiki"],
 };
 

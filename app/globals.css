@@ -361,14 +361,8 @@
   }
 }
 
-/* ── Blog article code blocks (Streamdown + Shiki) ──────────────────
-   Streamdown renders fenced code as its own chrome (header, floating
-   copy/download buttons, body) instead of a bare <pre>, using the site's
-   theme tokens (bg-sidebar/bg-background) by default — which follow the
-   light/dark toggle. Code blocks here are deliberately *always* a dark ink
-   slab, matching the pre-Streamdown design, regardless of site theme, so
-   they're pinned to fixed dark colors via Streamdown's data-attribute
-   hooks rather than the theme-following prose-pre:* modifiers. */
+/* Server-highlighted code preserves the existing styling hooks and dark
+   surfaces in both themes, without shipping the highlighter to browsers. */
 .prose [data-streamdown="code-block"] {
   background-color: #111113;
   border-color: rgb(255 255 255 / 0.1);

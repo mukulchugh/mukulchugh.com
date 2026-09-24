@@ -24,7 +24,9 @@ try {
         Element.prototype.requestFullscreen = () =>
           Promise.reject(new Error("Fullscreen unavailable"));
       });
-    await page.goto("http://localhost:3000", { waitUntil: "networkidle" });
+    await page.goto(process.env.SITE_URL || "http://localhost:3000", {
+      waitUntil: "networkidle",
+    });
     const game = page.getByRole("region", { name: "Rebound air hockey" });
     await game.getByRole("button", { exact: true, name: "Play" }).click();
     await page.waitForTimeout(200);

@@ -16,6 +16,7 @@ const routes = [
   "/blog",
   "/experience",
   "/contact",
+  "/privacy",
   ...details,
   "/missing-design-check",
 ];
@@ -47,9 +48,11 @@ try {
       await page
         .getByRole("navigation", { exact: true, name: "Primary" })
         .waitFor();
-      await page
-        .getByRole("region", { name: "Start a conversation" })
-        .waitFor({ state: "attached" });
+      if (route !== "/privacy") {
+        await page
+          .getByRole("region", { name: "Start a conversation" })
+          .waitFor({ state: "attached" });
+      }
       assert.equal(
         await page.locator(".bento-brand-bar:visible").count(),
         1,
@@ -59,7 +62,7 @@ try {
         await page
           .getByRole("region", { name: "Start a conversation" })
           .count(),
-        1,
+        route === "/privacy" ? 0 : 1,
         `${route}: CTA count`
       );
       assert.equal(

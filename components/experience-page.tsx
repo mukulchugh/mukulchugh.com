@@ -47,7 +47,7 @@ export default function ExperiencePage() {
                     className="mb-5 size-12 rounded-lg bg-white p-1.5 object-contain"
                     height={48}
                     src={experience.icon}
-                    unoptimized
+                    unoptimized={experience.icon.endsWith(".ico")}
                     width={48}
                   />
                   <h2 className="text-xl font-semibold leading-snug tracking-tight sm:text-2xl">

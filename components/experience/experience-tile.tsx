@@ -449,13 +449,6 @@ export function ExperienceTile() {
                     handoffActive &&
                     !handoffComplete
                   }
-                  aria-label={
-                    item.company === "Zenduty"
-                      ? handoffComplete
-                        ? "Explore IMR by Xurrent experience"
-                        : "See Zenduty’s next chapter"
-                      : `Explore ${item.company} experience`
-                  }
                   className={styles.role}
                   data-selected={index === selected}
                   key={item.company}
@@ -483,7 +476,7 @@ export function ExperienceTile() {
                           alt=""
                           height={40}
                           src={item.logo}
-                          unoptimized
+                          unoptimized={item.logo.endsWith(".ico")}
                           width={40}
                         />
                       </span>
@@ -522,7 +515,7 @@ export function ExperienceTile() {
                           alt=""
                           height={40}
                           src={item.logo}
-                          unoptimized
+                          unoptimized={item.logo.endsWith(".ico")}
                           width={40}
                         />
                       </motion.span>
@@ -537,7 +530,6 @@ export function ExperienceTile() {
                         transition={transition}
                       >
                         <DialogTrigger
-                          aria-label={`Explore ${item.company} experience`}
                           className={`${styles.role} ${styles.earlierRole}`}
                           data-selected={selected === index + roles.length}
                           onClick={() => {
@@ -654,7 +646,7 @@ export function ExperienceTile() {
                           alt=""
                           height={32}
                           src={item.logo}
-                          unoptimized
+                          unoptimized={item.logo.endsWith(".ico")}
                           width={32}
                         />
                       </motion.span>
@@ -682,7 +674,9 @@ export function ExperienceTile() {
                       ? "/design/brand/xurrent.png"
                       : role.logo
                   }
-                  unoptimized
+                  unoptimized={
+                    role.company !== "Zenduty" && role.logo.endsWith(".ico")
+                  }
                   width={48}
                 />
               </span>
