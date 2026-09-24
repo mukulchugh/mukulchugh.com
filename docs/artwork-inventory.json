@@ -1,5 +1,85 @@
 [
   {
+    "file": "public/design/projects/cryptomedia-cryptocurrency-tracker-reference.webp",
+    "bytes": 89714,
+    "sha256": "1d6b6fdaf5eaafac475d3ba4ad3076ec79e7f254b8166088a08197b99a1f1e59",
+    "packSource": "delivery/projects/cryptomedia-cryptocurrency-tracker-reference.webp",
+    "relationship": "byte-identical",
+    "derivedFrom": "public/design/projects/cryptomedia-cryptocurrency-tracker-reference.png",
+    "sourceSha256": "370ca85dd28da7e2e4b4a8c58e9b01cb52ec5b2e247109e7cdc3e55837f99fcc",
+    "sourcePack": "assets/projects/cryptomedia-cryptocurrency-tracker-reference.png",
+    "width": 1200,
+    "height": 800,
+    "derivation": "sharp 0.35.3: resize({ width: 1200, withoutEnlargement: true }).webp({ quality: 90 }); lossy delivery derivative, original PNG preserved"
+  },
+  {
+    "file": "public/design/chrome-ribbon.webp",
+    "bytes": 63640,
+    "sha256": "05027a745f0b8e37d35ec6d94908f7ac5348b03e52e6c975d742d51116a5eefc",
+    "packSource": "delivery/chrome-ribbon.webp",
+    "relationship": "byte-identical",
+    "derivedFrom": "public/design/chrome-ribbon.png",
+    "sourceSha256": "64b9fb58554e45638eed4065b24e88a1006747da0b674bfd2ec39395c396caf0",
+    "sourcePack": "assets/chrome-ribbon-v2.png",
+    "width": 1200,
+    "height": 734,
+    "derivation": "sharp 0.35.3: resize({ width: 1200, withoutEnlargement: true }).webp({ quality: 90 }); lossy delivery derivative, original PNG preserved"
+  },
+  {
+    "file": "public/design/location-map.webp",
+    "bytes": 92558,
+    "sha256": "88406471bc35f252b6099c1a1967f9b7de66938194ffaba1e5781861c2e12032",
+    "packSource": "delivery/location-map.webp",
+    "relationship": "byte-identical",
+    "derivedFrom": "public/design/location-map.png",
+    "sourceSha256": "d5f44e971c71c9a75575a3aaf623b81af6bb952a90b1b50182283ce48ff14d02",
+    "sourcePack": "assets/location-map.png",
+    "sourcePackSha256": "3047c3d5378f67e4240a12d693698728eaf529b6cad72b6263541c3ea3684a76",
+    "sourcePackRelationship": "PNG image-data chunks identical; metadata differs",
+    "width": 1200,
+    "height": 800,
+    "derivation": "sharp 0.35.3: resize({ width: 1200, withoutEnlargement: true }).webp({ quality: 90 }); lossy delivery derivative, original PNG preserved"
+  },
+  {
+    "file": "public/design/agent-loop-home-reference.webp",
+    "bytes": 115474,
+    "sha256": "5adce3c5dfc08e21a54c3a24bc4a6ec6332c9796d8789f38594af2fedfaf2a49",
+    "packSource": "delivery/agent-loop-home-reference.webp",
+    "relationship": "byte-identical",
+    "derivedFrom": "public/design/agent-loop-home-reference.png",
+    "sourceSha256": "7a5823652dbece4dbd034cd808a496cd9b759decf1551d82320eb668f0a2e160",
+    "sourcePack": "assets/agent-loop-home-reference.png",
+    "width": 1200,
+    "height": 800,
+    "derivation": "sharp 0.35.3: resize({ width: 1200, withoutEnlargement: true }).webp({ quality: 90 }); lossy delivery derivative, original PNG preserved"
+  },
+  {
+    "file": "public/design/database-layers-home-reference.webp",
+    "bytes": 26286,
+    "sha256": "72e11f3e881cdc12ea3d461e6a0c2b723712bc91f85cc3b49ec55f80df6ec72e",
+    "packSource": "delivery/database-layers-home-reference.webp",
+    "relationship": "byte-identical",
+    "derivedFrom": "public/design/database-layers-home-reference.png",
+    "sourceSha256": "c4d901b1bcc17084a997005dd3bda7251310db0751dea8c771fb0af9bfdd8ed1",
+    "sourcePack": "assets/database-layers-home-reference.png",
+    "width": 1200,
+    "height": 800,
+    "derivation": "sharp 0.35.3: resize({ width: 1200, withoutEnlargement: true }).webp({ quality: 90 }); lossy delivery derivative, original PNG preserved"
+  },
+  {
+    "file": "public/design/projects/quivly-skills-v2.webp",
+    "bytes": 20864,
+    "sha256": "c1af3721495a7453fd12c1c139fde48ad256df85d8fec3b2d4fe68510926462a",
+    "packSource": "delivery/projects/quivly-skills-v2.webp",
+    "relationship": "byte-identical",
+    "derivedFrom": "public/design/projects/quivly-skills-v2.png",
+    "sourceSha256": "f299885890c6a04834a288ddf071dc94458fa157a84034a5a614589ed14c4e8f",
+    "sourcePack": "assets/quivly-skills-art-v2.png",
+    "width": 1200,
+    "height": 694,
+    "derivation": "sharp 0.35.3: resize({ width: 1200, withoutEnlargement: true }).webp({ quality: 90 }); lossy delivery derivative, original PNG preserved"
+  },
+  {
     "file": "public/design/agent-loop-home-reference.png",
     "bytes": 2042565,
     "sha256": "7a5823652dbece4dbd034cd808a496cd9b759decf1551d82320eb668f0a2e160",
@@ -582,5 +662,15 @@
     "sha256": "484586a7b4db20bcb76f9f77ab1fc3cc3ee7e51904fc77e9857123c38c4dd3bc",
     "packSource": "assets/writing-featured-reference.png",
     "relationship": "byte-identical"
+  },
+  {
+    "file": "public/design/articles/agent-working-memory-trust-boundary-support.png",
+    "width": 1448,
+    "height": 1086,
+    "bytes": 2177692,
+    "sha256": "9c0d882abbcaec9acade3ced82509843034f63eb7d7457b8614d260e547c75db",
+    "packSource": "assets/articles/agent-working-memory-trust-boundary-support.png",
+    "relationship": "byte-identical",
+    "promptRecord": "Built-in image_gen provenance\nReference: pages/articles/agent-working-memory-injection-hygiene.png\nPurpose: lower introduction supporting illustration, not the hero.\nNative dimensions: 1448x1086 (4:3), no resizing or upscaling.\nBytes: 2177692\nSHA-256: 9c0d882abbcaec9acade3ced82509843034f63eb7d7457b8614d260e547c75db\nRelationship: faithful supporting-composition reconstruction, not exact extracted pixels.\nExact prompt:\nUse case: precise-object-edit. Create a standalone high-resolution landscape 4:3 asset faithfully recreating ONLY the supporting illustration to the right of the introduction in this reference, below the main hero (glass scratchpad panels beside vertical lime trust boundary). Do not recreate the full webpage or hero. Match this exact supporting illustration composition: dark charcoal studio plinth/backdrop, five overlapping upright smoke-glass rectangular cards staggered upward behind the front card, fine silver borders, one luminous electric-chartreuse vertical boundary line near right edge, tiny chartreuse arrows pointing toward boundary, brushed glass material realistic light/reflections. Cards labeled exactly PLAN, THOUGHTS, TOOL CALLS, OBSERVATIONS, NOTES (UNTRUSTED), one label per card, white small monospace. Right of boundary exact white microcopy SANITIZE / SEPARATE / BE EXPLICIT in three lines. No other text, logos, page UI, navigation, author photo, article title or watermark. Frame tightly around this artwork with cards and boundary fully visible. This is an article supporting illustration, not a cover. Keep reference's restrained monochrome with lime accent, realistic 3D materials, clean editorial finish.\n\nVisual inspection: five labeled smoke-glass cards, lime trust boundary and three-line sanitation guidance are present. Generated card spacing, lighting and boundary thickness are not pixel-identical to the reference.\n"
   }
 ]

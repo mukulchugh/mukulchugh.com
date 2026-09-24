@@ -20,6 +20,7 @@ import {
 } from "@/lib/blog";
 import { accentColorForTags } from "@/lib/blog-topic";
 import { siteConfig } from "@/lib/data";
+import { pageMetadata } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
 export const revalidate = 3600;
@@ -45,27 +46,13 @@ export async function generateMetadata({
     notFound();
   }
 
-  return {
-    alternates: {
-      canonical: `/blog/${slug}`,
-    },
-    description: post.seo?.description || post.brief,
-    openGraph: {
-      description: post.brief,
-      images: [getPostCoverSrc(post)],
-      publishedTime: post.publishedAt,
-      title: post.title,
-      type: "article",
-      url: `${siteConfig.siteUrl}/blog/${slug}`,
-    },
-    title: `${post.seo?.title || post.title} | ${siteConfig.name}`,
-    twitter: {
-      card: "summary_large_image",
-      description: post.brief,
-      images: [getPostCoverSrc(post)],
-      title: post.title,
-    },
-  };
+  return pageMetadata(
+    `/blog/${slug}`,
+    post.seo?.title || post.title,
+    post.seo?.description || post.brief,
+    post.publishedAt,
+    post.updatedAt
+  );
 }
 
 export default async function PostPage({ params }: PostPageProps) {
@@ -93,10 +80,14 @@ export default async function PostPage({ params }: PostPageProps) {
     articleSection: post.tags[0]?.name || "Technology",
     author: {
       "@type": "Person",
-      image: post.author?.profilePicture || siteConfig.images.profileImage,
+      image: new URL(
+        post.author?.profilePicture || siteConfig.images.profileImage,
+        siteConfig.siteUrl
+      ).href,
       name: post.author?.name || siteConfig.name,
+      url: `${siteConfig.siteUrl}/about`,
     },
-    dateModified: post.publishedAt,
+    ...(post.updatedAt ? { dateModified: post.updatedAt } : {}),
     datePublished: post.publishedAt,
     description: post.brief,
     headline: post.title,
@@ -107,11 +98,8 @@ export default async function PostPage({ params }: PostPageProps) {
       "@type": "WebPage",
     },
     publisher: {
-      "@type": "Organization",
-      logo: {
-        "@type": "ImageObject",
-        url: siteConfig.images.profileImage,
-      },
+      "@id": `${siteConfig.siteUrl}/#person`,
+      "@type": "Person",
       name: siteConfig.name,
     },
     timeRequired: `PT${post.readTimeInMinutes}M`,

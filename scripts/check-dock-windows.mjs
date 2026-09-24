@@ -58,7 +58,7 @@ try {
           await page.getByRole("list", { name: "Work history" }).waitFor();
         if (name === "Writing")
           await page
-            .getByRole("heading", { name: "Notes from the work." })
+            .getByRole("button", { exact: true, name: "All" })
             .waitFor();
         assert.equal(
           await panel.evaluate(
@@ -85,9 +85,9 @@ try {
             Math.abs(rect.width - viewport.clientWidth) < 2
           );
         }),
-        "Contact must fill the window content area before booking"
+        "Contact must fill the window content area"
       );
-      await dialog.getByRole("button", { name: "Book a short call" }).click();
+      assert.equal(await contact.getAttribute("data-booking"), "true");
       await dialog
         .getByRole("button", { name: "Back to contact options" })
         .focus();

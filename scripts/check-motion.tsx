@@ -1,9 +1,12 @@
 import assert from "node:assert/strict";
+import { existsSync } from "node:fs";
 import { renderToStaticMarkup } from "react-dom/server";
 import About from "../components/about";
 import { CTATile } from "../components/bento/cta-tile";
 import { HeroArtwork } from "../components/bento/profile-tile";
+import { ContactSection } from "../components/contact/contact-section";
 import Experience from "../components/experience";
+import Intro from "../components/intro";
 import Projects from "../components/projects";
 import { Button } from "../components/ui/button";
 import { Reveal, RevealGroup, RevealItem } from "../components/ui/reveal";
@@ -67,7 +70,7 @@ for (const appearance of ["dark", "light"] as const) {
     assert.match(contact, /aria-label="Book a call"/);
     assert.match(contact, /hover:bg-\[#bce92a\] hover:text-zinc-950/);
     assert.match(contact, /aria-label="Copy email address"/);
-    assert.match(contact, /aria-label="View resume"/);
+    assert.doesNotMatch(contact, /resume|résumé|MukulChughCV/i);
     assert.match(contact, /href="mailto:contact@mukulchugh.com"/);
     assert.equal(
       contact.includes("contact-orbit-v2.png"),
@@ -82,6 +85,30 @@ for (const appearance of ["dark", "light"] as const) {
   }
 }
 console.log("Contact appearance and compact-mode server contracts passed.");
+
+for (const Component of [ContactSection, Intro]) {
+  const markup = renderToStaticMarkup(
+    <ActiveSectionContextProvider>
+      <Component />
+    </ActiveSectionContextProvider>
+  );
+  assert.doesNotMatch(markup, /resume|résumé|MukulChughCV/i);
+}
+assert.equal(existsSync("public/MukulChughCV.pdf"), false);
+for (const defaultBooking of [false, true]) {
+  const markup = renderToStaticMarkup(
+    <ActiveSectionContextProvider>
+      <ContactSection defaultBooking={defaultBooking} />
+    </ActiveSectionContextProvider>
+  );
+  assert.ok(markup.includes(`data-booking="${defaultBooking}"`));
+  assert.ok(
+    markup.includes(
+      defaultBooking ? "Back to contact options" : "Book a short call"
+    )
+  );
+  assert.equal(markup.includes("Loading available times"), defaultBooking);
+}
 
 const homepage = renderToStaticMarkup(
   <ActiveSectionContextProvider>

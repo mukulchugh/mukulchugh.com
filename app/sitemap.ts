@@ -1,41 +1,13 @@
 import type { MetadataRoute } from "next";
-import { getAllPosts } from "@/lib/blog";
-import { siteConfig } from "@/lib/data";
+import { publicDocuments } from "@/lib/public-content";
+import { absoluteUrl, socialImage } from "@/lib/seo";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = siteConfig.siteUrl;
-
-  const staticRoutes: MetadataRoute.Sitemap = [
-    ...["/about", "/projects", "/contact"].map((route) => ({
-      changeFrequency: "monthly" as const,
-      priority: 0.8,
-      url: `${baseUrl}${route}`,
-    })),
-    {
-      changeFrequency: "monthly",
-      priority: 0.8,
-      url: `${baseUrl}/experience`,
-    },
-    {
-      changeFrequency: "daily",
-      lastModified: new Date(),
-      priority: 1.0,
-      url: baseUrl,
-    },
-    {
-      changeFrequency: "daily",
-      lastModified: new Date(),
-      priority: 0.9,
-      url: `${baseUrl}/blog`,
-    },
-  ];
-
-  const blogRoutes: MetadataRoute.Sitemap = getAllPosts().map((post) => ({
-    changeFrequency: "weekly" as const,
-    lastModified: new Date(post.publishedAt),
-    priority: 0.8,
-    url: `${baseUrl}/blog/${post.slug}`,
+  return publicDocuments().map((doc) => ({
+    url: absoluteUrl(doc.path),
+    ...(doc.updatedAt || doc.publishedAt
+      ? { lastModified: doc.updatedAt || doc.publishedAt }
+      : {}),
+    images: [socialImage(doc.path)],
   }));
-
-  return [...staticRoutes, ...blogRoutes];
 }

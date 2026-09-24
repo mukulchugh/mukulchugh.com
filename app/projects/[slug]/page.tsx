@@ -34,9 +34,9 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { PageJsonLd } from "@/components/page-json-ld";
 import { PageShell } from "@/components/page-shell";
 import { buttonVariants } from "@/components/ui/button";
-import { siteConfig } from "@/lib/data";
 import { projectDetails } from "@/lib/project-details";
 import {
   getAllProjectSlugs,
@@ -46,6 +46,7 @@ import {
   projectLinkLabel,
   slugifyProjectTitle,
 } from "@/lib/projects";
+import { pageMetadata } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 import {
   HealthPrinciple,
@@ -58,47 +59,11 @@ interface ProjectPageProps {
   params: Promise<{ slug: string }>;
 }
 
-// Editorial headings describe the existing public record, not outcomes or metrics.
-const overviewTitles: Record<string, string> = {
-  altr: "Keep the intent with the work.",
-  brik: "One codebase. Native surfaces.",
-  "cryptomedia-cryptocurrency-tracker": "Markets and your watchlist.",
-  ferry: "Your Watch. Your Mac microphone.",
-  heroapp: "From concept to mobile app.",
-  "moshi-health": "Reflection over time.",
-  "moshi-personal-agent-fleet": "Memory, research, and reflection.",
-  openkvm: "One keyboard. Two Macs.",
-  pulse: "One gateway across the team’s tools.",
-  "quivly-agents": "Customer context to team workflows.",
-  "quivly-design-language": "A shared UI foundation.",
-  "quivly-platform": "Product and the systems behind it.",
-  "quivly-skills": "Agent skills for customer success.",
-  "rca-tool-grafana-plugin": "Investigating incidents in Grafana.",
-  tethr: "One plan. Built together.",
-  "zendash-global-admin-dashboard": "One dashboard. Many teams.",
-  zepeats: "From browsing to delivery.",
-};
-
-const overviewBodies: Record<string, string> = {
-  altr: "Requests lose context as they move between planning, implementation, and review. Altr is designed to preserve that trail: capture the original signal, draft acceptance criteria, work in isolated Git worktrees, and review changes against the initial goal. Its early-access direction keeps human approval in the loop rather than treating generated code as finished work.",
-  tethr:
-    "People contribute intent and constraints; connected agents bring back what implementation reveals. In the private alpha, an authorized agent proposes a section update against the version it read. A person reviews the source, rationale, and exact diff before accepting or rejecting it. Accepted sections form an immutable named release. Tethr runs no LLM of its own: it holds the shared plan and the record of who approved each change. Reusable skills and CLI hooks are planned, not current alpha features.",
-};
-
-const focusPanels: Record<string, { title: string; body: string }> = {
-  "cryptomedia-cryptocurrency-tracker": {
-    body: "Live market data from CoinGecko. A personal watchlist backed by Firebase.",
-    title: "Follow your watchlist.",
-  },
-  "moshi-personal-agent-fleet": {
-    body: "Memory. Research. Reflection. A private workspace built for my own use.",
-    title: "A workspace for reflection.",
-  },
-  tethr: {
-    body: "A proposal is not the current plan. A named person reviews the exact change before it becomes part of a sealed release.",
-    title: "Propose. Review. Release.",
-  },
-};
+import {
+  focusPanels,
+  overviewBodies,
+  overviewTitles,
+} from "@/lib/project-editorial";
 
 const technologyIcons: Record<string, typeof IconCode> = {
   "Agent Skills": IconStack2,
@@ -182,18 +147,8 @@ export async function generateMetadata({
 }: ProjectPageProps): Promise<Metadata> {
   const { slug } = await params;
   const project = getProjectBySlug(slug);
-  if (!project) return { title: "Project Not Found" };
-  return {
-    alternates: { canonical: `/projects/${slug}` },
-    description: project.description,
-    openGraph: {
-      description: project.description,
-      title: project.title,
-      type: "website",
-      url: `${siteConfig.siteUrl}/projects/${slug}`,
-    },
-    title: project.title,
-  };
+  if (!project) notFound();
+  return pageMetadata(`/projects/${slug}`, project.title, project.description);
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
@@ -247,6 +202,12 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   return (
     <PageShell>
       <main>
+        <PageJsonLd
+          description={project.description}
+          path={`/projects/${slug}`}
+          title={project.title}
+          type="CreativeWork"
+        />
         <div className="flex flex-col gap-3">
           <div
             className={cn(

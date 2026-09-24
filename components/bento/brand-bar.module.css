@@ -1,0 +1,123 @@
+.tile {
+  --identity-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  min-height: 76px;
+  padding: 12px 24px;
+  margin-block: 16px;
+  border: 1px solid hsl(var(--border));
+  border-radius: 14px;
+}
+
+.identity {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex: 0 0 44px;
+  align-items: center;
+  min-height: 44px;
+  border-radius: 6px;
+}
+
+.identity:focus-visible {
+  outline: 2px solid hsl(var(--foreground));
+  outline-offset: 4px;
+}
+
+.name {
+  position: absolute;
+  left: 100%;
+  width: 144px;
+  padding-left: 12px;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition:
+    opacity 120ms ease-out,
+    transform 280ms var(--identity-ease);
+}
+
+.tagline {
+  min-width: 0;
+  padding-left: 20px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: hsl(var(--muted-foreground));
+  border-left: 1px solid hsl(var(--border));
+  transition:
+    opacity 180ms ease-out 100ms,
+    transform 360ms var(--identity-ease) 60ms;
+}
+
+.theme {
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.identity:focus-visible .name {
+  pointer-events: auto;
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 220ms ease-out 90ms,
+    transform 420ms var(--identity-ease) 40ms;
+}
+.identity:focus-visible ~ .tagline {
+  transform: translateX(144px);
+  transition:
+    opacity 100ms ease-out,
+    transform 440ms var(--identity-ease);
+}
+@media (hover: hover) and (pointer: fine) {
+  .identity:hover .name {
+    pointer-events: auto;
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 220ms ease-out 90ms,
+      transform 420ms var(--identity-ease) 40ms;
+  }
+  .identity:hover ~ .tagline {
+    transform: translateX(144px);
+    transition:
+      opacity 100ms ease-out,
+      transform 440ms var(--identity-ease);
+  }
+}
+
+@media (max-width: 900px) {
+  .tile {
+    gap: 12px;
+    min-height: 72px;
+    padding: 12px;
+  }
+  .tagline {
+    padding-left: 12px;
+    font-size: 11px;
+    text-wrap: balance;
+  }
+  .identity:focus-visible ~ .tagline {
+    opacity: 0;
+    transform: none;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .identity:hover ~ .tagline {
+      opacity: 0;
+      transform: none;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .name,
+  .tagline,
+  .identity:is(:hover, :focus-visible) .name,
+  .identity:is(:hover, :focus-visible) ~ .tagline {
+    transition: none;
+  }
+}

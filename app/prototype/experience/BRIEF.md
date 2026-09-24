@@ -1,0 +1,39 @@
+# Experience study
+
+Mode: Experience. Approved tile promoted to the homepage. Shared implementation lives in `components/experience/experience-tile.tsx`, `experience-tile.module.css`, and `zenduty-handoff.tsx`; the development-only prototype renders the same module. Homepage section anchoring and active-navigation tracking are retained by `components/experience.tsx`. HeroApp is labeled “Co-founder & CTO” per owner correction. Historical prototype notes below describe earlier iterations.
+
+## Latest acquisition interaction
+
+Latest refinement supersedes the simple handoff below: a 1.2s CSS transform/opacity sequence connects the stacked logos with a thread, takes Xurrent diagonally behind Zenduty, displaces Zenduty downward and settles Xurrent in its place. No visible action-cue text remains. The complete identity/status line transitions together to keep the slash adjacent to the company name. The tile displays Exited; the modal retains the full role history. Both themes and 320/1440 widths, reduced motion and second-click dialog behavior are checked by `.scratch/check-zenduty-handoff.mjs`. A Chromium performance sample recorded zero layouts during the middle 650ms of the orbit; this is not a device FPS certification.
+
+Zenduty uses the approved Handoff concept. First click transitions the acquisition marker into the main logo and changes the name to IMR by Xurrent in 720ms; it never opens the dialog automatically. Clicks during motion are ignored. The next click opens the individual modal, which preserves “Formerly Zenduty” and historical role/dates. Scrolling does not trigger or reverse this handoff. Reduced motion settles immediately, retaining the two-click contract. See ACQUISITION-CONCEPTS.md for the selected workflow; earlier scroll-trigger concept proposals are superseded.
+
+## Approved direction
+
+Concept B contribution-led tile, Concept A expanded modal, and the title “Different teams. A wider perspective.” Light and dark concepts approved as the build direction. The right panel in the concept is a modal, not an adjacent homepage column. Existing Syne/Geist typography, real thin borders, 14px corners, restrained lime, and shared Button/Dialog remain authoritative.
+
+## Content
+
+Quivly, Swiggy and Zenduty have individual summaries and three contribution areas each. Earlier work includes HeroApp, Digital Moshai, Instahomes, Guby Rogers and the Microsoft student community, without disputed dates or unsupported metrics. Content draws on reviewed portfolio data and research dossier through c2df13a. No private customer examples, detailed internal incidents, or sole-ownership claims are published. Swiggy links to its existing article; other roles link to related project pages.
+
+## Behavior and motion
+
+Company logos anchor the main rows and modal headings. Zenduty connects graphically to Xurrent using its official mark, rather than presenting overlapping employment as two unrelated jobs. Owner clarification: the four-month acquisition chapter spans January to May 2025, with internal discussions in January and public announcement in February; Zenduty employment continued through May before Swiggy. Earlier work previews all five original logos in a single row; expanded text keeps names and contribution context accessible. These remain isolated prototype changes.
+
+Entire role rows are shared Base UI dialog triggers. Previous/next wrap between all eight company-specific experiences; the close control and Escape restore focus to the originating trigger. The modal scroll area resets on role navigation. Each earlier company opens its own content, not a grouped modal. Unverified dates and metrics are omitted. The full Experience link is in the same header row as the tile title, top-right; on narrow tiles it is an accessible arrow control. Modal title and previous/next/close controls likewise share a fixed header row.
+
+The approved unfolding concept replaces native details: five compact logo badges morph into five contribution-led rows in the same 480px scroll area. Motion layout projection and shared logo IDs preserve continuity, with a 45ms stagger and the existing restrained spring. Text fades in independently so it is not stretched by parent transforms. Wheel pressure at the bottom accumulates to 90px within a 350ms window; an upward touch gesture over 65px at that boundary also expands. No wheel/touch default is cancelled and no global scroll listener is used. The Earlier work button and each badge provide explicit click/keyboard alternatives. Expansion persists until explicitly collapsed. Reduced motion makes the layout change immediate. No added dependency or perpetual animation loop.
+
+Animation Systems and Impeccable informed a restrained sequence: shared dialog entrance, 380ms directional 12px/4px chapter reveal with 45ms detail stagger, 200ms arrow feedback, 160ms control press, and a 260ms earlier-work reveal. Only transforms and opacity animate in the authored reveals. Reduced motion disables these and the hover shifts. No new libraries or continuous animation loops.
+
+## Verification
+
+Theme refinement stays local to this tile and its modal: explicit light/dark selection and hover fills, olive-tinted selected metadata, theme-aware accent focus outlines and text selection, readable scrollbars and opaque footer surface. Original logo colors and white backings remain unchanged. `.scratch/check-experience-themes.mjs` checks live theme switching, selected text and modal-description contrast (at least 4.5:1), runtime errors and overflow at 1440/320, with tile/modal captures. Layout and motion are unchanged in this pass.
+
+Scroll-back behavior: returning upward to the featured/earlier boundary folds the earlier rows back into the footer stack with a reverse stagger. Upward browsing deeper in the earlier list does not collapse it. Wheel and downward touch gestures at the return boundary also reverse the transition when no native scroll movement remains. Plus rotation uses a damped spring, with immediate reduced-motion state. Focus moves to More work if a collapsing card contained it. `.scratch/check-experience-reverse.mjs` checks desktop/mobile scrolling, boundary wheel/touch reversal and reduced motion.
+
+Latest approved refinement: More work is anchored below the scroll area, not a heading or row inside it. Its compact logo stack sits immediately to the title's right, with the plus at the far right. Shared card/logo layout IDs move those badges into the continuous list, using the same row design as the featured roles. No additional list heading, panel or mode is introduced. The footer remains fixed and displays a quiet count after expansion. Scroll pressure directly rotates the plus; touch cancellation resets incomplete rotation. The list has a fixed 480px height so expansion does not resize the outer tile. Changes are limited to this prototype and its checks.
+
+`.scratch/check-experience-unfold.mjs` supersedes the earlier native-disclosure and badge checks. It passed boundary thresholds, wheel, synthetic touch, keyboard, collapse, all five individual modals, focus restoration, reduced motion and overflow in both themes at 1440/390/320. Start/mid/end and modal screenshots are under `.scratch/unfold-*`. Real device touch and sustained 60fps are not certified by these Chromium checks. Motion library guidance: https://motion.dev/docs/react-layout-animations.
+
+TypeScript and scoped Biome checks passed. `.scratch/check-experience-study.mjs` passed both themes at 1440/768/390/320, all roles, navigation and rapid switching, earlier-work disclosure, modal closing/focus return, no horizontal overflow and no page errors. Desktop and narrow mobile tile/modal captures were visually reviewed. This is Chromium verification, not a cross-browser or device performance certification. No dev-server operations, commit, push, or deployment.

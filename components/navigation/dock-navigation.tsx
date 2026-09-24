@@ -13,6 +13,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { type ReactNode, useEffect, useId, useRef, useState } from "react";
 import { links } from "@/lib/data";
+import { trackPortfolioEvent } from "@/lib/analytics";
 import styles from "./dock.module.css";
 import { type Destination, GenieWindow, type Launch } from "./genie-window";
 
@@ -346,6 +347,7 @@ export function DockNavigation({
                   const trigger = event.currentTarget;
                   const rect = trigger.getBoundingClientRect();
                   setSelected(item.name);
+                  if (!study) trackPortfolioEvent("dock_window_open", { destination: item.hash, surface: "dock" });
                   setLaunch({
                     dock: tray.current!.getBoundingClientRect(),
                     filter:

@@ -30,6 +30,7 @@ export interface Post {
   headings?: PostHeading[];
   id: string;
   publishedAt: string;
+  updatedAt?: string;
   readTimeInMinutes: number;
   seo?: {
     title: string;

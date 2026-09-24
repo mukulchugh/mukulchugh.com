@@ -3,44 +3,42 @@ import {
   IconArrowUpRight,
   IconChevronDown,
 } from "@tabler/icons-react";
-import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { PageShell } from "@/components/page-shell";
+import { PageJsonLd } from "@/components/page-json-ld";
+import { PageOnly, PageShell } from "@/components/page-shell";
 import { buttonVariants } from "@/components/ui/button";
-import { experiencesData, siteConfig, zendutyChapter } from "@/lib/data";
+import { experiencesData, zendutyChapter } from "@/lib/data";
+import { publicPages, staticMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/experience" },
-  description:
-    "Mukul Chugh’s work history across engineering, product, and design.",
-  openGraph: {
-    description: "My work across engineering, product, and design.",
-    title: "Experience | Mukul Chugh",
-    type: "website",
-    url: `${siteConfig.siteUrl}/experience`,
-  },
-  title: "Experience",
-};
+export const metadata = staticMetadata("/experience");
 
 export default function ExperiencePage() {
   return (
     <PageShell>
       <main className="page-content">
-        <header className="mb-8 px-1 sm:mb-12">
-          <Link
-            className="mb-5 inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
-            href="/#experience"
-          >
-            <IconArrowLeft aria-hidden="true" size={16} /> Back to overview
-          </Link>
-          <h1 className="text-[clamp(2.25rem,5vw,4rem)] font-semibold leading-[1.1] tracking-[-0.035em]">
-            Experience
-          </h1>
-          <p className="mt-4 max-w-[55ch] text-base leading-relaxed text-muted-foreground">
-            My work across engineering, product, and design.
-          </p>
-        </header>
+        <PageJsonLd
+          description={publicPages["/experience"].description}
+          path="/experience"
+          title={publicPages["/experience"].title}
+          type="WebPage"
+        />
+        <PageOnly>
+          <header className="mb-8 px-1 sm:mb-12">
+            <Link
+              className="mb-5 inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+              href="/#experience"
+            >
+              <IconArrowLeft aria-hidden="true" size={16} /> Back to overview
+            </Link>
+            <h1 className="text-[clamp(2.25rem,5vw,4rem)] font-semibold leading-[1.1] tracking-[-0.035em]">
+              Experience
+            </h1>
+            <p className="mt-4 max-w-[55ch] text-base leading-relaxed text-muted-foreground">
+              My work across engineering, product, and design.
+            </p>
+          </header>
+        </PageOnly>
         <ol aria-label="Work history" className="space-y-3">
           {experiencesData.map((experience) => (
             <li key={experience.company}>
@@ -109,17 +107,19 @@ export default function ExperiencePage() {
             </li>
           ))}
         </ol>
-        <div className="mt-8 flex flex-wrap items-center gap-3">
-          <Link
-            className={buttonVariants({ variant: "outline" })}
-            href="/projects"
-          >
-            View selected work <IconArrowUpRight aria-hidden="true" />
-          </Link>
-          <Link className={buttonVariants()} href="/contact">
-            Get in touch <IconArrowUpRight aria-hidden="true" />
-          </Link>
-        </div>
+        <PageOnly>
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <Link
+              className={buttonVariants({ variant: "outline" })}
+              href="/projects"
+            >
+              View selected work <IconArrowUpRight aria-hidden="true" />
+            </Link>
+            <Link className={buttonVariants()} href="/contact">
+              Get in touch <IconArrowUpRight aria-hidden="true" />
+            </Link>
+          </div>
+        </PageOnly>
       </main>
     </PageShell>
   );

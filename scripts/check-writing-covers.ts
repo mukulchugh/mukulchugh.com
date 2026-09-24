@@ -3,6 +3,7 @@ import { existsSync } from "node:fs";
 import { generateMetadata } from "../app/blog/[slug]/page";
 import { getPostCoverSrc } from "../components/blog/post-cover";
 import { getAllPosts } from "../lib/blog";
+import { socialImage } from "../lib/seo";
 
 const posts = getAllPosts();
 assert.equal(posts.length, 15);
@@ -12,8 +13,17 @@ await Promise.all(
     const metadata = await generateMetadata({
       params: Promise.resolve({ slug: post.slug }),
     });
-    assert.deepEqual(metadata.openGraph?.images, [getPostCoverSrc(post)]);
-    assert.deepEqual(metadata.twitter?.images, [getPostCoverSrc(post)]);
+    const expected = [
+      {
+        alt: `${post.seo?.title || post.title} | Mukul Chugh`,
+        height: 630,
+        type: "image/png",
+        url: socialImage(`/blog/${post.slug}`),
+        width: 1200,
+      },
+    ];
+    assert.deepEqual(metadata.openGraph?.images, expected);
+    assert.deepEqual(metadata.twitter?.images, expected);
   })
 );
 assert.equal(

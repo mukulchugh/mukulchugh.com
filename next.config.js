@@ -51,6 +51,15 @@ const nextConfig = {
       },
     ],
   },
+  outputFileTracingIncludes: {
+    "/og/*": [
+      "./public/fonts/og/*",
+      "./public/design/brand/*",
+      "./public/design/articles/*-reference.png",
+      "./public/design/project-art-v3/*",
+      "./public/design/projects/*",
+    ],
+  },
   poweredByHeader: false,
   reactCompiler: true,
 
@@ -89,6 +98,15 @@ const nextConfig = {
         source: "/blog/engineer-turned-generalist",
       },
     ];
+  },
+  async rewrites() {
+    return {
+      beforeFiles: [
+        { destination: "/markdown", source: "/index.md" },
+        { destination: "/markdown", source: "/.md" },
+        { destination: "/markdown/:path+", source: "/:path+.md" },
+      ],
+    };
   },
   // Streamdown's code-highlighting plugin pulls in shiki, which ships ESM
   // that Next's default external-package handling can't resolve in RSC.

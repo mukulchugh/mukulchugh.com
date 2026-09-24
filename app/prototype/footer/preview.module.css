@@ -1,0 +1,15 @@
+.preview {
+  min-height: 100svh;
+  padding-block: 16px;
+}
+
+.controls {
+  display: flex;
+  justify-content: flex-end;
+  width: min(95.5%, 1400px);
+  margin: 0 auto 24px;
+}
+
+:global(body:has([data-footer-preview]) > footer) {
+  display: none;
+}

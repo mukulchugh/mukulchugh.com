@@ -232,10 +232,6 @@
   min-height: 44px;
   overflow-wrap: anywhere;
 }
-.utilities > button:last-of-type {
-  padding-inline: 0;
-  font-size: 13px;
-}
 .copyStatus {
   flex-basis: 100%;
   min-height: 18px;

@@ -1,0 +1,7 @@
+.preview {
+  min-height: 100svh;
+}
+
+:global(body:has([data-header-preview]) > footer) {
+  display: none;
+}

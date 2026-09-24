@@ -28,6 +28,7 @@ interface Frontmatter {
   coverImage?: string;
   draft?: boolean;
   publishedAt?: string;
+  updatedAt?: string;
   seoDescription?: string;
   seoTitle?: string;
   slug?: string;
@@ -115,6 +116,7 @@ function fileToPost(file: string, withContent: boolean): Post | null {
     headings,
     id: slug,
     publishedAt: fm.publishedAt || new Date(0).toISOString(),
+    updatedAt: fm.updatedAt,
     readTimeInMinutes: readTimeFromText(content),
     seo:
       fm.seoTitle || fm.seoDescription

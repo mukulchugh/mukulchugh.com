@@ -11,9 +11,9 @@ import dynamic from "next/dynamic";
 import { useTheme } from "next-themes";
 import { useEffect, useId, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { CVModal } from "@/components/ui/cv-modal";
 import { FluorescentShader } from "@/components/ui/fluorescent-shader";
 import { siteConfig } from "@/lib/data";
+import { trackPortfolioEvent } from "@/lib/analytics";
 import { useSectionInView } from "@/lib/hooks";
 import styles from "./contact-section.module.css";
 
@@ -43,6 +43,7 @@ function Calendar({
       clearTimeout(timer);
       if (!disposed) setStatus("");
     };
+    const booked = () => trackPortfolioEvent("booking_complete", { surface: "calendar" });
     const failed = () => {
       clearTimeout(timer);
       if (!disposed) {
@@ -58,9 +59,11 @@ function Calendar({
         if (disposed) return;
         cal("on", { action: "linkReady", callback: ready });
         cal("on", { action: "linkFailed", callback: failed });
+        cal("on", { action: "bookingSuccessfulV2", callback: booked });
         unsubscribe = () => {
           cal("off", { action: "linkReady", callback: ready });
           cal("off", { action: "linkFailed", callback: failed });
+          cal("off", { action: "bookingSuccessfulV2", callback: booked });
         };
         cal("ui", { hideEventTypeDetails: true, layout: "month_view", theme });
         setConfigured(true);
@@ -124,16 +127,20 @@ function Calendar({
   );
 }
 
-export function ContactSection({ id }: { id?: string }) {
+export function ContactSection({
+  id,
+  defaultBooking = false,
+}: {
+  id?: string;
+  defaultBooking?: boolean;
+}) {
   const instance = `contact-${useId().replace(/:/g, "")}`;
   const { ref } = useSectionInView("Contact");
-  const [booking, setBooking] = useState(false);
-  const [visited, setVisited] = useState(false);
-  const [resume, setResume] = useState(false);
+  const [booking, setBooking] = useState(defaultBooking);
+  const [visited, setVisited] = useState(defaultBooking);
   const [copy, setCopy] = useState("");
   const { resolvedTheme } = useTheme();
   const actionRef = useRef<HTMLButtonElement>(null);
-  const resumeRef = useRef<HTMLButtonElement>(null);
   const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(
     () => () => {
@@ -148,6 +155,7 @@ export function ContactSection({ id }: { id?: string }) {
   const copyEmail = async () => {
     try {
       await navigator.clipboard.writeText(siteConfig.email.display);
+      trackPortfolioEvent("email_copy", { surface: "contact" });
       setCopy("Copied");
     } catch {
       setCopy("Use the email link to get in touch.");
@@ -156,121 +164,106 @@ export function ContactSection({ id }: { id?: string }) {
     copyTimer.current = setTimeout(() => setCopy(""), 2500);
   };
   return (
-    <>
-      <section
-        aria-label="Start a conversation"
-        className={styles.tile}
-        data-booking={booking}
-        id={id ?? instance}
-        onKeyDown={(event) => {
-          if (booking && !resume && event.key === "Escape") {
-            event.stopPropagation();
-            close();
-          }
-        }}
-        ref={ref}
-      >
-        <div className={styles.statement}>
-          <h2>
-            What should
-            <br />
-            we make next?
-          </h2>
-          <p>
-            Bring the idea you keep coming back to.
-            <br />
-            Let’s see where a conversation takes it.
-          </p>
-        </div>
-        <div className={styles.call}>
-          <FluorescentShader active={!booking} className={styles.shader} />
-          <header className={styles.callHeader}>
-            <IconVideo
-              aria-hidden="true"
-              className={styles.video}
-              stroke={1.25}
-            />
-            <div className={styles.callCopy}>
-              <h3>15 minutes.</h3>
-              <p>An idea is enough.</p>
-            </div>
-            <Button
-              aria-controls={`${instance}-calendar`}
-              aria-expanded={booking}
-              aria-label={
-                booking ? "Back to contact options" : "Book a short call"
+    <section
+      aria-label="Start a conversation"
+      className={styles.tile}
+      data-booking={booking}
+      id={id ?? instance}
+      onKeyDown={(event) => {
+        if (booking && event.key === "Escape") {
+          event.stopPropagation();
+          close();
+        }
+      }}
+      ref={ref}
+    >
+      <div className={styles.statement}>
+        <h2>
+          What should
+          <br />
+          we make next?
+        </h2>
+        <p>
+          Bring the idea you keep coming back to.
+          <br />
+          Let’s see where a conversation takes it.
+        </p>
+      </div>
+      <div className={styles.call}>
+        <FluorescentShader active={!booking} className={styles.shader} />
+        <header className={styles.callHeader}>
+          <IconVideo
+            aria-hidden="true"
+            className={styles.video}
+            stroke={1.25}
+          />
+          <div className={styles.callCopy}>
+            <h3>15 minutes.</h3>
+            <p>An idea is enough.</p>
+          </div>
+          <Button
+            aria-controls={`${instance}-calendar`}
+            aria-expanded={booking}
+            aria-label={
+              booking ? "Back to contact options" : "Book a short call"
+            }
+            className={styles.book}
+            onClick={() => {
+              if (booking) close();
+              else {
+                trackPortfolioEvent("booking_open", { surface: "contact" });
+                setVisited(true);
+                setBooking(true);
               }
-              className={styles.book}
-              onClick={() => {
-                if (booking) close();
-                else {
-                  setVisited(true);
-                  setBooking(true);
-                }
-              }}
-              ref={actionRef}
-              variant="unstyled"
-            >
-              {booking ? (
-                <>
-                  <IconArrowLeft aria-hidden="true" />
-                  Back
-                </>
-              ) : (
-                <>
-                  Book a short call <IconArrowUpRight aria-hidden="true" />
-                </>
-              )}
-            </Button>
-          </header>
-          <div
-            aria-hidden={!booking}
-            className={styles.reveal}
-            id={`${instance}-calendar`}
-            inert={!booking}
+            }}
+            ref={actionRef}
+            variant="unstyled"
           >
-            <div className={styles.revealInner}>
-              {visited && (
-                <Calendar
-                  key={resolvedTheme}
-                  namespace={instance}
-                  theme={resolvedTheme === "dark" ? "dark" : "light"}
-                />
-              )}
-            </div>
+            {booking ? (
+              <>
+                <IconArrowLeft aria-hidden="true" />
+                Back
+              </>
+            ) : (
+              <>
+                Book a short call <IconArrowUpRight aria-hidden="true" />
+              </>
+            )}
+          </Button>
+        </header>
+        <div
+          aria-hidden={!booking}
+          className={styles.reveal}
+          id={`${instance}-calendar`}
+          inert={!booking}
+        >
+          <div className={styles.revealInner}>
+            {visited && (
+              <Calendar
+                key={resolvedTheme}
+                namespace={instance}
+                theme={resolvedTheme === "dark" ? "dark" : "light"}
+              />
+            )}
           </div>
         </div>
-        <div className={styles.utilities}>
-          <a href={`mailto:${siteConfig.email.display}`}>
-            {siteConfig.email.display}
-          </a>
-          <Button
-            aria-label="Copy email address"
-            onClick={copyEmail}
-            size="icon"
-            variant="ghost"
-          >
-            {copy === "Copied" ? <IconCheck /> : <IconCopy />}
-          </Button>
-          <Button
-            onClick={() => setResume(true)}
-            ref={resumeRef}
-            variant="link"
-          >
-            View résumé
-          </Button>
-          <span className={styles.copyStatus} role="status">
-            {copy}
-          </span>
-        </div>
-      </section>
-      <CVModal
-        cvUrl={siteConfig.files.cv}
-        isOpen={resume}
-        name={siteConfig.firstName}
-        onClose={() => setResume(false)}
-        returnFocus={resumeRef}
-      />
-    </>
+      </div>
+      <div className={styles.utilities}>
+        <a href={`mailto:${siteConfig.email.display}`}>
+          {siteConfig.email.display}
+        </a>
+        <Button
+          aria-label="Copy email address"
+          onClick={copyEmail}
+          size="icon"
+          variant="ghost"
+        >
+          {copy === "Copied" ? <IconCheck /> : <IconCopy />}
+        </Button>
+        <span className={styles.copyStatus} role="status">
+          {copy}
+        </span>
+      </div>
+    </section>
   );
 }

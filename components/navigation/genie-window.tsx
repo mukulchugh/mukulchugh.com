@@ -12,6 +12,7 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import { type ReactNode, useLayoutEffect, useRef, useState } from "react";
+import { PageWindowContext } from "@/components/page-shell";
 import { links } from "@/lib/data";
 import dockStyles from "./dock.module.css";
 import styles from "./genie-window.module.css";
@@ -33,12 +34,13 @@ function animateShell(
   reduce: boolean
 ) {
   const originX = launch.x - bounds.left;
-  const originY = launch.y - bounds.top;
+  // Land at the dock's upper edge, never beneath its translucent surface.
+  const originY = launch.dock.top - bounds.top - 2;
   const startTime = document.timeline.currentTime;
   return Array.from(shape.children).map((element, index) => {
     const ratio = index / slices.length;
-    const frames = Array.from({ length: 25 }, (_, step) => {
-      const t = step / 24;
+    const frames = Array.from({ length: 121 }, (_, step) => {
+      const t = step / 120;
       const progressAt = (r: number) => {
         const delayed = Math.max(
           0,
@@ -68,15 +70,19 @@ function animateShell(
       const sliceHeight = bounds.height / slices.length + 1;
       const perspective = topWidth / bottomWidth - 1;
       const offsetY = y - ratio * bounds.height;
-      const xy = (bottomLeft * (perspective + 1) - topLeft) / sliceHeight;
-      const yy =
-        ((nextY - y + 1) * (perspective + 1) + offsetY * perspective) /
-        sliceHeight;
+      const xy = ((bottomLeft - topLeft) * (perspective + 1)) / sliceHeight;
+      const yy = ((nextY - y + 1) * (perspective + 1)) / sliceHeight;
       return {
+        // Dense precomputed poses avoid the browser's 3D matrix decomposition,
+        // which overshoots between otherwise-correct trapezoids. At 440ms these
+        // samples are finer than a 240Hz display, with no per-frame JS/layout.
+        easing: reduce ? "linear" : "steps(1, end)",
         opacity: reduce ? t : Math.min(1, t * 8),
         transform: reduce
           ? "none"
-          : `matrix3d(${topWidth / bounds.width},0,0,0,${xy},${yy},0,${perspective / sliceHeight},0,0,1,0,${topLeft},${offsetY},0,1)`,
+          : // Keep travel separate from perspective decomposition. Interpolating
+            // large translations inside the matrix made strips overshoot the dock.
+            `translate3d(${topLeft}px,${offsetY}px,0) matrix3d(${topWidth / bounds.width},0,0,0,${xy},${yy},0,${perspective / sliceHeight},0,0,1,0,0,0,0,1)`,
       };
     });
     const animation = element.animate(frames, {
@@ -120,6 +126,7 @@ export function GenieWindow({
   const [ready, setReady] = useState(false);
   const [visited, setVisited] = useState<Destination[]>([]);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const switcher = useRef<HTMLElement>(null);
 
   useLayoutEffect(() => {
     if (!launch) {
@@ -193,11 +200,22 @@ export function GenieWindow({
     setReady(false);
     if (shell.current) shell.current.style.opacity = "1";
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const bounds = panel.current?.getBoundingClientRect();
+    const icon = switcher.current?.querySelector<HTMLElement>("[aria-current]");
+    const iconBounds = icon?.getBoundingClientRect();
+    const destinationLaunch = iconBounds
+      ? { ...launch, x: iconBounds.left + iconBounds.width / 2 }
+      : launch;
+    const label = selected === "Blog" ? "Writing" : selected;
+    trigger.current =
+      launch.trigger
+        .closest("nav")
+        ?.querySelector<HTMLElement>(`[aria-label="${label}"]`) ??
+      launch.trigger;
     if (reduce || !animation.current.length) {
       onDismiss();
       return;
     }
-    const bounds = panel.current?.getBoundingClientRect();
     if (
       bounds &&
       shell.current &&
@@ -207,15 +225,23 @@ export function GenieWindow({
           bounds.y,
           bounds.width,
           bounds.height,
-          launch.x,
+          destinationLaunch.x,
           launch.y,
         ].join(",")
     ) {
       // Resize invalidates the original strip projection. Start its replacement
       // at the fully open pose before reversing, without replaying an entrance.
+      const time = Number(animation.current[0]?.currentTime ?? 440);
       animation.current.forEach((item) => item.cancel());
-      animation.current = animateShell(shell.current, bounds, launch, false);
-      animation.current.forEach((item) => item.finish());
+      animation.current = animateShell(
+        shell.current,
+        bounds,
+        destinationLaunch,
+        false
+      );
+      animation.current.forEach((item) => {
+        item.currentTime = Math.min(time, 440);
+      });
     }
     // Reverse the existing geometry and shared clock, including mid-flight closes.
     // Rebuilding the strips here caused a one-frame reset and a visible jump.
@@ -274,7 +300,7 @@ export function GenieWindow({
           style={
             launch
               ? ({
-                  bottom: `max(96px, calc(100svh - ${launch.y}px + 52px))`,
+                  bottom: `calc(100svh - ${launch.dock.top}px + 12px)`,
                 } as React.CSSProperties)
               : undefined
           }
@@ -316,14 +342,16 @@ export function GenieWindow({
                 view.
               </Dialog.Description>
               <div className={styles.content} inert={!ready} ref={content}>
-                {(visited.includes(selected)
-                  ? visited
-                  : [...visited, selected]
-                ).map((name) => (
-                  <div hidden={selected !== name} key={name}>
-                    {pages[name]}
-                  </div>
-                ))}
+                <PageWindowContext value={true}>
+                  {(launch && !visited.includes(selected)
+                    ? [...visited, selected]
+                    : visited
+                  ).map((name) => (
+                    <div hidden={selected !== name} key={name}>
+                      {pages[name]}
+                    </div>
+                  ))}
+                </PageWindowContext>
               </div>
             </div>
           </div>
@@ -331,6 +359,7 @@ export function GenieWindow({
             aria-label="Window destinations"
             className={`${dockStyles.dock} ${styles.switcher}`}
             data-tone={launch?.tone}
+            ref={switcher}
             style={
               launch
                 ? {

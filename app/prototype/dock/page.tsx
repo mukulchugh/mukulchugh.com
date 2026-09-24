@@ -41,7 +41,7 @@ export default function Page() {
               <BlogPage />
             </BlogLayout>
           ),
-          Contact: <ContactSection />,
+          Contact: <ContactSection defaultBooking />,
           Experience: <ExperiencePage />,
           Projects: <ProjectsPage />,
         }}
