@@ -189,6 +189,19 @@ These six final-build runs are stored in `/private/tmp/portfolio-lighthouse/nati
 
 Remaining performance work is real: mobile initial rendering, render-blocking shared styles/fonts, and homepage/editorial image LCP still prevent all-100. Privacy currently receives CSS for deferred dock destinations as well as its own surface; splitting that CSS is a candidate, not an implemented or measured gain. No production score or real-user Core Web Vitals pass is implied by these local results.
 
+### Production follow-up for `e140b2c`
+
+Vercel confirmed successful deployment of the native-booking/shared-runtime commit. The live Contact form returned available times from Cal with HTTP 200 and no Cal cookies. Booking writes were blocked during this live check.
+
+| Contact production | Performance | Accessibility | Best Practices | SEO | CLS |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Mobile | 95 | 100 | 100 | 100 | 0 |
+| Desktop | 100 | 100 | 81 | 100 | 0 |
+
+Reports: `/private/tmp/portfolio-lighthouse/native-production`. Mobile LCP was 2.61s and TBT 162ms. Desktop Best Practices still fails the deprecated-API audit: the Google service-worker iframe at `/api/analytics/google/_/service_worker/69f0/sw_iframe.html` emits the Attribution Reporting deprecation. The warning did not occur in that mobile run. This variability is documented, not hidden by selecting the better run. No Cal third-party-cookie warning remains in these reports. A missing vendor source-map diagnostic also remains informational. Analytics was not removed or falsified to obtain a score.
+
+Working tree was clean after the application commit; the following documentation-only commit records this production evidence. The user-owned port-3000 development server was left untouched.
+
 ## Reproduce
 
 ```sh
