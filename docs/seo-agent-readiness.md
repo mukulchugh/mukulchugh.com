@@ -55,6 +55,8 @@ The generator uses Next.js ImageResponse, locally bundled OFL-licensed Syne/Geis
 
 ## Verification
 
+Pre-push refresh (24 September 2026): the exact staged build, UI/source checks and dock/no-JavaScript browser checks pass. All 48 HTML and Markdown routes pass. The previously observed production OG failure recurred: 43 PNG responses failed during concurrent browser checks, then all 48 failed on a serial rerun with `Input buffer contains unsupported image format`. The OG implementation is unchanged; this remains an unresolved release check despite an earlier successful full sweep.
+
 - `bun run test:seo`: public registry, sitemap completeness, hidden/unknown exclusions, Markdown article parity, image-file presence, canonical metadata.
 - `bun scripts/check-seo.ts http://127.0.0.1:4179`: all 48 HTML/Markdown/PNG routes, negotiation, cache headers, real discovery bodies, sitemap/RSS membership, raw headings/content, Person identity, HEAD and representative 404/406 responses. Run against an isolated production build, not an unrelated dev server.
 - `SITE_URL=http://127.0.0.1:4179 bun run test:dock`: JavaScript-disabled public pages; lazy writing fetch, failed-load retry, all dock destinations, focus, reduced motion, both themes and 320/1440px layouts. Shared views preserve page markup while route metadata remains server-owned.
@@ -66,7 +68,7 @@ Verification uses an isolated production copy on a spare port. The user-owned de
 
 ## Limits and next release checks
 
-No ranking, rich-result, citation, or indexing gain is claimed. PostHog setup and local proxy delivery have since been verified; see [analytics setup and production gates](analytics-setup.md). Google Analytics account reports, Search Console, Bing Webmaster Tools, and production bot access remain unverified. After deployment, verify public response headers, CDN behavior, Google URL Inspection/Rich Results Test, social-card fetches, and submit the updated sitemap. Monitor real search and referral data before changing the editorial content further.
+No ranking, rich-result, citation, or indexing gain is claimed. PostHog setup, Google Analytics reports, Search Console, and local proxy delivery have been verified; see [analytics setup and production gates](analytics-setup.md). Bing Webmaster Tools and production bot access remain unverified. After deployment, verify public response headers, CDN behavior, Google URL Inspection/Rich Results Test, social-card fetches, and submit the updated sitemap. Monitor real search and referral data before changing the editorial content further.
 
 No invented FAQs, testimonials, ratings, credentials, metrics, or “fresh” dates were added. No content was hidden specifically for crawlers. Markdown access is available both by explicit URL and Accept-header negotiation.
 
