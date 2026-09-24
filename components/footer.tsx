@@ -16,6 +16,10 @@ export default function Footer() {
         <p className={styles.note}>Still building.</p>
         <p className={styles.copyright}>
           © {new Date().getFullYear()} {siteConfig.name}
+          {" · "}
+          <Link className="underline underline-offset-4" href="/privacy">
+            Privacy
+          </Link>
         </p>
       </div>
       <nav aria-label="Footer links" className={styles.links}>

@@ -108,6 +108,7 @@ const nextConfig = {
       ],
     };
   },
+  skipTrailingSlashRedirect: true,
   // Streamdown's code-highlighting plugin pulls in shiki, which ships ESM
   // that Next's default external-package handling can't resolve in RSC.
   transpilePackages: ["shiki"],

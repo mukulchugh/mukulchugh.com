@@ -12,8 +12,8 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { type ReactNode, useEffect, useId, useRef, useState } from "react";
-import { links } from "@/lib/data";
 import { trackPortfolioEvent } from "@/lib/analytics";
+import { links } from "@/lib/data";
 import styles from "./dock.module.css";
 import { type Destination, GenieWindow, type Launch } from "./genie-window";
 
@@ -347,7 +347,11 @@ export function DockNavigation({
                   const trigger = event.currentTarget;
                   const rect = trigger.getBoundingClientRect();
                   setSelected(item.name);
-                  if (!study) trackPortfolioEvent("dock_window_open", { destination: item.hash, surface: "dock" });
+                  if (!study)
+                    trackPortfolioEvent("dock_window_open", {
+                      destination: item.hash,
+                      surface: "dock",
+                    });
                   setLaunch({
                     dock: tray.current!.getBoundingClientRect(),
                     filter:
@@ -362,6 +366,7 @@ export function DockNavigation({
                       tray.current!.offsetHeight / 2,
                   });
                 }}
+                prefetch={false}
               >
                 <Icon aria-hidden="true" size={21} stroke={1.65} />
                 <span className={styles.label}>{label}</span>
@@ -380,7 +385,15 @@ export function DockNavigation({
       <GenieWindow
         launch={launch}
         onDismiss={() => setLaunch(null)}
-        onSelect={setSelected}
+        onSelect={(name) => {
+          setSelected(name);
+          const item = links.find((link) => link.name === name);
+          if (!study && item)
+            trackPortfolioEvent("dock_window_open", {
+              destination: item.hash,
+              surface: "window-tab",
+            });
+        }}
         pages={pages}
         selected={selected}
       />
