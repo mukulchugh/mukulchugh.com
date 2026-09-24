@@ -2,7 +2,7 @@ import Image from "next/image";
 import type { Post } from "@/lib/blog";
 import { cn } from "@/lib/utils";
 
-export const refinedArticleSlugs = new Set([
+const refinedArticleSlugs = new Set([
   "agent-stuck-detection-tool-loops",
   "agent-suggested-actions-as-tools",
   "agent-working-memory-injection-hygiene",

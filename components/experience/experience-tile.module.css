@@ -389,26 +389,6 @@
   border: 1px solid hsl(var(--border));
   border-radius: 10px;
 }
-.acquisition {
-  display: flex;
-  grid-column: 2 / -1;
-  gap: 12px;
-  align-items: center;
-  padding-top: 4px;
-  text-align: left;
-}
-.acquisition strong {
-  display: block;
-  font-size: 14px;
-  font-weight: 500;
-}
-.acquisition > span:last-child > span {
-  display: block;
-  margin-top: 3px;
-  font-size: 12px;
-  line-height: 1.6;
-  color: hsl(var(--muted-foreground));
-}
 .acquisitionDetail {
   display: flex;
   flex-wrap: wrap;
@@ -724,10 +704,6 @@
     width: 32px;
     height: 32px;
     padding: 3px;
-  }
-  .acquisition {
-    grid-column: 1 / -1;
-    gap: 8px;
   }
   .intro,
   .role,

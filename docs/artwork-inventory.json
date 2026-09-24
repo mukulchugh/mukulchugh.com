@@ -1,92 +1,5 @@
 [
   {
-    "file": "public/design/projects/cryptomedia-cryptocurrency-tracker-reference.webp",
-    "bytes": 89714,
-    "sha256": "1d6b6fdaf5eaafac475d3ba4ad3076ec79e7f254b8166088a08197b99a1f1e59",
-    "packSource": "delivery/projects/cryptomedia-cryptocurrency-tracker-reference.webp",
-    "relationship": "byte-identical",
-    "derivedFrom": "public/design/projects/cryptomedia-cryptocurrency-tracker-reference.png",
-    "sourceSha256": "370ca85dd28da7e2e4b4a8c58e9b01cb52ec5b2e247109e7cdc3e55837f99fcc",
-    "sourcePack": "assets/projects/cryptomedia-cryptocurrency-tracker-reference.png",
-    "width": 1200,
-    "height": 800,
-    "derivation": "sharp 0.35.3: resize({ width: 1200, withoutEnlargement: true }).webp({ quality: 90 }); lossy delivery derivative, original PNG preserved"
-  },
-  {
-    "file": "public/design/chrome-ribbon.webp",
-    "bytes": 63640,
-    "sha256": "05027a745f0b8e37d35ec6d94908f7ac5348b03e52e6c975d742d51116a5eefc",
-    "packSource": "delivery/chrome-ribbon.webp",
-    "relationship": "byte-identical",
-    "derivedFrom": "public/design/chrome-ribbon.png",
-    "sourceSha256": "64b9fb58554e45638eed4065b24e88a1006747da0b674bfd2ec39395c396caf0",
-    "sourcePack": "assets/chrome-ribbon-v2.png",
-    "width": 1200,
-    "height": 734,
-    "derivation": "sharp 0.35.3: resize({ width: 1200, withoutEnlargement: true }).webp({ quality: 90 }); lossy delivery derivative, original PNG preserved"
-  },
-  {
-    "file": "public/design/location-map.webp",
-    "bytes": 92558,
-    "sha256": "88406471bc35f252b6099c1a1967f9b7de66938194ffaba1e5781861c2e12032",
-    "packSource": "delivery/location-map.webp",
-    "relationship": "byte-identical",
-    "derivedFrom": "public/design/location-map.png",
-    "sourceSha256": "d5f44e971c71c9a75575a3aaf623b81af6bb952a90b1b50182283ce48ff14d02",
-    "sourcePack": "assets/location-map.png",
-    "sourcePackSha256": "3047c3d5378f67e4240a12d693698728eaf529b6cad72b6263541c3ea3684a76",
-    "sourcePackRelationship": "PNG image-data chunks identical; metadata differs",
-    "width": 1200,
-    "height": 800,
-    "derivation": "sharp 0.35.3: resize({ width: 1200, withoutEnlargement: true }).webp({ quality: 90 }); lossy delivery derivative, original PNG preserved"
-  },
-  {
-    "file": "public/design/agent-loop-home-reference.webp",
-    "bytes": 115474,
-    "sha256": "5adce3c5dfc08e21a54c3a24bc4a6ec6332c9796d8789f38594af2fedfaf2a49",
-    "packSource": "delivery/agent-loop-home-reference.webp",
-    "relationship": "byte-identical",
-    "derivedFrom": "public/design/agent-loop-home-reference.png",
-    "sourceSha256": "7a5823652dbece4dbd034cd808a496cd9b759decf1551d82320eb668f0a2e160",
-    "sourcePack": "assets/agent-loop-home-reference.png",
-    "width": 1200,
-    "height": 800,
-    "derivation": "sharp 0.35.3: resize({ width: 1200, withoutEnlargement: true }).webp({ quality: 90 }); lossy delivery derivative, original PNG preserved"
-  },
-  {
-    "file": "public/design/database-layers-home-reference.webp",
-    "bytes": 26286,
-    "sha256": "72e11f3e881cdc12ea3d461e6a0c2b723712bc91f85cc3b49ec55f80df6ec72e",
-    "packSource": "delivery/database-layers-home-reference.webp",
-    "relationship": "byte-identical",
-    "derivedFrom": "public/design/database-layers-home-reference.png",
-    "sourceSha256": "c4d901b1bcc17084a997005dd3bda7251310db0751dea8c771fb0af9bfdd8ed1",
-    "sourcePack": "assets/database-layers-home-reference.png",
-    "width": 1200,
-    "height": 800,
-    "derivation": "sharp 0.35.3: resize({ width: 1200, withoutEnlargement: true }).webp({ quality: 90 }); lossy delivery derivative, original PNG preserved"
-  },
-  {
-    "file": "public/design/projects/quivly-skills-v2.webp",
-    "bytes": 20864,
-    "sha256": "c1af3721495a7453fd12c1c139fde48ad256df85d8fec3b2d4fe68510926462a",
-    "packSource": "delivery/projects/quivly-skills-v2.webp",
-    "relationship": "byte-identical",
-    "derivedFrom": "public/design/projects/quivly-skills-v2.png",
-    "sourceSha256": "f299885890c6a04834a288ddf071dc94458fa157a84034a5a614589ed14c4e8f",
-    "sourcePack": "assets/quivly-skills-art-v2.png",
-    "width": 1200,
-    "height": 694,
-    "derivation": "sharp 0.35.3: resize({ width: 1200, withoutEnlargement: true }).webp({ quality: 90 }); lossy delivery derivative, original PNG preserved"
-  },
-  {
-    "file": "public/design/agent-loop-home-reference.png",
-    "bytes": 2042565,
-    "sha256": "7a5823652dbece4dbd034cd808a496cd9b759decf1551d82320eb668f0a2e160",
-    "packSource": "assets/agent-loop-home-reference.png",
-    "relationship": "byte-identical"
-  },
-  {
     "file": "public/design/articles/agent-stuck-detection-tool-loops-reference.png",
     "bytes": 1661945,
     "sha256": "32bf4cdeddb898048bb414238d86d0621516576fcace14dfed201f13494b96cd",
@@ -263,13 +176,6 @@
     "relationship": "byte-identical"
   },
   {
-    "file": "public/design/brand/quivly-wordmark-white.webp",
-    "bytes": 22086,
-    "sha256": "ece3e4fea7f5ca3bd5f9d736710fb96742f0f4d8dbfad280c86175308262b296",
-    "packSource": "assets/brand/quivly-wordmark-white.webp",
-    "relationship": "byte-identical"
-  },
-  {
     "file": "public/design/brand/swiggy.webp",
     "bytes": 2908,
     "sha256": "86d5f388bc835e39555d820ee30141b35d60e43f1a0d96ea92397352ec37c84b",
@@ -291,25 +197,10 @@
     "relationship": "byte-identical"
   },
   {
-    "file": "public/design/chrome-ribbon.png",
-    "bytes": 1722724,
-    "sha256": "64b9fb58554e45638eed4065b24e88a1006747da0b674bfd2ec39395c396caf0",
-    "packSource": "assets/chrome-ribbon-v2.png",
-    "relationship": "byte-identical",
-    "promptRecord": "Use case: precise-object-edit. Production hero artwork for the approved portfolio. Input image is the exact approved 397x243 hero artwork reference. Recreate this very same brushed chrome single twisting loop sculpture and its tiny chartreuse sphere, same silhouette, perspective, placement, dark charcoal backdrop, directional highlights, fine brushed grain and floor reflections. Remove ONLY the three text groups and thin card border, leaving the scene underneath clean. Preserve the sculpture exactly: tall rounded ribbon rises at x30%-60%, broad loop curls down to lower center and right, small lime sphere at x85% y69%. Do not turn it into a sideways figure-eight. No lettering, logo, text, labels, controls or new objects. Fill a landscape canvas matching reference ratio 397:243. Highest available native resolution; retain the composition precisely, no added margins."
-  },
-  {
     "file": "public/design/contact-orbit-v2.png",
     "bytes": 1525492,
     "sha256": "ec9c57556c1a2a058e615e8dfe637ba55fd88f543913103feff0462d36ee79ea",
     "packSource": "assets/contact-orbit-v2.png",
-    "relationship": "byte-identical"
-  },
-  {
-    "file": "public/design/database-layers-home-reference.png",
-    "bytes": 1567575,
-    "sha256": "c4d901b1bcc17084a997005dd3bda7251310db0751dea8c771fb0af9bfdd8ed1",
-    "packSource": "assets/database-layers-home-reference.png",
     "relationship": "byte-identical"
   },
   {
@@ -318,13 +209,6 @@
     "sha256": "ab5c2c2ddab746cc4938127c9d2eb2a1963307793004a1eb2247249ac685273a",
     "packSource": "assets/error-reference.png",
     "relationship": "byte-identical"
-  },
-  {
-    "file": "public/design/location-map.png",
-    "bytes": 1516346,
-    "sha256": "d5f44e971c71c9a75575a3aaf623b81af6bb952a90b1b50182283ce48ff14d02",
-    "packSource": "assets/location-map.png",
-    "relationship": "PNG image-data chunks identical; metadata differs"
   },
   {
     "file": "public/design/openkvm-featured-reference.png",
@@ -390,13 +274,6 @@
     "packSource": "assets/projects/cryptomedia-cryptocurrency-tracker-detail-2-recovery.png",
     "relationship": "byte-identical",
     "promptRecord": "Built-in image_gen provenance\nReference: design-pack/pages/projects/cryptomedia-cryptocurrency-tracker.png\nNative dimensions: 1536x1024\nIntended use: Illustrative UI concept; not evidence of production UI or current market data.\nOriginal exact generation prompt:\nUse case: ui-mockup\nAsset type: standalone lower-panel illustrative interface asset for portfolio case study.\nInput image 1 is a full-page approved design reference. Generate ONLY the specified lower-panel artwork, faithfully redrawn at native high resolution, landscape 3:2 (1536x1024 or larger). Do not generate the full page, white surrounding card, website navigation, section numbers, or outer captions. This is explicitly an illustrative concept, not a real product screenshot or evidence. Match reference composition, black glass materials, fine bevels, soft light and restrained color. Do not invent brand logos or capabilities. Any existing marks may be faithfully preserved from reference only. No watermarks.\nTarget: lower right panel 07 / SCREENSHOT, inner dark coin detail artwork only. Flat front-on charcoal cryptocurrency interface filling canvas. Top nav existing blue reference mark with 'Cryptomedia', Markets, Watchlist, search 'Search coins...', circular user icon. Below left 'Back to markets'. Large orange Bitcoin emblem, 'Bitcoin BTC', '$67,432.12', green '+2.4% (24h)'. Right upper outlined button with star and 'Add to Watchlist'. Under coin heading small range tabs 1D active blue, 1W, 1M, 1Y, ALL. Large green detailed jagged price line chart beneath, faint green area fill and subtle grid, upward overall trajectory then pullback at end, time-axis labels. To its right a narrow dark glass statistics card with rows 'Market Cap', '24h Volume', 'Circulating Supply', 'Max Supply', 'All Time High', each right value an em dash as in reference. Tiny bottom-left 'Illustrative concept'. Preserve chart-left/statistics-right hierarchy, blue accent only for selected tab and brand mark. No market table, no laptop hardware. Data is illustrative reference data, not current.\n\nExact edit prompt:\nUse case: precise-object-edit. Input image is edit target. Change ONLY the small blue circular brand emblem immediately to the left of the word Cryptomedia in the top navigation: erase that emblem and fill its small footprint with seamless matching dark navbar background. Retain the Cryptomedia wordmark in its exact position, no replacement logo or symbol. Everything else unchanged: preserve full 1536x1024 landscape composition, all text, large orange Bitcoin emblem, chart and its jagged line, statistic rows, prices, blue range tab, colors, light, glass edges, background and tiny Illustrative concept caption. Do not redesign or shift any element.\n\nKnown fidelity gaps: AI-redrawn details, typography proportions, gray placeholder lengths, highlights and minor icon strokes vary from the reference; composition and semantic panel distinction retained. Cryptomedia blue brand emblem omitted after a targeted edit removed a drifted generated mark; wordmark retained."
-  },
-  {
-    "file": "public/design/projects/cryptomedia-cryptocurrency-tracker-reference.png",
-    "bytes": 1651619,
-    "sha256": "370ca85dd28da7e2e4b4a8c58e9b01cb52ec5b2e247109e7cdc3e55837f99fcc",
-    "packSource": "assets/projects/cryptomedia-cryptocurrency-tracker-reference.png",
-    "relationship": "byte-identical"
   },
   {
     "file": "public/design/projects/ferry-detail-1.png",
@@ -558,14 +435,6 @@
     "sha256": "b81dc9af3df90e92aa6b3c17aa6d52660197bf462ffc3867b2bc96fe054b24e0",
     "packSource": "assets/projects/quivly-skills-reference.png",
     "relationship": "byte-identical"
-  },
-  {
-    "file": "public/design/projects/quivly-skills-v2.png",
-    "bytes": 1066912,
-    "sha256": "f299885890c6a04834a288ddf071dc94458fa157a84034a5a614589ed14c4e8f",
-    "packSource": "assets/quivly-skills-art-v2.png",
-    "relationship": "byte-identical",
-    "promptRecord": "Use case: precise-object-edit\nAsset type: opaque production portfolio artwork plate, target aspect ratio 313:181 (1.7293).\nInput image: approved skills-art composition crop, edit target and exact visual reference.\nPrimary request: recreate this exact crop as clean high resolution artwork, removing ALL page text, tags, arrow, label masking patches, and the Q letter on the front card. Preserve the reference geometry and composition exactly. Continuous uniform chartreuse background #d3f846 edge to edge, left half completely empty for future semantic HTML title and copy. No labels or characters anywhere.\nSubject: the SAME tight upright cascade of SEVEN thin PORTRAIT smoked translucent glass cards on the RIGHT. Preserve the reference pose: front-most card is at upper LEFT of the group, a narrow tall portrait parallelogram with vertical side edges; its four corners approximately (57%,25%), (75%,12%), (75%,61%), (57%,74%) of the full image. Each successive rear card shifts slightly RIGHT and DOWN, overlapping heavily, ending near x96%,y92%. Parallel top and bottom edges slope upward from left to right, exactly like reference. Long card edges remain VERTICAL. Front card dark olive smoked glass; next two lighter translucent olive; remaining cards progressively charcoal black. Thin pale glass outlines, fine subtle edge highlights, softly rounded individual card corners, translucent layering, restrained premium 3D material. Keep the object silhouette entirely within the right 44% of canvas. The cards are UPRIGHT PORTRAIT cards, taller than wide, not landscape cards and not a spread across the canvas. The stack goes DOWN TO THE RIGHT behind the front card, not up to the right. Front card has a plain uninterrupted face, NO Q, NO logo. Preserve exact scale, tilt, layering density and viewpoint. No invented brand or product UI.\nDo not add objects, heavy shadows, scenery, floor horizon, grid, icons, text, numbers, letters, watermark, diagram arrows, borders or outer card corners. Do not change the concept, restyle, center the object, or spread the cards apart. Same approved reference artwork with only UI and logo removed. Opaque full-frame chartreuse image, no margins, no background bands."
   },
   {
     "file": "public/design/projects/rca-tool-grafana-plugin-detail-1-recovery.png",

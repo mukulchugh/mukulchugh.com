@@ -1,3 +1,5 @@
+> Asset files live in `public/design/rebound-v1/`. Moved out of `public/` so provenance notes are not served publicly.
+
 # Rebound asset pack
 
 Approved direction: `approved-reference.png`. Generated with the built-in image tool using that exact image as the edit reference. These are regenerated separate layers, not pixel-exact extractions.

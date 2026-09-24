@@ -42,7 +42,7 @@ interface TopicFamily {
 // the watermark icon, and the constellation line tint. A post always falls
 // into a family (FALLBACK_FAMILY below covers anything unmatched), so a
 // cover is never "undressed."
-export const TOPIC_FAMILIES: TopicFamily[] = [
+const TOPIC_FAMILIES: TopicFamily[] = [
   {
     accent: [147, 130, 255],
     icon: IconRobot,

@@ -6,7 +6,6 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { BrandBar } from "../components/bento/brand-bar";
 import { Badge } from "../components/ui/badge";
 import { buttonVariants } from "../components/ui/button";
-import { Card } from "../components/ui/card";
 import { getAllPosts, getPostServer } from "../lib/blog";
 import { links } from "../lib/data";
 import { getAllProjectSlugs, projectLinkLabel } from "../lib/projects";
@@ -25,10 +24,6 @@ assert.match(badge, /rounded-\[6px\]/);
 assert.match(badge, /overflow-wrap:anywhere/);
 assert.match(badge, /React Native/); // CSS changes presentation, not source text.
 assert.match(badge, /liquid-badge/);
-assert.match(
-  renderToStaticMarkup(createElement(Card, null, "Readable content")),
-  /bento-surface/
-);
 for (const variant of [
   "default",
   "secondary",

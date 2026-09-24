@@ -139,24 +139,6 @@
   text-transform: uppercase;
   letter-spacing: 0.22em;
 }
-.controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  align-items: center;
-  justify-content: space-between;
-  padding-top: 16px;
-  border-top: 1px solid #ffffff1a;
-}
-.controls p {
-  margin: 0;
-  font-size: 13px;
-  color: #d2d3cf;
-}
-.controls > div {
-  display: flex;
-  gap: 8px;
-}
 .card .overlayActions .action,
 .card .demoActions .action {
   color: #171a13;
@@ -173,12 +155,6 @@
 .card .overlayActions .secondary:hover {
   color: white;
   background: #ffffff14;
-}
-.help {
-  margin: 14px 0 0;
-  font-size: 11px;
-  line-height: 1.6;
-  color: #a9aca5;
 }
 .overlay {
   position: absolute;
