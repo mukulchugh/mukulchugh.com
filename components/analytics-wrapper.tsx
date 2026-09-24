@@ -42,7 +42,7 @@ export function AnalyticsWrapper() {
     <Script
       id="portfolio-google-analytics"
       src={`${GOOGLE_PROXY}/gtag/js?id=${GA_ID}`}
-      strategy="afterInteractive"
+      strategy="lazyOnload"
     />
   ) : null;
 }

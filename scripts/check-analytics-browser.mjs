@@ -134,6 +134,9 @@ try {
       throw error;
     });
   await page.evaluate(() => {
+    const initialize = window.__posthog.init.bind(window.__posthog);
+    window.__posthog.init = (token, config) =>
+      initialize(token, { ...config, opt_out_useragent_filter: true });
     window.__tracking.initializeAnalytics();
     // Test-only: PostHog correctly filters navigator.webdriver in automation.
     // Production keeps its bot filter enabled; all fixture writes are intercepted.

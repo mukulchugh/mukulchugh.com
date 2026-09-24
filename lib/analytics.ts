@@ -1,6 +1,6 @@
 import { inject, pageview, track } from "@vercel/analytics";
 import { injectSpeedInsights } from "@vercel/speed-insights";
-import posthog from "posthog-js";
+import type { PostHog } from "posthog-js";
 import {
   cleanUrl,
   GA_ID,
@@ -19,6 +19,7 @@ type EventProperties = {
 let initialized = false;
 let previousPath: string | undefined;
 let speedInsights: ReturnType<typeof injectSpeedInsights>;
+let posthogReady: Promise<PostHog | undefined> | undefined;
 
 export function analyticsAllowed(
   hostname: string,
@@ -89,6 +90,12 @@ function safely(send: () => void) {
   }
 }
 
+function capturePostHog(send: (sdk: PostHog) => void) {
+  void posthogReady?.then((sdk) => {
+    if (sdk && canTrack()) safely(() => send(sdk));
+  });
+}
+
 /** All provider initialization lives here; no SDK calls in UI components. */
 export function initializeAnalytics() {
   if (initialized || !canTrack()) return;
@@ -111,60 +118,72 @@ export function initializeAnalytics() {
         server_container_url: window.location.origin + GOOGLE_PROXY,
       });
   });
-  safely(() => {
-    if (!POSTHOG_TOKEN.startsWith("phc_")) return;
-    posthog.init(POSTHOG_TOKEN, {
-      api_host: POSTHOG_PROXY,
-      autocapture: {
-        css_selector_ignorelist: [
-          ".ph-no-capture",
-          ".ph-no-autocapture",
-          "[data-ph-no-autocapture]",
-          "form",
-          "[data-analytics-private]",
-        ],
-        dom_event_allowlist: ["click"],
-        element_allowlist: ["a", "button"],
-      },
-      before_send: (event) => {
-        if (!(event && canTrack())) return null;
-        for (const key of [
-          "$current_url",
-          "$initial_current_url",
-          "$session_entry_url",
-          "$referrer",
-          "$initial_referrer",
-        ]) {
-          if (key in event.properties)
-            event.properties[key] = privateUrl(event.properties[key]);
-        }
-        for (const key of ["$set", "$set_once", "$el_text", "$element_text"])
-          delete event.properties[key];
-        event.properties = scrubAnalyticsUrls(
-          event.properties
-        ) as typeof event.properties;
-        return event;
-      },
-      capture_dead_clicks: true,
-      capture_exceptions: false,
-      capture_heatmaps: true,
-      capture_pageleave: true,
-      capture_pageview: false,
-      capture_performance: { network_timing: false, web_vitals: true },
-      defaults: "2026-05-30",
-      disable_capture_url_hashes: true,
-      disable_session_recording: true,
-      disable_surveys: true,
-      enable_recording_console_log: false,
-      ip: false,
-      mask_all_element_attributes: true,
-      mask_all_text: true,
-      mask_personal_data_properties: true,
-      person_profiles: "never",
-      respect_dnt: true,
-      ui_host: "https://us.posthog.com",
-    });
-  });
+  posthogReady = new Promise<void>((resolve) => {
+    const idle = () => {
+      if ("requestIdleCallback" in window)
+        window.requestIdleCallback(() => resolve(), { timeout: 1000 });
+      else setTimeout(resolve, 0);
+    };
+    if (document.readyState === "complete") idle();
+    else window.addEventListener("load", idle, { once: true });
+  })
+    .then(async () => {
+      if (!(canTrack() && POSTHOG_TOKEN.startsWith("phc_"))) return;
+      const { default: posthog } = await import("posthog-js");
+      posthog.init(POSTHOG_TOKEN, {
+        api_host: POSTHOG_PROXY,
+        autocapture: {
+          css_selector_ignorelist: [
+            ".ph-no-capture",
+            ".ph-no-autocapture",
+            "[data-ph-no-autocapture]",
+            "form",
+            "[data-analytics-private]",
+          ],
+          dom_event_allowlist: ["click"],
+          element_allowlist: ["a", "button"],
+        },
+        before_send: (event) => {
+          if (!(event && canTrack())) return null;
+          for (const key of [
+            "$current_url",
+            "$initial_current_url",
+            "$session_entry_url",
+            "$referrer",
+            "$initial_referrer",
+          ]) {
+            if (key in event.properties)
+              event.properties[key] = privateUrl(event.properties[key]);
+          }
+          for (const key of ["$set", "$set_once", "$el_text", "$element_text"])
+            delete event.properties[key];
+          event.properties = scrubAnalyticsUrls(
+            event.properties
+          ) as typeof event.properties;
+          return event;
+        },
+        capture_dead_clicks: true,
+        capture_exceptions: false,
+        capture_heatmaps: true,
+        capture_pageleave: true,
+        capture_pageview: false,
+        capture_performance: { network_timing: false, web_vitals: true },
+        defaults: "2026-05-30",
+        disable_capture_url_hashes: true,
+        disable_session_recording: true,
+        disable_surveys: true,
+        enable_recording_console_log: false,
+        ip: false,
+        mask_all_element_attributes: true,
+        mask_all_text: true,
+        mask_personal_data_properties: true,
+        person_profiles: "never",
+        respect_dnt: true,
+        ui_host: "https://us.posthog.com",
+      });
+      return posthog;
+    })
+    .catch(() => undefined);
   const config = process.env.NEXT_PUBLIC_VERCEL_OBSERVABILITY_CLIENT_CONFIG;
   safely(() =>
     inject(
@@ -213,7 +232,7 @@ export function trackPageView(pathname: string) {
       send_to: GA_ID,
     })
   );
-  safely(() =>
+  capturePostHog((posthog) =>
     posthog.capture("$pageview", {
       $current_url: location,
       $pathname: path,
@@ -248,13 +267,13 @@ export function trackPortfolioEvent(
       send_to: GA_ID,
     })
   );
-  safely(() => posthog.capture(event, values));
+  capturePostHog((posthog) => posthog.capture(event, values));
   safely(() => track(event, values));
 }
 export function reportPageError() {
   trackPortfolioEvent("page_error", { surface: "error-boundary" });
   if (canTrack())
-    safely(() =>
+    capturePostHog((posthog) =>
       posthog.captureException(new Error("Portfolio page failed to render"))
     );
 }

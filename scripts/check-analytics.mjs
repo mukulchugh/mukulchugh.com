@@ -27,6 +27,7 @@ mock.module("@vercel/speed-insights", () => ({
 const fakeWindow = {
   dataLayer: [],
   location: new URL("https://mukulchugh.com/?email=private@example.com#secret"),
+  requestIdleCallback: (callback) => callback(),
 };
 Object.defineProperty(globalThis, "window", {
   configurable: true,
@@ -34,7 +35,10 @@ Object.defineProperty(globalThis, "window", {
 });
 Object.defineProperty(globalThis, "document", {
   configurable: true,
-  value: { referrer: "https://example.com/?private=value" },
+  value: {
+    readyState: "complete",
+    referrer: "https://example.com/?private=value",
+  },
 });
 Object.defineProperty(globalThis, "navigator", {
   configurable: true,
@@ -77,6 +81,7 @@ fakeWindow.location = new URL("https://mukulchugh.com/projects/openkvm");
 analytics.trackPageView("/projects/openkvm");
 fakeWindow.location = new URL("https://mukulchugh.com/");
 analytics.trackPageView("/");
+await new Promise((resolve) => setTimeout(resolve, 0));
 assert.equal(
   vercelViews.length,
   3,
@@ -96,6 +101,7 @@ analytics.trackPortfolioEvent("project_open", {
   surface: "slider",
   ...{ email: "private@example.com" },
 });
+await new Promise((resolve) => setTimeout(resolve, 0));
 assert.equal(vercelEvents.length, 1);
 assert(!JSON.stringify(captured).includes("private@example.com"));
 assert.equal(posthogConfig.capture_pageview, false);
@@ -197,7 +203,7 @@ try {
   assert.equal(worker.status, 200);
   assert.equal(
     worker.headers.get("Service-Worker-Allowed"),
-    "/api/analytics/google/_/service_worker/"
+    "/api/analytics/google/_/service_worker"
   );
   assert.equal(
     forwarded[1].url,

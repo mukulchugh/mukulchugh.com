@@ -66,7 +66,7 @@ async function proxy(request: Request, { params }: Context) {
           "Content-Type": path.endsWith(".html")
             ? "text/html; charset=utf-8"
             : "application/javascript; charset=utf-8",
-          "Service-Worker-Allowed": "/api/analytics/google/_/service_worker/",
+          "Service-Worker-Allowed": "/api/analytics/google/_/service_worker",
           "X-Content-Type-Options": "nosniff",
         },
       });
