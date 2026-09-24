@@ -24,13 +24,6 @@
 @media (hover: hover) and (pointer: fine) and (
     prefers-reduced-motion: no-preference
   ) {
-  .home-design .home-project-art {
-    transform-origin: 65% 50%;
-    transition: transform 650ms cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .home-design article:is(:hover, :focus-within) .home-project-art {
-    transform: scale(1.025);
-  }
   .home-design #project-index-list a svg {
     transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
   }
@@ -45,8 +38,7 @@
   .ui-label {
     @apply font-sans text-xs font-medium uppercase tracking-[0.12em] leading-[1.5];
   }
-  .bento-surface,
-  .glass-tile {
+  .bento-surface {
     background: var(--tile-fill);
     border: 1px solid hsl(var(--border));
     border-radius: 14px;
@@ -419,14 +411,6 @@
   color: #f4f4f5;
   background: transparent;
 }
-.glass-tile-hover {
-  transition: border-color 160ms ease-out;
-}
-@media (hover: hover) {
-  .glass-tile-hover:hover {
-    border-color: hsl(var(--foreground) / 0.25);
-  }
-}
 @media (min-width: 640px) {
   :root {
     /* sm+: 48px item + 16px shell padding + 24px offset(bottom-6) + 24px = ~112px */
@@ -455,39 +439,6 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.06),
     0 2px 8px rgba(0, 0, 0, 0.35),
     0 8px 32px -8px rgba(0, 0, 0, 0.55);
-}
-.social-card {
-  border: 1px solid hsl(var(--border));
-}
-
-/* ── Modal-panel shadow — shared by floating dialog surfaces ───
-   CalBookingModal and the ExpandableCard (experience) modal are
-   the same conceptual surface — an elevated panel floating above a
-   backdrop — but had each drifted to a different one-off shadow (some
-   single-layer, one tinted pure-black instead of the neutral-grey used
-   everywhere else). Converged here to one two-layer recipe in the same
-   neutral-grey register as .glass-tile / .project-card.
-*/
-.modal-shadow {
-  box-shadow:
-    0 8px 24px -8px rgba(20, 20, 40, 0.12),
-    0 24px 64px -16px rgba(20, 20, 40, 0.2);
-}
-
-.dark .modal-shadow {
-  box-shadow:
-    0 8px 24px -8px rgba(0, 0, 0, 0.4),
-    0 24px 64px -16px rgba(0, 0, 0, 0.5);
-}
-
-/* ── Accessibility: reduced transparency ─────────────── */
-@media (prefers-reduced-transparency: reduce) {
-  .aurora-blob {
-    display: none !important;
-  }
-  .grain-overlay {
-    display: none !important;
-  }
 }
 
 .dialog-surface {
@@ -526,9 +477,6 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-  .aurora-blob {
-    animation: none !important;
-  }
   .dialog-surface {
     scale: 1 !important;
     translate: none !important;
@@ -536,7 +484,6 @@
 }
 /* Tile edges are real, uniform borders, never simulated with shadows. */
 .bento-surface,
-.glass-tile,
 .tile-glass,
 [data-slot="card"] {
   position: relative;
@@ -545,7 +492,7 @@
   isolation: isolate;
 }
 /* Broad, static sheen suggests a raised glass face without drawing fake edges. */
-:is(.bento-surface, .glass-tile, .tile-glass)::after {
+:is(.bento-surface, .tile-glass)::after {
   position: absolute;
   inset: 0;
   z-index: 0;
@@ -591,14 +538,13 @@
   [data-slot="button"],
   .liquid-surface,
   .bento-surface,
-  .glass-tile,
   .tile-glass {
     border: 1px solid ButtonText;
     box-shadow: none;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
   }
-  :is(.bento-surface, .glass-tile, .tile-glass)::after {
+  :is(.bento-surface, .tile-glass)::after {
     display: none;
   }
 }

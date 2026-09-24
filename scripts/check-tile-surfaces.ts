@@ -21,7 +21,7 @@ assert.doesNotMatch(
 assert.match(css, /--tile-sheen: none/);
 assert.match(
   css,
-  /:is\(\.bento-surface, \.glass-tile, \.tile-glass\)::after\s*\{\s*display: none/
+  /:is\(\.bento-surface, \.tile-glass\)::after\s*\{\s*display: none/
 );
 for (const file of [
   "components/bento/profile-tile.tsx",
