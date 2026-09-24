@@ -31,6 +31,12 @@ export const publicPages = {
     heading: "Experience",
     title: "Experience",
   },
+  "/privacy": {
+    description:
+      "How this personal portfolio handles messages, bookings, analytics and browser privacy preferences.",
+    heading: "Privacy.",
+    title: "Privacy",
+  },
   "/projects": {
     description:
       "Products, tools, and experiments by Mukul Chugh, with the work behind them.",

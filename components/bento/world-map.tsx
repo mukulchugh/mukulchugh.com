@@ -33,13 +33,7 @@ export function WorldMap() {
       ref={ref}
       viewBox={`0 0 ${worldMapData.width} ${worldMapData.height}`}
     >
-      <path
-        className="stroke-foreground/20"
-        d={worldMapData.dots}
-        fill="none"
-        strokeLinecap="round"
-        strokeWidth="0.48"
-      />
+      <use className="stroke-foreground/20" href="/design/world-map.svg#dots" />
       <path
         className="stroke-foreground/20"
         d={connection}

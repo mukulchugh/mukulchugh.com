@@ -362,6 +362,7 @@ export function DockNavigation({
                       tray.current!.offsetHeight / 2,
                   });
                 }}
+                prefetch={false}
               >
                 <Icon aria-hidden="true" size={21} stroke={1.65} />
                 <span className={styles.label}>{label}</span>

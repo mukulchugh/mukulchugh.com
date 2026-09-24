@@ -9,6 +9,7 @@
     "fix": "ultracite fix",
     "lint": "ultracite check",
     "start": "next start",
+    "test:dock": "node scripts/check-dock-windows.mjs",
     "test:seo": "bun scripts/check-seo.ts",
     "test:ui": "bun scripts/check-motion.tsx && bun scripts/check-blog.ts && bun scripts/check-projects.ts && bun scripts/check-ui.ts && bun scripts/check-writing.tsx && bun scripts/check-writing-covers.ts && bun scripts/check-tile-surfaces.ts"
   },

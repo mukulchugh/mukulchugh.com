@@ -4,7 +4,7 @@ Implemented locally on 24 September 2026. No deployment, Search Console submissi
 
 ## Scope
 
-47 public HTML pages: 6 main pages, 15 articles, 26 projects. Prototypes, unknown slugs, drafts, and hidden projects are excluded from discovery and Markdown export.
+48 public HTML pages: 7 main pages (including Privacy), 15 articles, 26 projects. Prototypes, unknown slugs, drafts, and hidden projects are excluded from discovery and Markdown export.
 
 ### Corrected
 
@@ -26,7 +26,11 @@ Implemented locally on 24 September 2026. No deployment, Search Console submissi
 | `/blog/<slug>` | `/blog/<slug>.md` |
 | Other public pages | Append `.md` |
 
-HTML advertises the alternative through `rel=alternate type=text/markdown`. Markdown responses identify the HTML canonical through the HTTP Link header, use `text/markdown`, and include structured frontmatter with author, description, canonical, image, and real publication/modification dates where known.
+HTML advertises the alternative through `rel=alternate type=text/markdown`. Public page URLs also negotiate `Accept: text/markdown`, including quality values and explicit rejections. Markdown responses identify the HTML canonical through the HTTP Link header, use `text/markdown`, and include structured frontmatter with author, description, canonical, image, and real publication/modification dates where known.
+
+Markdown responses include `Vary: Accept, Accept-Encoding`. Next 16.3 overwrites Vary on HTML pages, so HTML uses `Cache-Control: private, no-cache` to prevent shared-cache variant confusion and require private-cache revalidation. The underlying pages remain prerendered. This sacrifices shared HTML caching until the framework preserves Accept; verify actual deployed CDN headers before relaxing the safeguard. Flight/actions and machine-readable files keep their own protocols.
+
+Missing negotiated Markdown pages return a real 404 with links to llms.txt, the sitemap and writing index. Unsupported representations return 406. `/llms.txt` names when to consult the portfolio, how to fetch content, and the limits of its public information. Person schema includes the existing public email/contact URL and country-level address, without inventing a business identity or street address. `/privacy` describes configured services and visitor choices without inventing retention promises.
 
 Article bodies come directly from the published Markdown source. Other pages use existing public biography, work history, project descriptions, implementation details, boundaries, and source links. Project editorial copy is shared with HTML, including the current ALTR and Tethr descriptions. This is a readable content representation, not a serialization of decorative interface chrome.
 
@@ -52,18 +56,19 @@ The generator uses Next.js ImageResponse, locally bundled OFL-licensed Syne/Geis
 ## Verification
 
 - `bun run test:seo`: public registry, sitemap completeness, hidden/unknown exclusions, Markdown article parity, image-file presence, canonical metadata.
-- `bun scripts/check-seo.ts http://localhost:3000`: all 47 HTML responses, all 47 Markdown responses, all 47 correctly sized PNGs, valid JSON-LD, alternate links, discovery endpoints, and representative 404s.
+- `bun scripts/check-seo.ts http://127.0.0.1:4179`: all 48 HTML/Markdown/PNG routes, negotiation, cache headers, real discovery bodies, sitemap/RSS membership, raw headings/content, Person identity, HEAD and representative 404/406 responses. Run against an isolated production build, not an unrelated dev server.
+- `SITE_URL=http://127.0.0.1:4179 bun run test:dock`: JavaScript-disabled public pages; lazy writing fetch, failed-load retry, all dock destinations, focus, reduced motion, both themes and 320/1440px layouts. Shared views preserve page markup while route metadata remains server-owned.
 - `bun run test:ui`: existing UI, writing, project, motion, cover, and surface contracts.
 - `npx tsc --noEmit` and `npm run build`.
 - Visual inspection of homepage, article, and project social previews.
 
-The dev server was not started, stopped, or restarted. Local production compilation is not a production deployment.
+Verification uses an isolated production copy on a spare port. The user-owned dev server is not restarted. Local production compilation is not a production deployment.
 
 ## Limits and next release checks
 
 No ranking, rich-result, citation, or indexing gain is claimed. Search Console, Bing Webmaster Tools, analytics, and production bot access were not accessed. After deployment, verify public response headers, CDN behavior, Google URL Inspection/Rich Results Test, social-card fetches, and submit the updated sitemap. Monitor real search and referral data before changing the editorial content further.
 
-No invented FAQs, testimonials, ratings, credentials, metrics, or “fresh” dates were added. No content was hidden specifically for crawlers. Markdown access is explicit by URL, not Accept-header negotiation.
+No invented FAQs, testimonials, ratings, credentials, metrics, or “fresh” dates were added. No content was hidden specifically for crawlers. Markdown access is available both by explicit URL and Accept-header negotiation.
 
 ## Focused skill references and current guidance
 

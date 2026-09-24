@@ -1,10 +1,67 @@
 // biome-ignore-all lint/performance/noAwaitInLoops: Sequential UI actions verify one window lifecycle.
 import assert from "node:assert/strict";
+import { mkdir } from "node:fs/promises";
 import { chromium } from "playwright";
 
 const browser = await chromium.launch();
 const route = process.argv[2] || "/";
+const base = process.env.SITE_URL || "http://localhost:3000";
+await mkdir(".scratch", { recursive: true });
 try {
+  const noScript = await browser.newPage({
+    javaScriptEnabled: false,
+    reducedMotion: "reduce",
+    viewport: { height: 900, width: 320 },
+  });
+  for (const path of ["/", "/about", "/contact", "/privacy"]) {
+    await noScript.goto(new URL(path, base).href);
+    assert(await noScript.locator("main h1").first().isVisible(), path);
+    assert((await noScript.locator("main").innerText()).length >= 500, path);
+    if (path === "/") {
+      const asset = await noScript.request.get(
+        new URL("/design/world-map.svg", base).href
+      );
+      assert.equal(asset.status(), 200);
+      const svg = await asset.text();
+      const map = noScript.locator(
+        'svg:has(use[href="/design/world-map.svg#dots"])'
+      );
+      for (const theme of ["light", "dark"]) {
+        await noScript.evaluate((value) => {
+          document.documentElement.className = value;
+        }, theme);
+        const external = await map.screenshot({
+          animations: "disabled",
+          path: `.scratch/map-external-${theme}.png`,
+        });
+        await map.evaluate((element, source) => {
+          const use = element.querySelector("use");
+          const path = new DOMParser()
+            .parseFromString(source, "image/svg+xml")
+            .querySelector("path");
+          path.setAttribute("class", use.getAttribute("class"));
+          use.after(document.importNode(path, true));
+          use.style.display = "none";
+        }, svg);
+        // Compare the cached geometry with the identical inline path.
+        // The hidden use keeps the same locator while the pixels are compared.
+        assert(
+          (
+            await map.screenshot({
+              animations: "disabled",
+              path: `.scratch/map-inline-${theme}.png`,
+            })
+          ).equals(external),
+          `World map parity: ${theme}`
+        );
+        await map.evaluate((element) => {
+          element.querySelector("#dots").remove();
+          element.querySelector("use").style.display = "";
+        });
+      }
+    }
+  }
+  await noScript.close();
   for (const theme of ["light", "dark"]) {
     for (const width of [1440, 320]) {
       const page = await browser.newPage({ viewport: { height: 1000, width } });
@@ -13,10 +70,18 @@ try {
         theme
       );
       const errors = [];
+      let writingRequests = 0;
+      await page.route("**/dock/posts.json", async (request) => {
+        writingRequests += 1;
+        if (writingRequests === 1)
+          await request.fulfill({ body: "Unavailable", status: 503 });
+        else await request.continue();
+      });
       page.on("pageerror", (error) => errors.push(error.message));
-      await page.goto(`http://localhost:3000${route}`);
+      await page.goto(new URL(route, base).href);
       await page.evaluate(() => document.fonts.ready);
       await page.waitForTimeout(1200);
+      assert.equal(writingRequests, 0, "Writing must not load before a click");
       const dock = page.getByRole("navigation", {
         exact: true,
         name: route === "/prototype/dock" ? "Dock preview" : "Primary",
@@ -42,7 +107,7 @@ try {
           Math.abs(before[key] - after[key]) < 1,
           `Dock ${key} changed`
         );
-      const panel = page.locator('[data-ready="true"]');
+      const panel = page.locator('[data-ready="true"][data-contact]');
       const initial = await panel.boundingBox();
       for (const name of [
         "About",
@@ -56,10 +121,23 @@ try {
         assert.deepEqual(rect, initial, `${name} changed window dimensions`);
         if (name === "Experience")
           await page.getByRole("list", { name: "Work history" }).waitFor();
-        if (name === "Writing")
+        if (name === "Writing") {
+          await panel.getByRole("alert").waitFor();
+          await panel
+            .getByRole("link", { name: "Open writing page" })
+            .waitFor();
+          await panel
+            .getByRole("button", { exact: true, name: "Retry" })
+            .click();
           await page
             .getByRole("button", { exact: true, name: "All" })
             .waitFor();
+          assert.equal(
+            writingRequests,
+            2,
+            "Retry must reload the writing feed"
+          );
+        }
         assert.equal(
           await panel.evaluate(
             (element) => element.scrollWidth > element.clientWidth + 1
@@ -119,7 +197,7 @@ try {
     }
   }
   console.log(
-    "Standard window size, actual page content, dock continuity and reverse close passed."
+    "Lazy writing, failure recovery, window content, dock continuity, focus and reverse close passed in both themes at 320px and 1440px."
   );
 } finally {
   await browser.close();

@@ -74,6 +74,10 @@ export const contactContent = {
   description:
     "Bring the idea you keep coming back to. Let’s see where a conversation takes it.",
   heading: "What should we make next?",
+  paragraphs: [
+    "Get in touch about product engineering, mobile or web applications, and practical AI tools. This portfolio brings together my work across engineering, product and design. If a project or article connects with something you are building, include its name or link so we can start with the same context.",
+    "A useful first message describes the problem, who it affects and what you would like to explore together. You do not need a finished brief. Email is a good place to share that context; the calendar offers a short introductory conversation. Please keep confidential information out of an initial message. You can read the privacy page for details about messages, booking and the services used on this site.",
+  ],
 } as const;
 
 // Footer Content
