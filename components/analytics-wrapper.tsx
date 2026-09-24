@@ -4,23 +4,39 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import { canTrack, linkEvent, trackPortfolioEvent, validGaId } from "@/lib/analytics";
 
 export function AnalyticsWrapper({ gaId }: { gaId: string }) {
   const [shouldLoad, setShouldLoad] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
-    // Defer analytics until after first paint / interaction window
-    const timer = window.setTimeout(() => setShouldLoad(true), 2500);
-    return () => window.clearTimeout(timer);
+    if (!canTrack()) return;
+    const analyticsWindow = window as Window & { dataLayer?: unknown[] };
+    const queue = (analyticsWindow.dataLayer ??= []);
+    // Configure privacy before Google's config command; no advertising features.
+    queue.push(["consent", "default", { ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied", analytics_storage: "granted" }]);
+    queue.push(["set", { allow_google_signals: false, allow_ad_personalization_signals: false }]);
+    setShouldLoad(true);
+    const clicked = (event: MouseEvent) => {
+      if (!(event.target instanceof Element) || event.defaultPrevented || event.button !== 0) return;
+      const link = event.target.closest<HTMLAnchorElement>("a[href]");
+      if (!link) return;
+      const action = linkEvent(link.href, window.location.href);
+      if (action) trackPortfolioEvent(action.event, action.properties);
+    };
+    document.addEventListener("click", clicked);
+    return () => document.removeEventListener("click", clicked);
   }, []);
 
-  if (!shouldLoad) {
+  if (!shouldLoad || pathname.startsWith("/prototype")) {
     return null;
   }
 
   return (
     <>
-      <GoogleAnalytics gaId={gaId} />
+      {validGaId(gaId) && <GoogleAnalytics gaId={gaId} />}
       <Analytics />
       <SpeedInsights />
     </>
