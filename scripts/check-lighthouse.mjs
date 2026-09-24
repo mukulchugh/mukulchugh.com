@@ -8,13 +8,23 @@ import { chromium } from "playwright";
 const run = promisify(execFile);
 const base = process.env.SITE_URL || "http://localhost:4181";
 const output = resolve(process.env.AUDIT_DIR || ".scratch/lighthouse");
-const sitemap = await (await fetch(`${base}/sitemap.xml`)).text();
+const response = await fetch(`${base}/sitemap.xml`);
+if (!response.ok) throw new Error(`Sitemap returned ${response.status}`);
+const sitemap = await response.text();
 const routes =
   process.env.AUDIT_ROUTES?.split(",") ||
   [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map(
     (match) => new URL(match[1]).pathname
   );
 const modes = (process.env.AUDIT_MODES || "mobile,desktop").split(",");
+if (
+  !routes.length ||
+  modes.some((mode) => !["mobile", "desktop"].includes(mode))
+) {
+  throw new Error(
+    "The audit requires public routes and valid mobile/desktop modes"
+  );
+}
 const results = [];
 await mkdir(output, { recursive: true });
 
@@ -59,10 +69,12 @@ for (const route of routes) {
         ])
       );
       const row = {
+        benchmarkIndex: report.environment.benchmarkIndex,
         cls: report.audits["cumulative-layout-shift"].numericValue,
         failures: Object.values(report.audits)
           .filter((audit) => audit.score !== null && audit.score < 1)
           .map(({ id, title, displayValue }) => ({ displayValue, id, title })),
+        fetchTime: report.fetchTime,
         lcp: report.audits["largest-contentful-paint"].numericValue,
         mode,
         route,
@@ -70,7 +82,7 @@ for (const route of routes) {
         tbt: report.audits["total-blocking-time"].numericValue,
       };
       results.push(row);
-      console.log(JSON.stringify(row));
+      console.log(JSON.stringify({ ...row, failures: row.failures.length }));
     } catch (error) {
       const row = { error: error.message, mode, route };
       results.push(row);
