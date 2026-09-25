@@ -28,6 +28,24 @@ try {
       waitUntil: "domcontentloaded",
     });
     const game = page.getByRole("region", { name: "Rebound air hockey" });
+    const dialogState = () =>
+      page.evaluate(() => {
+        const dialog = document.querySelector("dialog");
+        return {
+          childCount: dialog?.children.length ?? -1,
+          open: dialog?.hasAttribute("open") ?? null,
+        };
+      });
+    assert.deepEqual(
+      await dialogState(),
+      { childCount: 0, open: false },
+      "Collapsed shell is a genuinely empty, closed native dialog (no inline pseudo-modal)"
+    );
+    assert.equal(
+      await page.getByRole("region", { name: "Rebound air hockey" }).count(),
+      1,
+      "Exactly one accessible region for the inline game (no duplicate landmark)"
+    );
     await game.getByRole("button", { exact: true, name: "Play" }).click();
     await page.waitForTimeout(200);
     assert.equal(await game.getAttribute("data-status"), "playing");
@@ -46,6 +64,16 @@ try {
     await game.getByRole("button", { name: "Enter fullscreen" }).click();
     await page.waitForTimeout(900);
     assert.equal(await game.getAttribute("data-expanded"), "true");
+    assert.deepEqual(
+      await dialogState(),
+      { childCount: 1, open: true },
+      "Expanded shell is a real, open modal dialog containing the game (one expanded modal)"
+    );
+    assert.equal(
+      await page.getByRole("dialog", { name: "Fullscreen air hockey" }).count(),
+      1,
+      "Exactly one accessible dialog while expanded"
+    );
     if (!fallback)
       assert.equal(
         await page.evaluate(() => Boolean(document.fullscreenElement)),
@@ -92,6 +120,11 @@ try {
     await controls.getByRole("button", { name: "Exit fullscreen" }).click();
     await page.waitForTimeout(800);
     assert.equal(await game.getAttribute("data-expanded"), "false");
+    assert.deepEqual(
+      await dialogState(),
+      { childCount: 0, open: false },
+      "Collapsing restores a genuinely empty, closed native dialog"
+    );
     assert.equal(await puck.getAttribute("data-same-puck"), "yes");
     assert.equal(
       await game
