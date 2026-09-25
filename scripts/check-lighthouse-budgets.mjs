@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import {
+  AGENTIC_CATEGORY,
   aggregateRuns,
   buildRouteAggregate,
   DEFAULT_BUDGETS,
@@ -7,6 +8,7 @@ import {
   evaluateTargets,
   median,
   parseRepeats,
+  selectCategories,
   spread,
   validateBudgets,
 } from "./check-lighthouse.mjs";
@@ -434,6 +436,96 @@ assert.deepEqual(
   ),
   { aggregate: null, budgetFailures: [] },
   "an all-errored route/mode has no evidence to aggregate"
+);
+
+// selectCategories: Agentic Browsing is required by default (the owner now
+// requires all five categories), and only an explicit "0" opts a diagnostic
+// run out -- never silently, and never leaving only four categories checked
+// while still being reported as the full target.
+const ALL_FIVE = [...CATEGORIES, AGENTIC_CATEGORY];
+assert.deepEqual(
+  selectCategories(undefined),
+  ALL_FIVE,
+  "agentic-browsing must be included by default with no env var set"
+);
+assert.deepEqual(
+  selectCategories("1"),
+  ALL_FIVE,
+  "an explicit AUDIT_AGENTIC=1 must match the default (redundant, not additive)"
+);
+assert.deepEqual(
+  selectCategories("nonsense"),
+  ALL_FIVE,
+  'only an exact "0" opts out; any other value keeps the required default'
+);
+assert.deepEqual(
+  selectCategories("0"),
+  CATEGORIES,
+  "an explicit AUDIT_AGENTIC=0 must opt a diagnostic run out of agentic-browsing"
+);
+
+// evaluateTargets across all five selected categories: agentic-browsing is
+// enforced exactly like every other required category -- a genuine 100 run
+// passes, but a missing, null, or below-100 agentic-browsing score fails,
+// and none of that is reported as success.
+const fiveCategoryRow = {
+  mode: "mobile",
+  route: "/",
+  run: 1,
+  scores: {
+    accessibility: 100,
+    "agentic-browsing": 100,
+    "best-practices": 100,
+    performance: 100,
+    seo: 100,
+  },
+};
+assert.deepEqual(
+  evaluateTargets([fiveCategoryRow], ALL_FIVE),
+  [],
+  "a genuine all-five, all-100 run must not be flagged"
+);
+
+const missingAgenticScores = { ...fiveCategoryRow.scores };
+missingAgenticScores["agentic-browsing"] = undefined;
+assert.ok(
+  evaluateTargets(
+    [{ ...fiveCategoryRow, scores: missingAgenticScores }],
+    ALL_FIVE
+  ).some(
+    (line) =>
+      line.includes("agentic-browsing") && line.includes("missing/unscored")
+  ),
+  "a report missing the agentic-browsing category entirely must fail, not be treated as a pass"
+);
+
+assert.ok(
+  evaluateTargets(
+    [
+      {
+        ...fiveCategoryRow,
+        scores: { ...fiveCategoryRow.scores, "agentic-browsing": null },
+      },
+    ],
+    ALL_FIVE
+  ).some(
+    (line) =>
+      line.includes("agentic-browsing") && line.includes("missing/unscored")
+  ),
+  "a null (unscored) agentic-browsing category must never be reported as success"
+);
+
+assert.ok(
+  evaluateTargets(
+    [
+      {
+        ...fiveCategoryRow,
+        scores: { ...fiveCategoryRow.scores, "agentic-browsing": 80 },
+      },
+    ],
+    ALL_FIVE
+  ).some((line) => line.includes("agentic-browsing 80 < 100")),
+  "agentic-browsing below 100 must fail exactly like any other required category"
 );
 
 console.log(

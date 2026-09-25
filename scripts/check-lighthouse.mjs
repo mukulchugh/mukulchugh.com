@@ -8,16 +8,28 @@ import { chromium } from "playwright";
 const run = promisify(execFile);
 const VALID_MODES = ["mobile", "desktop"];
 const MAX_REPEATS = 20;
-// Budgets only ever cover the four fixed Lighthouse categories, regardless of
-// which categories are actually selected for a given invocation (an
-// optionally selected agentic-browsing category still owes the strict
-// all-100 target below; it has no regression-budget baseline).
-const BUDGET_CATEGORIES = [
+const CORE_CATEGORIES = [
   "performance",
   "accessibility",
   "best-practices",
   "seo",
 ];
+export const AGENTIC_CATEGORY = "agentic-browsing";
+
+// Agentic Browsing is a required target category by default, exactly like
+// the other four -- the owner requires all five. Only an explicit
+// AUDIT_AGENTIC="0" opts a diagnostic run out of it; any other value
+// (including unset) keeps it in. Never silent: runAudit reports whenever a
+// run excludes it, so a four-category pass can never be read as "all five."
+export const selectCategories = (auditAgenticEnv) =>
+  auditAgenticEnv === "0"
+    ? [...CORE_CATEGORIES]
+    : [...CORE_CATEGORIES, AGENTIC_CATEGORY];
+// Budgets only ever cover the four fixed non-agentic Lighthouse categories
+// (CORE_CATEGORIES above). Agentic Browsing is a required target category by
+// default (see selectCategories above) but has no regression-budget
+// baseline of its own.
+const BUDGET_CATEGORIES = CORE_CATEGORIES;
 
 // Regression-only baselines, evaluated exclusively when AUDIT_BUDGET_MODE=1.
 // These exist to flag drift between repeats, not to replace the all-100
@@ -198,9 +210,9 @@ export const buildRouteAggregate = (route, mode, runs, options = {}) => {
   return { aggregate, budgetFailures };
 };
 
-// The actual owner-requested target: every explicitly selected category
-// (including an optionally selected agentic-browsing one) must score 100 on
-// every run. Iterates the selected `categories` themselves, not just
+// The actual owner-requested target: every selected category -- by default
+// all five, including Agentic Browsing (see selectCategories) -- must score
+// 100 on every run. Iterates the selected `categories` themselves, not just
 // whatever happens to be present on the row, so an empty/partial `scores`
 // object cannot silently pass. A run that errored, or that has no valid
 // score for a selected category (Lighthouse reports `null` when a category
@@ -247,7 +259,6 @@ async function runAudit() {
   const base = process.env.SITE_URL || "http://localhost:4181";
   const output = resolve(process.env.AUDIT_DIR || ".scratch/lighthouse");
   const repeats = parseRepeats(process.env.AUDIT_REPEATS);
-  const useAgentic = process.env.AUDIT_AGENTIC === "1";
   const budgetMode = process.env.AUDIT_BUDGET_MODE === "1";
   const response = await fetch(`${base}/sitemap.xml`);
   if (!response.ok) throw new Error(`Sitemap returned ${response.status}`);
@@ -264,10 +275,15 @@ async function runAudit() {
     );
   }
 
-  // Selected categories owe the strict all-100 target below; there is no
-  // exemption for agentic-browsing once it is explicitly opted into.
-  const categories = ["performance", "accessibility", "best-practices", "seo"];
-  if (useAgentic) categories.push("agentic-browsing");
+  // Agentic Browsing is a required target category by default, alongside
+  // the other four; only an explicit AUDIT_AGENTIC="0" opts a diagnostic run
+  // out of it, and that exclusion is always reported below, never silent.
+  const categories = selectCategories(process.env.AUDIT_AGENTIC);
+  if (!categories.includes(AGENTIC_CATEGORY)) {
+    console.log(
+      `Diagnostic mode: ${AGENTIC_CATEGORY} excluded via AUDIT_AGENTIC=0. This run only enforces the all-100 target on ${categories.length} of 5 required categories (${categories.join(", ")}) -- it is not a pass of the full target.`
+    );
+  }
 
   const budgets = budgetMode
     ? validateBudgets(
@@ -285,6 +301,7 @@ async function runAudit() {
   const metadata = {
     browser: null,
     budgetMode,
+    categories,
     commit: commit.trim(),
     lighthouse: lighthousePackage,
     modes,
@@ -400,7 +417,7 @@ async function runAudit() {
 
   const targetFailures = evaluateTargets(results, categories);
   console.log(
-    `${results.length} audits complete across ${repeats} repeat(s); ${targetFailures.length} target failure(s) (every selected category must be 100). Reports: ${output}`
+    `${results.length} audits complete across ${repeats} repeat(s) on ${categories.length} categor${categories.length === 1 ? "y" : "ies"} (${categories.join(", ")}); ${targetFailures.length} target failure(s), each must be 100. Reports: ${output}`
   );
   for (const failure of targetFailures) {
     console.error(`Target failure: ${failure}`);

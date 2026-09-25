@@ -10,9 +10,9 @@ on:
         description: "Lighthouse repeats per route/mode"
         default: "2"
       agentic:
-        description: "Also collect the agentic-browsing category (subject to the same all-100 target once selected)"
+        description: "Include the required agentic-browsing category in the all-100 target (default true; set false only for a diagnostic opt-out, never as a scoring shortcut)"
         type: boolean
-        default: false
+        default: true
       budgetMode:
         description: "Also report opt-in regression budgets (median-based drift check; never a substitute for the all-100 target)"
         type: boolean
@@ -31,6 +31,11 @@ jobs:
       - run: bun run check
       - run: bunx tsc --noEmit
       - run: bun run build
+      # These two live on the coordinator's page-loading/motion branches and
+      # land here on integration; they run after build like every other
+      # post-build check in this job.
+      - run: node scripts/check-home-showcase-server.mjs
+      - run: node scripts/check-motion-priority.mjs
       - run: node scripts/check-lighthouse-budgets.mjs
       - run: bun run test:seo
       - run: bun run test:ui
@@ -40,10 +45,12 @@ jobs:
       - run: bun run test:dead
 
   full-sweep:
-    # Manual only: enforces the same strict all-100 target as fast-checks,
-    # just across every route/mode instead of skipping the expensive audit.
-    # It never runs on push/PR, so it cannot contend with other CI or block
-    # a merge by itself; a human reads the uploaded artifact.
+    # Manual only: this is the only job that actually runs Lighthouse and
+    # enforces check-lighthouse.mjs's strict all-100 target (all five
+    # categories by default) against real routes. fast-checks above does not
+    # run Lighthouse at all -- it only unit-tests that target/budget logic.
+    # full-sweep never runs on push/PR, so it cannot contend with other CI
+    # or block a merge by itself; a human reads the uploaded artifact.
     name: Full 48-route Lighthouse sweep (mobile + desktop)
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
