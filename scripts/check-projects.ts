@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { hiddenProjectTitles } from "../lib/data";
+import { hiddenProjectTitles } from "../lib/project-catalog";
 import { projectDetails } from "../lib/project-details";
 import {
   getAllProjectSlugs,
