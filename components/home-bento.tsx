@@ -2,10 +2,7 @@
 
 import About from "@/components/about";
 import { BrandBar, LocationTile, ProfileTile } from "@/components/bento";
-import {
-  type Project,
-  ProjectSlider,
-} from "@/components/bento/project-slider";
+import { type Project, ProjectSlider } from "@/components/bento/project-slider";
 import BlogSection from "@/components/blog-section";
 import { ContactSection } from "@/components/contact/contact-section";
 import Experience from "@/components/experience";

@@ -47,13 +47,14 @@ if (manifest) {
   const entry = manifest.match(
     /"\[project\]\/components\/home-bento\.tsx":(\{[^}]*\})/
   );
-  if (!entry) {
-    failures.push(`${manifestPath}: no client-reference entry for home-bento.tsx`);
-  } else {
+  if (entry) {
     const { chunks } = JSON.parse(entry[1]);
     const shipped = chunks
       .map((chunk) =>
-        readFileSync(path.join(".next/static", chunk.replace("/_next/static", "")), "utf8")
+        readFileSync(
+          path.join(".next/static", chunk.replace("/_next/static", "")),
+          "utf8"
+        )
       )
       .join("\n");
     if (shipped.includes("getShowcaseProjects")) {
@@ -61,6 +62,10 @@ if (manifest) {
         "generated home-bento.tsx chunks: must not contain getShowcaseProjects"
       );
     }
+  } else {
+    failures.push(
+      `${manifestPath}: no client-reference entry for home-bento.tsx`
+    );
   }
 }
 
@@ -110,7 +115,10 @@ function importsOf(file) {
   );
   const specifiers = [];
   function visit(node) {
-    if (ts.isImportDeclaration(node) && ts.isStringLiteral(node.moduleSpecifier)) {
+    if (
+      ts.isImportDeclaration(node) &&
+      ts.isStringLiteral(node.moduleSpecifier)
+    ) {
       const target = resolveImport(node.moduleSpecifier.text, file);
       if (target) specifiers.push(target);
     }
