@@ -1,0 +1,80 @@
+name: Performance
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      repeats:
+        description: "Lighthouse repeats per route/mode"
+        default: "2"
+      agentic:
+        description: "Also collect the agentic-browsing category (subject to the same all-100 target once selected)"
+        type: boolean
+        default: false
+      budgetMode:
+        description: "Also report opt-in regression budgets (median-based drift check; never a substitute for the all-100 target)"
+        type: boolean
+        default: false
+
+jobs:
+  fast-checks:
+    name: Fast PR checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - run: bun run check
+      - run: bunx tsc --noEmit
+      - run: bun run build
+      - run: node scripts/check-lighthouse-budgets.mjs
+      - run: bun run test:seo
+      - run: bun run test:ui
+      - run: bun run test:analytics
+      - run: bun run test:assets
+      - run: bun run test:css
+      - run: bun run test:dead
+
+  full-sweep:
+    # Manual only: enforces the same strict all-100 target as fast-checks,
+    # just across every route/mode instead of skipping the expensive audit.
+    # It never runs on push/PR, so it cannot contend with other CI or block
+    # a merge by itself; a human reads the uploaded artifact.
+    name: Full 48-route Lighthouse sweep (mobile + desktop)
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - run: bunx playwright install --with-deps chromium
+      - run: bun run build
+      - name: Start production server on 4181
+        run: |
+          bun run start -- -p 4181 &
+          for _ in $(seq 1 30); do
+            curl -sf http://localhost:4181/sitemap.xml > /dev/null && exit 0
+            sleep 2
+          done
+          echo "Server did not become ready" >&2
+          exit 1
+      - name: Run full route sweep
+        env:
+          SITE_URL: http://localhost:4181
+          AUDIT_DIR: .scratch/lighthouse
+          AUDIT_REPEATS: ${{ github.event.inputs.repeats || '2' }}
+          AUDIT_AGENTIC: ${{ github.event.inputs.agentic == 'true' && '1' || '0' }}
+          AUDIT_BUDGET_MODE: ${{ github.event.inputs.budgetMode == 'true' && '1' || '0' }}
+        run: node scripts/check-lighthouse.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lighthouse-reports
+          path: .scratch/lighthouse
+          retention-days: 30
