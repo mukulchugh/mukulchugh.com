@@ -2,18 +2,24 @@
 
 import About from "@/components/about";
 import { BrandBar, LocationTile, ProfileTile } from "@/components/bento";
-import { ProjectSlider } from "@/components/bento/project-slider";
+import {
+  type Project,
+  ProjectSlider,
+} from "@/components/bento/project-slider";
 import BlogSection from "@/components/blog-section";
 import { ContactSection } from "@/components/contact/contact-section";
 import Experience from "@/components/experience";
 import { Rebound } from "@/components/rebound/rebound";
 import type { Post } from "@/lib/blog";
 import { useSectionInView } from "@/lib/hooks";
-import { getShowcaseProjects } from "@/lib/projects";
 
-const showcase = getShowcaseProjects();
-
-export function HomeBento({ posts }: { posts: Post[] }) {
+export function HomeBento({
+  posts,
+  showcase,
+}: {
+  posts: Post[];
+  showcase: Project[];
+}) {
   const { ref } = useSectionInView("Projects");
   return (
     <div className="home-design flex min-w-0 flex-col gap-3">
