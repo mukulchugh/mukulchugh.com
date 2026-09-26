@@ -44,3 +44,14 @@ All were inspected in one batched pass; the one issue found (the ready and skele
 - A passing build and passing scripts are not the same claim as verified end-to-end smoothness; the claims above are backed specifically by the scenarios and screenshots listed, not by build success alone.
 
 Server used for all of the above: a dedicated `next start -p 4185` in this worktree, stopped after verification. Ports 3000, 4182, and 4184 were not touched.
+
+## Integration verification
+
+Integrated into `perf/sitewide-lighthouse` and independently checked against its dedicated production preview on port 4182:
+
+- Production build: 67 generated routes, 1123 valid asset references across 60 HTML pages. Lint, UI contracts, CSS usage and dead-source checks passed.
+- Loading regression, native booking (all submissions mocked), project archive failure/retry, and the existing dock window suite passed.
+- Additional screenshots captured the actual delayed page skeleton at 1440px dark, 390px light and 320px dark. Each window fit without horizontal overflow; reduced-motion windows had no running animations. Screenshots: `.scratch/unified-loading/skeleton-{dark-1440,light-390,dark-320}.png`.
+- The reduced-motion focus-return gap documented above is addressed separately by the one-selector fix in `docs/dock-close-focus-2026-09-26.md`. The loader does not add manual focus handling.
+
+These are local Chromium results, not production deployment or fresh PageSpeed scores. The user-owned port 3000 remains untouched.
