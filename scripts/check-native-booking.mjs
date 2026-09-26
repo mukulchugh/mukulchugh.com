@@ -17,7 +17,15 @@ try {
     "invalid",
     "unavailable",
   ]) {
+    const timezoneId =
+      outcome === "accepted"
+        ? "Asia/Kolkata"
+        : outcome === "pending"
+          ? "America/Los_Angeles"
+          : "Europe/London";
     const context = await browser.newContext({
+      locale: "en-US",
+      timezoneId,
       viewport: { height: 1000, width: 1440 },
     });
     const page = await context.newPage();
@@ -31,6 +39,8 @@ try {
     await page.clock.setFixedTime(new Date("2026-09-25T00:00:00Z"));
     const errors = [];
     const submissions = [];
+    const availability = [];
+    let expectedZone;
     page.on("pageerror", (error) => errors.push(error.message));
     await context.route("**/api.cal.com/**", async (route) => {
       const request = route.request();
@@ -42,6 +52,7 @@ try {
         assert.equal(data.username, "mukulchugh");
         assert.equal(data.eventTypeSlug, "15min");
         assert.equal(data.attendee.email, "fixture@example.com");
+        assert.equal(data.attendee.timeZone, expectedZone);
         assert.deepEqual(data.guests, ["guest@example.com"]);
         assert.equal(data.allowConflicts, undefined);
         assert.equal(request.headers()["cal-api-version"], "2026-02-25");
@@ -61,6 +72,7 @@ try {
         });
       }
       assert.equal(url.pathname, "/v2/slots");
+      availability.push(Object.fromEntries(url.searchParams));
       if (outcome === "unavailable")
         return route.fulfill({ json: { status: "error" }, status: 503 });
       const date = url.searchParams.get("start");
@@ -77,13 +89,47 @@ try {
       });
     });
     await page.goto(`${base}/contact`);
-    await page.getByLabel("Timezone", { exact: true }).waitFor();
+    // The wrapping label also contains option text once timezones populate.
+    const timezone = page.getByRole("combobox", {
+      exact: true,
+      name: "Timezone",
+    });
+    await timezone.locator("option").first().waitFor({ state: "attached" });
+    expectedZone = await page.evaluate(
+      (value) =>
+        new Intl.DateTimeFormat("en-US", { timeZone: value }).resolvedOptions()
+          .timeZone,
+      timezoneId
+    );
+    assert.equal(await timezone.inputValue(), expectedZone);
+    assert.equal(
+      await page.getByLabel("Date", { exact: true }).inputValue(),
+      timezoneId === "America/Los_Angeles" ? "2026-09-24" : "2026-09-25",
+      "Initial date follows the visitor's timezone, not the server's date"
+    );
     await page.waitForTimeout(350);
     assert.ok(
       (await page.evaluate(() => window.bookingLayoutShift)) < 0.01,
       "Booking styles must be present before hydration without a layout jump"
     );
-    await page.getByLabel("Date", { exact: true }).fill("2026-12-10");
+    // Manual overrides must survive subsequent date changes and submission.
+    if (outcome === "conflict") {
+      expectedZone = "UTC";
+      await timezone.selectOption(expectedZone);
+    }
+    await Promise.all([
+      page.waitForResponse((response) => {
+        const url = new URL(response.url());
+        return (
+          url.hostname === "api.cal.com" &&
+          url.pathname === "/v2/slots" &&
+          url.searchParams.get("start") === "2026-12-10"
+        );
+      }),
+      page.getByLabel("Date", { exact: true }).fill("2026-12-10"),
+    ]);
+    assert.equal(availability.at(-1).timeZone, expectedZone);
+    assert.equal(await timezone.inputValue(), expectedZone);
     if (outcome === "unavailable") {
       await page
         .getByRole("button", { exact: true, name: "Try again" })
@@ -95,6 +141,15 @@ try {
     const slots = page
       .locator('[class*="booking-calendar"] button')
       .filter({ hasText: /\d/ });
+    const expectedTime =
+      timezoneId === "Asia/Kolkata"
+        ? "11:30 PM"
+        : timezoneId === "America/Los_Angeles"
+          ? "10:00 AM"
+          : "6:00 PM";
+    await page
+      .getByRole("button", { exact: true, name: expectedTime })
+      .waitFor();
     await slots.first().click();
     await page.getByLabel("Your name", { exact: true }).fill("Fixture Visitor");
     await page
@@ -196,7 +251,7 @@ try {
     }
   }
   console.log(
-    "PASS: native booking outcomes, preserved details, narrow layouts and both themes. All booking submissions mocked."
+    "PASS: automatic India/Los Angeles/London timezones, local date, winter slot times, manual UTC override, booking payloads, outcomes and responsive themes. All booking submissions mocked."
   );
 } finally {
   await browser.close();
