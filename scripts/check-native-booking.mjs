@@ -77,7 +77,10 @@ try {
       });
     });
     await page.goto(`${base}/contact`);
-    await page.getByLabel("Timezone", { exact: true }).waitFor();
+    // The wrapping label also contains option text once timezones populate.
+    await page
+      .getByRole("combobox", { exact: true, name: "Timezone" })
+      .waitFor();
     await page.waitForTimeout(350);
     assert.ok(
       (await page.evaluate(() => window.bookingLayoutShift)) < 0.01,

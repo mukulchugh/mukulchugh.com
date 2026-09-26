@@ -28,6 +28,13 @@ try {
       waitUntil: "domcontentloaded",
     });
     const game = page.getByRole("region", { name: "Rebound air hockey" });
+    const puck = game.getByAltText("Puck").locator("..");
+    // Production can paint the Play button before the game effect initializes.
+    await page.waitForFunction(() =>
+      document
+        .querySelector('[alt="Puck"]')
+        ?.parentElement?.style.transform.includes("translate3d(")
+    );
     const dialogState = () =>
       page.evaluate(() => {
         const dialog = document.querySelector("dialog");
@@ -47,10 +54,13 @@ try {
       "Exactly one accessible region for the inline game (no duplicate landmark)"
     );
     await game.getByRole("button", { exact: true, name: "Play" }).click();
-    await page.waitForTimeout(200);
+    await page.waitForFunction(
+      () =>
+        document.querySelector('[aria-label="Rebound air hockey"]')?.dataset
+          .status === "playing"
+    );
     assert.equal(await game.getAttribute("data-status"), "playing");
     await game.getByRole("button", { exact: true, name: "Pause" }).click();
-    const puck = game.getByAltText("Puck").locator("..");
     await puck.evaluate((el) => {
       el.dataset.samePuck = "yes";
     });
