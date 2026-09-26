@@ -10,6 +10,7 @@ import {
 import { lazy, Suspense, useEffect, useId, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FluorescentShader } from "@/components/ui/fluorescent-shader";
+import { LoadingState } from "@/components/ui/loading-state";
 import { trackPortfolioEvent } from "@/lib/analytics";
 import { useSectionInView } from "@/lib/hooks";
 import { siteConfig } from "@/lib/site-config";
@@ -135,12 +136,11 @@ export function ContactSection({
             {visited && (
               <Suspense
                 fallback={
-                  <p
+                  <LoadingState
                     className={`${styles.calendarLoading} ${calendarStyles.calendar}`}
-                    role="status"
-                  >
-                    Checking available times…
-                  </p>
+                    label="Checking available times…"
+                    variant="compact"
+                  />
                 }
               >
                 <BookingCalendar />

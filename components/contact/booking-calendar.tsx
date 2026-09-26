@@ -7,6 +7,7 @@ import {
 } from "@tabler/icons-react";
 import { type FormEvent, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { LoadingState } from "@/components/ui/loading-state";
 import { trackPortfolioEvent } from "@/lib/analytics";
 import styles from "./booking-calendar.module.css";
 
@@ -387,15 +388,20 @@ export function BookingCalendar() {
               </label>
             </div>
             <div aria-busy={loading} className={styles.availability}>
-              <p role="status">
-                {loading
-                  ? "Checking available times…"
-                  : availabilityError
+              {loading ? (
+                <LoadingState
+                  label="Checking available times…"
+                  variant="compact"
+                />
+              ) : (
+                <p role="status">
+                  {availabilityError
                     ? "Available times couldn’t load. Try again or open the calendar below."
                     : slots.length
                       ? "Choose your start time."
                       : "No times available on this date. Try another day."}
-              </p>
+                </p>
+              )}
               {availabilityError && (
                 <Button
                   onClick={() => setRefresh((value) => value + 1)}

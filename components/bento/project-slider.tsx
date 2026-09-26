@@ -20,6 +20,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { LoadingState } from "@/components/ui/loading-state";
 import { useReducedMotion } from "@/lib/use-reduced-motion";
 import styles from "./project-slider.module.css";
 
@@ -406,7 +407,7 @@ export function ProjectSlider({
                   </div>
                 </div>
               ) : (
-                <p role="status">Loading projects…</p>
+                <LoadingState label="Loading projects…" />
               )}
             </div>
           </DialogContent>
