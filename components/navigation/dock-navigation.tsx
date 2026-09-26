@@ -45,6 +45,9 @@ export function DockNavigation({
   const [hasOpened, setHasOpened] = useState(false);
   const launchTrigger = launch?.trigger;
   const [selected, setSelected] = useState<Destination>("Contact");
+  const [pendingDestination, setPendingDestination] =
+    useState<Destination | null>(null);
+  const pendingToken = useRef(0);
   const stage = useRef<HTMLDivElement>(null);
   const tray = useRef<HTMLElement>(null);
   const filterId = `dock-lens-${useId().replace(/:/g, "")}`;
@@ -60,7 +63,18 @@ export function DockNavigation({
 
   useEffect(() => {
     setLaunch(null);
+    // A real route change (Home, back/forward, another link) supersedes any
+    // destination click still awaiting its shell chunk.
+    pendingToken.current += 1;
+    setPendingDestination(null);
   }, [pathname]);
+
+  useEffect(
+    () => () => {
+      pendingToken.current += 1;
+    },
+    []
+  );
 
   useEffect(() => {
     if (!(launchTrigger && tray.current)) return;
@@ -333,6 +347,7 @@ export function DockNavigation({
             const label = item.name === "Blog" ? "Writing" : item.name;
             return (
               <Link
+                aria-busy={pendingDestination === item.name || undefined}
                 aria-current={
                   !study && current === item.name ? "page" : undefined
                 }
@@ -341,23 +356,39 @@ export function DockNavigation({
                 href={item.hash}
                 key={item.name}
                 onClick={async (event) => {
-                  if (
-                    item.name === "Home" ||
+                  const modified =
                     event.metaKey ||
                     event.ctrlKey ||
                     event.shiftKey ||
                     event.altKey ||
-                    event.button !== 0
-                  )
+                    event.button !== 0;
+                  if (item.name === "Home") {
+                    if (!modified) {
+                      // A real same-tab navigation away supersedes any
+                      // destination click still awaiting its shell chunk.
+                      pendingToken.current += 1;
+                      setPendingDestination(null);
+                    }
                     return;
+                  }
+                  if (modified) return;
                   event.preventDefault();
                   const trigger = event.currentTarget;
+                  const token = ++pendingToken.current;
+                  setPendingDestination(item.name);
                   try {
                     await loadWindow();
                   } catch {
-                    window.location.assign(item.hash);
+                    if (pendingToken.current === token) {
+                      setPendingDestination(null);
+                      window.location.assign(item.hash);
+                    }
                     return;
                   }
+                  // A newer click already claimed the window; let it own the
+                  // open sequence instead of racing it with this stale one.
+                  if (pendingToken.current !== token) return;
+                  setPendingDestination(null);
                   if (!(trigger.isConnected && tray.current)) return;
                   const rect = trigger.getBoundingClientRect();
                   setHasOpened(true);
@@ -387,12 +418,26 @@ export function DockNavigation({
                 }}
                 prefetch={false}
               >
-                <Icon aria-hidden="true" size={21} stroke={1.65} />
+                <Icon
+                  aria-hidden="true"
+                  className={
+                    pendingDestination === item.name
+                      ? "animate-pulse motion-reduce:animate-none"
+                      : undefined
+                  }
+                  size={21}
+                  stroke={1.65}
+                />
                 <span className={styles.label}>{label}</span>
               </Link>
             );
           })}
         </nav>
+        <span aria-live="polite" className="sr-only" role="status">
+          {pendingDestination
+            ? `Opening ${pendingDestination === "Blog" ? "Writing" : pendingDestination}…`
+            : ""}
+        </span>
       </div>
       {study && (
         <p className={styles.note} role="status">
