@@ -57,7 +57,7 @@ Main also separately rejected proposed follow-ups that would have removed
 the global `opacity` default or reduced-motion protection to save a few
 remaining bytes; no such change was implemented.
 
-An earlier draft of my own analysis mis-attributed a shared React-DOM chunk
+An earlier worker analysis mis-attributed a shared React-DOM chunk
 as the game's physics chunk (string false-positive: `'rink'` matched inside
 `flexShrink`). That attribution was wrong and is not reproduced here; no
 physics/game/CPU causal claim is made in this report.
@@ -73,7 +73,7 @@ physics/game/CPU causal claim is made in this report.
 
 Desktop: 47 of 48 routes score 100; home is the one exception at 99.
 
-Coordinator-validated (not re-run by me): production build — 67 routes,
+Coordinator-validated: production build — 67 routes,
 1,072 asset references, 60 HTML pages; lint/typecheck; `test:ui`, `test:seo`,
 `test:analytics`, `test:assets`, `test:css`, `test:dead`;
 `check-home-showcase-server` and motion-priority generated-build checks;
@@ -131,7 +131,7 @@ desktop (×2) met the target.
 - Page-closing animation work is out of scope here and is being handled
   separately on `fix/closing-motion` (session `portfolio-closing-motion`),
   not on this performance track.
-- This performance branch (`perf/fleet-inline-css`) is still not pushed,
+- The integration branch (`perf/sitewide-lighthouse`) is still not pushed,
   opened as a PR, or deployed. The all-100 target remains unmet.
 
 ## Trace-led investigation
