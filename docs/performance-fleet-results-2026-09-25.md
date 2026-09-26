@@ -1,6 +1,6 @@
 # Performance fleet results — 2026-09-25
 
-App source: `863927d`. This audit branch: `f2814c0`. `origin/main` verified
+Measured app source: `863927d`. Initial audit checkpoint: `f2814c0`. `origin/main` verified
 unchanged at `56267f5` — no push/PR/deploy this pass. All scores below are
 local Next.js production-build Lighthouse runs (Chromium only; Safari/Firefox
 not tested), not deployed PageSpeed Insights or real-user data. Analytics
@@ -109,6 +109,20 @@ every run. The strict-100 harness correctly flagged 6 of these 8 runs red
 (home mobile ×2, home desktop ×2, `/privacy` mobile ×2); only `/privacy`
 desktop (×2) met the target.
 
+### UI fixes after these measurements
+
+The local integration branch subsequently accepted shared loading states
+(`ec58ce0` through `78742d4`) and the reduced-motion dock focus repair
+(`cfaaad3`). They do not constitute a new performance result. The score
+tables above predate these changes and must not be presented as a fresh
+audit of the current source. Local integration evidence is recorded in
+`docs/unified-loading-2026-09-26.md` and
+`docs/dock-close-focus-2026-09-26.md`.
+
+Contact closing-motion candidates that produced first-frame layout jumps,
+scaled body text, or clipped controls were rejected. No such candidate was
+integrated with the loading work. That investigation remains separate.
+
 ## Unresolved
 
 - Mobile performance is not at the 100 target (81–95 range across the two
@@ -128,9 +142,9 @@ desktop (×2) met the target.
   any production performance claim is made.
 - CI runner execution (whether this workflow runs unattended on what
   cadence/hardware) is not established by this pass.
-- Page-closing animation work is out of scope here and is being handled
-  separately on `fix/closing-motion` (session `portfolio-closing-motion`),
-  not on this performance track.
+- Contact page-closing animation work is being handled separately on
+  `fix/closing-motion-clean` and `fix/contact-transition`. Their results
+  are not included in the measured performance results above.
 - The integration branch (`perf/sitewide-lighthouse`) is still not pushed,
   opened as a PR, or deployed. The all-100 target remains unmet.
 
