@@ -253,6 +253,7 @@
 @media (prefers-reduced-motion: reduce) {
   .study *,
   .study *::before,
+  .dock,
   .dock * {
     transition: none !important;
     animation: none !important;
