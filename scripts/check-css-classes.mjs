@@ -108,19 +108,30 @@ for (const file of files.filter(
     (/^(?:app|components)\//.test(file) && file.endsWith(".module.css"))
 )) {
   const classes = new Map();
-  postcss
-    .parse(readFileSync(file, "utf8"), { from: file })
-    .walkRules((rule) => {
-      selectorParser((selectors) => {
-        selectors.walkClasses((node) => {
-          for (let parent = node.parent; parent; parent = parent.parent) {
-            if (parent.type === "pseudo" && parent.value === ":global") return;
-          }
-          if (!classes.has(node.value))
-            classes.set(node.value, rule.source.start.line);
-        });
-      }).processSync(rule.selector);
-    });
+  const sheet = postcss.parse(readFileSync(file, "utf8"), { from: file });
+  const transitionClasses = new Set();
+  sheet.walkDecls("view-transition-class", (declaration) => {
+    for (const name of declaration.value.split(/\s+/))
+      transitionClasses.add(name);
+  });
+  sheet.walkRules((rule) => {
+    selectorParser((selectors) => {
+      selectors.walkClasses((node) => {
+        for (let parent = node.parent; parent; parent = parent.parent) {
+          if (parent.type === "pseudo" && parent.value === ":global") return;
+          // Native snapshot classes are declared in CSS, not in JSX.
+          if (
+            parent.type === "pseudo" &&
+            parent.value.startsWith("::view-transition-") &&
+            transitionClasses.has(node.value)
+          )
+            return;
+        }
+        if (!classes.has(node.value))
+          classes.set(node.value, rule.source.start.line);
+      });
+    }).processSync(rule.selector);
+  });
   const used = file.endsWith(".module.css")
     ? (moduleUses.get(resolve(file)) ?? new Set())
     : sourceTokens;

@@ -24,12 +24,25 @@
 }
 .panel[data-contact="true"] .content {
   padding: 0;
+  container-type: size;
 }
 .panel[data-contact="true"] .content > div:not([hidden]) {
   height: 100%;
 }
-.panel[data-contact="true"] .content > div > section {
-  min-height: 100%;
+.panel[data-contact="true"] .content > div > div {
+  border: none;
+  border-radius: 0;
+}
+.panel[data-contact="true"] .content > div > div > section {
+  /* A plain percentage can't resolve here: the frame's own height is
+     itself only a min-height (so tall booking content can grow it and
+     let .content's own scrollbar handle the overflow, not get clipped),
+     which never becomes a definite value for a percentage child to
+     resolve against. Querying .content (a real size container with a
+     definite, flex-derived height) directly skips that indeterminate
+     link -- and growing the section from the bottom up this way also
+     naturally makes the frame (which merely wraps it) at least as tall. */
+  min-height: 100cqh;
   border: none;
   border-radius: 0;
 }
