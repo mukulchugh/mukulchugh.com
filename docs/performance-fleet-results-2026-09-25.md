@@ -49,6 +49,13 @@ released/deployed.
 | PostHog experimental init-queue change | Coordinator-reported bug in the init queue; reverted by the owning worker. |
 | Initial game dialog-role draft | `role="region"` applied to the native `<dialog>` was invalid ARIA. The accepted fix removes the role override entirely and only populates dialog content/semantics once expanded. |
 | Dock resize padding/tone change | Rejected on coordinator review: the `ResizeObserver`'s `contentRect` excludes padding, mis-sizing the refraction lens — not a generic owning-worker judgment call. |
+| `experimental.inlineCss: true` (Next.js native) | Home initial HTML raw 117,304→620,210B (Δ502,906B, ~3x the 165,330B inlined `<style>` block — the full, un-split CSS bundle is duplicated into every page's SSR `<style>` and again in the RSC payload), gzip 18,203→107,126B — well over 2x the baseline's combined HTML+CSS gzip (18,203+29,907≈48,110B). Rejected on these bytes alone; no browser/Lighthouse run was performed, so no score claim is made. Native `next build` itself succeeded; a post-build asset-checker false positive (its regex matches `href=` inside React's `data-href`, which packs multiple URLs into one attribute) was confirmed separately with a corrected one-off check — 1,092/1,092 real asset references across all 60 generated HTML pages were valid — so this was not the reason for rejection, and no permanent checker change was made. Reverted byte-for-byte; not committed. |
+| Motion `optimizePackageImports: ["motion/react"]` | Output byte-identical to HEAD across the measured routes — zero measurable change. Reverted, not committed. |
+| Motion `LazyMotion` (two candidates: a whole-package dynamic import, then a corrected variant using a separate static `domMax` module) | Both rejected: the corrected variant still grew `/privacy` initial JS. Coordinator-measured (`node:zlib` `gzipSync`): home 19 chunks 1,184,545B raw/377,129B gzip → 21 chunks 1,103,825B raw/355,855B gzip (smaller); privacy 13 chunks 786,799B raw/247,310B gzip → 15 chunks 828,341B raw/261,471B gzip (larger). The client module graph was restructured in a way that increased shared delivered bytes on a route that doesn't even use the animation — no browser/Lighthouse run was performed on either candidate, and no per-module cost is claimed as the cause. Both reverted, not committed. |
+
+Main also separately rejected proposed follow-ups that would have removed
+the global `opacity` default or reduced-motion protection to save a few
+remaining bytes; no such change was implemented.
 
 An earlier draft of my own analysis mis-attributed a shared React-DOM chunk
 as the game's physics chunk (string false-positive: `'rink'` matched inside
@@ -78,17 +85,54 @@ dock windows (4 combinations); project archive first-click, sustained
 chunk-failure retry, Escape, reopen; analytics real-SDK browser fixture with
 all writes intercepted.
 
+## Sep 26 continuation
+
+Agentic Browsing scoring 100 above means all 3 applicable scored checks
+passed (normalized 100), including `agent-accessibility-tree`, which now
+passes on all 96 previously-recorded local route×mode audits. This confirms
+the specific checks measured here, not a general guarantee of compatibility
+with arbitrary AI-browsing agents.
+
+Fresh coordinator baseline (`.scratch/lighthouse-resume-baseline`, local
+production build, analytics disabled as before, no newly deployed PSI run):
+2 repeats each, mobile + desktop, on home and `/privacy` (8 runs total).
+
+| Route | Mode | Performance (2 runs) | LCP (ms) | TBT (ms) |
+| --- | --- | --- | --- | --- |
+| Home (`/`) | Mobile | 84, 86 | 4489.5, 4230.7 | 43, 27 |
+| Home (`/`) | Desktop | 99, 99 | — | 0, 0 |
+| `/privacy` | Mobile | 95, 95 | 2956.6, 2954.9 | 42, 42 |
+| `/privacy` | Desktop | 100, 100 | — | 0, 0 |
+
+The other 4 categories scored 100 on every one of the 8 runs; CLS was 0 on
+every run. The strict-100 harness correctly flagged 6 of these 8 runs red
+(home mobile ×2, home desktop ×2, `/privacy` mobile ×2); only `/privacy`
+desktop (×2) met the target.
+
 ## Unresolved
 
-- Mobile performance is not at the 100 target (81–95 range). The two
-  experiments tried this round (React.lazy dock loader, cssChunking graph)
-  were both measured and both rejected on evidence.
+- Mobile performance is not at the 100 target (81–95 range across the two
+  sweeps recorded here; the Sep 26 repeat runs above add home 84/86 and
+  `/privacy` 95/95 mobile). Five experiments across both rounds (React.lazy
+  dock loader, `cssChunking: "graph"`, `experimental.inlineCss`, Motion
+  `optimizePackageImports`, two Motion `LazyMotion` variants) were measured
+  and rejected on evidence; none is kept. Desktop is also not uniformly at
+  100: home scored 99/99 in the Sep 26 repeats.
+- Reducing the evidenced initial shared client cost (the module-graph bytes
+  the Motion experiments touched) without losing a feature or
+  browser-compatibility protection is the concrete next step; no candidate
+  achieving that has been found yet.
 - Production verification (real analytics cost, deployed PSI/field data,
   Vercel edge/CDN behavior) remains unverified — local builds only.
+  A deployed preview with real analytics enabled must be measured before
+  any production performance claim is made.
 - CI runner execution (whether this workflow runs unattended on what
   cadence/hardware) is not established by this pass.
-- Motion import optimization is a candidate currently being tested
-  separately — not claimed kept or improved until confirmed.
+- Page-closing animation work is out of scope here and is being handled
+  separately on `fix/closing-motion` (session `portfolio-closing-motion`),
+  not on this performance track.
+- This performance branch (`perf/fleet-inline-css`) is still not pushed,
+  opened as a PR, or deployed. The all-100 target remains unmet.
 
 ## Trace-led investigation
 
