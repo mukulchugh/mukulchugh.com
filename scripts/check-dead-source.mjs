@@ -42,6 +42,16 @@ for (const file of files) {
       node.expression.kind === ts.SyntaxKind.ImportKeyword
     ) {
       specifier = node.arguments[0];
+    } else if (
+      // The `new Worker(new URL("./x.ts", import.meta.url))` pattern used to
+      // spawn module workers: import.meta.url makes it a real dependency edge.
+      ts.isNewExpression(node) &&
+      ts.isIdentifier(node.expression) &&
+      node.expression.text === "URL" &&
+      node.arguments?.length === 2 &&
+      node.arguments[1].getText(source) === "import.meta.url"
+    ) {
+      specifier = node.arguments[0];
     }
     if (specifier && ts.isStringLiteral(specifier)) {
       const target = resolveImport(specifier.text, file);

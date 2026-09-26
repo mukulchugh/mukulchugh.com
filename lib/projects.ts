@@ -1,5 +1,5 @@
-import { hiddenProjectTitles, projectsData } from "@/lib/data";
 import { projectArtwork } from "@/lib/project-artwork";
+import { hiddenProjectTitles, projectsData } from "@/lib/project-catalog";
 
 export type ProjectData = (typeof projectsData)[number];
 

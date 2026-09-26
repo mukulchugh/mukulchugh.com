@@ -1,16 +1,19 @@
+.frame {
+  position: relative;
+  overflow: clip;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 14px;
+}
 .tile {
   --duration: 440ms;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   display: grid;
   grid-template-rows: 1fr auto;
   grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-  overflow: clip;
   color: hsl(var(--foreground));
   scroll-margin-top: 80px;
-  background: hsl(var(--card));
-  border: 1px solid hsl(var(--border));
-  border-radius: 14px;
-  transition: grid-template-columns var(--duration) var(--ease);
+  view-transition-class: contact-vt-panel;
 }
 .tile[data-booking="true"] {
   --duration: 620ms;
@@ -20,6 +23,7 @@
   grid-area: 1 / 1;
   min-width: 0;
   padding: clamp(24px, 4vw, 60px);
+  view-transition-class: contact-vt-panel;
 }
 .statement h2 {
   font-family: var(--font-syne), sans-serif;
@@ -28,7 +32,7 @@
   line-height: 1.08;
   letter-spacing: -0.03em;
   text-wrap: balance;
-  transition: font-size var(--duration) var(--ease);
+  view-transition-class: contact-vt-leaf;
 }
 .tile[data-booking="true"] .statement h2 {
   font-size: clamp(28px, 2.6vw, 38px);
@@ -38,6 +42,7 @@
   font-size: 14px;
   line-height: 1.7;
   color: hsl(var(--muted-foreground));
+  view-transition-class: contact-vt-leaf;
 }
 .call {
   position: relative;
@@ -50,6 +55,7 @@
   transition:
     background-color 500ms ease,
     color 300ms ease;
+  view-transition-class: contact-vt-panel;
 }
 .shader {
   position: absolute;
@@ -77,13 +83,11 @@
   justify-content: space-between;
   min-height: 420px;
   padding: clamp(24px, 4vw, 56px);
-  transition:
-    min-height var(--duration) var(--ease),
-    padding var(--duration) var(--ease);
 }
 .video {
   width: 32px;
   height: 32px;
+  view-transition-class: contact-vt-leaf;
 }
 .callCopy {
   width: 100%;
@@ -94,11 +98,12 @@
   font-weight: 600;
   line-height: 1.2;
   letter-spacing: -0.025em;
-  transition: font-size var(--duration) var(--ease);
+  view-transition-class: contact-vt-leaf;
 }
 .callCopy p {
   margin-top: 8px;
   font-size: 14px;
+  view-transition-class: contact-vt-leaf;
 }
 .book {
   justify-content: space-between;
@@ -110,6 +115,7 @@
   transition:
     background-color 180ms ease,
     border-color 180ms ease;
+  view-transition-class: contact-vt-leaf;
 }
 .book svg {
   transition: transform 180ms ease-out;
@@ -139,6 +145,7 @@
   transition:
     grid-template-rows var(--duration) var(--ease),
     opacity 140ms ease;
+  view-transition-class: contact-vt-reveal;
 }
 .tile[data-booking="true"] .reveal {
   grid-template-rows: 1fr;
@@ -150,6 +157,79 @@
 .revealInner {
   min-height: 0;
   overflow: hidden;
+}
+/*
+ * Every named surface shares --duration/--ease with the rest of the tile.
+ * Leaves (text, icon, button, utilities, calendar) render their captured
+ * bitmap at intrinsic size (object-fit: none) so a resizing group never
+ * stretches or magnifies glyphs -- only the panel backgrounds are allowed
+ * to morph as bitmaps, per the accepted diagnostic. (getComputedStyle must
+ * be scoped to the transition-root element, not document.documentElement,
+ * to see these applied -- verified both ways.)
+ */
+::view-transition-group(.contact-vt-panel),
+::view-transition-group(.contact-vt-leaf),
+::view-transition-group(.contact-vt-reveal),
+::view-transition-old(.contact-vt-panel),
+::view-transition-new(.contact-vt-panel),
+::view-transition-old(.contact-vt-leaf),
+::view-transition-new(.contact-vt-leaf),
+::view-transition-old(.contact-vt-reveal),
+::view-transition-new(.contact-vt-reveal) {
+  animation-duration: var(--duration, 440ms);
+  animation-timing-function: var(--ease, ease);
+}
+/* Chromium's UA styling for these generated boxes otherwise wins over a
+   plain author rule here (verified: without !important, object-fit stays
+   at the "fill" default and stretches captured glyphs). */
+::view-transition-old(.contact-vt-leaf),
+::view-transition-new(.contact-vt-leaf),
+::view-transition-old(.contact-vt-reveal),
+::view-transition-new(.contact-vt-reveal) {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: none !important;
+  object-position: top left !important;
+  mix-blend-mode: normal !important;
+}
+/* Old copy fades out quickly, then the new copy resolves in over the
+   remainder -- touching, not overlapping, windows (old ends exactly when
+   new starts). Two different-size headings on screen at once (a
+   simultaneous cross-dissolve) visibly double-exposes; these windows
+   must not overlap. */
+::view-transition-old(.contact-vt-leaf) {
+  animation: contact-vt-leaf-out calc(var(--duration, 440ms) * 0.4) ease-in both !important;
+}
+::view-transition-new(.contact-vt-leaf) {
+  animation: contact-vt-leaf-in calc(var(--duration, 440ms) * 0.6) ease-out
+    calc(var(--duration, 440ms) * 0.4) both !important;
+}
+@keyframes contact-vt-leaf-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes contact-vt-leaf-in {
+  from {
+    opacity: 0;
+  }
+}
+/* The calendar's old snapshot is a frozen bitmap of live UI (inputs,
+   times); leave it visible only briefly instead of crossfading it slowly
+   as a "shrinking" duplicate, and don't let it drift after it's invisible. */
+::view-transition-old(.contact-vt-reveal) {
+  animation: contact-vt-leaf-out 120ms ease-in both !important;
+}
+::view-transition-new(.contact-vt-reveal) {
+  animation: contact-vt-leaf-in calc(var(--duration, 440ms) - 120ms) ease-out
+    120ms both !important;
+}
+/* While the native transition owns the crossfade, the CSS transitions
+   below would otherwise keep animating an in-between state into the "new"
+   snapshot and visibly fight the view transition. */
+.tile[data-vt-active="true"],
+.tile[data-vt-active="true"] * {
+  transition: none !important;
 }
 .calendarLoading {
   min-height: 604px;
@@ -166,6 +246,7 @@
   align-items: center;
   padding: 0 clamp(24px, 4vw, 60px) 28px;
   font-size: 13px;
+  view-transition-class: contact-vt-leaf;
 }
 .utilities a {
   display: inline-flex;

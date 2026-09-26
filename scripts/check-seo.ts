@@ -9,7 +9,7 @@ import sitemap from "../app/sitemap";
 import { JsonLd } from "../components/json-ld";
 import { preferredRepresentation } from "../lib/accept";
 import { getAllPosts, getPostServer } from "../lib/blog";
-import { hiddenProjectTitles } from "../lib/data";
+import { hiddenProjectTitles } from "../lib/project-catalog";
 import { getAllProjectSlugs } from "../lib/projects";
 import {
   llmsIndex,

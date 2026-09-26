@@ -1,6 +1,7 @@
 import { mock } from "bun:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
+import { createRequire } from "node:module";
 import { cleanUrl, GA_ID, POSTHOG_PROJECT_ID } from "../lib/analytics-config";
 
 const captured = [];
@@ -108,6 +109,10 @@ assert.equal(posthogConfig.capture_pageview, false);
 assert.equal(posthogConfig.api_host, "/api/analytics/posthog");
 assert.equal(posthogConfig.disable_session_recording, true);
 assert.equal(posthogConfig.mask_all_text, true);
+assert(
+  !posthogConfig.__preview_deferred_init_extensions,
+  "posthog-js 1.434.12's __preview_deferred_init_extensions must stay unset: its _processInitTaskQueue reuses the original initStartTime on every rescheduled setTimeout, so once elapsed first crosses the 30ms budget it stays over budget forever and every remaining extension task (autocapture/heatmaps/dead-clicks/exceptions) is silently rescheduled without ever running. See the vendor reproduction below."
+);
 const scrubbed = posthogConfig.before_send({
   event: "$web_vitals",
   properties: {
@@ -320,6 +325,50 @@ try {
 const config = await readFile("next.config.js", "utf8");
 assert(!config.includes('destination: "https://us.i.posthog.com/:path*"'));
 assert(config.includes("skipTrailingSlashRedirect: true"));
+
+// Trip-wire for the vendor bug that blocked shipping __preview_deferred_init_extensions
+// (posthog-js 1.434.12, node_modules/posthog-js/lib/src/posthog-core.js
+// PostHog.prototype._processInitTaskQueue): it reschedules with setTimeout(0) but
+// always re-diffs against the *original* initStartTime, so once elapsed first crosses
+// the 30ms budget it never processes another queued task. No network or DOM required;
+// this borrows the real prototype method against a minimal fake instance. If posthog-js
+// fixes this upstream, `ran` below will become 1 and this assertion will fail, which is
+// the signal to re-evaluate enabling the flag.
+{
+  const require = createRequire(import.meta.url);
+  const { PostHog } = require("posthog-js/lib/src/posthog-core.js");
+  const scheduled = [];
+  const originalSetTimeout = globalThis.setTimeout;
+  globalThis.setTimeout = (fn) => {
+    scheduled.push(fn);
+    return 0;
+  };
+  let ran = 0;
+  const tasks = [() => ran++];
+  const instance = {
+    _processInitTaskQueue: PostHog.prototype._processInitTaskQueue,
+    config: { __preview_deferred_init_extensions: true },
+    register_for_session: () => undefined,
+  };
+  try {
+    instance._processInitTaskQueue(tasks, performance.now() - 31);
+    for (let i = 0; i < 5 && scheduled.length > 0; i++)
+      scheduled.shift().call(instance);
+  } finally {
+    globalThis.setTimeout = originalSetTimeout;
+  }
+  assert.equal(
+    ran,
+    0,
+    "expected posthog-js's known-broken deferred init queue to stay stuck; if this now runs the task, the upstream bug is fixed and __preview_deferred_init_extensions can be re-evaluated"
+  );
+  assert.equal(
+    tasks.length,
+    1,
+    "the stuck task must remain queued, never dropped"
+  );
+}
+
 console.log(
-  "PASS: shared analytics, three-provider dedupe, privacy gates, URL scrubbing, and bounded proxy."
+  "PASS: shared analytics, three-provider dedupe, privacy gates, URL scrubbing, bounded proxy, and the posthog-js deferred-init trip-wire."
 );

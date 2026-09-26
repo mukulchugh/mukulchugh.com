@@ -185,13 +185,93 @@ try {
         true
       );
       await page.emulateMedia({ reducedMotion: "reduce" });
-      await dock.getByRole("link", { exact: true, name: "About" }).click();
+      const aboutTrigger = dock.getByRole("link", {
+        exact: true,
+        name: "About",
+      });
+      await aboutTrigger.click();
+      await page.getByRole("dialog", { exact: true, name: "About" }).waitFor();
       await page.waitForTimeout(200);
       await page
         .getByRole("button", { exact: true, name: "Close window" })
         .click();
-      await page.waitForTimeout(150);
-      assert.equal(await page.getByRole("dialog").count(), 0);
+      await page.getByRole("dialog").waitFor({ state: "hidden" });
+      await page.waitForTimeout(250);
+      assert.equal(
+        await aboutTrigger.evaluate(
+          (element) => element === document.activeElement
+        ),
+        true,
+        "Reduced-motion click-close must return focus to the About trigger"
+      );
+
+      // Escape must restore focus the same way a click-close does.
+      await aboutTrigger.click();
+      await page.getByRole("dialog", { exact: true, name: "About" }).waitFor();
+      await page.waitForTimeout(200);
+      await page.keyboard.press("Escape");
+      await page.getByRole("dialog").waitFor({ state: "hidden" });
+      await page.waitForTimeout(250);
+      assert.equal(
+        await aboutTrigger.evaluate(
+          (element) => element === document.activeElement
+        ),
+        true,
+        "Reduced-motion Escape-close must return focus to the About trigger"
+      );
+
+      // Switching destinations inside the window before closing must return
+      // focus to the switched-to destination's own dock trigger, not the
+      // original one that launched the window.
+      const projectsTrigger = dock.getByRole("link", {
+        exact: true,
+        name: "Projects",
+      });
+      await aboutTrigger.click();
+      await page.getByRole("dialog", { exact: true, name: "About" }).waitFor();
+      await page.waitForTimeout(200);
+      await page
+        .getByRole("navigation", { name: "Window destinations" })
+        .getByRole("button", { exact: true, name: "Projects" })
+        .click();
+      await page
+        .getByRole("dialog", { exact: true, name: "Projects" })
+        .waitFor();
+      await page.waitForTimeout(200);
+      await page
+        .getByRole("button", { exact: true, name: "Close window" })
+        .click();
+      await page.getByRole("dialog").waitFor({ state: "hidden" });
+      await page.waitForTimeout(250);
+      assert.equal(
+        await projectsTrigger.evaluate(
+          (element) => element === document.activeElement
+        ),
+        true,
+        "Closing after a destination switch must focus the switched-to trigger"
+      );
+
+      // Reopening right after a close must not have its initial focus stolen
+      // back by the previous window's return-focus restoration.
+      const contactTrigger = dock.getByRole("link", {
+        exact: true,
+        name: "Contact",
+      });
+      await contactTrigger.click();
+      await page
+        .getByRole("dialog", { exact: true, name: "Contact" })
+        .waitFor();
+      assert.equal(
+        await page
+          .getByRole("button", { exact: true, name: "Close window" })
+          .evaluate((element) => element === document.activeElement),
+        true,
+        "Reopening immediately after a close must keep the new window's initial focus"
+      );
+      await page
+        .getByRole("button", { exact: true, name: "Close window" })
+        .click();
+      await page.getByRole("dialog").waitFor({ state: "hidden" });
       assert.deepEqual(errors, []);
       await page.close();
     }

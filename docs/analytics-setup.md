@@ -40,6 +40,14 @@ Session replay, console recording, network timing capture, surveys/popups, perso
 
 Per the owner's preference, there is no opt-in popup. Tracking respects DNT/GPC and runs only on the production canonical host, not localhost, preview hosts, or prototype routes. URL queries/fragments are stripped; nested PostHog performance properties are scrubbed too. This configuration is not a legal-compliance determination. IP anonymization and proxying also mean precise visitor geography must not be assumed.
 
+## Startup cost
+
+PostHog already starts after `load`/`requestIdleCallback` (unchanged from the prior release); no further reduction was found that is both supported and safe.
+
+`posthog.init`'s `@experimental` `__preview_deferred_init_extensions` option (publicly typed in `node_modules/@posthog/types/dist/posthog-config.d.ts`, `posthog-js` 1.434.12) was tried and reverted. It is meant to time-slice autocapture/heatmaps/dead-clicks/exception-tracking setup across `setTimeout(0)` ticks instead of one synchronous block, but its implementation is broken in this version: `PostHog.prototype._processInitTaskQueue` (`node_modules/posthog-js/lib/src/posthog-core.js`) reschedules with `setTimeout(0)` while comparing elapsed time against the *original* `initStartTime` on every call. Once elapsed first crosses the 30ms budget, it never falls back under budget, so every remaining queued extension task is rescheduled forever and never actually runs. In practice this can permanently drop autocapture, heatmaps, dead clicks, and exception capture, and can leave `posthog.captureException` (used by `reportPageError`) undefined when called shortly after init. `bun run test:analytics` reproduces this deterministically against the real vendored `posthog-core.js`, with no network or DOM: see the trip-wire at the end of `scripts/check-analytics.mjs`. The flag stays unset until posthog-js ships a fix; that trip-wire will fail (task runs) once it does, which is the signal to re-evaluate.
+
+`posthog-js`'s slim entry points (`dist/module.slim.js`, `lib/src/entrypoints/module.slim.es.js`) were also evaluated and rejected: unlike the default import, slim skips `require("./default-extensions")`, so it never registers the classes backing autocapture, heatmaps, dead clicks, or Web Vitals capture. Restoring them would require assigning `PostHog.__defaultExtensionClasses` directly, an internal, undocumented static field, not a supported import or setting. The `no-external` entry was also rejected: it drops `external-scripts-loader`, which every one of those extensions depends on to fetch its lazy-loaded chunk. The default `posthog-js` import remains the smallest supported bundle with full parity for the enabled feature set.
+
 ## Verification and limits
 
 Run:

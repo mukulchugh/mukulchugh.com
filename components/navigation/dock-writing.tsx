@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { BlogIndex } from "@/components/blog/blog-index";
+import { LoadingState } from "@/components/ui/loading-state";
 import type { Post } from "@/lib/blog";
 
 export default function DockWriting() {
@@ -26,11 +27,13 @@ export default function DockWriting() {
   if (posts) return <BlogIndex posts={posts} />;
   return (
     <div className="space-y-4 p-6">
-      <p role={failed ? "alert" : "status"}>
-        {failed
-          ? "Writing couldn’t load. You can retry or open the page."
-          : "Loading writing…"}
-      </p>
+      {failed ? (
+        <p role="alert">
+          Writing couldn’t load. You can retry or open the page.
+        </p>
+      ) : (
+        <LoadingState label="Loading writing…" />
+      )}
       {failed && (
         <button
           className="min-h-11 underline underline-offset-4"

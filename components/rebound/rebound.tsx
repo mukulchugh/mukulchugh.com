@@ -123,6 +123,13 @@ export function Rebound() {
         ?.getBoundingClientRect() ?? null;
     if (slot.current)
       slot.current.style.height = `${card.current.getBoundingClientRect().height}px`;
+    // Move the persistent, already-mounted game section into the native
+    // dialog so showModal() covers it with real focus containment and
+    // background inertness. React still owns/reconciles this node's own
+    // subtree; it never re-parents it itself (dialog always renders with
+    // zero declared children), so this manual move is stable across
+    // re-renders and undone by collapse() below.
+    shell.current.appendChild(card.current);
     flushSync(() => setExpanded(true));
     shell.current.showModal();
     // Fullscreen cannot target a dialog. Its persistent game section is eligible.
@@ -166,6 +173,9 @@ export function Rebound() {
     }
     await animateExpansion(false);
     shell.current?.close();
+    // Restore the section to its ordinary, always-present host now that the
+    // dialog is closed, so the collapsed shell is genuinely empty again.
+    if (slot.current && card.current) slot.current.appendChild(card.current);
     flushSync(() => {
       setExpanded(false);
       setConfirmRestart(false);
@@ -436,6 +446,13 @@ export function Rebound() {
   }, []);
   return (
     <div className={styles.slot} ref={slot}>
+      {/* A real modal only while expanded. It never holds content while
+          closed: the section below is moved in imperatively by
+          expand()/collapse() so a closed dialog stays natively empty and
+          out of the accessibility tree, instead of carrying a disallowed
+          role override (dialog only permits alertdialog; see
+          w3.org/TR/html-aria/#el-dialog and axe-core's aria-allowed-role
+          data for the dialog element). */}
       <dialog
         aria-label={expanded ? "Fullscreen air hockey" : undefined}
         className={styles.shell}
@@ -444,392 +461,389 @@ export function Rebound() {
           void collapse();
         }}
         ref={shell}
-        role={expanded ? "dialog" : "presentation"}
+      />
+      <section
+        aria-label="Rebound air hockey"
+        className={`bento-surface ${styles.card}`}
+        data-expanded={expanded}
+        data-status={status}
+        ref={card}
       >
-        <section
-          aria-label="Rebound air hockey"
-          className={`bento-surface ${styles.card}`}
-          data-expanded={expanded}
-          data-status={status}
-          ref={card}
-        >
-          <header className={styles.header}>
-            {expanded && (
-              <Image
-                alt="Mukul Chugh"
-                className={styles.brand}
-                height={36}
-                src={siteConfig.images.logoDark}
-                width={36}
-              />
-            )}
-            <h2>For the playful ones.</h2>
-            {!expanded && (
-              <Button
-                aria-label="Enter fullscreen"
-                className={styles.expand}
-                onClick={expand}
-                ref={expandButton}
-                size="icon"
-                title="Enter fullscreen"
-                variant="ghost"
-              >
-                <IconArrowsMaximize aria-hidden="true" />
-              </Button>
-            )}
-            {!expanded && status === "ready" && !reduced && (
-              <Button
-                aria-label={demoPaused ? "Resume demo" : "Pause demo"}
-                className={styles.pause}
-                onClick={() => {
-                  demoStopped.current = !demoStopped.current;
-                  setDemoPaused(demoStopped.current);
-                }}
-                size="icon"
-                variant="ghost"
-              >
-                {demoPaused ? (
-                  <IconPlayerPlay aria-hidden="true" />
-                ) : (
-                  <IconPlayerPause aria-hidden="true" />
-                )}
-              </Button>
-            )}
-            {!expanded && (status === "playing" || status === "goal") && (
-              <Button
-                aria-label="Pause"
-                className={styles.pause}
-                onClick={pause}
-                size="icon"
-                title="Pause"
-                variant="ghost"
-              >
+        <header className={styles.header}>
+          {expanded && (
+            <Image
+              alt="Mukul Chugh"
+              className={styles.brand}
+              height={36}
+              src={siteConfig.images.logoDark}
+              width={36}
+            />
+          )}
+          <h2>For the playful ones.</h2>
+          {!expanded && (
+            <Button
+              aria-label="Enter fullscreen"
+              className={styles.expand}
+              onClick={expand}
+              ref={expandButton}
+              size="icon"
+              title="Enter fullscreen"
+              variant="ghost"
+            >
+              <IconArrowsMaximize aria-hidden="true" />
+            </Button>
+          )}
+          {!expanded && status === "ready" && !reduced && (
+            <Button
+              aria-label={demoPaused ? "Resume demo" : "Pause demo"}
+              className={styles.pause}
+              onClick={() => {
+                demoStopped.current = !demoStopped.current;
+                setDemoPaused(demoStopped.current);
+              }}
+              size="icon"
+              variant="ghost"
+            >
+              {demoPaused ? (
+                <IconPlayerPlay aria-hidden="true" />
+              ) : (
                 <IconPlayerPause aria-hidden="true" />
-              </Button>
-            )}
-          </header>
-          <div className={styles.arena}>
-            <div
-              className={styles.field}
-              data-rebound-field
-              onPointerMove={(event) => {
-                if (
-                  event.pointerType !== "mouse" ||
-                  !running.current ||
-                  serveIn.current > 0
-                )
-                  return;
-                const point = pointerPosition(event.clientX, event.clientY);
+              )}
+            </Button>
+          )}
+          {!expanded && (status === "playing" || status === "goal") && (
+            <Button
+              aria-label="Pause"
+              className={styles.pause}
+              onClick={pause}
+              size="icon"
+              title="Pause"
+              variant="ghost"
+            >
+              <IconPlayerPause aria-hidden="true" />
+            </Button>
+          )}
+        </header>
+        <div className={styles.arena}>
+          <div
+            className={styles.field}
+            data-rebound-field
+            onPointerMove={(event) => {
+              if (
+                event.pointerType !== "mouse" ||
+                !running.current ||
+                serveIn.current > 0
+              )
+                return;
+              const point = pointerPosition(event.clientX, event.clientY);
+              target.current = {
+                x: clamp(point.x, 85, 460),
+                y: clamp(point.y, 70, H - 70),
+              };
+            }}
+            ref={field}
+          >
+            <Image
+              alt=""
+              className={styles.rink}
+              draggable={false}
+              fetchPriority="high"
+              height={1000}
+              loading="eager"
+              sizes="(max-width: 600px) 90vw, 1100px"
+              src="/design/rebound-v1/rink-tall.png"
+              width={2000}
+            />
+            <button
+              aria-describedby={helpId}
+              aria-label="Your lime paddle"
+              className={`${styles.sprite} ${styles.player}`}
+              onBlur={() => keys.current.clear()}
+              onKeyDown={(e) => {
+                if (e.key.startsWith("Arrow")) {
+                  e.preventDefault();
+                  keys.current.add(e.key);
+                }
+                if (e.key === "Escape" && !expanded) pause();
+              }}
+              onKeyUp={(e) => keys.current.delete(e.key)}
+              onLostPointerCapture={() => {
+                drag.current = null;
+              }}
+              onPointerCancel={pause}
+              onPointerDown={(e) => {
+                if (e.pointerType === "mouse" || serveIn.current > 0) return;
+                if (!(running.current && e.isPrimary) || e.button !== 0) return;
+                const point = pointerPosition(e.clientX, e.clientY);
+                drag.current = {
+                  id: e.pointerId,
+                  x: point.x - game.current.player.x,
+                  y: point.y - game.current.player.y,
+                };
+                e.currentTarget.setPointerCapture(e.pointerId);
+              }}
+              onPointerMove={(e) => {
+                const d = drag.current;
+                if (!d || d.id !== e.pointerId) return;
+                const point = pointerPosition(e.clientX, e.clientY);
                 target.current = {
-                  x: clamp(point.x, 85, 460),
-                  y: clamp(point.y, 70, H - 70),
+                  x: clamp(point.x - d.x, 85, 460),
+                  y: clamp(point.y - d.y, 70, H - 70),
                 };
               }}
-              ref={field}
+              onPointerUp={(e) => {
+                drag.current = null;
+                if (e.currentTarget.hasPointerCapture(e.pointerId))
+                  e.currentTarget.releasePointerCapture(e.pointerId);
+              }}
+              ref={(node) => {
+                sprites.current[0] = node;
+              }}
+              type="button"
             >
               <Image
                 alt=""
-                className={styles.rink}
                 draggable={false}
-                fetchPriority="high"
-                height={1000}
-                loading="eager"
-                sizes="(max-width: 600px) 90vw, 1100px"
-                src="/design/rebound-v1/rink-tall.png"
-                width={2000}
+                height={1254}
+                sizes="(max-width: 600px) 44px, 120px"
+                src="/design/rebound-v1/mallet-lime.png"
+                width={1254}
               />
-              <button
-                aria-describedby={helpId}
-                aria-label="Your lime paddle"
-                className={`${styles.sprite} ${styles.player}`}
-                onBlur={() => keys.current.clear()}
-                onKeyDown={(e) => {
-                  if (e.key.startsWith("Arrow")) {
-                    e.preventDefault();
-                    keys.current.add(e.key);
-                  }
-                  if (e.key === "Escape" && !expanded) pause();
-                }}
-                onKeyUp={(e) => keys.current.delete(e.key)}
-                onLostPointerCapture={() => {
-                  drag.current = null;
-                }}
-                onPointerCancel={pause}
-                onPointerDown={(e) => {
-                  if (e.pointerType === "mouse" || serveIn.current > 0) return;
-                  if (!(running.current && e.isPrimary) || e.button !== 0)
-                    return;
-                  const point = pointerPosition(e.clientX, e.clientY);
-                  drag.current = {
-                    id: e.pointerId,
-                    x: point.x - game.current.player.x,
-                    y: point.y - game.current.player.y,
-                  };
-                  e.currentTarget.setPointerCapture(e.pointerId);
-                }}
-                onPointerMove={(e) => {
-                  const d = drag.current;
-                  if (!d || d.id !== e.pointerId) return;
-                  const point = pointerPosition(e.clientX, e.clientY);
-                  target.current = {
-                    x: clamp(point.x - d.x, 85, 460),
-                    y: clamp(point.y - d.y, 70, H - 70),
-                  };
-                }}
-                onPointerUp={(e) => {
-                  drag.current = null;
-                  if (e.currentTarget.hasPointerCapture(e.pointerId))
-                    e.currentTarget.releasePointerCapture(e.pointerId);
-                }}
-                ref={(node) => {
-                  sprites.current[0] = node;
-                }}
-                type="button"
-              >
-                <Image
-                  alt=""
-                  draggable={false}
-                  height={1254}
-                  sizes="(max-width: 600px) 44px, 120px"
-                  src="/design/rebound-v1/mallet-lime.png"
-                  width={1254}
-                />
-              </button>
-              <div
-                className={`${styles.sprite} ${styles.opponent}`}
-                ref={(node) => {
-                  sprites.current[1] = node;
-                }}
-              >
-                <Image
-                  alt="Opponent paddle"
-                  draggable={false}
-                  height={1254}
-                  sizes="(max-width: 600px) 44px, 120px"
-                  src="/design/rebound-v1/mallet-ivory.png"
-                  width={1254}
-                />
-              </div>
-              <div
-                className={`${styles.sprite} ${styles.puck}`}
-                ref={(node) => {
-                  sprites.current[2] = node;
-                }}
-              >
-                <Image
-                  alt="Puck"
-                  draggable={false}
-                  height={1254}
-                  sizes="64px"
-                  src="/design/rebound-v1/puck.png"
-                  width={1254}
-                />
-              </div>
-              {(confirmRestart ||
-                countdown !== null ||
-                status === "paused" ||
-                status === "finished") && (
-                <div className={styles.overlay}>
-                  <div className={styles.statusPanel}>
-                    <span
-                      aria-live="polite"
-                      className={styles.statusTitle}
-                      role="status"
-                    >
-                      {confirmRestart
-                        ? "Start a fresh match?"
+            </button>
+            <div
+              className={`${styles.sprite} ${styles.opponent}`}
+              ref={(node) => {
+                sprites.current[1] = node;
+              }}
+            >
+              <Image
+                alt="Opponent paddle"
+                draggable={false}
+                height={1254}
+                sizes="(max-width: 600px) 44px, 120px"
+                src="/design/rebound-v1/mallet-ivory.png"
+                width={1254}
+              />
+            </div>
+            <div
+              className={`${styles.sprite} ${styles.puck}`}
+              ref={(node) => {
+                sprites.current[2] = node;
+              }}
+            >
+              <Image
+                alt="Puck"
+                draggable={false}
+                height={1254}
+                sizes="64px"
+                src="/design/rebound-v1/puck.png"
+                width={1254}
+              />
+            </div>
+            {(confirmRestart ||
+              countdown !== null ||
+              status === "paused" ||
+              status === "finished") && (
+              <div className={styles.overlay}>
+                <div className={styles.statusPanel}>
+                  <span
+                    aria-live="polite"
+                    className={styles.statusTitle}
+                    role="status"
+                  >
+                    {confirmRestart
+                      ? "Start a fresh match?"
+                      : status === "paused"
+                        ? "Paused"
+                        : status === "finished"
+                          ? message
+                          : status === "ready"
+                            ? "Your move."
+                            : status === "goal"
+                              ? message
+                              : "Resetting the puck"}
+                  </span>
+                  {!confirmRestart &&
+                    countdown !== null &&
+                    status !== "paused" && (
+                      <div
+                        aria-label={`Next serve in ${countdown} seconds`}
+                        className={styles.timer}
+                      >
+                        <svg aria-hidden="true" viewBox="0 0 100 100">
+                          <circle cx="50" cy="50" r="44" />
+                          <circle
+                            className={styles.timerArc}
+                            cx="50"
+                            cy="50"
+                            pathLength="3"
+                            r="44"
+                            strokeDasharray={`${countdown} 3`}
+                          />
+                        </svg>
+                        <strong>{countdown}</strong>
+                      </div>
+                    )}
+                  <small>
+                    {confirmRestart
+                      ? "Your score will reset."
+                      : expanded &&
+                          (status === "paused" || status === "finished")
+                        ? "A little play, by Mukul."
                         : status === "paused"
-                          ? "Paused"
+                          ? "Resume to continue"
                           : status === "finished"
-                            ? message
+                            ? `${scores[0]} : ${scores[1]} · Final score`
                             : status === "ready"
-                              ? "Your move."
-                              : status === "goal"
-                                ? message
-                                : "Resetting the puck"}
-                    </span>
-                    {!confirmRestart &&
-                      countdown !== null &&
-                      status !== "paused" && (
-                        <div
-                          aria-label={`Next serve in ${countdown} seconds`}
-                          className={styles.timer}
-                        >
-                          <svg aria-hidden="true" viewBox="0 0 100 100">
-                            <circle cx="50" cy="50" r="44" />
-                            <circle
-                              className={styles.timerArc}
-                              cx="50"
-                              cy="50"
-                              pathLength="3"
-                              r="44"
-                              strokeDasharray={`${countdown} 3`}
-                            />
-                          </svg>
-                          <strong>{countdown}</strong>
-                        </div>
-                      )}
-                    <small>
-                      {confirmRestart
-                        ? "Your score will reset."
-                        : expanded &&
-                            (status === "paused" || status === "finished")
-                          ? "A little play, by Mukul."
-                          : status === "paused"
-                            ? "Resume to continue"
-                            : status === "finished"
-                              ? `${scores[0]} : ${scores[1]} · Final score`
-                              : status === "ready"
-                                ? "First to five. You’re lime."
-                                : "Next serve automatically"}
-                    </small>
-                    {confirmRestart ? (
+                              ? "First to five. You’re lime."
+                              : "Next serve automatically"}
+                  </small>
+                  {confirmRestart ? (
+                    <div className={styles.overlayActions}>
+                      <Button
+                        className={styles.action}
+                        data-restart-confirm
+                        onClick={reset}
+                      >
+                        Restart match
+                      </Button>
+                      <Button
+                        className={styles.secondary}
+                        onClick={() => {
+                          setConfirmRestart(false);
+                          gameDock.current?.querySelector("button")?.focus();
+                        }}
+                        variant="ghost"
+                      >
+                        Keep match
+                      </Button>
+                    </div>
+                  ) : (
+                    (status === "ready" ||
+                      status === "paused" ||
+                      status === "finished") && (
                       <div className={styles.overlayActions}>
                         <Button
                           className={styles.action}
-                          data-restart-confirm
-                          onClick={reset}
+                          onClick={status === "finished" ? reset : start}
                         >
-                          Restart match
+                          {status === "paused"
+                            ? "Resume"
+                            : status === "finished"
+                              ? "Play again"
+                              : "Play"}
                         </Button>
-                        <Button
-                          className={styles.secondary}
-                          onClick={() => {
-                            setConfirmRestart(false);
-                            gameDock.current?.querySelector("button")?.focus();
-                          }}
-                          variant="ghost"
-                        >
-                          Keep match
-                        </Button>
-                      </div>
-                    ) : (
-                      (status === "ready" ||
-                        status === "paused" ||
-                        status === "finished") && (
-                        <div className={styles.overlayActions}>
+                        {status === "paused" && (
                           <Button
-                            className={styles.action}
-                            onClick={status === "finished" ? reset : start}
+                            className={styles.secondary}
+                            onClick={
+                              expanded ? () => setConfirmRestart(true) : reset
+                            }
+                            variant="ghost"
                           >
-                            {status === "paused"
-                              ? "Resume"
-                              : status === "finished"
-                                ? "Play again"
-                                : "Play"}
+                            Restart
                           </Button>
-                          {status === "paused" && (
-                            <Button
-                              className={styles.secondary}
-                              onClick={
-                                expanded ? () => setConfirmRestart(true) : reset
-                              }
-                              variant="ghost"
-                            >
-                              Restart
-                            </Button>
-                          )}
-                        </div>
-                      )
-                    )}
-                  </div>
+                        )}
+                      </div>
+                    )
+                  )}
                 </div>
-              )}
-            </div>
-          </div>
-          <div className={styles.scoreboard}>
-            <div>
-              <strong>{scores[0]}</strong>
-              <span>You</span>
-            </div>
-            {expanded ? (
-              <span className={styles.scoreDivider}>:</span>
-            ) : status === "ready" ? (
-              <div className={styles.demoActions}>
-                <Button className={styles.action} onClick={start}>
-                  Play
-                </Button>
               </div>
-            ) : (
-              <p>Move to defend. Flick to score.</p>
             )}
-            <div>
-              <strong>{scores[1]}</strong>
-              <span>Opponent</span>
-            </div>
           </div>
-          {expanded && (
-            <nav
-              aria-label="Game controls"
-              className={`${dockStyles.dock} ${styles.gameDock}`}
-              data-tone="dark"
-              ref={gameDock}
-            >
-              <div aria-hidden="true" className={dockStyles.material} />
-              <Button
-                aria-label={
-                  status === "playing" || status === "goal"
-                    ? "Pause"
-                    : status === "ready"
-                      ? "Play"
-                      : status === "finished"
-                        ? "Play again"
-                        : "Resume"
-                }
-                className={dockStyles.item}
-                onClick={() => {
-                  setConfirmRestart(false);
-                  if (status === "playing" || status === "goal") pause();
-                  else if (status === "finished") reset();
-                  else start();
-                }}
-                size="icon"
-                variant="ghost"
-              >
-                {status === "playing" || status === "goal" ? (
-                  <IconPlayerPause aria-hidden="true" />
-                ) : (
-                  <IconPlayerPlay aria-hidden="true" />
-                )}
-                <span className={dockStyles.label}>
-                  {status === "playing" || status === "goal" ? "Pause" : "Play"}
-                </span>
+        </div>
+        <div className={styles.scoreboard}>
+          <div>
+            <strong>{scores[0]}</strong>
+            <span>You</span>
+          </div>
+          {expanded ? (
+            <span className={styles.scoreDivider}>:</span>
+          ) : status === "ready" ? (
+            <div className={styles.demoActions}>
+              <Button className={styles.action} onClick={start}>
+                Play
               </Button>
-              <Button
-                aria-label="Restart match"
-                className={dockStyles.item}
-                onClick={() => {
-                  pause();
-                  setConfirmRestart(true);
-                }}
-                size="icon"
-                variant="ghost"
-              >
-                <IconRefresh aria-hidden="true" />
-                <span className={dockStyles.label}>Restart</span>
-              </Button>
-              <Button
-                aria-label="Exit fullscreen"
-                className={dockStyles.item}
-                onClick={collapse}
-                size="icon"
-                variant="ghost"
-              >
-                <IconArrowsMinimize aria-hidden="true" />
-                <span className={dockStyles.label}>Exit fullscreen</span>
-              </Button>
-            </nav>
+            </div>
+          ) : (
+            <p>Move to defend. Flick to score.</p>
           )}
-          <p className="sr-only" id={helpId}>
-            Move your cursor over the rink. No click needed. On touch, drag the
-            lime paddle. Arrow keys also work after Play. Escape pauses. First
-            to five.
-            {reduced
-              ? " Reduced motion: slower play, no decorative effects. Play starts only when you choose."
-              : ""}
-          </p>
-        </section>
-      </dialog>
+          <div>
+            <strong>{scores[1]}</strong>
+            <span>Opponent</span>
+          </div>
+        </div>
+        {expanded && (
+          <nav
+            aria-label="Game controls"
+            className={`${dockStyles.dock} ${styles.gameDock}`}
+            data-tone="dark"
+            ref={gameDock}
+          >
+            <div aria-hidden="true" className={dockStyles.material} />
+            <Button
+              aria-label={
+                status === "playing" || status === "goal"
+                  ? "Pause"
+                  : status === "ready"
+                    ? "Play"
+                    : status === "finished"
+                      ? "Play again"
+                      : "Resume"
+              }
+              className={dockStyles.item}
+              onClick={() => {
+                setConfirmRestart(false);
+                if (status === "playing" || status === "goal") pause();
+                else if (status === "finished") reset();
+                else start();
+              }}
+              size="icon"
+              variant="ghost"
+            >
+              {status === "playing" || status === "goal" ? (
+                <IconPlayerPause aria-hidden="true" />
+              ) : (
+                <IconPlayerPlay aria-hidden="true" />
+              )}
+              <span className={dockStyles.label}>
+                {status === "playing" || status === "goal" ? "Pause" : "Play"}
+              </span>
+            </Button>
+            <Button
+              aria-label="Restart match"
+              className={dockStyles.item}
+              onClick={() => {
+                pause();
+                setConfirmRestart(true);
+              }}
+              size="icon"
+              variant="ghost"
+            >
+              <IconRefresh aria-hidden="true" />
+              <span className={dockStyles.label}>Restart</span>
+            </Button>
+            <Button
+              aria-label="Exit fullscreen"
+              className={dockStyles.item}
+              onClick={collapse}
+              size="icon"
+              variant="ghost"
+            >
+              <IconArrowsMinimize aria-hidden="true" />
+              <span className={dockStyles.label}>Exit fullscreen</span>
+            </Button>
+          </nav>
+        )}
+        <p className="sr-only" id={helpId}>
+          Move your cursor over the rink. No click needed. On touch, drag the
+          lime paddle. Arrow keys also work after Play. Escape pauses. First to
+          five.
+          {reduced
+            ? " Reduced motion: slower play, no decorative effects. Play starts only when you choose."
+            : ""}
+        </p>
+      </section>
     </div>
   );
 }

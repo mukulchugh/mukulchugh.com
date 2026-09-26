@@ -2,12 +2,9 @@
 
 import dynamic from "next/dynamic";
 import { DockNavigation } from "@/components/navigation/dock-navigation";
+import { LoadingState } from "@/components/ui/loading-state";
 
-const loading = () => (
-  <p className="p-6 text-muted-foreground" role="status">
-    Loading page…
-  </p>
-);
+const loading = () => <LoadingState className="p-6" label="Loading page…" />;
 const AboutPage = dynamic(() => import("@/components/about-page"), { loading });
 const ExperiencePage = dynamic(() => import("@/components/experience-page"), {
   loading,

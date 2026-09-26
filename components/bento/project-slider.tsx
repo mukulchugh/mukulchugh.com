@@ -9,10 +9,9 @@ import {
   IconPlayerPlay,
 } from "@tabler/icons-react";
 import gsap from "gsap";
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
-import Projects from "@/components/projects";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -21,10 +20,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { LoadingState } from "@/components/ui/loading-state";
 import { useReducedMotion } from "@/lib/use-reduced-motion";
 import styles from "./project-slider.module.css";
 
 gsap.registerPlugin(useGSAP);
+
+// The full project catalog (~700 lines of data) only backs the archive
+// dialog; load it on open instead of shipping it with the seven curated cards.
+const loadArchive = () =>
+  import("@/components/projects").then((mod) => mod.default);
 
 export type Project = {
   background: string;
@@ -52,18 +57,36 @@ export function ProjectSlider({
   const nextControl = useRef<HTMLButtonElement>(null);
   const previous = useRef(new Map<string, DOMRect>());
   const busyRef = useRef(false);
+  const hasAdvanced = useRef(false);
   const [index, setIndex] = useState(0);
   const [busy, setBusy] = useState(false);
   const [paused, setPaused] = useState(false);
   const [archiveOpen, setArchiveOpen] = useState(false);
+  const [archiveStatus, setArchiveStatus] = useState<
+    "error" | "idle" | "loading" | "ready"
+  >("idle");
+  const [ArchiveContent, setArchiveContent] = useState<Awaited<
+    ReturnType<typeof loadArchive>
+  > | null>(null);
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
   const [visible, setVisible] = useState(false);
   const [tabVisible, setTabVisible] = useState(true);
   const reduced = useReducedMotion();
+  const requestArchive = useCallback(() => {
+    if (archiveStatus === "loading" || archiveStatus === "ready") return;
+    setArchiveStatus("loading");
+    loadArchive()
+      .then((Component) => {
+        setArchiveContent(() => Component);
+        setArchiveStatus("ready");
+      })
+      .catch(() => setArchiveStatus("error"));
+  }, [archiveStatus]);
   const advance = useCallback(
     (amount: number) => {
       if (busyRef.current) return;
+      hasAdvanced.current = true;
       if (root.current?.contains(document.activeElement))
         nextControl.current?.focus();
       previous.current = new Map(
@@ -271,6 +294,15 @@ export function ProjectSlider({
         {[-1, 0, 1, 2, 3, 4].map((slot) => {
           const project = projects[wrap(index + slot, projects.length)];
           const hidden = slot < 0 || slot > 3;
+          const preloadFeature =
+            slot === 0 && !hasAdvanced.current && project.art
+              ? getImageProps({
+                  alt: "",
+                  fill: true,
+                  sizes: "(max-width: 767px) 95vw, 65vw",
+                  src: project.art,
+                }).props
+              : null;
           return (
             <article
               aria-hidden={hidden || undefined}
@@ -282,6 +314,20 @@ export function ProjectSlider({
               key={project.slug}
               style={{ backgroundColor: project.background }}
             >
+              {preloadFeature && (
+                <link
+                  as="image"
+                  fetchPriority="high"
+                  href={preloadFeature.src}
+                  imageSizes={preloadFeature.sizes}
+                  imageSrcSet={preloadFeature.srcSet}
+                  // Desktop-only: production Lighthouse shows the desktop LCP is
+                  // this card's art, while mobile LCP is the game board, whose
+                  // own priority must stay uncontested.
+                  media="(min-width: 768px)"
+                  rel="preload"
+                />
+              )}
               {project.art && (
                 <Image
                   alt=""
@@ -325,7 +371,13 @@ export function ProjectSlider({
         })}
       </div>
       <div className={styles.toolbar}>
-        <Dialog onOpenChange={setArchiveOpen} open={archiveOpen}>
+        <Dialog
+          onOpenChange={(open) => {
+            setArchiveOpen(open);
+            if (open) requestArchive();
+          }}
+          open={archiveOpen}
+        >
           <DialogTrigger
             render={<Button className={styles.explore} variant="unstyled" />}
           >
@@ -342,7 +394,21 @@ export function ProjectSlider({
               </DialogDescription>
             </header>
             <div className="min-h-0 flex-1 overflow-y-auto px-5 py-6 sm:px-8">
-              <Projects />
+              {archiveStatus === "ready" && ArchiveContent ? (
+                <ArchiveContent />
+              ) : archiveStatus === "error" ? (
+                <div className="flex flex-col items-start gap-3" role="alert">
+                  <p>Couldn't load the project archive.</p>
+                  <div className="flex items-center gap-4">
+                    <Button onClick={requestArchive} variant="unstyled">
+                      Try again
+                    </Button>
+                    <Link href="/projects">View all projects</Link>
+                  </div>
+                </div>
+              ) : (
+                <LoadingState label="Loading projects…" />
+              )}
             </div>
           </DialogContent>
         </Dialog>
