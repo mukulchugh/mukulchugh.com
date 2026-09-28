@@ -4,6 +4,12 @@ import { usePathname } from "next/navigation";
 import { type ReactNode, useLayoutEffect, useRef } from "react";
 import { useReducedMotion } from "@/lib/use-reduced-motion";
 
+// The story owns its viewport and controls. Ordinary routes keep their chrome.
+export function PortfolioChrome({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
+  return pathname === "/story" ? null : children;
+}
+
 export function RouteTransition({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const reduce = useReducedMotion();

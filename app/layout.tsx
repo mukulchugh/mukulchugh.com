@@ -7,7 +7,10 @@ import Footer from "@/components/footer";
 import { JsonLd } from "@/components/json-ld";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Dock } from "@/components/ui/dock";
-import { RouteTransition } from "@/components/ui/route-transition";
+import {
+  PortfolioChrome,
+  RouteTransition,
+} from "@/components/ui/route-transition";
 import ActiveSectionContextProvider from "@/context/active-section-context";
 import { geist, syne } from "@/lib/fonts";
 import { staticMetadata } from "@/lib/seo";
@@ -65,8 +68,10 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ActiveSectionContextProvider>
             <RouteTransition>{children}</RouteTransition>
-            <Footer />
-            <Dock />
+            <PortfolioChrome>
+              <Footer />
+              <Dock />
+            </PortfolioChrome>
           </ActiveSectionContextProvider>
           <AnalyticsWrapper />
         </ThemeProvider>
