@@ -1,0 +1,30 @@
+{
+  "/story/altr-2026.webp": {
+    "prompt": "Source: https://mukulchugh.com/projects/altr. Inspected existing page capture, not generated. Capture supplied in portfolio research dossier; current project artwork is explicitly illustrative. Image pixels unchanged.",
+    "createdAt": "2026-09-28T02:45:06.545Z"
+  },
+  "/story/blogging-orb.webp": {
+    "prompt": "Source: original archive capture of Blogging Orb, captured 20140319113142. https://web.archive.org/web/20140319113142/http://www.bloggingorb.com:80/. Supplied portfolio research capture; image content unchanged. Not generated.",
+    "createdAt": "2026-09-28T02:00:50.712Z"
+  },
+  "/story/digital-moshai.webp": {
+    "prompt": "Source: https://web.archive.org/web/20201113160441/https://digitalmoshai.com/. Inspected existing page capture, not generated. Capture supplied in portfolio research dossier; current project artwork is explicitly illustrative. Image pixels unchanged.",
+    "createdAt": "2026-09-28T02:45:06.571Z"
+  },
+  "/story/duke-2015.webp": {
+    "prompt": "Source: https://web.archive.org/web/20150728020857/http://www.gyaanify.org:80/454/duke-theme-wordpress-genesis. Inspected existing page capture, not generated. Capture supplied in portfolio research dossier; current project artwork is explicitly illustrative. Image pixels unchanged.",
+    "createdAt": "2026-09-28T02:45:06.592Z"
+  },
+  "/story/portfolio-2021.webp": {
+    "prompt": "Source: https://web.archive.org/web/20210401191432/http://mukulchugh.com/. Inspected existing page capture, not generated. Capture supplied in portfolio research dossier; current project artwork is explicitly illustrative. Image pixels unchanged.",
+    "createdAt": "2026-09-28T02:45:06.613Z"
+  },
+  "/story/tech-knowledge-providers.webp": {
+    "prompt": "Source: original archive capture of http://techknowledgeproviders.blogspot.com, captured 20130721083448. https://web.archive.org/web/20130721083448/http://techknowledgeproviders.blogspot.com. Supplied portfolio research capture; image content unchanged. Not generated.",
+    "createdAt": "2026-09-28T02:00:50.681Z"
+  },
+  "/story/tethr-2026.webp": {
+    "prompt": "Source: https://mukulchugh.com/projects/tethr. Inspected existing page capture, not generated. Capture supplied in portfolio research dossier; current project artwork is explicitly illustrative. Image pixels unchanged.",
+    "createdAt": "2026-09-28T02:45:06.634Z"
+  }
+}
