@@ -4,6 +4,8 @@ Script and shot storyboard, draft 1. 28 September 2026.
 
 **For Mukul's review.** This document proposes 34 passages for the dedicated `/story` page. It contains the complete visible script, expanded reading copy, character actions, desktop and portrait compositions, transitions and an art-proof brief. It is a written storyboard, not rendered frames or a validated animation. Nothing here changes the live prototype.
 
+The [high-fidelity production plan](story-high-fidelity-plan.md) maps every passage to its characters, environments, artifacts, animation, camera work and acceptance checks, with paid candidates and original-build alternatives for review.
+
 The current build remains **39 beats, 12 chapters, 23 selectable years, 237,100ms of playback and an 18-second ending**. Its technical fix commit is `f63f96c`. Those values remain authoritative until an approved script is implemented and measured.
 
 ## 1. The story we are telling
