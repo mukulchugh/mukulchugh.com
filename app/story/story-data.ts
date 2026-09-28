@@ -542,7 +542,7 @@ export function yearAt(position: number) {
   }
   return LAST_YEAR;
 }
-export function positionForYear(year: number) {
+function calendarPositionForYear(year: number) {
   if (!Number.isInteger(year) || year < FIRST_YEAR || year > LAST_YEAR)
     return null;
   if (year === FIRST_YEAR) return 0;
@@ -553,6 +553,29 @@ export function positionForYear(year: number) {
       return start + ((year - previous) / (next - previous)) * (end - start);
   }
   return 1;
+}
+// Navigation addresses the composed hold; native scrolling still visits every pose.
+export function readingPosition(position: number) {
+  const index = beatAt(position);
+  const start = beats[index].position;
+  const span = (beats[index + 1]?.position ?? 1) - start;
+  return start + span * (index === 0 ? 0.75 : 0.5);
+}
+export function positionForYear(year: number) {
+  const start = calendarPositionForYear(year);
+  if (start === null) return null;
+  const end = calendarPositionForYear(year + 1) ?? 1;
+  // A childhood year can begin during travel. Find its next hold without
+  // assigning a new milestone or changing the selected year.
+  for (let i = beatAt(start); i < beats.length; i++) {
+    const beatStart = beats[i].position;
+    const span = (beats[i + 1]?.position ?? 1) - beatStart;
+    const low = Math.max(start, beatStart + span * 0.22);
+    const high = Math.min(end - 0.0001, beatStart + span * 0.78);
+    if (low <= high)
+      return Math.max(low, Math.min(high, readingPosition(beatStart)));
+  }
+  return start;
 }
 export function beatAt(position: number) {
   const p = clampProgress(position);
