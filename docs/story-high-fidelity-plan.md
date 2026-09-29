@@ -1,6 +1,6 @@
 # /story: high-fidelity production plan
 
-28 September 2026. Planning baseline: `8685268`, following the critical fixes and the complete script draft. The owner requested an end-to-end high-fidelity plan and approved including paid assets **for review**, not purchase. Original builds may replace paid candidates after the owner reviews the options.
+Updated 29 September 2026 for the owner's vertical-flow correction. Planning baseline: `8685268`, following the critical fixes and the complete script draft. The owner requested an end-to-end high-fidelity plan and approved including paid assets **for review**, not purchase. Original builds may replace paid candidates after the owner reviews the options.
 
 **Target:** a continuous, inhabited 3D memoir with mature characters, convincing materials and deliberate cinematography. Every passage needs a finished action, setting, transition and phone composition. The production standard applies to the middle of the story as much as the opening and ending.
 
@@ -10,7 +10,7 @@ This is a production plan and asset audit. It does not claim that models have be
 
 Use the [34-passage script and storyboard](story-script-storyboard.md) as the proposed production breakdown. The live build still has 39 beats. The mapping below accounts for all of them, so this plan remains useful if the five proposed merges are revised. Do not implement the merges merely because they appear in this document.
 
-Preserve the owner's decisions: Dad in 2004; substantial childhood exploration; Mandal uncle at Uttaranchal Computer; teenage work at the white CRT; real pages; physical HuntIT and SPARK; car travel to college; flight to Bangalore; mentoring; the Quivly role; Altr → Tethr → adult working. Dad's later personal moments remain outside this story. Desktop travel is horizontal with depth; portrait travel is vertical. Own M, Syne/Geist and restrained terracotta/copper identity remain. One visible laptop at a time. Phones stay handheld scale.
+Preserve the owner's decisions: Dad in 2004; substantial childhood exploration; Mandal uncle at Uttaranchal Computer; teenage work at the white CRT; real pages; physical HuntIT and SPARK; car travel to college; flight to Bangalore; mentoring; the Quivly role; Altr → Tethr → adult working. Dad's later personal moments remain outside this story. Story travel is vertical on desktop, tablet and phone, with inward and outward camera movement for depth. This supersedes the earlier desktop sideways direction. Own M, Syne/Geist and restrained terracotta/copper identity remain. One visible laptop at a time. Phones stay handheld scale.
 
 The accepted v4 stills are composition references. Their warmer human attention and material detail are useful; their incidental typography, green controls, anatomy and invented historical UI are not new authority. The later aerial opening, smaller headings and current palette override those details. The current procedural figures are blocking assets. Neither they nor a more polished flat image are substitutes for authored moving characters.
 
@@ -91,7 +91,7 @@ Every clip needs an initial pose, contact pose, held pose and release. Hands mus
 
 ## 4. Every scene's high-fidelity completion card
 
-Numbers reference the proposed draft. The bracketed numbers are existing runtime beat numbers; all 39 are represented. **Every row below is planned, not final-art complete.** A scene passes only after its listed visual test and the shared acceptance gate in section 9 pass.
+Numbers reference the proposed draft. The bracketed numbers are existing runtime beat numbers; all 39 are represented. Every scene inherits vertical chapter-to-chapter travel on all viewports; desktop and portrait notes specify framing, not different journey axes. **Every row below is planned, not final-art complete.** A scene passes only after its listed visual test and the shared acceptance gate in section 9 pass.
 
 | Scene / current beats | Asset packs and evidence | Authored action, camera and light | Scene-specific acceptance test |
 | --- | --- | --- | --- |
@@ -211,7 +211,7 @@ Preserve the current 20/60/20 model until the script/timing change is approved. 
 
 Author desktop and portrait camera/target paths together for each scene. The safe reading region remains a hard constraint, but a global bounding-box pullback must not be the primary cinematographer. Define the subject, contact action and near/far environment extent for each shot, including incoming and outgoing frames. A frame should show one leading action, even if both worlds exist during a boundary.
 
-Use three-quarter faces and profile changes to reveal attention. Curves need smooth position and orientation, sensible near planes and bounded acceleration. Avoid sudden roll or lens jumps. The phone path travels vertically; it is not a cropped version of desktop horizontal travel. Short landscape and portrait tablet get reviewed compositions, not a blanket scale-down.
+Use three-quarter faces and profile changes to reveal attention. Curves need smooth position and orientation, sensible near planes and bounded acceleration. Avoid sudden roll or lens jumps. The journey follows a vertical route on every viewport. Downward native scroll advances chronologically; reverse scroll retraces it. Depth pushes, pullbacks and local arcs serve the action while the chapter sequence remains vertical. Author desktop and phone framing independently along that shared direction, retaining the right reading region on desktop and the scene below copy on portrait. Short landscape and portrait tablet get reviewed compositions, not a blanket scale-down.
 
 ### Materials and light
 
@@ -274,7 +274,7 @@ Each finished scene package must provide:
 2. A meaningful human action with convincing gaze, posture, hand contact and scale. A scene cannot pass solely because its required objects exist.
 3. A coherent room/place with grounded props and enough context at the held shot. The phone still communicates the same action.
 4. Final model/material/light quality at actual browser camera distance. No visible blocking mesh, missing map, faceted hero face, material mismatch or upscaled 128px sign.
-5. Authored arrival, composed hold and departure, including both sides of every boundary. No blank travel, next-era leak, hard swap, opaque camera penetration or clipping into copy.
+5. Vertical chapter-to-chapter travel on desktop, tablet and phone, with authored arrival, composed hold and departure on both sides of every boundary. No blank travel, next-era leak, hard swap, opaque camera penetration or clipping into copy.
 6. Matching forward/reverse/seek poses, complete Pause, correct resumption, year/chapter composed holds and position-preserving rotation/URL-bar resize.
 7. Visible keyboard focus, stable control focus through unmounts, readable HTML, usable source links, dock clearance and equivalent work/contact exits in reading mode.
 8. Loading, error, retry, context-loss and route-exit behaviour with no missing hero assets, repeated canvas, leaked resource or fabricated fallback evidence.
@@ -292,7 +292,7 @@ The next implementation proposal is deliberately concrete:
 - **Places:** the 2004 room, inhabited repair shop and modern mentoring area.
 - **Props:** white computer, openable tower/PC internals, bench stock, keyboard/mouse and a modern display.
 - **Actions:** point/follow/act, explain/inspect, reversible disassembly and the matching adult lesson.
-- **Views:** real desktop and portrait camera paths inside the page's current copy/dock constraints.
+- **Views:** vertical story flow on every viewport, with separately composed desktop and portrait camera paths inside the page's current copy/dock constraints.
 - **Look:** one final material/light standard demonstrated in both warm childhood and cooler office conditions.
 - **Evidence:** no new historical screenshot is required to make this proof truthful. Existing brand/capture sources stay separate.
 - **Review:** approve the moving human/material standard before duplicating it across the remaining scenes.

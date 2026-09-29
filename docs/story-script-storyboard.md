@@ -1,6 +1,6 @@
 # The screen stayed on
 
-Script and shot storyboard, draft 1. 28 September 2026.
+Script and shot storyboard, draft 1. 28 September 2026. Direction updated 29 September: vertical story flow on all viewports.
 
 **For Mukul's review.** This document proposes 34 passages for the dedicated `/story` page. It contains the complete visible script, expanded reading copy, character actions, desktop and portrait compositions, transitions and an art-proof brief. It is a written storyboard, not rendered frames or a validated animation. Nothing here changes the live prototype.
 
@@ -41,7 +41,7 @@ All other existing beats keep their own passage. This tests 34 without imposing 
 
 ## 3. Direction shared by every passage
 
-**A connected world.** Rooms share a continuous spatial route, with thresholds, floors, windows and near-field objects carrying transitions. Desktop travels sideways with selected inward and outward arcs. Portrait travels vertically through separately composed stages. Adjacent eras are connected artistically, not presented as literal neighbouring buildings. No blank journey with only a floating cable.
+**A connected world.** Rooms share a continuous spatial route, with thresholds, floors, windows and near-field objects carrying transitions. The story travels vertically on desktop, tablet and phone, with selected inward and outward arcs for depth. Downward native scroll advances through the years; reverse scroll retraces the route. Compose desktop and portrait shots separately within that shared vertical direction. This supersedes the earlier sideways desktop journey and applies to every passage below. Local gestures, driving and camera reframing can cross the stage; chapter progression stays vertical. Adjacent eras are connected artistically, not presented as literal neighbouring buildings. No blank journey with only a floating cable.
 
 **People act.** Each passage has a leading verb. Seated characters shift attention, reach, explain or test something. A new logo on an unchanged screen is not a new scene. Poses are authored and scrubbed from progress; idle loops cannot continue after Pause.
 
@@ -663,7 +663,7 @@ Character direction: restrained stylisation, believable proportions and articula
 
 Material direction: subtly aged ivory plastic, brushed metal, wood with scale-correct grain, fabric with restrained roughness, believable screen emission. Use controlled light and contact shadows to establish weight. Avoid giant heads, capsule hands, glossy toy materials and detail added without purpose.
 
-The proof must be real, moving 3D inside the page's copy and control constraints. Static concept renders may guide it, but cannot replace geometry or establish animation approval. Review desktop 1440×900 and portrait 390×844 together, then check 320×568, short landscape and tablet before expanding the art pass.
+The proof must be real, moving 3D inside the page's copy and control constraints, demonstrating vertical chapter-to-chapter flow on desktop as well as phone. Static concept renders may guide it, but cannot replace geometry or establish animation approval. Review desktop 1440×900 and portrait 390×844 together, then check 320×568, short landscape and tablet before expanding the art pass.
 
 Accept it only if the hand contact, attention, camera continuity, typography clearance and phone scale work in motion, both forward and backward. Then separately run the existing focus, pause, rotation, fallback and route-cleanup checks. Technical passing and visual acceptance are separate decisions.
 
