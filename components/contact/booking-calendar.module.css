@@ -53,6 +53,16 @@
   border: 1px solid color-mix(in srgb, hsl(var(--foreground)) 45%, transparent);
   border-radius: 10px;
 }
+/* iOS Safari sizes date inputs by content and ignores width:100% */
+.calendar input[type="date"] {
+  display: block;
+  text-align: left;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.calendar input[type="date"]::-webkit-date-and-time-value {
+  text-align: left;
+}
 .calendar textarea {
   resize: vertical;
 }
@@ -68,7 +78,7 @@
 }
 .times {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
   gap: 10px;
   font-variant-numeric: tabular-nums;
 }
@@ -142,13 +152,28 @@
     opacity: 1;
   }
 }
+@media (max-width: 960px) {
+  .stage {
+    min-height: 0;
+  }
+}
 @media (max-width: 480px) {
   .stage {
     padding: 24px 16px;
   }
+  .stage h4 {
+    font-size: 24px;
+  }
   .controls {
     grid-template-columns: minmax(0, 1fr);
     gap: 16px;
+    margin: 20px 0;
+  }
+  .times {
+    gap: 8px;
+  }
+  .times button {
+    padding-inline: 4px;
   }
   .fallback {
     margin-inline: 16px;
