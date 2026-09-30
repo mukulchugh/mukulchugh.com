@@ -272,6 +272,20 @@
     transform: translate(2px, -2px);
   }
 }
+/* Booking needs the full width well before the idle tile does. */
+@media (max-width: 960px) {
+  .tile[data-booking="true"] {
+    grid-template-rows: auto auto auto;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .tile[data-booking="true"] .call {
+    grid-area: 2 / 1;
+  }
+  .tile[data-booking="true"] .utilities {
+    grid-area: 3 / 1;
+    padding-block: 18px;
+  }
+}
 @media (max-width: 700px) {
   .tile,
   .tile[data-booking="true"] {
