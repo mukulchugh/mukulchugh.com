@@ -32,6 +32,7 @@ import {
   positionForPlaybackTime,
   positionForScroll,
   positionForYear,
+  readingPosition,
   scrollForPosition,
   yearAt,
 } from "./story-data";
@@ -41,20 +42,23 @@ type Panel = "year" | "chapters" | "read" | "artifact" | null;
 
 function WrittenStory({ primary = false }: { primary?: boolean }) {
   const Heading = primary ? "h1" : "h2";
+  const SectionHeading = primary ? "h2" : "h3";
   return (
     <>
-      <Heading>The screen stayed on.</Heading>
+      <Heading tabIndex={primary ? -1 : undefined}>
+        The screen stayed on.
+      </Heading>
       <p className={styles.readerIntro}>From Rudrapur to here, 2004–2026.</p>
       {beats.map((beat, index) => (
         <section id={`memory-${index}`} key={beat.position}>
-          <h3>{beat.title.replace("\n", " ")}</h3>
+          <SectionHeading>{beat.title.replace("\n", " ")}</SectionHeading>
           <p className={styles.date}>{beat.caption}</p>
           <p>{beat.reading}</p>
           {beat.project && <Link href={beat.project}>Explore the project</Link>}
         </section>
       ))}
       <section>
-        <h3>About these memories</h3>
+        <SectionHeading>About these memories</SectionHeading>
         <p>
           This story combines my memories with surviving public pages and career
           records. Childhood scenes and the people, rooms, vehicles and hardware
@@ -93,6 +97,17 @@ function WrittenStory({ primary = false }: { primary?: boolean }) {
           </p>
         ))}
       </section>
+      <div className={styles.ending}>
+        <div className={styles.endingActions}>
+          <Link href="/projects">
+            Explore my work <IconArrowUpRight aria-hidden size={16} />
+          </Link>
+          <Link href="/contact">
+            Let’s talk <IconArrowUpRight aria-hidden size={16} />
+          </Link>
+        </div>
+        <p>It started with my dad.</p>
+      </div>
     </>
   );
 }
@@ -114,8 +129,12 @@ export default function StoryExperience() {
   const journey = useRef<HTMLElement>(null);
   const engine = useRef<ReturnType<typeof createStoryScene> | null>(null);
   const progressRef = useRef(0);
+  const sampledPosition = useRef(0);
+  const scrollEcho = useRef<number | null>(null);
   const playingRef = useRef(false);
   const copyRef = useRef<HTMLDivElement>(null);
+  const readingRef = useRef<HTMLElement>(null);
+  const focusedRef = useRef<HTMLElement | null>(null);
   const artifactRef = useRef<HTMLButtonElement>(null);
   const ticksRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLInputElement>(null);
@@ -192,8 +211,7 @@ export default function StoryExperience() {
           focused === artifactRef.current) ||
           (focused.matches("[data-story-project]") &&
             focused.getAttribute("href") !== beats[beatIndex].project) ||
-          (focused.closest("[data-story-ending]") &&
-            beats[beatIndex].id !== "still-building"));
+          (focused.closest("[data-story-ending]") && p < 0.985));
       if (focusWillLeave)
         copyRef.current?.querySelector("h1")?.focus({ preventScroll: true });
       setProgress(p);
@@ -201,17 +219,25 @@ export default function StoryExperience() {
     engine.current?.seek(p);
   }
 
-  function seek(position: number, updateHistory = true) {
-    playingRef.current = false;
-    setPlaying(false);
-    const p = clampProgress(position);
-    updatePosition(p);
+  function writeScroll(p: number) {
     window.scrollTo({
       behavior: "instant",
       top:
         rangeRef.current.top +
         Math.ceil(scrollForPosition(p) * rangeRef.current.distance),
     });
+    // Native pixels round the written offset. Their scroll event is an echo,
+    // not new input that should move a paused or directly addressed pose.
+    scrollEcho.current = window.scrollY;
+  }
+
+  function seek(position: number, updateHistory = true) {
+    playingRef.current = false;
+    setPlaying(false);
+    const p = clampProgress(position);
+    sampledPosition.current = p;
+    updatePosition(p);
+    writeScroll(p);
     if (updateHistory)
       window.history.replaceState(
         window.history.state,
@@ -224,6 +250,8 @@ export default function StoryExperience() {
     if (!(immersive && journey.current)) return;
     let frame = 0;
     let previousTime = 0;
+    let viewportWidth = 0;
+    let viewportHeight = 0;
     let settled: ReturnType<typeof setTimeout> | undefined;
     function measure() {
       if (!journey.current) return;
@@ -234,13 +262,29 @@ export default function StoryExperience() {
         ),
         top: journey.current.offsetTop,
       };
+      viewportWidth = window.innerWidth;
+      viewportHeight = window.innerHeight;
     }
     function sample(time = performance.now()) {
       frame = 0;
       if (playingRef.current) return;
+      // A clamping scroll event can precede resize after orientation changes.
+      if (
+        viewportWidth !== window.innerWidth ||
+        viewportHeight !== window.innerHeight
+      ) {
+        resize();
+        return;
+      }
+      if (window.scrollY === scrollEcho.current) {
+        previousTime = 0;
+        return;
+      }
+      scrollEcho.current = null;
       const target = positionForScroll(
         (window.scrollY - rangeRef.current.top) / rangeRef.current.distance
       );
+      sampledPosition.current = target;
       const elapsed = Math.min(64, previousTime ? time - previousTime : 16);
       previousTime = time;
       const gap = target - progressRef.current;
@@ -266,17 +310,15 @@ export default function StoryExperience() {
       if (!(frame || playingRef.current)) frame = requestAnimationFrame(sample);
     }
     function resize() {
-      // Preserve the actual scroll position, never the lagging camera pose.
-      const p = positionForScroll(
-        (window.scrollY - rangeRef.current.top) / rangeRef.current.distance
-      );
+      // The browser may already have clamped scrollY against the new height.
+      // Preserve the last sampled input, not that offset or the lagging camera.
+      const p = sampledPosition.current;
+      cancelAnimationFrame(frame);
+      frame = 0;
+      previousTime = 0;
       measure();
-      window.scrollTo({
-        behavior: "instant",
-        top:
-          rangeRef.current.top +
-          Math.ceil(scrollForPosition(p) * rangeRef.current.distance),
-      });
+      updatePosition(p);
+      writeScroll(p);
     }
     function restore() {
       const match = /^#year=(\d{4})$/.exec(window.location.hash);
@@ -340,13 +382,9 @@ export default function StoryExperience() {
     const step = (time: number) => {
       if (!playingRef.current) return;
       const p = positionForPlaybackTime(startTime + time - started);
+      sampledPosition.current = p;
       updatePosition(p);
-      window.scrollTo({
-        behavior: "instant",
-        top:
-          rangeRef.current.top +
-          Math.ceil(scrollForPosition(p) * rangeRef.current.distance),
-      });
+      writeScroll(p);
       if (p >= 1) {
         playingRef.current = false;
         setPlaying(false);
@@ -378,6 +416,10 @@ export default function StoryExperience() {
   }, []);
 
   useEffect(() => {
+    if (focusedRef.current && !focusedRef.current.isConnected) {
+      const surface = immersive ? copyRef.current : readingRef.current;
+      surface?.querySelector("h1")?.focus({ preventScroll: true });
+    }
     if (!immersive) {
       setPlaying(false);
       setSound(false);
@@ -453,6 +495,9 @@ export default function StoryExperience() {
       className={styles.story}
       data-mode={mounted ? (immersive ? "immersive" : "reading") : "pending"}
       id="top"
+      onFocusCapture={(event) => {
+        focusedRef.current = event.target;
+      }}
     >
       <header className={styles.header}>
         <Link
@@ -568,7 +613,7 @@ export default function StoryExperience() {
         </p>
       )}
       {!immersive && (
-        <article className={styles.reading}>
+        <article className={styles.reading} ref={readingRef}>
           {failed && (
             <div className={styles.fallback} role="status">
               <p>The 3D view couldn't open. The story is here to read.</p>
@@ -609,17 +654,17 @@ export default function StoryExperience() {
             >
               <div aria-hidden className={`${dock.material} ${styles.glass}`} />
               <button
+                aria-disabled={progress < 0.005}
                 aria-label="Previous chapter"
                 className={`${styles.control} ${styles.previous}`}
-                disabled={progress < 0.005}
                 onClick={() => {
-                  const previous = [...chapters]
-                    .reverse()
-                    .find(
-                      (chapter) =>
-                        chapter.position < progressRef.current - 0.025
-                    );
-                  seek(previous?.position ?? 0);
+                  if (progressRef.current < 0.005) return;
+                  const chapter = beats[beatAt(progressRef.current)].chapter;
+                  seek(
+                    chapter === 0
+                      ? 0
+                      : readingPosition(chapters[chapter - 1].position)
+                  );
                 }}
                 title="Previous chapter"
                 type="button"
@@ -630,7 +675,7 @@ export default function StoryExperience() {
                 aria-label={playing ? "Pause journey" : "Play journey"}
                 className={`${styles.control} ${styles.play}`}
                 onClick={() => {
-                  if (last) seek(0);
+                  if (progressRef.current >= 1 && !playing) seek(0);
                   setPlaying(!playing);
                 }}
                 title={playing ? "Pause" : "Play the journey"}
@@ -667,19 +712,14 @@ export default function StoryExperience() {
                     if (["ArrowRight", "ArrowUp"].includes(event.key))
                       target = positionForYear(Math.min(LAST_YEAR, year + 1));
                     if (event.key === "PageDown")
-                      target =
-                        chapters.find(
-                          (chapter) =>
-                            chapter.position > progressRef.current + 0.001
-                        )?.position ?? 1;
+                      target = chapters[beat.chapter + 1]
+                        ? readingPosition(chapters[beat.chapter + 1].position)
+                        : 1;
                     if (event.key === "PageUp")
                       target =
-                        [...chapters]
-                          .reverse()
-                          .find(
-                            (chapter) =>
-                              chapter.position < progressRef.current - 0.001
-                          )?.position ?? 0;
+                        beat.chapter > 0
+                          ? readingPosition(chapters[beat.chapter - 1].position)
+                          : 0;
                     if (event.key === "Home") target = 0;
                     if (event.key === "End") target = 1;
                     if (target !== null) {
@@ -694,17 +734,15 @@ export default function StoryExperience() {
                 <span className={styles.endYear}>{LAST_YEAR}</span>
               </div>
               <button
+                aria-disabled={last}
                 aria-label="Next chapter"
                 className={`${styles.control} ${styles.next}`}
-                disabled={last}
-                onClick={() =>
-                  seek(
-                    chapters.find(
-                      (chapter) =>
-                        chapter.position > progressRef.current + 0.025
-                    )?.position ?? 1
-                  )
-                }
+                onClick={() => {
+                  if (progressRef.current >= 0.985) return;
+                  const next =
+                    chapters[beats[beatAt(progressRef.current)].chapter + 1];
+                  seek(next ? readingPosition(next.position) : 1);
+                }}
                 title="Next chapter"
                 type="button"
               >
@@ -809,7 +847,7 @@ export default function StoryExperience() {
                       aria-current={beat.chapter === i ? "step" : undefined}
                       onClick={() => {
                         setPanel(null);
-                        seek(chapter.position);
+                        seek(readingPosition(chapter.position));
                       }}
                       type="button"
                     >

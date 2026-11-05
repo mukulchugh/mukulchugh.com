@@ -69,7 +69,8 @@ export function createStoryScene(host: HTMLElement, onFailure: () => void) {
     let portrait = false;
     let width = 1,
       height = 1,
-      copyBottom = 0;
+      copyBottom = 0,
+      copyLeft = 0;
     const copyElement =
       host.parentElement?.querySelector<HTMLElement>("[data-story-copy]");
     const pmrem = new THREE.PMREMGenerator(renderer);
@@ -2628,6 +2629,10 @@ export function createStoryScene(host: HTMLElement, onFailure: () => void) {
     const offset = new THREE.Vector3();
     const background = new THREE.Color();
     const skyBackground = new THREE.Color(0xc3_d8_de);
+    const visibleBounds = new THREE.Box3();
+    const meshBounds = new THREE.Box3();
+    const corner = new THREE.Vector3();
+    const viewRotation = new THREE.Quaternion();
     function shotPose(
       index: number,
       focus: THREE.Vector3,
@@ -2719,9 +2724,17 @@ export function createStoryScene(host: HTMLElement, onFailure: () => void) {
       camera.position.y += travel * 0.8;
       const w = width,
         h = height;
-      const stageTop = portrait ? copyBottom + 12 : 0;
-      const stageHeight = portrait ? Math.max(125, h - 176 - stageTop) : h;
-      const stageWidth = portrait ? w : w * 0.545;
+      const copyArrival = index === 0 ? 1 : clampProgress(state.phase / 0.2);
+      const copyDeparture =
+        index < beats.length - 1 ? clampProgress((1 - state.phase) / 0.2) : 1;
+      const copyTravel = (1 - copyArrival) * 42 - (1 - copyDeparture) * 24;
+      const stageTop = portrait ? copyBottom + Math.max(0, copyTravel) + 12 : 0;
+      const stageHeight = portrait ? Math.max(1, h - 176 - stageTop) : h;
+      // Leave room for the copy's 24px departure and a visible gutter.
+      const stageLeft = portrait ? 0 : 24;
+      const stageWidth = portrait
+        ? w
+        : Math.max(200, copyLeft - 48 - stageLeft);
       camera.clearViewOffset();
       camera.aspect = stageWidth / stageHeight;
       offset.subVectors(camera.position, target);
@@ -2745,7 +2758,7 @@ export function createStoryScene(host: HTMLElement, onFailure: () => void) {
         (1 - active("still-building") * smooth(phase("still-building")) * 0.12);
       if (offset.length() < minimum) offset.setLength(minimum);
       camera.position.copy(target).add(offset);
-      if (!portrait) camera.setViewOffset(stageWidth, h, 0, 0, w, h);
+      if (!portrait) camera.setViewOffset(stageWidth, h, -stageLeft, 0, w, h);
       camera.updateProjectionMatrix();
       camera.lookAt(target);
       renderer.domElement.dataset.travelAxis = portrait
@@ -2899,6 +2912,51 @@ export function createStoryScene(host: HTMLElement, onFailure: () => void) {
       repairFan.position.x = 0.14 + smooth((dismantle - 0.4) / 0.35) * 0.25;
       repairFan.rotation.x = smooth((dismantle - 0.4) / 0.35) * Math.PI * 2;
       repairRam.position.x = 0.02 + smooth((dismantle - 0.55) / 0.3) * 0.2;
+      if (!portrait) {
+        // Fit the visible geometry, including BOTH places during travel. A
+        // fixed per-shot width cannot protect copy when the worlds separate.
+        // ponytail: axis-aligned bounds are conservative; authored shot bounds
+        // can tighten the wide car/flight views after the staging is approved.
+        visibleBounds.makeEmpty();
+        for (const world of worlds) {
+          if (!world.visible) continue;
+          world.updateWorldMatrix(true, true);
+          world.traverseVisible((object) => {
+            if (!(object instanceof THREE.Mesh)) return;
+            if (!object.geometry.boundingBox)
+              object.geometry.computeBoundingBox();
+            meshBounds
+              .copy(object.geometry.boundingBox!)
+              .applyMatrix4(object.matrixWorld);
+            visibleBounds.union(meshBounds);
+          });
+        }
+        viewRotation.copy(camera.quaternion).invert();
+        const tanY = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+        const tanX = tanY * camera.aspect;
+        let distance = camera.position.distanceTo(target);
+        for (let i = 0; i < 8; i++) {
+          corner
+            .set(
+              i & 1 ? visibleBounds.max.x : visibleBounds.min.x,
+              i & 2 ? visibleBounds.max.y : visibleBounds.min.y,
+              i & 4 ? visibleBounds.max.z : visibleBounds.min.z
+            )
+            .sub(target)
+            .applyQuaternion(viewRotation);
+          distance = Math.max(
+            distance,
+            Math.abs(corner.x) / tanX + corner.z + 0.3,
+            Math.abs(corner.y) / (tanY * 0.78) + corner.z + 0.3
+          );
+        }
+        offset.subVectors(camera.position, target).setLength(distance);
+        camera.position.copy(target).add(offset);
+        camera.lookAt(target);
+        // Pulling out to include neighbouring places must not fog them away.
+        fog.near = Math.max(fog.near, distance + 8);
+        fog.far = Math.max(fog.far, distance + 37);
+      }
       renderer.domElement.dataset.subject =
         beats[index].id === "car-to-college"
           ? journey < 0.64
@@ -2947,6 +3005,7 @@ export function createStoryScene(host: HTMLElement, onFailure: () => void) {
       copyBottom = copyElement
         ? copyElement.offsetTop + copyElement.offsetHeight
         : height * 0.36;
+      copyLeft = copyElement?.offsetLeft ?? width * 0.56;
       portrait = window.matchMedia(
         "(max-width: 760px) and (orientation: portrait)"
       ).matches;

@@ -111,13 +111,31 @@ async function seek(page, year) {
   );
   await page.waitForTimeout(480);
 }
+async function settledPose(page, position) {
+  await page.waitForFunction(
+    (p) =>
+      Math.abs(Number(document.querySelector("canvas")?.dataset.progress) - p) <
+      1e-8,
+    position
+  );
+  await page.evaluate(
+    () =>
+      new Promise((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(resolve))
+      )
+  );
+}
 if (process.env.STORY_CAPTURE_ONLY === "fleet") {
   try {
     const page = await browser.newPage();
     page.on("pageerror", (error) => errors.push(String(error)));
     await page.goto(`${base}/story`, { waitUntil: "networkidle" });
     await ready(page);
+    await page.addStyleTag({
+      content: "nextjs-portal { visibility: hidden; }",
+    });
     const frames = [];
+    const forward = new Map();
     for (const [device, width, height] of [
       ["desktop", 1440, 900],
       ["mobile", 390, 844],
@@ -139,7 +157,7 @@ if (process.env.STORY_CAPTURE_ONLY === "fleet") {
               ) < 0.0001,
             Math.round(p * 1000) / 1000
           );
-          await page.waitForTimeout(80);
+          await settledPose(page, Math.round(p * 1000) / 1000);
           const file = `${device}-${String(i + 1).padStart(2, "0")}-${beat.id}-${label}.png`;
           const screenshot = await page.screenshot({ path: `${out}/${file}` });
           const top =
@@ -173,6 +191,7 @@ if (process.env.STORY_CAPTURE_ONLY === "fleet") {
             )
               filled++;
           const occupancy = filled / (info.width * info.height);
+          if (label === "hold") forward.set(`${device}-${i}`, { data, stage });
           const shot = await page.locator("canvas").getAttribute("data-shot");
           frames.push({ file, occupancy, shot });
           assert.ok(
@@ -200,6 +219,22 @@ if (process.env.STORY_CAPTURE_ONLY === "fleet") {
         assert.equal(
           await page.locator("canvas").getAttribute("data-beat"),
           beats[i].id
+        );
+        await settledPose(page, Math.round(p * 1000) / 1000);
+        const reference = forward.get(`${device}-${i}`);
+        const pixels = await sharp(await page.screenshot())
+          .extract(reference.stage)
+          .resize(160)
+          .removeAlpha()
+          .raw()
+          .toBuffer();
+        assert.equal(pixels.length, reference.data.length);
+        let changed = 0;
+        for (let n = 0; n < pixels.length; n++)
+          if (Math.abs(pixels[n] - reference.data[n]) > 4) changed++;
+        assert.ok(
+          changed / pixels.length < 0.0005,
+          `Direction-dependent frame: ${device} ${beats[i].id} (${changed / pixels.length})`
         );
       }
     }
@@ -361,6 +396,7 @@ try {
   await page.waitForTimeout(500);
   await page.screenshot({ path: `${out}/desktop-room.png` });
   await seek(page, 2004);
+  await page.getByRole("slider").fill("0");
   await check("One canvas, isolated story chrome", async () => {
     assert.equal(await page.locator("canvas").count(), 1);
     assert.equal(
