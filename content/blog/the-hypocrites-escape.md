@@ -36,7 +36,7 @@ Later I found out a writer named Ernest Becker wrote a whole book on this in the
 
 ## A thought experiment: what if the state raised the kids?
 Imagine a world where every married couple has to give one or two children to the government to raise.
-Having children would become ordinary, almost like buying a home. Parenthood would stop being a default and become a role taken on by people who actually want it: dedicated guardians for minds that are fragile and need care. Marketing, schooling, housing, inheritance — so many systems would break and have to be rebuilt.
+Having children would become ordinary, almost like casting a vote. Parenthood would stop being a default and become a role taken on by people who actually want it: dedicated guardians for minds that are fragile and need care. Marketing, schooling, housing, inheritance, so many systems would break and have to be rebuilt.
 It would probably be a grey, uniform world. But aren’t we already halfway there? Every child spends about 16 years in school learning the same standard summary of the world, on the same schedule, from the same syllabus. Families are what add the colour.
 It has even been tried, sort of. Plato imagined it more than two thousand years ago. Israel’s kibbutzim raised children in communal houses for decades, and most eventually gave it up because parents wanted their kids home at night. Which tells me something: either the prescription runs very deep, or some of it isn’t a prescription at all.
 
