@@ -101,7 +101,7 @@ Maybe that's my limited worldview talking. I was raised, trained really, to be I
 
 A Hindi song with an Arabic-sounding beat has been on repeat in my headphones for an hour.
 
-Something strange happened while I was writing this. I felt aware of everything around me — the seat, the engine hum, the people in their rows — and that awareness came from inside. At the same time, I felt like I was watching myself from up near the ceiling: a guy hunched over a laptop, typing too fast. Two of me. One feeling, one watching.
+Something strange happened while I was writing this. I felt aware of everything around me - the seat, the engine hum, the people in their rows — and that awareness came from inside. At the same time, I felt like I was watching myself from up near the ceiling: a guy hunched over a laptop, typing too fast. Two of me. One feeling, one watching.
 
 Old traditions have names for this. Indian philosophy calls the watcher the *sakshi*, the witness. Osho, whose talks I love, spoke about it constantly. I'd heard the idea plenty of times. I'd never felt it this clearly.
 
