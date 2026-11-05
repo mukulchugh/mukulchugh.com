@@ -107,6 +107,7 @@ const diagramCounts: Record<string, number> = {
   "quivly-skills-agent-expertise": 1,
   "self-hosted-personal-agent-fleet": 1,
   "skip-your-own-api-when-you-own-the-database": 1,
+  "the-hypocrites-escape": 0,
 };
 
 await Promise.all(
